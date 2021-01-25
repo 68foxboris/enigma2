@@ -89,6 +89,7 @@ std::map<EGLint, const char*> eglErrorType =
   X(EGL_DEBUG_MSG_ERROR_KHR),
   X(EGL_DEBUG_MSG_WARN_KHR),
   X(EGL_DEBUG_MSG_INFO_KHR),
+#endif
 };
 #undef X
 
@@ -119,6 +120,7 @@ void EglErrorCallback(EGLenum error,
 
   CLog::Log(LOGDEBUG, "EGL Debugging:\nError: {}\nCommand: {}\nType: {}\nMessage: {}", errorStr, command, typeStr, message);
 }
+#endif
 
 std::set<std::string> CEGLUtils::GetClientExtensions()
 {
@@ -186,6 +188,7 @@ CEGLContextUtils::CEGLContextUtils(EGLenum platform, std::string const& platform
 
     eglDebugMessageControl(EglErrorCallback, eglDebugAttribs);
   }
+#endif
 
   m_platformSupported = CEGLUtils::HasClientExtension("EGL_EXT_platform_base") && CEGLUtils::HasClientExtension(platformExtension);
 }
@@ -406,6 +409,7 @@ bool CEGLContextUtils::CreateContext(CEGLAttributesVec contextAttribs)
   {
     contextAttribs.Add({{EGL_CONTEXT_FLAGS_KHR, EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR}});
   }
+#endif
 
   m_eglContext = eglCreateContext(m_eglDisplay, eglConfig,
                                   EGL_NO_CONTEXT, contextAttribs.Get());
