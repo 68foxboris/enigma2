@@ -84,6 +84,7 @@ std::map<EGLenum, const char*> eglErrors =
 
 std::map<EGLint, const char*> eglErrorType =
 {
+#if !defined(TARGET_STB)
   X(EGL_DEBUG_MSG_CRITICAL_KHR),
   X(EGL_DEBUG_MSG_ERROR_KHR),
   X(EGL_DEBUG_MSG_WARN_KHR),
@@ -93,6 +94,7 @@ std::map<EGLint, const char*> eglErrorType =
 
 } // namespace
 
+#if !defined(TARGET_STB)
 void EglErrorCallback(EGLenum error,
                       const char* command,
                       EGLint messageType,
@@ -171,6 +173,7 @@ void CEGLUtils::Log(int logLevel, const std::string& what)
 CEGLContextUtils::CEGLContextUtils(EGLenum platform, std::string const& platformExtension)
 : m_platform{platform}
 {
+#if !defined(TARGET_STB)
   if (CEGLUtils::HasClientExtension("EGL_KHR_debug"))
   {
     auto eglDebugMessageControl = CEGLUtils::GetRequiredProcAddress<PFNEGLDEBUGMESSAGECONTROLKHRPROC>("eglDebugMessageControlKHR");
@@ -391,6 +394,7 @@ bool CEGLContextUtils::CreateContext(CEGLAttributesVec contextAttribs)
 
   EGLConfig eglConfig{m_eglConfig};
 
+#if !defined(TARGET_STB)
   if (CEGLUtils::HasExtension(m_eglDisplay, "EGL_KHR_no_config_context"))
     eglConfig = EGL_NO_CONFIG_KHR;
 
