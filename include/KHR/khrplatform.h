@@ -99,6 +99,9 @@
  *-------------------------------------------------------------------------
  * This precedes the return type of the function in the function prototype.
  */
+#define BROADCOM_PLATFORM 1
+#ifdef BROADCOM_PLATFORM
+
 #if defined(KHRONOS_STATIC)
     /* If the preprocessor constant KHRONOS_STATIC is defined, make the
      * header compatible with static linking. */
@@ -115,6 +118,7 @@
 #   define KHRONOS_APICALL
 #endif
 
+#endif /* BROADCOM_PLATFORM */
 /*-------------------------------------------------------------------------
  * Definition of KHRONOS_APIENTRY
  *-------------------------------------------------------------------------

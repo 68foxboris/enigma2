@@ -55,10 +55,10 @@
 #endif
 #define EGLAPIENTRYP EGLAPIENTRY*
 
-#if defined(MESA_EGL_NO_X11_HEADERS) && !defined(EGL_NO_X11)
-#warning "`MESA_EGL_NO_X11_HEADERS` is deprecated, and doesn't work with the unmodified Khronos header"
-#warning "Please use `EGL_NO_X11` instead, as `MESA_EGL_NO_X11_HEADERS` will be removed soon"
-#define EGL_NO_X11
+#ifdef BROADCOM_PLATFORM
+#include <EGL/begl_memplatform.h>
+#include <EGL/begl_schedplatform.h>
+#include <EGL/begl_displayplatform.h>
 #endif
 
 /* The types NativeDisplayType, NativeWindowType, and NativePixmapType
@@ -130,6 +130,12 @@ typedef khronos_uintptr_t EGLNativeWindowType;
 
 #elif defined(__unix__) || defined(USE_X11)
 
+#ifdef BROADCOM_PLATFORM
+
+typedef void *EGLNativeDisplayType;
+typedef void *EGLNativePixmapType;
+typedef void *EGLNativeWindowType;
+
 /* X11 (tentative)  */
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -151,6 +157,8 @@ typedef void *EGLNativeWindowType;
 typedef void              *EGLNativeDisplayType;
 typedef khronos_uintptr_t  EGLNativePixmapType;
 typedef khronos_uintptr_t  EGLNativeWindowType;
+
+#endif /* BROADCOM_PLATFORM */
 
 #else
 #error "Platform not recognized"
