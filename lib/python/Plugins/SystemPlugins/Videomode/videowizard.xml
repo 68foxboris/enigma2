@@ -1,0 +1,91 @@
+<wizard>
+	<step id="inputselection" nextstep="modesdetection" timeout="10" timeoutaction="selectnext">
+		<condition>
+self.portCount = len(self.listPorts())
+self.condition = self.portCount > 1
+if self.portCount == 1:
+	self.selection = "HDMI"
+	self.portSelectionMoved()
+		</condition>
+		<text value="Video output port selection.\n\nPress OK to select the video port.\n\nThe next output port will be automatically tried in 20 seconds." />
+		<displaytext value="Select video output port with UP/DOWN buttons" />
+		<list type="dynamic" source="listPorts" evaluation="portSelectionMade" onselect="portSelectionMoved" />
+		<code>
+self.clearSelectedKeys()
+self.selectKey("OK")
+		</code>
+	</step>
+
+	<step id="modesdetection" >
+		<condition>
+self.condition = (self.port == "DVI" or self.port == "HDMI")
+		</condition>
+		<text value="Do you want to use auto mode detection?\n\nThis option reads all supported modes and automatically sets the highest resolution supported by your TV. Choose 'No' if you want to customize your settings.\n\nWARNING: If on the next screen you lose signal on your video mode, long press EXIT button to return to the list of video modes." />
+		<displaytext value="Use automatic mode detection" />
+		<list>
+			<listentry caption="Yes" step="modeauto" />
+			<listentry caption="No" step="modedefault" />
+		</list>
+		<code>
+self.clearSelectedKeys()
+self.selectKey("UP")
+self.selectKey("DOWN")
+		</code>
+	</step>
+
+	<step id="modedefault" timeoutstep="modeselection" timeout="1" timeoutaction="changestep">
+		<condition>
+self.condition = (self.port == "DVI" or self.port == "HDMI")
+		</condition>
+		<text value="Default video mode selected for the TV." />
+		<displaytext value="Default video mode selected" />
+		<code>
+config.av.edid_override.setValue(True)
+config.av.edid_override.save()
+		</code>
+	</step>
+
+	<step id="modeauto" timeoutstep="modeselection" timeout="1" timeoutaction="changestep">
+		<condition>
+self.condition = (self.port == "DVI" or self.port == "HDMI")
+		</condition>
+		<text value="Auto video mode selected for the TV." />
+		<displaytext value="Auto video mode selected" />
+		<code>
+config.av.edid_override.setValue(False)
+config.av.edid_override.save()
+		</code>
+	</step>
+
+	<step id="modeselection" nextstep="rateselection" timeout="10" timeoutaction="selectnext">
+		<text value="Select the video mode to be used on the TV.\n\nThe following video modes will automatically change in 20 seconds.\n\nWARNING: If a video mode causes signal loss, hold the EXIT button to return to the mode video list." />
+		<displaytext value="Select video mode" />
+		<list type="dynamic" source="listModes" evaluation="modeSelectionMade" onselect="modeSelectionMoved" />
+		<code>
+self.clearSelectedKeys()
+self.selectKey("UP")
+self.selectKey("DOWN")
+		</code>
+	</step>
+
+	<step id="rateselection" nextstep="end" timeout="10" timeoutaction="selectnext">
+		<condition>
+self.condition = (self.port != "DVI" or self.mode == "PC")
+		</condition>
+		<text value="Select the refresh rate to be used on the TV." />
+		<displaytext value="Select refresh rate" />
+		<list type="dynamic" source="listRates" evaluation="rateSelectionMade" onselect="rateSelectionMoved" />
+		<code>
+self.clearSelectedKeys()
+self.selectKey("UP")
+self.selectKey("DOWN")
+		</code>
+	</step>
+
+	<step id="end">
+		<code>
+self.saveWizardChanges()
+self.close()
+		</code>
+	</step>
+</wizard>
