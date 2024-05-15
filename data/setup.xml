@@ -26,6 +26,7 @@
 		<item level="1" text="EPG language selection 2" conditional="config.autolanguage.audio_epglanguage.value" description="Configure the secondary EPG language.">config.autolanguage.audio_epglanguage_alternative</item>
 	</setup>
 	<setup key="channelselection" title="Channel Selection Setup">
+		<item level="0" text="Style of the channel list" description="Set the style of the channel list.">config.channelSelection.style</item>
 		<item level="1" text="Enable blinking" description="Enable blink functionality for some areas like record icon.">config.usage.enable_blinking</item>
 		<item level="1" text="Show positioner movement" requires="isRotorTuner" description="Configure whether or not an icon should be shown when your motorized dish is moving.">config.usage.showdish</item>
 		<item level="1" text="Show positioner position" requires="isRotorTuner" description="Configure whether or not a rotor position will be displayed on the infobar">config.misc.showrotorposition</item>
