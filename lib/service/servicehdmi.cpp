@@ -9,6 +9,7 @@
 #include <lib/service/servicehdmi.h>
 #include <lib/service/service.h>
 #include <lib/driver/avcontrol.h>
+#include <lib/base/modelinformation.h>
 
 #include <string>
 
@@ -106,7 +107,8 @@ long long eStaticServiceHDMIInfo::getFileSize(const eServiceReference &ref)
 eServiceHDMI::eServiceHDMI(eServiceReference ref)
  : m_ref(ref), m_decoder_index(0), m_noaudio(false)
 {
-
+	eModelInformation &modelinformation = eModelInformation::getInstance();
+	m_b_hdmiin_fhd = modelinformation.getValue("hdmifhdin") == "True";
 }
 
 eServiceHDMI::~eServiceHDMI()
@@ -124,7 +126,7 @@ RESULT eServiceHDMI::connectEvent(const sigc::slot<void(iPlayableService*,int)> 
 RESULT eServiceHDMI::start()
 {
 	eAVControl::getInstance()->startStopHDMIIn(true, !m_noaudio, 1);
-#ifndef HAVE_HDMIIN_DREAMBOX
+#ifndef HAVE_HDMIIN_DM
 	m_decoder = new eTSMPEGDecoder(NULL, m_decoder_index);
 	m_decoder->setVideoPID(1, 0);
 	if (!m_noaudio)
@@ -138,7 +140,7 @@ RESULT eServiceHDMI::start()
 RESULT eServiceHDMI::stop()
 {
 	eAVControl::getInstance()->startStopHDMIIn(false, true, 1);
-#ifndef HAVE_HDMIIN_DREAMBOX
+#ifndef HAVE_HDMIIN_DM
 	m_decoder = NULL;
 #endif
 	m_event(this, evStopped);
@@ -173,12 +175,39 @@ RESULT eServiceHDMI::getName(std::string &name)
 
 int eServiceHDMI::getInfo(int w)
 {
+	switch (w)
+	{
+		case sVideoHeight: return m_b_hdmiin_fhd ? 1080 : 720;
+		case sVideoWidth: return m_b_hdmiin_fhd ? 1920 : 1280;
+		case sFrameRate: return 50;
+		case sProgressive: return 1;
+		case sGamma: return 0;
+		case sAspect: return 1;
+	}
+
 	return resNA;
 }
 
 std::string eServiceHDMI::getInfoString(int w)
 {
-	return "";
+	switch (w)
+	{
+	case sVideoInfo:
+	{
+		char buff[100];
+		snprintf(buff, sizeof(buff), "%d|%d|50|1|0|1",
+				m_b_hdmiin_fhd ? 1080 : 720,
+				m_b_hdmiin_fhd ? 1920 : 1280
+				);
+		std::string videoInfo = buff;
+		return videoInfo;
+	}
+	case sServiceref:
+		return m_ref.toString();
+	default:
+		break;
+	}
+	return iServiceInformation::getInfoString(w);
 }
 
 ePtr<iServiceInfoContainer> eServiceHDMI::getInfoObject(int w)
@@ -245,8 +274,7 @@ RESULT eServiceHDMIRecord::stop()
 	if (m_state == statePrepared)
 	{
 		m_thread = NULL;
-		if (!m_simulate && eEncoder::getInstance())
-			eEncoder::getInstance()->freeEncoder(m_encoder_fd);
+		if (eEncoder::getInstance()) eEncoder::getInstance()->freeEncoder(m_encoder_fd);
 		m_encoder_fd = -1;
 		m_state = stateIdle;
 	}
@@ -267,12 +295,11 @@ int eServiceHDMIRecord::doPrepare()
 			int framerate = eConfigManager::getConfigIntValue("config.hdmirecord.framerate", 50000);
 			int interlaced = eConfigManager::getConfigIntValue("config.hdmirecord.interlaced", 0);
 			int aspectratio = eConfigManager::getConfigIntValue("config.hdmirecord.aspectratio", 0);
-			m_encoder_fd = eEncoder::getInstance()->allocateEncoder(m_ref.toString(), buffersize, bitrate, width, height, framerate, interlaced, aspectratio);
+			m_encoder_fd = eEncoder::getInstance()->allocateEncoder(m_ref.toString(), m_buffersize, bitrate, width, height, framerate, interlaced, aspectratio);
 			*/
 			m_encoder_fd = eEncoder::getInstance()->allocateHDMIEncoder(m_ref.toString(), m_buffersize);
 		}
-		if (m_encoder_fd < 0)
-			return -1;
+		if (m_encoder_fd < 0) return -1;
 	}
 	m_state = statePrepared;
 	return 0;
