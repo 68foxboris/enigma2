@@ -2090,6 +2090,7 @@ std::string eDVBServicePlay::getInfoString(int w)
 		std::stringstream demux;
 		demux << h.getDemuxID();
 		return demux.str();
+	}
 	case sVideoInfo:
 	{
 		std::string videoInfo;
