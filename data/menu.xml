@@ -95,7 +95,7 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 			<item entryID="primary_skin_selector" level="0" text="Skin Setup" weight="10"><screen module="SkinSelector" screen="SkinSelector" /></item>
 			<menu entryID="display_selection" level="0" text="Front Panel Display" weight="15">
 				<id val="lcd" />
-				<item entryID="display_skin_selector" level="0" text="LCD Skin Setup" weight="5"><screen module="SkinSelector" screen="LcdSkinSelector" /></item>
+				<item entryID="display_skin_selector" level="0" text="LCD Skin Setup" weight="5" requires="LCDSupport"><screen module="SkinSelector" screen="LcdSkinSelector" /></item>
 				<item entryID="lcd_setup" level="1" text="LCD Setup" weight="10" requires="Display"><setup id="FrontDisplay" /></item>
 				<item entryID="led_setup" level="1" text="LED Setup" weight="15"><setup id="LEDDisplay" /></item>
 			</menu>
