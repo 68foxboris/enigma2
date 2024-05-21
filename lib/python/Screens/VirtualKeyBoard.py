@@ -44,6 +44,7 @@ class VirtualKeyboard(Screen):
 
 	def __init__(self, session, title=_("Virtual Keyboard Text:"), text="", maxSize=False, visibleWidth=False, type=Input.TEXT, currPos=None, allMarked=False, style=VKB_ENTER_ICON):
 		Screen.__init__(self, session, enableHelp=True)
+		self.skinName = ["VirtualKeyboard", "VirtualKeyBoard"]
 		self.setTitle(_("Virtual keyboard"))
 		prompt = title  # Title should only be used for screen titles!
 		self["key_info"] = StaticText(_("INFO"))
@@ -1184,4 +1185,3 @@ class VirtualKeyboard(Screen):
 class VirtualKeyBoard(VirtualKeyboard):
 	def __init__(self, session, title=_("Virtual Keyboard Text:"), text="", maxSize=False, visible_width=False, type=Input.TEXT, currPos=None, allMarked=False, style=VirtualKeyboard.VKB_ENTER_ICON):
 		VirtualKeyboard.__init__(self, session, title=title, text=text, maxSize=maxSize, visibleWidth=visible_width, type=type, currPos=currPos, allMarked=allMarked, style=style)
-		self.skinName = ["VirtualKeyboard", "VirtualKeyBoard"]
