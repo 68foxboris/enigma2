@@ -139,6 +139,13 @@ def InitUsageConfig():
 		("keep reverseB", "%s + %s" % (_("Keep service"), _("Reverse bouquet buttons")))
 	])
 
+	config.usage.shutdownOK = ConfigBoolean(default=True)
+	config.usage.shutdownNOK_action = ConfigSelection(default="normal", choices=[
+		("normal", _("Just boot")),
+		("standby", _("Goto standby")),
+		("deepstandby", _("Goto deep standby"))
+	])
+
 	choicelist = [("by skin", _("As defined by the skin"))]
 	for i in range(5, 41):
 		choicelist.append((str(i)))
