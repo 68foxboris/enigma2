@@ -36,7 +36,7 @@ class DirectoryBrowser(Screen):
 				"red": self.exit,
 				"ok": self.ok,
 				"cancel": self.exit
-		})
+			})
 
 	def ok(self):
 		if self.filelist.canDescent():
@@ -62,19 +62,13 @@ class MediaPlayerSettings(ConfigListScreen, Screen):
 		self.skinName = ["MediaPlayerSettings", "Setup"]
 		self.setTitle(_("Edit settings"))
 
-		self["key_red"] = StaticText(_("Cancel"))
-		self["key_green"] = StaticText(_("Save"))
-
-		ConfigListScreen.__init__(self, [], session)
+		ConfigListScreen.__init__(self, [], session, fullUI=True)
 		self.parent = parent
 		self.initConfigList()
 		config.mediaplayer.saveDirOnExit.addNotifier(self.initConfigList)
 
-		self["setupActions"] = ActionMap(["SetupActions", "ColorActions"],
+		self["setupActions"] = ActionMap(["SetupActions"],
 		{
-			"green": self.keySave,
-			"red": self.keyCancel,
-			"cancel": self.keyCancel,
 			"ok": self.ok,
 		}, -2)
 
@@ -102,5 +96,5 @@ class MediaPlayerSettings(ConfigListScreen, Screen):
 
 	def DirectoryBrowserClosed(self, path):
 		print("[MediaPlayer] PathBrowserClosed:" + str(path))
-		if path:
+		if path != False:
 			config.mediaplayer.defaultDir.setValue(path)

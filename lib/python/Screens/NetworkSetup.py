@@ -19,9 +19,6 @@ from Tools.Directories import resolveFilename, fileReadLines, SCOPE_PLUGINS, SCO
 from Tools.LoadPixmap import LoadPixmap
 from Plugins.Plugin import PluginDescriptor
 from enigma import eTimer, getDesktop, eConsoleAppContainer
-from Components.SystemInfo import BoxInfo, SystemInfo
-
-model = BoxInfo.getItem("model")
 
 MODULE_NAME = __name__.split(".")[-1]
 
@@ -531,26 +528,8 @@ class AdapterSetup(ConfigListScreen, Screen):
 
 				self.createConfig()
 
-				self["OkCancelActions"] = HelpableActionMap(self, ["OkCancelActions"],
-						{
-						"cancel": (self.keyCancel, _("exit network adapter configuration")),
-						"ok": (self.keySave, _("activate network adapter configuration")),
-						})
-
-				self["ColorActions"] = HelpableActionMap(self, ["ColorActions"],
-						{
-						"red": (self.keyCancel, _("exit network adapter configuration")),
-						"green": (self.keySave, _("activate network adapter configuration")),
-						"blue": (self.KeyBlue, _("open nameserver configuration")),
-						})
-
-				self["actions"] = NumberActionMap(["SetupActions"],
-				{
-						"ok": self.keySave,
-				}, -2)
-
 				self.list = []
-				ConfigListScreen.__init__(self, self.list, session=self.session)
+				ConfigListScreen.__init__(self, self.list, session=self.session, fullUI=True)
 				self.createSetup()
 				self.onLayoutFinish.append(self.layoutFinished)
 				self.onClose.append(self.cleanup)

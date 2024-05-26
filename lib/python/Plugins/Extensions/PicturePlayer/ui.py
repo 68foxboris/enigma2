@@ -147,15 +147,6 @@ class Pic_Setup(ConfigListScreen, Screen):
 		# for the skin: first try MediaPlayerSettings, then Setup, this allows individual skinning
 		self.skinName = ["PicturePlayerSetup", "Setup"]
 		self.setTitle(_("Settings"))
-		self["actions"] = ActionMap(["SetupActions", "MenuActions"],
-			{
-			"cancel": self.keyCancel,
-			"save": self.keySave,
-			"ok": self.keySave,
-			"menu": self.closeRecursive,
-		}, -2)
-		self["key_red"] = StaticText(_("Cancel"))
-		self["key_green"] = StaticText(_("Save"))
 
 		setup_list = [
 			(_("Slide show interval (sec.)"), config.pic.slidetime),
@@ -170,7 +161,7 @@ class Pic_Setup(ConfigListScreen, Screen):
 			(_("Auto EXIF Orientation rotation/flipping"), config.pic.autoOrientation),
 			(_("Stop play TV"), config.pic.stopPlayTv),
 		]
-		ConfigListScreen.__init__(self, setup_list, session)
+		ConfigListScreen.__init__(self, setup_list, session, fullUI=True)
 
 
 class Pic_Exif(Screen):
@@ -194,7 +185,7 @@ class Pic_Exif(Screen):
 		self.setTitle(_("Info"))
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions"],
-			{
+		{
 			"cancel": self.close
 		}, -1)
 
@@ -285,7 +276,7 @@ class Pic_Thumb(Screen):
 		framePos = 0
 		Page = 0
 		for x in piclist:
-			if not x[0][1]:
+			if x[0][1] == False:
 				self.filelist.append((index, framePos, Page, x[0][0], path + x[0][0]))
 				index += 1
 				framePos += 1
@@ -483,7 +474,7 @@ class Pic_Full_View(Screen):
 			self.session.nav.stopService()
 		self.setConf()
 		self["play_icon"].hide()
-		if not config.pic.infoline.value:
+		if config.pic.infoline.value == False:
 			self["file"].setText("")
 		self.start_decode()
 
@@ -537,7 +528,7 @@ class Pic_Full_View(Screen):
 
 	def slidePic(self):
 		print("[PicturePlayer] slide to next Picture index=" + str(self.lastindex))
-		if not config.pic.loop.value and self.lastindex == self.maxentry:
+		if config.pic.loop.value == False and self.lastindex == self.maxentry:
 			self.PlayPause()
 		self.shownow = True
 		self.ShowPicture()

@@ -257,11 +257,11 @@ class PowerKey:
 			elif selected[0] == "Menu":
 				root = mdom.getroot()
 				for x in root.findall("menu"):
-					y = x.find("id")
-					if y is not None:
-						id = y.get("val")
-						if id and id == selected[1]:
-							self.session.open(MainMenu, x)
+					if x.get("key") == "shutdown":
+						self.session.infobar = self
+						menu_screen = self.session.openWithCallback(self.MenuClosed, MainMenu, x)
+						menu_screen.setTitle(_("Standby / restart"))
+						break
 
 
 if enigma.eAVControl.getInstance().hasScartSwitch():

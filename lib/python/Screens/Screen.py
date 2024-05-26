@@ -1,4 +1,4 @@
-from enigma import eRCInput, eTimer, eWindow  # , getDesktop
+from enigma import eRCInput, eTimer, eWindow, getDesktop
 
 from skin import GUI_SKIN_ID, applyAllAttributes
 from Components.ActionMap import ActionMap
@@ -193,6 +193,9 @@ class Screen(dict):
 
 	title = property(getTitle, setTitle)
 
+	def setFocus(self, o):
+		self.instance.setFocus(o.instance)
+
 	def showHelp(self):
 		def callHelpAction(*args):
 			if args:
@@ -204,9 +207,6 @@ class Screen(dict):
 			if self.secondInfoBarScreen and self.secondInfoBarScreen.shown:
 				self.secondInfoBarScreen.hide()
 		self.session.openWithCallback(callHelpAction, HelpMenu, self.helpList)
-
-	def setFocus(self, o):
-		self.instance.setFocus(o.instance)
 
 	def setKeyboardModeNone(self):
 		rcinput = eRCInput.getInstance()
@@ -253,15 +253,14 @@ class Screen(dict):
 				f()
 
 	def applySkin(self):
-		# DEBUG: baseRes = (getDesktop(GUI_SKIN_ID).size().width(), getDesktop(GUI_SKIN_ID).size().height())
-		baseRes = (720, 576)  # FIXME: A skin might have set another resolution, which should be the base res.
+		bounds = (getDesktop(GUI_SKIN_ID).size().width(), getDesktop(GUI_SKIN_ID).size().height())
+		resolution = bounds
 		zPosition = 0
 		for (key, value) in self.skinAttributes:
-			if key == "baseResolution":
-				baseRes = tuple([int(x) for x in value.split(",")])
+			if key == "resolution":
+				resolution = tuple([int(x.strip()) for x in value.split(",")])
 			elif key == "zPosition":
 				zPosition = int(value)
-		self.scale = ((baseRes[0], baseRes[0]), (baseRes[1], baseRes[1]))
 		if not self.instance:
 			self.instance = eWindow(self.desktop, zPosition)
 		if "title" not in self.skinAttributes and self.screenTitle:
@@ -270,7 +269,7 @@ class Screen(dict):
 			for attribute in self.skinAttributes:
 				if attribute[0] == "title":
 					self.setTitle(_(attribute[1]))
-		self.skinAttributes.sort(key=lambda a: {"position": 1}.get(a[0], 0))  # We need to make sure that certain attributes come last.
+		self.scale = ((bounds[0], resolution[0]), (bounds[1], resolution[1]))
 		applyAllAttributes(self.instance, self.desktop, self.skinAttributes, self.scale)
 		self.createGUIScreen(self.instance, self.desktop)
 
@@ -338,5 +337,8 @@ class ScreenSummary(Screen):
 		if not isinstance(names, list):
 			names = [names]
 		self.skinName = ["%sSummary" % x for x in names]
+		className = self.__class__.__name__
+		if className != "ScreenSummary" and className not in self.skinName:  # e.g. if a module uses Screens.Setup.SetupSummary the skin needs to be available directly
+			self.skinName.append(className)
 		self.skinName.append("ScreenSummary")
 		self.skin = parent.__dict__.get("skinSummary", self.skin)  # If parent has a "skinSummary" defined, use that as default.
