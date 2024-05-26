@@ -117,7 +117,8 @@ class SoftwareTools(PackageInfoHandler):
 			if self.UpdateConsole:
 				if len(self.UpdateConsole.appContainers) == 0:
 					if callback is not None:
-						callback(False)
+						#callback(False)
+						pass
 
 	def startInstallMetaPackage(self, callback=None):
 		if callback is not None:
