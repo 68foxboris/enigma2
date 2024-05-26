@@ -28,17 +28,16 @@
 		<item key="scart_switch" level="1" text="VCR scart" conditional="config.usage.show_vcr_scart.value" requires="ScartSwitch"><code>self.session.scart.VCRSbChanged(3)</code></item>
 
 		<menu key="information" level="0" text="Information">
-			<item key="service_info_screen" level="1" text="Service"><screen module="ServiceInfo" screen="ServiceInfo"/></item>
-			<item key="distribution_info_screen" text="OpenPli Information" weight="5"><screen module="About" screen="ImageInformation" /></item>
-			<item key="receiver_info_screen" text="Receiver Information" weight="10"><screen module="About" screen="ReceiverInformation" /></item>
+			<item key="service_info_screen" level="1" text="Service"><screen module="About" screen="ServiceInformation"/></item>
+			<item key="distribution_info_screen" text="OpenPli Information" weight="5"><screen module="About" screen="ImageInformation"/></item>
+			<item key="receiver_info_screen" text="Receiver Information" weight="10"><screen module="About" screen="ReceiverInformation"/></item>
 			<item key="device_screen" text="Tuner Information" weight="15"><screen module="About" screen="TunerInformation"/></item>
-			<item key="device_info_screen" text="Storage" weight="25"><screen module="About" screen="StorageInformation" /></item>
-			<item key="memory_info_screen" text="Memory" weight="30"><screen module="About" screen="MemoryInformation" /></item>
-			<item key="network_info_screen" text="Network" weight="35"><screen module="About" screen="NetworkInformation" /></item>
-			<item key="geolocation_info_screen" text="Geolocation" weight="45"><screen module="About" screen="GeolocationInformation" /></item>
-			<item key="multiboot_info_screen" text="MultiBoot" weight="40" requires="canMultiBoot"><screen module="About" screen="MultiBootInformation" /></item>
-			<item key="streaming_clients_info_screen" text="Streaming clients info" screen module="StreamingClientsInfo"/></item>
-			<item key="streaming_clients_info_screen" level="2" text="Streaming clients info"><screen module="StreamingClientsInfo"/></item>
+			<item key="device_info_screen" text="Storage" weight="25"><screen module="About" screen="StorageInformation"/></item>
+			<item key="memory_info_screen" text="Memory" weight="30"><screen module="About" screen="MemoryInformation"/></item>
+			<item key="network_info_screen" text="Network" weight="35"><screen module="About" screen="NetworkInformation"/></item>
+			<item key="geolocation_info_screen" text="Geolocation" weight="45"><screen module="About" screen="GeolocationInformation"/></item>
+			<item key="multiboot_info_screen" text="MultiBoot" weight="40" requires="canMultiBoot"><screen module="About" screen="MultiBootInformation"/></item>
+			<item key="streaming_clients_info_screen" text="Streaming clients info"><screen module="StreamingClientsInfo"/></item>
 		</menu>
 
 		<item key="plugin_selection" level="0" text="Plugins"><screen module="PluginBrowser" screen="PluginBrowser"/></item>
@@ -50,13 +49,10 @@
 				<item key="fallbacktuner_settings" text="Fallback remote receiver setup"><screen module="SetupFallbacktuner"/></item>
 			</menu>
 			<menu key="system" weight="5" level="0" text="System">
-				<menu key="update" weight="0" level="0" text="Check update Settings">
-					<item key="check_update" level="0"><setup id="checkupdate"/></item>
-				</menu>
 				<menu key="video" level="0" text="Audio &amp; Video">
 					<item key="av_setup" level="0"><setup id="avsetup"/></item>
-					<item key="subtitle_setup" level="2" text="Subtitle Setup" weight="20"><setup id="subtitlesetup" /></item>
-					<item key="autolanguage_setup" level="0" text="Auto Language Setup"><setup id="autolanguagesetup"/></item>
+					<item key="subtitle_setup" level="2" text="Subtitle Setup" weight="20"><setup id="Subtitle"/></item>
+					<item key="autolanguage_setup" level="0" text="Automatic Language and Subtitles Setup"><setup id="AutoLanguage"/></item>
 					<item key="osdsetup" level="1" text="OSD Calibration" weight="50" requires="OSDCalibration"><screen module="OSDCalibration" screen="OSDCalibration" /></item>
 					<item key="setup_osd3d" level="2" text="OSD 3D Settings" weight="60" requires="OSD3DCalibration"><screen module="OSDCalibration" screen="OSD3DCalibration" /></item>
 				</menu>
@@ -64,13 +60,14 @@
 					<item key="language_setup" level="0" text="Language"><screen module="LanguageSelection"/></item>
 					<!-- Menu / Setup / Time -->
 					<item key="time_setup" level="0" text="Time" weight="50"><screen module="Time" screen="Time" /></item>
-					<item key="user_interface" level="0" text="User Interface" ><setup id="userinterface"/></item>
-					<item key="usage_setup" level="0" text="Customize"><setup id="usage"/></item>
+					<item key="user_interface" level="0" text="User Interface Setup" ><setup id="UserInterface"/></item>
+					<item key="channelselection_setup" level="0" text="Channel Selection Setup" weight="10"><setup id="channelselection" /></item>
+					<item key="usage_setup" level="0" text="Customize"><setup id="Usage"/></item>
 					<item key="primary_skin_selector" level="0" text="Skin"><screen module="SkinSelector" screen="SkinSelector"/></item>
 					<menu key="lcd" level="0" text="Front Panel Display">
-						<item key="display_skin_selector" level="0" text="Skin Setup" weight="5" requires="Display"><screen module="SkinSelector" screen="LcdSkinSelector" /></item>
+						<item key="display_skin_selector" level="0" text="Skin Setup" weight="5" requires="LCDSupport"><screen module="SkinSelector" screen="LcdSkinSelector" /></item>
 						<item key="lcd_setup" level="1" text="LCD Setup" weight="10" requires="Display"><setup id="FrontDisplay" /></item>
-						<item key="led_setup" level="1" text="LED Setup" weight="15"><setup id="LedDisplay" /></item>
+						<item key="led_setup" level="1" text="LED Setup" weight="15"><setup id="LeDDisplay" /></item>
 					</menu>
 				</menu>
 				<menu key="logs_menu" level="0" text="Log Manager" weight="2">
@@ -122,7 +119,7 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 				</menu>
 				<item key="rfmod_setup" level="1" requires="RfModulator"><setup id="RFmod"/></item>
 				<menu key="expert" level="0" text="Expert settings">
-					<item key="accesslevel_setup" level="0" text="User Mode"><setup id="accesslevel"/></item>
+					<item key="accesslevel_setup" level="0" text="User Mode Setup"><setup id="AccessLevel"/></item>
 					<!-- Menu / Setup / Recordings, Playback & Timeshift -->
 					<menu key="rec" level="1" text="Playback, Recording &amp; Timeshift" weight="45">
 						<item key="playback_setup" level="0" text="Playback Setup" weight="5"><setup id="Playback" /></item>
@@ -131,9 +128,9 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 						<item key="hdmirecord_setup" level="0" text="HDMI-IN Recording settings" weight="15" requires="HDMIin"><setup id="HDMIRecord"/></item>
 					</menu>
 					<menu key="harddisk" level="0" text="Harddisk" requires="Harddisk">
-						<item key="harddisk_setup" level="0"><setup id="harddisk"/></item>
-						<item key="harddisk_init" level="0" text="Initialization"><screen module="HarddiskSetup" screen="HarddiskSelection"/></item>
-						<item key="harddisk_check" level="0" text="Filesystem check"><screen module="HarddiskSetup" screen="HarddiskFsckSelection"/></item>
+						<item key="harddisk_setup" level="0" text="Harddisk Setup" weight="5"><setup id="HardDisk"/></item>
+						<item key="harddisk_init" level="0" text="Format Disk Settings"><screen module="HarddiskSetup" screen="HarddiskSelection"/></item>
+						<item key="harddisk_check" level="0" text="Filesystem Check"><screen module="HarddiskSetup" screen="HarddiskFsckSelection"/></item>
 						<item key="flash_expander" level="2" text="Flash Expander" weight="40"><screen module="FlashExpander" screen="FlashExpander" /></item>
 					</menu>
 					<item key="network_setup" level="0" text="Network"><screen module="NetworkSetup" screen="NetworkAdapterSelection"/></item>
@@ -144,10 +141,10 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 			</menu>
 
 			<menu key="cam" weight="10" text="SoftCam / CI">
-				<item key="softcam_setup" weight="10" level="0" text="Softcam Setup"><screen module="SoftcamSetup" screen="SoftcamSetup"/></item>
-				<item key="ci_setup" weight="10" level="0" text="Common Interface" requires="CommonInterface"><screen module="Ci" screen="CiSelection"/></item>
+				<item key="ci_setup" level="0" text="Common Interface" weight="5" requires="CommonInterface"><screen module="Ci" screen="CiSelection" /></item>
+				<item key="softcam_setup" level="0" text="Softcam" weight="5"><screen module="SoftcamSetup" screen="SoftcamSetup" /></item>
 				<item key="oscam_info" level="0" text="OSCam Information" weight="60"><screen module="OScamInfo" screen="OSCamInfo" /></item>
-				<item key="streamrelay_settings" weight="110" level="2" text="Stream Relay Settings"><screen module="SoftcamSetup" screen="StreamRelaySetup" /></item>
+				<item key="streamrelay_settings" level="2" text="Stream Relay Setup" weight="110"><screen module="SoftcamSetup" screen="StreamRelaySetup" /></item>
 			</menu>
 
 			<item key="parental_setup" weight="15" level="0" text="Parental control"><screen module="ParentalControlSetup" screen="ParentalControlSetup"/></item>
