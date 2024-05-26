@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from fcntl import ioctl
 from os import O_NONBLOCK, O_RDWR, close as osclose, listdir, open as osopen, write as oswrite
-from os.path import isdir, isfile
+from os.path import exists, isdir, isfile, join
 from platform import machine
 from struct import pack
+
 from enigma import eRCInput
 
 from keyids import KEYIDS, KEYIDNAMES
@@ -13,8 +14,6 @@ from Components.SystemInfo import BoxInfo
 from Tools.Directories import SCOPE_KEYMAPS, SCOPE_SKINS, fileReadLine, fileWriteLine, fileReadLines, fileReadXML, resolveFilename, pathExists
 
 MODULE_NAME = __name__.split(".")[-1]
-
-# BLACKLIST = ("dreambox front panel", "cec_input")  # Why was this being done?
 
 REMOTE_MODEL = 0
 REMOTE_RCTYPE = 1
@@ -29,11 +28,12 @@ class InputDevices:
 		self.devices = {}
 		self.currentDevice = ""
 		for device in sorted(listdir("/dev/input/")):
-			if isdir("/dev/input/%s" % device):
+
+			if isdir(join("/dev/input", device)):
 				continue
 			try:
 				buffer = b"\0" * 512
-				self.fd = osopen("/dev/input/%s" % device, O_RDWR | O_NONBLOCK)
+				self.fd = osopen(join("/dev/input", device), O_RDWR | O_NONBLOCK)
 				self.name = ioctl(self.fd, self.EVIOCGNAME(256), buffer)
 				osclose(self.fd)
 				self.name = self.name[:self.name.find(b"\0")].decode()
@@ -57,11 +57,6 @@ class InputDevices:
 					"enabled": False,
 					"configuredName": None
 				}
-				# What was this for?
-				# if model.startswith("et"):
-				# 	print("[InputDevice] ALERT: Old code flag for device starting with 'et'.")
-				# 	self.setDeviceDefaults(device)
-
 	def EVIOCGNAME(self, length):
 		# include/uapi/asm-generic/ioctl.h
 		IOC_NRBITS = 8
@@ -102,7 +97,7 @@ class InputDevices:
 		self.setDeviceAttribute(device, "configuredName", None)
 		eventRepeat = pack("LLHHi", 0, 0, 0x14, 0x01, 100)
 		eventDelay = pack("LLHHi", 0, 0, 0x14, 0x00, 700)
-		fd = osopen("/dev/input/%s" % device, O_RDWR)
+		fd = osopen(join("/dev/input", device), O_RDWR)
 		oswrite(fd, eventRepeat)
 		oswrite(fd, eventDelay)
 		osclose(fd)
@@ -127,7 +122,7 @@ class InputDevices:
 		if self.getDeviceAttribute(device, "enabled"):
 			# print(f"[InputDevices] setDeviceDelay for device '{device}' to {value} ms.")
 			event = pack("LLHHi", 0, 0, 0x14, 0x00, int(value))
-			fd = osopen("/dev/input/%s" % device, O_RDWR)
+			fd = osopen(join("/dev/input", device), O_RDWR)
 			oswrite(fd, event)
 			osclose(fd)
 
@@ -135,7 +130,7 @@ class InputDevices:
 		if self.getDeviceAttribute(device, "enabled"):
 			# print(f"[InputDevices] setDeviceRepeat for device '{device}' to {value} ms.")
 			event = pack("LLHHi", 0, 0, 0x14, 0x01, int(value))
-			fd = osopen("/dev/input/%s" % device, O_RDWR)
+			fd = osopen(join("/dev/input", device), O_RDWR)
 			oswrite(fd, event)
 			osclose(fd)
 

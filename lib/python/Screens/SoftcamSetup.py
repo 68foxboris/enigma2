@@ -11,6 +11,7 @@ from Screens.OScamInfo import OSCamInfo
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 from Tools.GetEcmInfo import GetEcmInfo
 from Components.Sources.StaticText import StaticText
+from ServiceReference import ServiceReference
 
 import os
 from Tools.camcontrol import CamControl
