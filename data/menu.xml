@@ -67,7 +67,7 @@
 					<menu key="lcd" level="0" text="Front Panel Display">
 						<item key="display_skin_selector" level="0" text="Skin Setup" weight="5" requires="LCDSupport"><screen module="SkinSelector" screen="LcdSkinSelector" /></item>
 						<item key="lcd_setup" level="1" text="LCD Setup" weight="10" requires="Display"><setup id="FrontDisplay" /></item>
-						<item key="led_setup" level="1" text="LED Setup" weight="15"><setup id="LeDDisplay" /></item>
+						<item key="led_setup" level="1" text="LED Setup" weight="15"><setup id="LEDDisplay" /></item>
 					</menu>
 				</menu>
 				<menu key="logs_menu" level="0" text="Log Manager" weight="2">
