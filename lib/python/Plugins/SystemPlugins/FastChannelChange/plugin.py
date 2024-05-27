@@ -1,18 +1,17 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 from Plugins.Plugin import PluginDescriptor
-from Screens.Screen import Screen
+from Screens.Setup import Setup
 from Screens.InfoBar import InfoBar
+from Screens.InfoBarGenerics import streamrelay
 from Components.config import config, ConfigSubsection, ConfigYesNo, ConfigSelection
-from Components.ConfigList import ConfigListScreen
-from Components.ActionMap import ActionMap
-from Components.Sources.StaticText import StaticText
 from Components.ServiceEventTracker import ServiceEventTracker
 from Components.SystemInfo import BoxInfo
 from enigma import iPlayableService, eTimer, eServiceReference, iRecordableService
 import os
 import glob
 from enigma import eFCCServiceManager
-from Screens.InfoBarGenerics import streamrelay
 
 g_max_fcc = len(glob.glob('/dev/fcc?'))
 g_default_fcc = (g_max_fcc) > 5 and 5 or g_max_fcc
@@ -35,7 +34,6 @@ def FCCChanged():
 
 
 def checkSupportFCC():
-	global g_max_fcc
 	return bool(g_max_fcc)
 
 
@@ -86,9 +84,9 @@ class FCCSupport:
 		self.__event_tracker = None
 		self.onClose = []
 		self.changeEventTracker()
-		BoxInfo.setMutableItem("FCCactive", self.fccSetupActivate)
-		# from Screens.PictureInPicture import on_pip_start_stop
-		# on_pip_start_stop.append(self.FCCForceStopforPIP)
+		BoxInfo.setItem("FCCactive", self.fccSetupActivate)
+#		from Screens.PictureInPicture import on_pip_start_stop
+#		on_pip_start_stop.append(self.FCCForceStopforPIP)
 
 	def setProcFCC(self, value):
 		procPath = "/proc/stb/frontend/fbc/fcc"
@@ -178,7 +176,7 @@ class FCCSupport:
 
 		if fcc_changed:
 			self.fccmgr.setFCCEnable(int(self.fccSetupActivate))
-			BoxInfo.setMutableItem("FCCactive", self.fccSetupActivate)
+			BoxInfo.setItem("FCCactive", self.fccSetupActivate)
 			curPlaying = self.session.nav.getCurrentlyPlayingServiceReference()
 			if curPlaying:
 				self.session.nav.stopService()
@@ -215,7 +213,7 @@ class FCCSupport:
 					iPlayableService.evEnd: self.getEvEnd,
 					iPlayableService.evTunedIn: self.getEvTunedIn,
 					iPlayableService.evTuneFailed: self.getEvTuneFailed
-				})
+					})
 
 		elif self.__event_tracker:
 			# run ServiceEventTracker.__del_event()
@@ -245,13 +243,14 @@ class FCCSupport:
 		if sref.type != 1:
 			playable = False
 
-		elif sref.getPath():  # is PVR? or streaming?
+		elif sref.getPath(): # is PVR? or streaming?
 			playable = False
 
-		elif int(sref.getData(0)) in (2, 10):  # is RADIO?
+		elif int(sref.getData(0)) in (2, 10): # is RADIO?
 			playable = False
 
-		playable = playable and not streamrelay.checkService(sref)
+		elif sref.toString() in streamrelay.data:
+			playable = False
 
 		return playable
 
@@ -263,7 +262,7 @@ class FCCSupport:
 		serviceRefList = []
 		for idx in range(len(serviceList)):
 			sref = serviceList[idx].toString()
-			if (sref.split(':')[1] == '0') and self.isPlayableFCC(sref):  # remove marker
+			if (sref.split(':')[1] == '0') and self.isPlayableFCC(sref): # remove marker
 				serviceRefList.append(sref)
 
 		if curServiceRef in serviceRefList:
@@ -271,13 +270,13 @@ class FCCSupport:
 			curServiceIndex = serviceRefList.index(curServiceRef)
 
 			for x in range(self.maxFCC - 1):
-				if x > (serviceRefListSize - 2):  # if not ((x+1) <= (serviceRefListSize-1))
+				if x > (serviceRefListSize - 2): # if not ((x+1) <= (serviceRefListSize-1))
 					break
 
 				idx = (x // 2) + 1
 				if x % 2:
-					idx *= -1  # idx : [ 1, -1, 2, -2, 3, -3, 4, -4 ....]
-				idx = (curServiceIndex + idx) % serviceRefListSize  # calc wraparound
+					idx *= -1 # idx : [ 1, -1, 2, -2, 3, -3, 4, -4 ....]
+				idx = (curServiceIndex + idx) % serviceRefListSize # calc wraparound
 				try:
 					fccZapUpDownList.append(serviceRefList[idx])
 				except:
@@ -350,13 +349,13 @@ class FCCSupport:
 		for (sref, value) in currentFCCList.items():
 			state = value[0]
 
-			if state == 2:  # fcc_state_failed
+			if state == 2: # fcc_state_failed
 				stopFCCList.append(sref)
 
-			elif sref in self.fccList:  # check conflict FCC channel (decoder/prepare)
+			elif sref in self.fccList: # check conflict FCC channel (decoder/prepare)
 				self.fccList.remove(sref)
 
-			elif state == 0:  # fcc_state_preparing
+			elif state == 0: # fcc_state_preparing
 				stopFCCList.append(sref)
 
 		for sref in stopFCCList:
@@ -399,11 +398,11 @@ class FCCSupport:
 			self.FCCTimeoutTimerStop()
 
 			if event in (iPlayableService.evTuneFailed, iPlayableService.evFccFailed):
-				self.fccmgr.stopFCCService()  # stop FCC Services in failed state
+				self.fccmgr.stopFCCService() # stop FCC Services in failed state
 
 			if not self.FCCCheckAndTimerStart() and len(self.fccList):
 				sref = self.fccList.pop(0)
-				if self.isPlayableFCC(sref):  # remove PVR, streaming, radio channels
+				if self.isPlayableFCC(sref): # remove PVR, streaming, radio channels
 					self.fccmgr.playFCCService(eServiceReference(sref))
 					self.FCCTimeoutTimerStart(sref)
 
@@ -412,7 +411,7 @@ class FCCSupport:
 		fccServiceList = self.fccmgr.getFCCServiceList()
 		for (sref, value) in fccServiceList.items():
 			state = value[0]
-			if state != 1:  # 1  : fcc_state_decoding
+			if state != 1: # 1  : fcc_state_decoding
 				self.fccmgr.stopFCCService(eServiceReference(sref))
 
 	def FCCDisableServices(self):
@@ -429,7 +428,7 @@ class FCCSupport:
 		for (sref, value) in self.fccmgr.getFCCServiceList().items():
 			state = value[0]
 			locked = value[1]
-			if state != 1 and locked == 0:  # no fcc decoding and no locked
+			if state != 1 and locked == 0: # no fcc decoding and no locked
 				return sref
 		return None
 
@@ -455,88 +454,43 @@ class FCCSupport:
 		self.fccTimeoutTimer.stop()
 
 
-class FCCSetup(Screen, ConfigListScreen):
+class FCCSetup(Setup):
 	def __init__(self, session):
-		Screen.__init__(self, session)
+		Setup.__init__(self, session, None)
 		self.title = _("Fast Channel Change Setup")
-		self.skinName = ["FCCSetup", "Setup"]
-		self.session = session
-		self["shortcuts"] = ActionMap(["ShortcutActions", "SetupActions"],
-		{
-			"ok": self.keySave,
-			"cancel": self.keyCancel,
-			"red": self.keyCancel,
-			"green": self.keySave,
-		}, -2)
-		self.list = []
-		ConfigListScreen.__init__(self, self.list, session=self.session)
-		self["key_red"] = StaticText(_("Cancel"))
-		self["key_green"] = StaticText(_("Save"))
-
-		self.isSupport = checkSupportFCC()
-
-		if self.isSupport:
-			self["description"] = StaticText("")
-			self.createConfig()
-			self.createSetup()
-		else:
-			self["description"] = StaticText(_("Receiver or driver does not support FCC"))
-
-	def createConfig(self):
-		self.enableEntry = (_("FCC enabled"), config.plugins.fccsetup.activate)
-		self.fccmaxEntry = (_("Max channels"), config.plugins.fccsetup.maxfcc)
-		self.zapupdownEntry = (_("Zap Up/Down"), config.plugins.fccsetup.zapupdown)
-		self.historyEntry = (_("History Prev/Next"), config.plugins.fccsetup.history)
-		self.priorityEntry = (_("priority"), config.plugins.fccsetup.priority)
-		self.recEntry = (_("Disable FCC during recordings"), config.plugins.fccsetup.disableforrec)
-		self.extEntry = (_("Show in extensions menu"), config.plugins.fccsetup.extensions)
 
 	def createSetup(self):
 		self.list = []
-		self.list.append(self.enableEntry)
-		if self.enableEntry[1].value:
-			self.list.append(self.fccmaxEntry)
-			self.list.append(self.zapupdownEntry)
-			self.list.append(self.historyEntry)
-			if self.zapupdownEntry[1].value and self.historyEntry[1].value:
-				self.list.append(self.priorityEntry)
-			self.list.append(self.recEntry)
-		self.list.append(self.extEntry)
-
+		self.list.append((_("FCC enabled"), config.plugins.fccsetup.activate))
+		if config.plugins.fccsetup.activate.value:
+			self.list.append((_("Max channels"), config.plugins.fccsetup.maxfcc))
+			self.list.append((_("Zap Up/Down"), config.plugins.fccsetup.zapupdown))
+			self.list.append((_("History Prev/Next"), config.plugins.fccsetup.history))
+			if config.plugins.fccsetup.zapupdown.value and config.plugins.fccsetup.history.value:
+				self.list.append((_("priority"), config.plugins.fccsetup.priority))
+			self.list.append((_("Disable FCC during recordings"), config.plugins.fccsetup.disableforrec))
+		self.list.append((_("Show in extensions menu"), config.plugins.fccsetup.extensions))
 		self["config"].list = self.list
 
-	def keyLeft(self):
-		ConfigListScreen.keyLeft(self)
-		self.setupChanged()
-
-	def keyRight(self):
-		ConfigListScreen.keyRight(self)
-		self.setupChanged()
-
-	def setupChanged(self):
-		currentEntry = self["config"].getCurrent()
-		if currentEntry in (self.zapupdownEntry, self.historyEntry, self.enableEntry):
-			if not (self.zapupdownEntry[1].value or self.historyEntry[1].value):
-				if currentEntry == self.historyEntry:
-					self.zapupdownEntry[1].value = True
+	def entryChanged(self):
+		currentItem = self.getCurrentItem()
+		if currentItem in (config.plugins.fccsetup.zapupdown, config.plugins.fccsetup.history, config.plugins.fccsetup.activate):
+			if not (config.plugins.fccsetup.zapupdown.value or config.plugins.fccsetup.history.value):
+				if currentItem == config.plugins.fccsetup.history:
+					config.plugins.fccsetup.zapupdown.value = True
 				else:
-					self.historyEntry[1].value = True
-			elif self.zapupdownEntry[1].value and self.historyEntry[1].value:
-				if int(self.fccmaxEntry[1].value) < 5:
+					config.plugins.fccsetup.history.value = True
+			elif config.plugins.fccsetup.zapupdown.value and config.plugins.fccsetup.history.value:
+				if int(config.plugins.fccsetup.maxfcc.value) < 5:
 					if g_max_fcc < 5:
-						self.fccmaxEntry[1].value = str(g_max_fcc)
+						config.plugins.fccsetup.maxfcc.value = str(g_max_fcc)
 					else:
-						self.fccmaxEntry[1].value = str(5)
-
+						config.plugins.fccsetup.maxfcc.value = str(5)
 			self.createSetup()
 
 	def keySave(self):
-		if not self.isSupport:
-			self.keyCancel()
-			return
-
-		ConfigListScreen.keySave(self)
 		FCCChanged()
+		Setup.keySave(self)
 
 
 def addExtentions(session, **kwargs):
@@ -563,7 +517,6 @@ def main(menuid, **kwargs):
 def Plugins(**kwargs):
 	list = []
 
-	global g_max_fcc
 	if g_max_fcc:
 		list.append(
 			PluginDescriptor(name="FCCSupport",
