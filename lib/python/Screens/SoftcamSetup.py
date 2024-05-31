@@ -64,7 +64,7 @@ class SoftcamSetup(Setup):
 			self.list.append((_("Restart cardserver"), ConfigAction(self.restart, "c")))
 			self.list.append((_("Restart both"), ConfigAction(self.restart, "sc")))
 
-		self.blueButton
+		self.blueButton()
 
 	def changedEntry(self):
 		if self["config"].getCurrent()[0] == self.softcams_text:
