@@ -54,6 +54,9 @@ def InitUsageConfig():
 	config.usage.alternative_number_mode = ConfigYesNo(default=False)
 
 	config.misc.usegstplaybin3 = ConfigYesNo(default=False)
+
+	config.misc.spinnerPosition = ConfigText(default="100,100")
+
 	config.usage.informationExtraSpacing = ConfigYesNo(False)
 
 	def alternativeNumberModeChange(configElement):
