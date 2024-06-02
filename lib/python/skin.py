@@ -1015,7 +1015,7 @@ class AttributeParser:
 	def horizontalAlignment(self, value):
 		self.guiObject.setHAlign(parseHorizontalAlignment(value))
 
-	def handledWidgets(self, value):  # This is only used for Screens to ignore optional widgets.
+	def ignoreWidgets(self, value):  # This is only used for Screens to ignore optional widgets.
 		pass
 
 	def includes(self, value):  # Same as conditional.  Created to partner new "excludes" attribute.

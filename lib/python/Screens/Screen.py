@@ -14,23 +14,25 @@ from Tools.CList import CList
 # Other commented out code is historic and should probably be deleted if it is not going to be used.
 #
 class Screen(dict):
-	NO_SUSPEND = False  # Deprecated feature needed for plugins
-	SUSPEND_STOPS = True  # Deprecated feature needed for plugins
-	SUSPEND_PAUSES = True  # Deprecated feature needed for plugins
+	NO_SUSPEND = False  # Deprecated feature needed for plugins.
+	SUSPEND_STOPS = True  # Deprecated feature needed for plugins.
+	SUSPEND_PAUSES = True  # Deprecated feature needed for plugins.
 
 	ALLOW_SUSPEND = True
 	globalScreen = None
 
 	def __init__(self, session, parent=None, mandatoryWidgets=None, enableHelp=False):
 		dict.__init__(self)
-		self.skinName = self.__class__.__name__
 		self.session = session
 		self.parent = parent
 		self.mandatoryWidgets = mandatoryWidgets
-		self.onClose = []
+		className = self.__class__.__name__
+		self.skinName = className
+		self.ignoreWidgets = []
 		self.onFirstExecBegin = []
 		self.onExecBegin = []
 		self.onExecEnd = []
+		self.onClose = []
 		self.onLayoutFinish = []
 		self.onContentChanged = []
 		self.onShown = []
@@ -55,7 +57,6 @@ class Screen(dict):
 		self["ScreenPath"] = StaticText()
 		self.screenPath = ""  # This is the current screen path without the title.
 		self.screenTitle = ""  # This is the current screen title without the path.
-		self.handledWidgets = []
 		if enableHelp:
 			self["helpActions"] = ActionMap(["HelpActions"], {
 				"displayHelp": self.showHelp
@@ -108,15 +109,15 @@ class Screen(dict):
 		self.hide()
 		for x in self.onClose:
 			x()
-		del self.helpList  # Fixup circular references.
+		del self.helpList  # Fix up circular references.
 		self.deleteGUIScreen()
 		# First disconnect all render from their sources. We might split this out into
 		# a "unskin"-call, but currently we destroy the screen afterwards anyway.
-		for val in self.renderer:
-			val.disconnectAll()  # Disconnect converter/sources and probably destroy them. Sources will not be destroyed.
+		for value in self.renderer:
+			value.disconnectAll()  # Disconnect converter/sources and probably destroy them. Sources will not be destroyed.
 		del self.session
-		for (name, val) in list(self.items()):
-			val.destroy()
+		for (name, value) in list(self.items()):
+			value.destroy()
 			del self[name]
 		self.renderer = []
 		self.__dict__.clear()  # Really delete all elements now.
@@ -138,9 +139,9 @@ class Screen(dict):
 		self.instance.show()
 		for x in self.onShow:
 			x()
-		for val in list(self.values()) + self.renderer:
-			if isinstance(val, GUIComponent) or isinstance(val, Source):
-				val.onShow()
+		for value in list(self.values()) + self.renderer:
+			if isinstance(value, GUIComponent) or isinstance(value, Source):
+				value.onShow()
 
 	def hide(self):
 		if not self.shown or not self.instance:
@@ -149,9 +150,9 @@ class Screen(dict):
 		self.instance.hide()
 		for x in self.onHide:
 			x()
-		for val in list(self.values()) + self.renderer:
-			if isinstance(val, GUIComponent) or isinstance(val, Source):
-				val.onHide()
+		for value in list(self.values()) + self.renderer:
+			if isinstance(value, GUIComponent) or isinstance(value, Source):
+				value.onHide()
 
 	def isAlreadyShown(self):  # Already shown is false until the screen is really shown (after creation).
 		return self.already_shown
@@ -179,9 +180,9 @@ class Screen(dict):
 		self.screenTitle = title
 		if showPath and config.usage.showScreenPath.value == "large" and title:
 			screenPath = ""
-			screenTitle = "%s > %s" % (self.screenPath, title) if self.screenPath else title
+			screenTitle = f"{self.screenPath} > {title}" if self.screenPath else title
 		elif showPath and config.usage.showScreenPath.value == "small":
-			screenPath = "%s >" % self.screenPath if self.screenPath else ""
+			screenPath = f"{self.screenPath} >" if self.screenPath else ""
 			screenTitle = title
 		else:
 			screenPath = ""
@@ -217,14 +218,14 @@ class Screen(dict):
 		rcinput = eRCInput.getInstance()
 		rcinput.setKeyboardMode(rcinput.kmAscii)
 
+	def saveKeyboardMode(self):
+		rcinput = eRCInput.getInstance()
+		self.keyboardMode = rcinput.getKeyboardMode()
+
 	def restoreKeyboardMode(self):
 		rcinput = eRCInput.getInstance()
 		if self.keyboardMode is not None:
 			rcinput.setKeyboardMode(self.keyboardMode)
-
-	def saveKeyboardMode(self):
-		rcinput = eRCInput.getInstance()
-		self.keyboardMode = rcinput.getKeyboardMode()
 
 	def setDesktop(self, desktop):
 		self.desktop = desktop
@@ -258,12 +259,13 @@ class Screen(dict):
 		resolution = bounds
 		zPosition = 0
 		for (key, value) in self.skinAttributes:
-			if key == "handledWidgets":
-				self.handledWidgets = [x.strip() for x in value.split(",")]
-			elif key == "resolution":
-				resolution = tuple([int(x.strip()) for x in value.split(",")])
-			elif key == "zPosition":
-				zPosition = int(value)
+			match key:
+				case "ignoreWidgets":
+					self.ignoreWidgets = [x.strip() for x in value.split(",")]
+				case "resolution" | "baseResolution":
+					resolution = tuple([int(x.strip()) for x in value.split(",")])
+				case "zPosition":
+					zPosition = int(value)
 		if not self.instance:
 			self.instance = eWindow(self.desktop, zPosition)
 		if "title" not in self.skinAttributes and self.screenTitle:
@@ -277,29 +279,32 @@ class Screen(dict):
 		self.createGUIScreen(self.instance, self.desktop)
 
 	def createGUIScreen(self, parent, desktop, updateonly=False):
-		for val in self.renderer:
-			if isinstance(val, GUIComponent):
+		for value in self.renderer:
+			if isinstance(value, GUIComponent):
 				if not updateonly:
-					val.GUIcreate(parent)
-				if not val.applySkin(desktop, self):
-					print("[Screen] Warning: Skin is missing renderer '%s' in %s." % (val, str(self)))
+					value.GUIcreate(parent)
+				if not value.applySkin(desktop, self):
+					print(f"[Screen] Warning: Skin is missing renderer '{value}' in {str(self)}.")
 		for key in self:
-			val = self[key]
-			if isinstance(val, GUIComponent):
+			value = self[key]
+			if isinstance(value, GUIComponent):
 				if not updateonly:
-					val.GUIcreate(parent)
-				depr = val.deprecationInfo
-				if val.applySkin(desktop, self):
-					if depr:
-						print("[Screen] WARNING: OBSOLETE COMPONENT '%s' USED IN SKIN. USE '%s' INSTEAD!" % (key, depr[0]))
-						print("[Screen] OBSOLETE COMPONENT WILL BE REMOVED %s, PLEASE UPDATE!" % depr[1])
-				elif not depr and key not in self.handledWidgets:
-					print("[Screen] Warning: Skin is missing element '%s' in %s." % (key, str(self)))
-		for w in self.additionalWidgets:
+					value.GUIcreate(parent)
+				deprecated = value.deprecationInfo
+				if value.applySkin(desktop, self):
+					if deprecated:
+						print(f"[Screen] WARNING: OBSOLETE COMPONENT '{key}' USED IN SKIN. USE '{deprecated[0]}' INSTEAD!")
+						print(f"[Screen] OBSOLETE COMPONENT WILL BE REMOVED {deprecated[1]}, PLEASE UPDATE!")
+				elif not deprecated and key not in self.ignoreWidgets:
+					try:
+						print(f"[Screen] Warning: Skin is missing element '{key}' in {str(self)} item {str(self[key])}.")
+					except Exception:
+						print(f"[Screen] Warning: Skin is missing element '{key}'.")
+		for widget in self.additionalWidgets:
 			if not updateonly:
-				w.instance = w.widget(parent)
-				# w.instance.thisown = 0
-			applyAllAttributes(w.instance, desktop, w.skinAttributes, self.scale)
+				widget.instance = widget.widget(parent)
+				# widget.instance.thisown = 0
+			applyAllAttributes(widget.instance, desktop, widget.skinAttributes, self.scale)
 		for f in self.onLayoutFinish:
 			if not isinstance(f, type(self.close)):
 				# exec f in globals(), locals()  # Python 2
@@ -326,22 +331,26 @@ class Screen(dict):
 
 class ScreenSummary(Screen):
 	skin = """
-	<screen position="fill" flags="wfNoBorder">
-		<widget source="global.CurrentTime" render="Label" position="0,0" size="e,20" font="Regular;16" horizontalAlignment="center" verticalAlignment="center">
+	<screen name="ScreenSummary" position="fill" flags="wfNoBorder">
+		<widget source="global.CurrentTime" render="Label" position="0,0" size="e,20" font="Regular;16" halign="center" valign="center">
 			<convert type="ClockToText">WithSeconds</convert>
 		</widget>
-		<widget source="Title" render="Label" position="0,25" size="e,45" font="Regular;18" horizontalAlignment="center" verticalAlignment="center" />
+		<widget source="Title" render="Label" position="0,25" size="e,45" font="Regular;18" halign="center" valign="center" />
 	</screen>"""
 
 	def __init__(self, session, parent):
 		Screen.__init__(self, session, parent=parent)
 		self["Title"] = StaticText(parent.getTitle())
-		names = parent.skinName
-		if not isinstance(names, list):
-			names = [names]
-		self.skinName = ["%sSummary" % x for x in names]
+		skinName = parent.skinName
+		if not isinstance(skinName, list):
+			skinName = [skinName]
+		self.skinName = [f"{x}Summary" for x in skinName]
 		className = self.__class__.__name__
-		if className != "ScreenSummary" and className not in self.skinName:  # e.g. if a module uses Screens.Setup.SetupSummary the skin needs to be available directly
+		if className != "ScreenSummary" and className not in self.skinName:  # When a summary screen does not have the same name as the parent then add it to the list.
 			self.skinName.append(className)
+		self.skinName += [f"{x}_summary" for x in skinName]  # DEBUG: Old summary screens currently kept for compatibility.
 		self.skinName.append("ScreenSummary")
 		self.skin = parent.__dict__.get("skinSummary", self.skin)  # If parent has a "skinSummary" defined, use that as default.
+		# skins = "', '".join(self.skinName)
+		# print(f"[Screen] DEBUG: Skin names: '{skins}'.")
+		# print(f"[Screen] DEBUG: Skin:\n{self.skin}")
