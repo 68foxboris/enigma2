@@ -309,8 +309,6 @@ def getDriverInstalledDate():
 		return _("unknown")
 
 
-
-
 def GetIPsFromNetworkInterfaces():
 	structSize = 40 if maxsize > 2 ** 32 else 32
 	sock = socket(AF_INET, SOCK_DGRAM)
