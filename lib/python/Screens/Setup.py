@@ -11,7 +11,6 @@ from Components.Label import Label
 from Components.Pixmap import Pixmap
 from Components.SystemInfo import BoxInfo, getBoxDisplayName
 from Components.Sources.StaticText import StaticText
-from Screens.HelpMenu import HelpableScreen
 from Screens.Screen import Screen, ScreenSummary
 from Tools.Directories import SCOPE_CURRENT_SKIN, SCOPE_PLUGINS, SCOPE_SKIN, fileReadXML, resolveFilename
 from Tools.LoadPixmap import LoadPixmap
@@ -23,9 +22,8 @@ setupModTimes = {}
 
 
 class Setup(ConfigListScreen, Screen, HelpableScreen):
-	def __init__(self, session, setup=None, plugin=None, PluginLanguageDomain=None, yellow_button=None, blue_button=None):
+	def __init__(self, session, setup=None, plugin=None, PluginLanguageDomain=None, yellow_button=None, blue_button=None, menu_button=None):
 		Screen.__init__(self, session, mandatoryWidgets=["config", "footnote", "description"], enableHelp=True)
-		HelpableScreen.__init__(self)
 		self.setup = setup
 		self.plugin = plugin
 		self.pluginLanguageDomain = PluginLanguageDomain
@@ -42,7 +40,7 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 			if setup.get("key") == self.setup:
 				allowDefault = setup.get("allowDefault", "") in ("1", "allowDefault", "enabled", "on", "true", "yes")
 				break
-		ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry, fullUI=True, allowDefault=allowDefault, yellow_button=yellow_button, blue_button=blue_button)
+		ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry, fullUI=True, allowDefault=allowDefault, yellow_button=yellow_button, blue_button=blue_button, menu_button=menu_button)
 		self["footnote"] = Label()
 		self["footnote"].hide()
 		self["description"] = Label()
