@@ -1,4 +1,5 @@
-from enigma import eRCInput, eTimer, eWindow, getDesktop
+# -*- coding: utf-8 -*-
+from enigma import eRCInput, eTimer, eWindow , getDesktop
 
 from skin import GUI_SKIN_ID, applyAllAttributes
 from Components.ActionMap import ActionMap
@@ -257,7 +258,9 @@ class Screen(dict):
 		resolution = bounds
 		zPosition = 0
 		for (key, value) in self.skinAttributes:
-			if key == "resolution":
+			if key == "handledWidgets":
+				self.handledWidgets = [x.strip() for x in value.split(",")]
+			elif key == "resolution":
 				resolution = tuple([int(x.strip()) for x in value.split(",")])
 			elif key == "zPosition":
 				zPosition = int(value)
