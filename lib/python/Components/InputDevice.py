@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from fcntl import ioctl
 from os import O_NONBLOCK, O_RDWR, close as osclose, listdir, open as osopen, write as oswrite
 from os.path import exists, isdir, isfile, join
@@ -35,8 +34,8 @@ class InputDevices:
 				buffer = b"\0" * 512
 				self.fd = osopen(join("/dev/input", device), O_RDWR | O_NONBLOCK)
 				self.name = ioctl(self.fd, self.EVIOCGNAME(256), buffer)
-				osclose(self.fd)
 				self.name = self.name[:self.name.find(b"\0")].decode()
+				osclose(self.fd)
 			except OSError as err:
 				print(f"[InputDevice] Error: device='{device}' getInputDevices <ERROR: ioctl(EVIOCGNAME): '{str(err)}'>")
 				self.name = None
@@ -58,7 +57,7 @@ class InputDevices:
 					"configuredName": None
 				}
 	def EVIOCGNAME(self, length):
-		# include/uapi/asm-generic/ioctl.h
+		# Include/uapi/asm-generic/ioctl.h.
 		IOC_NRBITS = 8
 		IOC_TYPEBITS = 8
 		IOC_SIZEBITS = 13 if "mips" in machine() else 14
@@ -140,7 +139,7 @@ class InputDevices:
 		return None
 
 	def setDeviceAttribute(self, device, attribute, value):
-		# print("[InputDevice] setDeviceAttribute DEBUG: Set attribute '%s' for device '%s' to value '%s'." % (attribute, device, value))
+		# print "[InputDevices] setting for device", device, "attribute", attribute, " to value", value
 		if device in self.devices:
 			self.devices[device][attribute] = value
 
@@ -164,12 +163,12 @@ class Keyboard:
 					keyboardMapPath = resolveFilename(SCOPE_KEYMAPS, keyboardMapFile)
 					if isfile(keyboardMapPath):
 						if config.crash.debugKeyboards.value:
-							print("[InputDevice] Adding keyboard keymap '%s' in '%s'." % (keyboardMapName, keyboardMapFile))
+							print(f"[InputDevice] Adding keyboard definition '{keyboardKmapFile}' for '{keyboardMapName}'.")
 						self.keyboardMaps.append((keyboardMapFile, keyboardMapName))
 					else:
-						print("[InputDevice] Error: Keyboard keymap file '%s' doesn't exist!" % keyboardMapPath)
+						print(f"[InputDevice] Error: Keyboard definition is invalid!  (kmap='{keyboardKmapFile}', name='{keyboardMapName}')")
 				else:
-					print("[InputDevice] Error: Invalid keyboard keymap information file '%s'!" % keyboardMapInfo)
+					print(f"[InputDevice] Error: Keyboard definition is invalid!  (kmap='{keyboardKmapFile}', name='{keyboardMapName}')")
 		config.inputDevices.keyboardMap = ConfigSelection(choices=self.keyboardMaps, default=self.getDefaultKeyboardMap())
 
 	def getDefaultKeyboardMap(self):
@@ -241,7 +240,7 @@ class RemoteControl:
 				if config.crash.debugRemoteControls.value:
 					print(f"[InputDevice] Remote control image file '{rcButtons['image']}'.")
 				for button in rc.findall("button"):
-					id = button.attrib.get("id", button.attrib.get("keyid"))
+					id = button.attrib.get("id", "KEY_RESERVED")
 					remap = button.attrib.get("remap")
 					keyId = KEYIDS.get(id)
 					remapId = KEYIDS.get(remap)
@@ -390,7 +389,7 @@ iInputDevices = inputDevices  # Deprecated support old plugins
 
 class RcTypeControl():
 	def __init__(self):
-		if pathExists('/proc/stb/ir/rc/type'):
+		if pathExists("/proc/stb/ir/rc/type"):
 			self.isSupported = True
 
 			if config.plugins.remotecontroltype.rctype.value != 0:
