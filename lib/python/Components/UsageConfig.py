@@ -5,7 +5,7 @@ from Components.Harddisk import harddiskmanager
 from Components.Console import Console
 from Components.config import ConfigSubsection, ConfigDirectory, ConfigYesNo, config, ConfigSelection, ConfigText, ConfigNumber, ConfigSet, ConfigLocations, ConfigSelectionNumber, ConfigClock, ConfigSlider, ConfigEnableDisable, ConfigSubDict, ConfigDictionarySet, ConfigInteger, ConfigPassword, ConfigIP, NoSave, ConfigBoolean
 from Tools.Directories import SCOPE_HDD, SCOPE_TIMESHIFT, defaultRecordingLocation, resolveFilename
-from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eDVBLocalTimeHandler, eEPGCache
+from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eSubtitleSettings ,eDVBLocalTimeHandler, eEPGCache
 from Components.About import GetIPsFromNetworkInterfaces
 from Components.NimManager import nimmanager
 from Components.Renderer.FrontpanelLed import ledPatterns, PATTERN_ON, PATTERN_OFF, PATTERN_BLINK
@@ -1620,125 +1620,181 @@ def InitUsageConfig():
 	])
 
 	config.subtitles = ConfigSubsection()
-	config.subtitles.show = ConfigYesNo(default=True)
-	config.subtitles.ttx_subtitle_colors = ConfigSelection(default="1", choices=[
-		("0", _("Original")),
-		("1", _("White")),
-		("2", _("Yellow"))
+
+	def setTTXSubtitleColors(configElement):
+		eSubtitleSettings.setTTXSubtitleColors(configElement.value)
+
+	config.subtitles.ttx_subtitle_colors = ConfigSelection(default=1, choices=[
+		(0, _("Original")),
+		(1, _("White")),
+		(2, _("Yellow"))
 	])
+	config.subtitles.ttx_subtitle_colors.addNotifier(setTTXSubtitleColors)
+
+	def setTTXSubtitleOriginalPosition(configElement):
+		eSubtitleSettings.setTTXSubtitleOriginalPosition(configElement.value)
+
 	config.subtitles.ttx_subtitle_original_position = ConfigYesNo(default=False)
-	config.subtitles.ttx_subtitle_position = ConfigSelection(default="50", choices=[
-		"0",
-		"10",
-		"20",
-		"30",
-		"40",
-		"50",
-		"60",
-		"70",
-		"80",
-		"90",
-		"100",
-		"150",
-		"200",
-		"250",
-		"300",
-		"350",
-		"400",
-		"450"
-	])
+	config.subtitles.ttx_subtitle_original_position.addNotifier(setTTXSubtitleOriginalPosition)
+
+	def setSubtitlePosition(configElement):
+		eSubtitleSettings.setSubtitlePosition(configElement.value)
+
+	config.subtitles.subtitle_position = ConfigSelection(default=50, choices=[(x, _("%d Pixels") % x) for x in list(range(0, 91, 10)) + list(range(100, 451, 50))])
+	config.subtitles.subtitle_position.addNotifier(setSubtitlePosition)
+
+	def setSubtitleAligment(configElement):
+		aligments = {
+			"left": 1,
+			"center": 4,
+			"right": 2
+		}
+		eSubtitleSettings.setSubtitleAligment(aligments.get(configElement.value, 4))
+
 	config.subtitles.subtitle_alignment = ConfigSelection(default="center", choices=[
 		("left", _("Left")),
 		("center", _("Center")),
 		("right", _("Right"))
 	])
+	config.subtitles.subtitle_position.addNotifier(setSubtitleAligment)
+
+	def setSubtitleReWrap(configElement):
+		eSubtitleSettings.setSubtitleReWrap(configElement.value)
+
 	config.subtitles.subtitle_rewrap = ConfigYesNo(default=False)
+	config.subtitles.subtitle_rewrap.addNotifier(setSubtitleReWrap)
+
+	def setSubtitleColoriseDialogs(configElement):
+		eSubtitleSettings.setSubtitleColoriseDialogs(configElement.value)
+
 	config.subtitles.colourise_dialogs = ConfigYesNo(default=False)
-	config.subtitles.subtitle_borderwidth = ConfigSelection(default="3", choices=["1", "2", "3", "4", "5"])
-	config.subtitles.subtitle_fontsize = ConfigSelection(default="40", choices=["%d" % x for x in range(16, 101) if not x % 2])
+	config.subtitles.colourise_dialogs.addNotifier(setSubtitleColoriseDialogs)
 
-	backtrans = [
-		("0", _("No transparency")),
-		("12", "5%"),
-		("25", "10%"),
-		("38", "15%"),
-		("50", "20%"),
-		("75", "30%"),
-		("100", "40%"),
-		("125", "50%"),
-		("150", "60%"),
-		("175", "70%"),
-		("200", "80%"),
-		("225", "90%"),
-		("255", _("Full transparency"))]
-	config.subtitles.subtitle_backtrans = ConfigSelection(default="255", choices=backtrans)
+	def setSubtitleBorderWith(configElement):
+		eSubtitleSettings.setSubtitleBorderWith(configElement.value)
 
-	subtitle_delay_choicelist = []
-	for i in range(-900000, 1845000, 45000):
-		if i == 0:
-			subtitle_delay_choicelist.append(("0", _("No delay")))
+	config.subtitles.subtitle_borderwidth = ConfigSelection(default=3, choices=[(x, str(x)) for x in range(1, 6)])
+	config.subtitles.subtitle_borderwidth.addNotifier(setSubtitleBorderWith)
+
+	def setSubtitleFontSize(configElement):
+		eSubtitleSettings.setSubtitleFontSize(configElement.value)
+
+	config.subtitles.subtitle_fontsize = ConfigSelection(default=40, choices=[(x, str(x)) for x in range(16, 101) if not x % 2])
+	config.subtitles.subtitle_fontsize.addNotifier(setSubtitleFontSize)
+
+	def setSubtitleBacktrans(configElement):
+		eSubtitleSettings.setSubtitleBacktrans(configElement.value)
+
+	choiceList = [
+		(0, _("No transparency")),
+		(12, "5%"),
+		(25, "10%"),
+		(38, "15%"),
+		(50, "20%"),
+		(75, "30%"),
+		(100, "40%"),
+		(125, "50%"),
+		(150, "60%"),
+		(175, "70%"),
+		(200, "80%"),
+		(225, "90%"),
+		(255, _("Full transparency"))]
+	config.subtitles.subtitles_backtrans = ConfigSelection(default=255, choices=choiceList)
+	config.subtitles.subtitles_backtrans.addNotifier(setSubtitleBacktrans)
+
+	def setDVBSubtitleBacktrans(configElement):
+		eSubtitleSettings.setDVBSubtitleBacktrans(configElement.value)
+
+	config.subtitles.dvb_subtitles_backtrans = ConfigSelection(default=0, choices=choiceList)
+	config.subtitles.subtitles_backtrans.addNotifier(setDVBSubtitleBacktrans)
+
+	choiceList = []
+	for x in range(-54000000, 54045000, 45000):
+		if x == 0:
+			choiceList.append((0, _("No delay")))
 		else:
-			subtitle_delay_choicelist.append((str(i), _("%2.1f sec") % (i / 90000.)))
-	config.subtitles.subtitle_noPTSrecordingdelay = ConfigSelection(default="315000", choices=subtitle_delay_choicelist)
+			choiceList.append((x, _("%2.1f Seconds") % (x / 90000.0)))
+
+	def setSubtitleNoPTSDelay(configElement):
+		eSubtitleSettings.setSubtitleNoPTSDelay(configElement.value)
+
+	config.subtitles.subtitle_noPTSrecordingdelay = ConfigSelection(default=315000, choices=choiceList)
+	config.subtitles.subtitle_noPTSrecordingdelay.addNotifier(setSubtitleNoPTSDelay)
+
+	def setSubtitleBadTimingDelay(configElement):
+		eSubtitleSettings.setSubtitleBadTimingDelay(configElement.value)
+
+	config.subtitles.subtitle_bad_timing_delay = ConfigSelection(default=0, choices=choiceList)
+	config.subtitles.subtitle_bad_timing_delay.addNotifier(setSubtitleBadTimingDelay)
+
+	def setPangoSubtitleDelay(configElement):
+		eSubtitleSettings.setPangoSubtitleDelay(configElement.value)
+
+	config.subtitles.pango_subtitles_delay = ConfigSelection(default=0, choices=choiceList)
+	config.subtitles.pango_subtitles_delay.addNotifier(setPangoSubtitleDelay)
+
+	def setDVBSubtitleYellow(configElement):
+		eSubtitleSettings.setDVBSubtitleYellow(configElement.value)
 
 	config.subtitles.dvb_subtitles_yellow = ConfigYesNo(default=False)
-	config.subtitles.dvb_subtitles_original_position = ConfigSelection(default="0", choices=[
-		("0", _("Original")),
-		("1", _("Fixed")),
-		("2", _("Relative"))
+	config.subtitles.dvb_subtitles_yellow.addNotifier(setDVBSubtitleYellow)
+
+	def setDVBSubtitleOriginalPosition(configElement):
+		eSubtitleSettings.setDVBSubtitleOriginalPosition(configElement.value)
+
+	config.subtitles.dvb_subtitles_original_position = ConfigSelection(default=0, choices=[
+		(0, _("Original")),
+		(1, _("Fixed")),
+		(2, _("Relative"))
 	])
-	config.subtitles.subtitle_position = ConfigSelection(default="50", choices=[
-		"0",
-		"10",
-		"20",
-		"30",
-		"40",
-		"50",
-		"60",
-		"70",
-		"80",
-		"90",
-		"100",
-		"150",
-		"200",
-		"250",
-		"300",
-		"350",
-		"400",
-		"450"
-	])
+	config.subtitles.dvb_subtitles_original_position.addNotifier(setDVBSubtitleOriginalPosition)
+
+	def setDVBSubtitleCentered(configElement):
+		eSubtitleSettings.setDVBSubtitleCentered(configElement.value)
+
 	config.subtitles.dvb_subtitles_centered = ConfigYesNo(default=False)
-	config.subtitles.subtitle_bad_timing_delay = ConfigSelection(default="0", choices=subtitle_delay_choicelist)
-	config.subtitles.dvb_subtitles_backtrans = ConfigSelection(default="0", choices=[
-		("0", _("No transparency")),
-		("25", "10%"),
-		("50", "20%"),
-		("75", "30%"),
-		("100", "40%"),
-		("125", "50%"),
-		("150", "60%"),
-		("175", "70%"),
-		("200", "80%"),
-		("225", "90%"),
-		("255", _("Full transparency"))
+	config.subtitles.dvb_subtitles_centered.addNotifier(setDVBSubtitleCentered)
+
+	def setPangoSubtitleColors(configElement):
+		eSubtitleSettings.setPangoSubtitleColors(configElement.value)
+
+	config.subtitles.pango_subtitle_colors = ConfigSelection(default=1, choices=[
+		(0, _("Alternative")),
+		(1, _("White")),
+		(2, _("Yellow"))
 	])
-	config.subtitles.pango_subtitle_colors = ConfigSelection(default="1", choices=[
-		("0", _("Alternative")),
-		("1", _("White")),
-		("2", _("Yellow"))
-	])
+	config.subtitles.pango_subtitle_colors.addNotifier(setPangoSubtitleColors)
+
+	def setPangoSubtitleFontWitch(configElement):
+		eSubtitleSettings.setPangoSubtitleFontWitch(configElement.value)
+
 	config.subtitles.pango_subtitle_fontswitch = ConfigYesNo(default=True)
-	config.subtitles.pango_subtitles_delay = ConfigSelection(default="0", choices=subtitle_delay_choicelist)
-	config.subtitles.pango_subtitles_fps = ConfigSelection(default="1", choices=[
-		("1", _("Original")),
-		("23976", _("23.976")),
-		("24000", _("24")),
-		("25000", _("25")),
-		("29970", _("29.97")),
-		("30000", _("30"))
+	config.subtitles.pango_subtitle_fontswitch.addNotifier(setPangoSubtitleFontWitch)
+
+	def setPangoSubtitleFPS(configElement):
+		eSubtitleSettings.setPangoSubtitleFPS(configElement.value)
+
+	config.subtitles.pango_subtitles_fps = ConfigSelection(default=1, choices=[
+		(1, _("Original")),
+		(23976, "23.976"),
+		(24000, "24"),
+		(25000, "25"),
+		(29970, "29.97"),
+		(30000, "30")
 	])
+	config.subtitles.pango_subtitles_fps.addNotifier(setPangoSubtitleFPS)
+
+	def setPangoSubtitleRemovehi(configElement):
+		eSubtitleSettings.setPangoSubtitleRemovehi(configElement.value)
+
 	config.subtitles.pango_subtitle_removehi = ConfigYesNo(default=False)
+	config.subtitles.pango_subtitle_removehi.addNotifier(setPangoSubtitleRemovehi)
+
+	def setPangoSubtitleAutoRun(configElement):
+		eSubtitleSettings.setPangoSubtitleAutoRun(configElement.value)
+
 	config.subtitles.pango_autoturnon = ConfigYesNo(default=True)
+	config.subtitles.pango_autoturnon.addNotifier(setPangoSubtitleAutoRun)
 
 	config.autolanguage = ConfigSubsection()
 	audio_language_choices = [
