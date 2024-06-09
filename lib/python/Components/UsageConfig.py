@@ -3,7 +3,7 @@ from gettext import ngettext
 from skin import parameters
 from Components.Harddisk import harddiskmanager
 from Components.Console import Console
-from Components.config import ConfigSubsection, ConfigDirectory, ConfigYesNo, config, ConfigSelection, ConfigText, ConfigNumber, ConfigSet, ConfigLocations, ConfigSelectionNumber, ConfigClock, ConfigSlider, ConfigEnableDisable, ConfigSubDict, ConfigDictionarySet, ConfigInteger, ConfigPassword, ConfigIP, NoSave, ConfigBoolean
+from Components.config import ConfigSubsection, ConfigDirectory, ConfigYesNo, config, ConfigSelection, ConfigText, ConfigNumber, ConfigSet, ConfigLocations, ConfigSelectionNumber, ConfigClock, ConfigSlider, ConfigEnableDisable, ConfigSubDict, ConfigDictionarySet, ConfigInteger, ConfigSequence, ConfigPassword, ConfigIP, NoSave, ConfigBoolean
 from Tools.Directories import SCOPE_HDD, SCOPE_TIMESHIFT, defaultRecordingLocation, resolveFilename
 from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eSubtitleSettings ,eDVBLocalTimeHandler, eEPGCache
 from Components.About import GetIPsFromNetworkInterfaces
@@ -54,6 +54,9 @@ def InitUsageConfig():
 	config.usage.alternative_number_mode = ConfigYesNo(default=False)
 
 	config.misc.usegstplaybin3 = ConfigYesNo(default=False)
+
+	config.misc.spinnerPosition = ConfigSequence(default=[50, 50], limits=[(0, 1260), (0, 700)], seperator=",")
+
 	config.usage.informationExtraSpacing = ConfigYesNo(False)
 
 	def alternativeNumberModeChange(configElement):
