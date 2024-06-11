@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 from Screens.Screen import Screen
+from Screens.Setup import Setup
 from Screens.MessageBox import MessageBox
 from Plugins.Plugin import PluginDescriptor
 
@@ -7,12 +7,10 @@ from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Components.NimManager import nimmanager
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigInteger, ConfigFloat
-from Components.ConfigList import ConfigListScreen
 from Components.Sources.StaticText import StaticText
 from Components.ProgressBar import ProgressBar
 from Components.Pixmap import Pixmap
 from Components.ServiceList import refreshServiceList
-from gettext import ngettext
 
 from enigma import eCableScan, eDVBFrontendParametersCable, eTimer
 
@@ -63,7 +61,7 @@ class CableScan:
 class CableScanStatus(Screen):
 	skin = """
 	<screen position="center,115" size="420,180" title="Cable Scan">
-		<widget name="frontend" pixmap="icons/scan-c.png" position="5,5" size="64,64" transparent="1" alphaTest="on" />
+		<widget name="frontend" pixmap="icons/scan-c.png" position="5,5" size="64,64" transparent="1" alphatest="on" />
 		<widget name="scan_state" position="10,120" zPosition="2" size="400,30" font="Regular;18" />
 		<widget name="scan_progress" position="10,155" size="400,15" pixmap="progress_big.png" borderWidth="2" borderColor="#cccccc" />
 	</screen>"""
@@ -85,9 +83,9 @@ class CableScanStatus(Screen):
 
 		self["actions"] = ActionMap(["OkCancelActions"],
 			{
-			"ok": self.ok,
-			"cancel": self.cancel
-		})
+				"ok": self.ok,
+				"cancel": self.cancel
+			})
 
 		self.onFirstExecBegin.append(self.doServiceScan)
 
@@ -115,49 +113,27 @@ config.plugins.CableScan.modulation = ConfigSelection(
 		(str(eDVBFrontendParametersCable.Modulation_QAM128), "128-QAM"),
 		(str(eDVBFrontendParametersCable.Modulation_QAM256), "256-QAM")],
 	default=str(eDVBFrontendParametersCable.Modulation_QAM64))
-config.plugins.CableScan.auto = ConfigYesNo(default=False)
+config.plugins.CableScan.auto = ConfigYesNo(default=True)
 
 
-class CableScanScreen(ConfigListScreen, Screen):
-	skin = """
-	<screen position="center,115" size="520,390" title="Cable Scan">
-		<widget name="config" position="10,10" size="500,250" scrollbarMode="showOnDemand" />
-		<widget name="introduction" position="10,265" size="500,50" font="Regular;20" horizontalAlignment="center" />
-		<ePixmap pixmap="buttons/red.png" position="100,330" size="140,40" alphaTest="on"/>
-		<ePixmap pixmap="buttons/green.png" position="270,330" size="140,40" alphaTest="on"/>
-		<widget source="key_red" render="Label" position="100,330" zPosition="1" size="135,40" font="Regular;19" horizontalAlignment="center" verticalAlignment="center" backgroundColor="#9f1313" transparent="1"/>
-		<widget source="key_green" render="Label" position="270,330" zPosition="1" size="135,40" font="Regular;19" horizontalAlignment="center" verticalAlignment="center" backgroundColor="#1f771f" transparent="1"/>
-	</screen>"""
-
+class CableScanScreen(Setup):
 	def __init__(self, session, nimlist):
-		Screen.__init__(self, session)
-
-		self.setTitle(_("Cable Scan"))
-		self["key_red"] = StaticText(_("Cancel"))
-		self["key_green"] = StaticText(_("Save"))
-
-		self["actions"] = ActionMap(["SetupActions", "MenuActions"],
-		{
-			"ok": self.keyGo,
-			"cancel": self.keyCancel,
-			"save": self.keySave,
-			"menu": self.closeRecursive,
-		}, -2)
-
-		self.nimlist = nimlist
+		Setup.__init__(self, session, blue_button={'function': self.startScan, 'text': _("Start CableScan"), 'helptext': _("Start Cablescan")})
 		self.prevservice = None
+		self.setTitle(_("Cable Scan"))
+		self.nimlist = nimlist
+		self.createSetup()
 
-		self.list = []
-		self.list.append((_('Frequency'), config.plugins.CableScan.frequency))
-		self.list.append((_('Symbol rate'), config.plugins.CableScan.symbolrate))
-		self.list.append((_('Modulation'), config.plugins.CableScan.modulation))
-		self.list.append((_('Network ID') + _(' (0 - all networks)'), config.plugins.CableScan.networkid))
-		self.list.append((_("Use official channel numbering"), config.plugins.CableScan.keepnumbering))
-		self.list.append((_("HD list"), config.plugins.CableScan.hdlist))
-		self.list.append((_("Enable auto cable scan"), config.plugins.CableScan.auto))
-
-		ConfigListScreen.__init__(self, self.list, session)
-		self["introduction"] = Label(_("Configure your network settings and press OK to scan"))
+	def createSetup(self):
+		configList = []
+		configList.append((_('Frequency'), config.plugins.CableScan.frequency))
+		configList.append((_('Symbol rate'), config.plugins.CableScan.symbolrate))
+		configList.append((_('Modulation'), config.plugins.CableScan.modulation))
+		configList.append((_('Network ID') + _(' (0 - all networks)'), config.plugins.CableScan.networkid))
+		configList.append((_("Use official channel numbering"), config.plugins.CableScan.keepnumbering))
+		configList.append((_("HD list"), config.plugins.CableScan.hdlist))
+		configList.append((_("Enable auto cable scan"), config.plugins.CableScan.auto))
+		self["config"].list = configList
 
 	def restoreService(self):
 		if self.prevservice:
@@ -167,10 +143,6 @@ class CableScanScreen(ConfigListScreen, Screen):
 		self.restoreService()
 		config.plugins.CableScan.save()
 		self.close()
-
-	def keyGo(self):
-		config.plugins.CableScan.save()
-		self.startScan()
 
 	def getFreeTuner(self):
 		dvbc_tuners_mask = sum([2**int(x) for x in self.nimlist])
@@ -204,7 +176,7 @@ class CableScanScreen(ConfigListScreen, Screen):
 
 class CableScanAutoScreen(CableScanScreen):
 	def __init__(self, session, nimlist):
-		print("[CableScan] start")
+		print("[AutoCableScan] start")
 		Screen.__init__(self, session)
 		self.skinName = "Standby"
 
@@ -230,14 +202,14 @@ class CableScanAutoScreen(CableScanScreen):
 			del self.scan
 
 	def scanCompleted(self, result):
-		print("[CableScan] completed result = ", result)
+		print("[AutoCableScan] completed result = ", result)
 		refreshServiceList()
 		self.close(result > 0)
 
 	def Power(self):
 		from Screens.Standby import inStandby
 		inStandby.Power()
-		print("[CableScan] aborted due to power button pressed")
+		print("[AutoCableScan] aborted due to power button pressed")
 		self.close(True)
 
 	def createSummary(self):
@@ -250,14 +222,14 @@ CableScanAutoStartTimer = eTimer()
 
 
 def CableScanMain(session, **kwargs):
-	session.open(CableScanScreen, nimmanager.getEnabledNimListOfType("DVB-C"))
+		session.open(CableScanScreen, nimmanager.getEnabledNimListOfType("DVB-C"))
 
 
 def restartScanAutoStartTimer(reply=False):
 	if reply:
 		CableScanAutoStartTimer.startLongTimer(86400)
 	else:
-		print("[CableScan] Scan was not successful retry in one hour")
+		print("[AutoCableScan] Scan was not successful retry in one hour")
 		CableScanAutoStartTimer.startLongTimer(3600)
 
 
