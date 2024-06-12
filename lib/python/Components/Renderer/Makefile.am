@@ -5,5 +5,5 @@ install_PYTHON = \
 	FixedLabel.py PositionGauge.py Canvas.py CiModuleControl.py Picon.py Pig.py \
 	FrontpanelLed.py ChannelNumber.py VideoSize.py NextEpgInfo.py GaugeRender.py \
 	RunningText.py LcdPicon.py VtiEmuInfo.py VtiImageVersion.py \
-	PicCript.py PicEmu2.py DRRunningText.py AudioIcon.py VolumeText.py RatingIcon.py \
+	PicCript.py PicEmu2.py DRRunningText.py AudioIcon.py VolumeText.py RatingIcon.py
 
