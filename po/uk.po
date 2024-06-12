@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-02 14:05+0100\n"
+"POT-Creation-Date: 2024-05-21 17:44+0200\n"
 "PO-Revision-Date: 2022-09-27 16:12+0200\n"
 "Last-Translator: kvinto\n"
 "Language-Team: kvinto\n"
@@ -381,8 +381,8 @@ msgstr "(Переключити)"
 msgid "(activated +%d min)"
 msgstr "(активовано +%d хв)"
 
-msgid "(current)"
-msgstr "(поточний)"
+msgid "(current image)"
+msgstr "(поточний імідж)"
 
 msgid "(empty)"
 msgstr "(відсутній)"
@@ -1051,9 +1051,6 @@ msgstr "Мистецтво/Культура (без музики, загальн
 msgid "Aruba"
 msgstr "Аруба"
 
-msgid "As defined by the skin"
-msgstr "Як визначено скіном"
-
 msgid "Ask user"
 msgstr "Запитати користувача"
 
@@ -1661,6 +1658,9 @@ msgstr "Канал"
 msgid "Channel Info"
 msgstr "Інформація про канал"
 
+msgid "Channel Selection"
+msgstr "Вибір Каналів"
+
 msgid "Channel context menu"
 msgstr "Контекстне меню каналу"
 
@@ -1956,17 +1956,17 @@ msgstr "Налаштування способу створення імен за
 msgid "Configure how the fan should operate"
 msgstr "Налаштування роботи вентилятора"
 
-msgid "Configure if and how crypto icons will be shown in the channel selection list."
-msgstr "Вкажіть, чи потрібно показати іконку кодування в списку каналів перед назвою каналу чи після."
+msgid "Configure if and how crypto icons will be shown in the channel selection list (left alignment only available in single line mode)."
+msgstr "Налаштуйте, чи відображатимуться іконку кодування у списку вибору каналів (вирівнювання за лівим краєм доступне лише в однорядковому режимі)."
 
 msgid "Configure if and how long the latest service in Picture in Picture mode will be remembered."
 msgstr "Налаштуйте, чи запам’ятовувати і як довго останній канал в режимі Картинка в картинці."
 
-msgid "Configure if and how service type icons will be shown in the channel selection list."
-msgstr "Налаштування показу іконок типів каналу і місце їх розташування у списку каналів."
+msgid "Configure if and how service type icons will be shown in the channel selection list (left alignment only available in single line mode)."
+msgstr "Налаштування показу іконок типів каналу і місце їх розташування у списку каналів (вирівнювання за лівим краєм доступне лише в однорядковому режимі)."
 
-msgid "Configure if and how the record indicator will be shown in the channel selection list."
-msgstr "Вкажіть, чи потрібно в селекторі каналів показувати індикатор запису і виберіть варіант показу іконки."
+msgid "Configure if and how the record indicator will be shown in the channel selection list (left alignment only available in single line mode)."
+msgstr "Налаштуйте, чи буде індикатор запису відображатися у списку вибору каналу (вирівнювання за лівим краєм доступне лише в однорядковому режимі)."
 
 msgid "Configure if and how wide columns will be shown in the channel selection list."
 msgstr "Налаштування відображення списку каналів стовпчиком, де номер, назва і опис каналу будуть мати відповідну ширину."
@@ -2304,7 +2304,7 @@ msgstr "Продовжити відтворення"
 msgid "Continue playing"
 msgstr "Продовжити перегляд"
 
-msgid "Continues play (loop)"
+msgid "Continuous play (loop)"
 msgstr "Безперервне відтворення (петля)"
 
 msgid "Contrast"
@@ -2643,6 +2643,9 @@ msgstr "Затримка в мілісекундах перед початком
 msgid "Delay in miliseconds between scrolling characters on display."
 msgstr "Затримка в мілісекундах між прокруткою символів на дисплеї."
 
+msgid "Delay when closing a stream relay service before reallocating the tuner for another service. Using '0' is only recommended for boxes with multiple satellite tuners."
+msgstr ""
+
 msgid "Delete"
 msgstr "Видалити"
 
@@ -2699,6 +2702,12 @@ msgstr "Розкодувати приймачем http-потоку"
 
 msgid "Descramble sending http streams"
 msgstr "Дешифрувати відправки HTTP потоків"
+
+msgid "Descramble service via streamrelay port"
+msgstr "Послуга розкодування через порт streamrelay"
+
+msgid "Descramble service via streamrelay url"
+msgstr "Послуга розкодування через URL-адресу streamrelay"
 
 msgid "Description"
 msgstr "Опис"
@@ -2804,6 +2813,9 @@ msgstr "Вимкнути поточні події, але не майбутні
 
 msgid "Disable move mode"
 msgstr "Вимкнути режим переміщення"
+
+msgid "Disable operator profiles"
+msgstr "Відключити профілі оператора"
 
 msgid "Disable timer"
 msgstr "Вимкнути таймер"
@@ -3104,10 +3116,6 @@ msgstr "ЕПГ:"
 msgid "ERROR - failed to scan (%s)!"
 msgstr "ПОМИЛКА - сканування невдале (%s)!"
 
-#, python-format
-msgid "ERROR downloading file %s/%s"
-msgstr "ПОМИЛКА завантаження файлу %s/%s"
-
 msgid "East"
 msgstr "Схід"
 
@@ -3345,8 +3353,8 @@ msgstr "Введіть пін-код"
 msgid "Enter URL"
 msgstr "Введіть URL"
 
-msgid "Enter an URL where alternative images could be listed for FlashImage. Enter text 'all' for automatic access of many images."
-msgstr "Введіть URL-адресу, де можуть бути перераховані альтернативні іміджі. Введіть текст 'all' для автоматичного доступу до багатьох іміджів."
+msgid "Enter an URL where alternative images could be listed for FlashImage."
+msgstr "Введіть URL-адресу, де можуть зберігатися альтернативні іміджі для FlashImage."
 
 msgid "Enter if you are in the east or west hemisphere."
 msgstr "Введіть де Ви знаходитесь на східній чи західній півкулі."
@@ -4174,6 +4182,9 @@ msgstr "HDMI-CEC адреса"
 msgid "HDMI-CEC setup"
 msgstr "Налаштування HDMI-CEC"
 
+msgid "HDMI-In"
+msgstr ""
+
 msgid "HDR10 support"
 msgstr "Підтримка HDR10"
 
@@ -4578,6 +4589,12 @@ msgstr "Налаштування пристрою введення"
 
 msgid "Input devices"
 msgstr "Пристрої введення"
+
+msgid "Insert Service"
+msgstr "Додати Канал"
+
+msgid "Insert entry"
+msgstr "Додати запис"
 
 msgid "Install"
 msgstr "Встановити"
@@ -5012,6 +5029,9 @@ msgstr "Люксембурзька"
 
 msgid "MB"
 msgstr "МБ"
+
+msgid "MENU"
+msgstr ""
 
 msgid "MHz"
 msgstr "МГц"
@@ -5756,6 +5776,9 @@ msgstr "Кількість повторення тексту на дисплеї
 msgid "Number or SMS style data entry"
 msgstr "Введення даних по номеру, як SMS"
 
+msgid "OE Version: "
+msgstr "Версія OE: "
+
 msgid "OK"
 msgstr "OK"
 
@@ -5933,8 +5956,14 @@ msgstr "ПІД РМТ"
 msgid "PPanel"
 msgstr "ПіП Панель"
 
+msgid "PREVIOUS"
+msgstr ""
+
 msgid "PULSe 4K(mini)"
 msgstr "PULSe 4K(mini)"
+
+msgid "PVR"
+msgstr ""
 
 msgid "Package list update"
 msgstr "Оновлення списку пакетів"
@@ -6052,6 +6081,9 @@ msgstr "Поштова скринька"
 msgid "Pilot"
 msgstr "Пілот"
 
+msgid "Pin Userbouquet"
+msgstr "Пін Фаворита користувача"
+
 msgid "Pitcairn"
 msgstr "Піткерн"
 
@@ -6108,6 +6140,12 @@ msgstr "Відтворити попередній"
 
 msgid "Play recorded movies..."
 msgstr "Відтворити записані передачі..."
+
+msgid "Play service with streamrelay"
+msgstr ""
+
+msgid "Play service without streamrelay"
+msgstr ""
 
 msgid "Please add titles to the compilation."
 msgstr "Будь ласка, додайте назву до компіляції."
@@ -6669,6 +6707,9 @@ msgstr "Python інтерфейс для /tmp/mmi.socket"
 
 msgid "Python version: "
 msgstr "Версія Python: "
+
+msgid "Pythonscript"
+msgstr "Скрипт Python"
 
 msgid "Qatar"
 msgstr "Катар"
@@ -7519,6 +7560,9 @@ msgstr "Виберіть Швидкий DiSEqC, якщо ваша антена �
 msgid "Select HDD"
 msgstr "Вибрати HDD"
 
+msgid "Select Service"
+msgstr "Вибрати Канал"
+
 msgid "Select Softcam"
 msgstr "Вибір Емулятора"
 
@@ -7634,14 +7678,26 @@ msgstr "Виберіть частоту оновлення"
 msgid "Select satellites"
 msgstr "Виберіть супутники"
 
+msgid "Select service name"
+msgstr "Вибрати назва каналу"
+
 msgid "Select service to add..."
 msgstr "Виберіть канал, щоб додати..."
+
+msgid "Select service type"
+msgstr "Вибрати тип каналу"
 
 msgid "Select slot"
 msgstr "Виберіть слот"
 
 msgid "Select sort method:"
 msgstr "Виберіть метод сортування:"
+
+msgid "Select stream URL"
+msgstr "Вибір URL стріму"
+
+msgid "Select stream type"
+msgstr "Вибір типу стріму"
 
 msgid "Select target folder"
 msgstr "Виберіть папку призначення"
@@ -7699,6 +7755,9 @@ msgstr "Виберіть shift лише для наступного символ
 
 msgid "Select the time zone within the area or region."
 msgstr "Виберіть Ваш часовий пояс у межах області чи регіону."
+
+msgid "Select the timer from the fallback tuner by default"
+msgstr "Виберіть таймер із резервного тюнера за замовчуванням"
 
 msgid "Select the tuner that controls the motorised dish."
 msgstr "Виберіть тюнер, який керує моторизованою антеною."
@@ -7815,6 +7874,12 @@ msgstr "Канал і PIDи"
 msgid "Service ID"
 msgstr "ID Каналу"
 
+msgid "Service Name"
+msgstr "Назва Каналу"
+
+msgid "Service Type"
+msgstr "Тип Каналу"
+
 msgid "Service belongs to a parental protected bouquet"
 msgstr "Канал є у списку батьківькому контролю"
 
@@ -7845,6 +7910,9 @@ msgstr "Інформація про канал - текучі значення �
 msgid "Service info - tuner setting values"
 msgstr "Інформація про канал - текучі налаштування тюнера"
 
+msgid "Service info font size"
+msgstr "Розмір шрифту програми каналу"
+
 msgid ""
 "Service invalid!\n"
 "(Timeout reading PMT)"
@@ -7855,12 +7923,18 @@ msgstr ""
 msgid "Service name"
 msgstr "Назва каналу"
 
+msgid "Service name font size"
+msgstr "Розмір шрифту назви каналу"
+
 msgid ""
 "Service not found!\n"
 "(SID not found in PAT)"
 msgstr ""
 "Канал не знайдено!\n"
 "(SID не знайдено в PAT)"
+
+msgid "Service number font size"
+msgstr "Розмір шрифту номера каналу"
 
 msgid "Service reference"
 msgstr "Референс Каналу"
@@ -7950,8 +8024,8 @@ msgstr "Встановіть пароль OpenWebif від резервного 
 msgid "Set the port of the OpenWebif from your fallback tuner"
 msgstr "Встановіть порт OpenWebif із резервного тюнера"
 
-msgid "Set the type of the progress indication in the channel selection screen."
-msgstr "Встановіть тип відображення прогресу в меню вибору каналів."
+msgid "Set the type of the progress indication in the channel selection screen (right alignment only available in single line mode)."
+msgstr "Встановіть тип індикації прогресу на екрані вибору каналу (вирівнювання по правому краю доступне лише в однорядковому режимі)."
 
 msgid "Set time window to 1 hour"
 msgstr "Встановіть час вікна на 1 годину"
@@ -8049,6 +8123,9 @@ msgstr "Показати 'VCR scart' в головному меню"
 msgid "Show WLAN status"
 msgstr "Показати статус Wi-Fi мережі"
 
+msgid "Show additional information on infobar"
+msgstr "Показати додаткову інформацію в Інфобарі"
+
 msgid "Show alternatives"
 msgstr "Показати альтернативу"
 
@@ -8081,6 +8158,9 @@ msgstr "Показати інфо кодування в Інфобарі"
 
 msgid "Show detailed event info"
 msgstr "Показати докладну інформацію події"
+
+msgid "Show disabled timers (local only)"
+msgstr ""
 
 msgid "Show event details"
 msgstr "Показати деталі події"
@@ -8208,6 +8288,9 @@ msgstr "Показати іконки типу каналу"
 msgid "Show servicelist or movies"
 msgstr "Показати списки каналів або записів"
 
+msgid "Show simple second infobar"
+msgstr "Показати простий другий інфобар"
+
 msgid "Show single service EPG"
 msgstr "Показати одиночний телегід каналу"
 
@@ -8324,9 +8407,6 @@ msgstr "Простий"
 
 msgid "Single EPG"
 msgstr "Простий ЕПГ"
-
-msgid "Single line mode"
-msgstr "Режим одного рядка"
 
 msgid "Single satellite"
 msgstr "Один супутник"
@@ -8785,6 +8865,15 @@ msgstr "Збережена позиція"
 msgid "Stream"
 msgstr "Потік"
 
+msgid "Stream Relay delay"
+msgstr "Затримка ретрансляції потоку"
+
+msgid "Stream Type"
+msgstr "Тип Потіку"
+
+msgid "Stream URL"
+msgstr "URL Потіку"
+
 msgid "Stream request"
 msgstr "Запит потоку"
 
@@ -9011,7 +9100,7 @@ msgstr "ТЕКСТ"
 #. TRANSLATORS: Add here whatever should be shown in the "translator" about screen, up to 6 lines (use \n for newline)
 msgid "TRANSLATOR_INFO"
 msgstr ""
-"Переклад:  kvinto - 29.10.2023\n"
+"Переклад:  kvinto - 11.06.2024\n"
 "Пошта:  badsystem@ukr.net"
 
 msgid "TS file is too large for ISO9660 level 1!"
@@ -9110,6 +9199,9 @@ msgstr "Час, що залишився до кінця передачі %d хв
 msgid "The DVD standard doesn't support H.264 (HDTV) video streams. Do you want to create a special format data DVD (which will not play in stand-alone DVD players) instead?"
 msgstr "DVD не підтримує стандарт H.264 (HDTV) відео потоків. Ви хочете створити спеціальний формат DVD (який можливо не програватиметься в стаціонарних DVD програвачах)?"
 
+msgid "The IP address from the streamrelay server that is used to descramble services that can only be encrypted via streamrelay"
+msgstr ""
+
 msgid "The PIN code has been changed successfully."
 msgstr "ПІН-код змінено успішно."
 
@@ -9140,6 +9232,11 @@ msgid ""
 msgstr ""
 "Папка %s не має прав на запис.\n"
 "Впевніться чи дійсно є права на запис папки."
+
+msgid ""
+"The enigma.info file for the boxinformation is not available or the content is invalid.\n"
+"Press any key to continue?"
+msgstr ""
 
 msgid "The following files were found..."
 msgstr "Наступні файли було знайдено..."
@@ -9200,6 +9297,9 @@ msgstr ""
 #, python-format
 msgid "The path %s already exists."
 msgstr "Цей шлях %s вже існує."
+
+msgid "The port from the streamrelay server that is used to descramble services that can only be encrypted via streamrelay"
+msgstr ""
 
 #, python-format
 msgid "The results have been written to %s"
@@ -9282,6 +9382,9 @@ msgstr ""
 
 msgid "This DVD RW medium is already formatted - reformatting will erase all content on the disc."
 msgstr "Цей DVD-RW диск вже відформатований - переформатування знищить всі дані на диску."
+
+msgid "This allows you to change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size"
+msgstr ""
 
 msgid "This bouquet is protected by a parental control PIN"
 msgstr "Цей фаворит захищений батьківським контролем"
@@ -9946,6 +10049,9 @@ msgstr "Зняти мітку з каналу позначеного, як 3D к
 msgid "Unmount"
 msgstr "Відключити"
 
+msgid "Unpin Userbouquet"
+msgstr "Зняти Пін у фаворитах"
+
 msgid "Unsupported"
 msgstr "Не підтримуєтья"
 
@@ -10050,6 +10156,9 @@ msgstr "Використовувати інформацію Virgin ЕПГ, ко�
 msgid "Use a gateway"
 msgstr "Використовувати шлюз"
 
+msgid "Use alternative skin"
+msgstr "Використати альтернативний скін"
+
 msgid "Use as PiP if possible"
 msgstr "Використовуйте як PiP, якщо це можливо"
 
@@ -10082,6 +10191,12 @@ msgstr "Використовувати оригінальну позицію т�
 
 msgid "Use power measurement"
 msgstr "Використовувати вимірювання потужності"
+
+msgid "Use skin default"
+msgstr "Встановити скін за замовчуванням"
+
+msgid "Use the alternative screen"
+msgstr "Використати альтернативний екран"
 
 msgid "Use the network wizard to configure selected network adapter"
 msgstr "Використати Майстер мережі для налаштування вибраного мережевого адаптера"
@@ -10478,8 +10593,14 @@ msgstr "Західна Сахара"
 msgid "What type of service scan do you want?"
 msgstr "Який тип каналів Ви хочете сканувати?"
 
+msgid "When enabled a simplified version from the second infobar is shown. This can also be toggled instantly by holding the OK buttin when the second infobar is visible. The infobar will shortly disappear and then shown in the other mode."
+msgstr ""
+
 msgid "When enabled enigma2 will load unlinked userbouquets. This means that userbouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are updated"
 msgstr "Якщо увімкнено, enigma2 завантажуватиме не зв’язані списки користувача. Це означає, що користувацькі списки доступні, але не включені до файлів bouquets.tv або bouquets.radio, все одно будуть завантажені. Це дозволяє, наприклад, зберігати власний список користувачів під час оновлення встановлених налаштувань"
+
+msgid "When enabled extra information is shown on the infobar. This can also be toggled instantly by holding the OK button when the inforbar is not visible."
+msgstr ""
 
 msgid "When enabled the Picture in Picture window can be closed with 'exit' button."
 msgstr "Якщо увімкнено, вікно Картинка в Картинці можна закрити кнопкою 'exit'."
@@ -10501,6 +10622,9 @@ msgstr "Якщо увімкнено, телеприставка може про�
 
 msgid "When enabled the timer from the fallback tuner is imported"
 msgstr "Якщо увімкнено, таймер із резервного тюнера імпортується"
+
+msgid "When enabled the timer from the fallback tuner is the default timer"
+msgstr "Якщо ввімкнено, таймер із резервного тюнера є таймером за умовчанням"
 
 msgid "When enabled then when you select a new channel in the channel selection the channel selection will not close. It will only close when you select the current playing service. This is a kind of preview mode"
 msgstr "Якщо увімкнено, тоді, коли Ви вибираєте новий канал у виборі каналів, вибір каналу не закриватиметься. Він закриється лише тоді, коли Ви вибрали поточну послугу відтворення. Це свого роду режим попереднього перегляду"
@@ -11467,6 +11591,9 @@ msgstr "захопити цей кадр як растрове зображен�
 msgid "green"
 msgstr "зелений"
 
+msgid "half an hour"
+msgstr ""
+
 msgid "handicraft"
 msgstr "ремесло"
 
@@ -11583,6 +11710,9 @@ msgstr "медицина/фізіологія/психологія"
 
 msgid "menu"
 msgstr "меню"
+
+msgid "min"
+msgstr "хв"
 
 msgid "mins"
 msgstr "хв"
@@ -12147,3 +12277,9 @@ msgstr "переключений"
 
 msgid "®"
 msgstr "®"
+
+msgid "°E"
+msgstr ""
+
+msgid "°W"
+msgstr ""
