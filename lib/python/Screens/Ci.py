@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+from Screens.ChoiceBox import ChoiceBox
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Tools.BoundFunction import boundFunction
@@ -6,7 +6,7 @@ from Components.Sources.StaticText import StaticText
 from Components.ActionMap import ActionMap
 from Components.ActionMap import NumberActionMap
 from Components.Label import Label
-from Components.config import config, ConfigEnableDisable, ConfigSubsection, ConfigSelection, ConfigSubList, KEY_LEFT, KEY_RIGHT, KEY_0, ConfigNothing, ConfigPIN, ConfigYesNo, NoSave
+from Components.config import config, ConfigEnableDisable, ConfigSubsection, ConfigSelection, ConfigSubList, KEY_LEFT, KEY_RIGHT, KEY_0, ConfigNothing, ConfigPIN, ConfigYesNo, NoSave, ConfigBoolean
 from Components.ConfigList import ConfigList, ConfigListScreen
 from Components.SystemInfo import BoxInfo
 from enigma import eTimer, eDVBCI_UI
@@ -79,9 +79,7 @@ class MMIDialog(Screen):
 	def __init__(self, session, slotid, action, handler=eDVBCI_UI.getInstance(), wait_text="", screen_data=None):
 		Screen.__init__(self, session)
 
-		print("[CI] MMIDialog with action %s" % str(action))
-
-		self["key_menu"] = StaticText(_("MENU"))
+		print(f"[CI] MMIDialog with action {str(action)}")
 
 		self.mmiclosed = False
 		self.tag = None
@@ -94,6 +92,7 @@ class MMIDialog(Screen):
 		self["title"] = Label("")
 		self["subtitle"] = Label("")
 		self["bottom"] = Label("")
+		self["key_menu"] = StaticText(_("MENU"))
 		self["entries"] = ConfigList([])
 
 		self["actions"] = NumberActionMap(["SetupActions", "MenuActions"],
@@ -398,13 +397,14 @@ CiHandler = CiMessageHandler()
 class CiSelection(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		self.setTitle(_("Common Interface"))
-		self["actions"] = ActionMap(["OkCancelActions", "CiSelectionActions"],
+		self.setTitle(_("Setup"))
+		self["actions"] = ActionMap(["OkCancelActions", "CiSelectionActions", "ColorActions"],
 			{
 				"left": self.keyLeft,
-				"right": self.keyLeft,
+				"right": self.keyRight,
 				"ok": self.okbuttonClick,
-				"cancel": self.cancel
+				"cancel": self.cancel,
+				"red": self.cancel
 			}, -1)
 
 		self.dlg = None
@@ -425,6 +425,7 @@ class CiSelection(Screen):
 		self["entries"] = menuList
 		self["entries"].onSelectionChanged.append(self.selectionChanged)
 		self["text"] = Label("")
+		self["key_red"] = StaticText(_("Exit"))
 		self.onLayoutFinish.append(self.layoutFinished)
 
 	def layoutFinished(self):
@@ -518,9 +519,13 @@ class CiSelection(Screen):
 		if cur and len(cur) > 2:
 			action = cur[2]
 			slot = cur[3]
-			if action == 3:
-				pass
-			elif action == 0:  # reset
+			if action < 0 or action == 3:
+				if isinstance(cur[1], ConfigBoolean):
+					self.keyRight()
+				elif isinstance(cur[1], ConfigSelection):
+					pass
+					self.keySelection()
+			elif action == 0: #reset
 				eDVBCI_UI.getInstance().setReset(slot)
 				authFile = f"/etc/ciplus/ci_auth_slot_{slot}.bin"
 				if exists(authFile):
@@ -535,6 +540,20 @@ class CiSelection(Screen):
 				self.session.openWithCallback(self.cancelCB, MessageBox, _("The saved PIN was cleared."), MessageBox.TYPE_INFO)
 			elif action == 2 and self.state[slot] == 2:
 				self.dlg = self.session.openWithCallback(self.dlgClosed, MMIDialog, slot, action)
+
+	def keySelection(self):
+		currConfig = self["entries"].getCurrent()
+		if currConfig and len(currConfig[1].choices.choices) > 1:
+			self.session.openWithCallback(
+				self.keySelectionCallback, ChoiceBox, title=currConfig[0],
+				list=list(zip(currConfig[1].description, currConfig[1].choices)),
+				selection=currConfig[1].getIndex(),
+				keys=[]
+			)
+
+	def keySelectionCallback(self, answer):
+		if answer:
+			self["entries"].getCurrent()[1].value = answer[1]
 
 	def cancelCB(self, value):
 		pass
