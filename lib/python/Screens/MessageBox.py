@@ -131,7 +131,7 @@ class MessageBox(Screen):
 		self.onLayoutFinish.append(self.layoutFinished)
 
 	def __repr__(self):
-		return "%s(%s)" % (str(type(self)), self.text)
+		return "%s(%s)" % (str(type(self)), self.text if hasattr(self, "text") else "<title>")
 
 	def layoutFinished(self):
 		if self.list:

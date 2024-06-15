@@ -13,12 +13,17 @@ class Pixmap(GUIComponent):
 
 	def __init__(self):
 		GUIComponent.__init__(self)
+		self.pixmap = None
 		self.xOffset = 0
 		self.yOffset = 0
 
 	def getSize(self):
 		size = self.instance.size()
 		return size.width(), size.height()
+
+	def setPixmap(self, pixmap):
+		self.pixmap = pixmap
+		self.instance.setPixmap(self.pixmap)
 
 	def applySkin(self, desktop, screen):
 		if self.skinAttributes is not None:
