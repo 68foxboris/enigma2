@@ -42,8 +42,7 @@ def PipPigMode(value):
 					import skin
 					x, y, w, h = skin.parameters.get("PipHidePosition", (16, 16, 16, 16))
 					pip = InfoBar.instance.session.pip
-					pip.move(x, y, doSave=False)
-					pip.resize(w, h, doSave=False)
+					pip.moveAndResizeToHidePosition(x, y, w, h)
 				PipPigModeEnabled = True
 		else:
 			PipPigModeTimer.start(100, True)
@@ -102,11 +101,10 @@ class PictureInPicture(Screen):
 		self.relocate()
 		self.setExternalPiP(config.av.pip_mode.value == "external")
 
-	def move(self, x, y, doSave=True):
-		if doSave:
-			config.av.pip.value[0] = x
-			config.av.pip.value[1] = y
-			config.av.pip.save()
+	def move(self, x, y):
+		config.av.pip.value[0] = x
+		config.av.pip.value[1] = y
+		config.av.pip.save()
 		w = config.av.pip.value[2]
 		h = config.av.pip.value[3]
 		if config.av.pip_mode.value == "cascade":
@@ -123,11 +121,10 @@ class PictureInPicture(Screen):
 			y = 0
 		self.instance.move(ePoint(x, y))
 
-	def resize(self, w, h, doSave=True):
-		if doSave:
-			config.av.pip.value[2] = w
-			config.av.pip.value[3] = h
-			config.av.pip.save()
+	def resize(self, w, h):
+		config.av.pip.value[2] = w
+		config.av.pip.value[3] = h
+		config.av.pip.save()
 		if config.av.pip_mode.value == "standard":
 			self.instance.resize(eSize(*(w, h)))
 			self["video"].instance.resize(eSize(*(w, h)))
@@ -152,6 +149,11 @@ class PictureInPicture(Screen):
 	def setSizePosMainWindow(self, x=0, y=0, w=0, h=0):
 		if BoxInfo.getItem("VideoDestinationConfigurable"):
 			self["video"].instance.setFullScreenPosition(eRect(x, y, w, h))
+
+	def moveAndResizeToHidePosition(self, x, y, w, h):
+		self.instance.move(ePoint(x, y))
+		self.instance.resize(eSize(*(w, h)))
+		self["video"].instance.resize(eSize(*(w, h)))
 
 	def setExternalPiP(self, onoff):
 		if BoxInfo.getItem("HasExternalPIP"):
@@ -189,7 +191,8 @@ class PictureInPicture(Screen):
 		if service is None:
 			return False
 		from Screens.InfoBarGenerics import streamrelay
-		ref, isStreamRelay = streamrelay.streamrelayChecker(self.resolveAlternatePipService(service))
+		orig_ref = self.resolveAlternatePipService(service)
+		ref = orig_ref and streamrelay.streamrelayChecker(orig_ref)
 		if ref:
 			if BoxInfo.getItem("CanNotDoSimultaneousTranscodeAndPIP") and StreamServiceList:
 				self.pipservice = None
@@ -199,19 +202,19 @@ class PictureInPicture(Screen):
 					AddPopup(text="PiP...\n" + _("Connected transcoding, limit - no PiP!"), type=MessageBox.TYPE_ERROR, timeout=5, id="ZapPipError")
 				return False
 			if ref.toString().startswith("4097"):
-				self.pipservice = None
-				self.currentService = None
-				self.currentServiceReference = None
+				# Change to service type 1 and try to play a stream as type 1
+				ref = eServiceReference("1" + ref.toString()[4:])
+			if not self.isPlayableForPipService(orig_ref):
 				if not config.usage.hide_zap_errors.value:
-					AddPopup(text=_("Service type 4097 incorrect for PiP!"), type=MessageBox.TYPE_ERROR, timeout=5, id="ZapPipError")
+					AddPopup(text="PiP...\n" + _("No free tuner!"), type=MessageBox.TYPE_ERROR, timeout=5, id="ZapPipError")
 				return False
 			self.pipservice = eServiceCenter.getInstance().play(ref)
 			if self.pipservice and not self.pipservice.setTarget(1, True):
 				if hasattr(self, "dishpipActive") and self.dishpipActive is not None:
-					self.dishpipActive.startPiPService(ref)
+					self.dishpipActive.startPiPService(orig_ref)
 				self.pipservice.start()
 				self.currentService = service
-				self.currentServiceReference = ref
+				self.currentServiceReference = orig_ref
 				print("[PictureInPicture] playing pip service", ref and ref.toString())
 				return True
 			else:
