@@ -259,7 +259,7 @@ class PowerKey:
 				for x in root.findall("menu"):
 					if x.get("key") == "shutdown":
 						self.session.infobar = self
-						menu_screen = self.session.open(MainMenu, x)
+						menu_screen = self.session.openWithCallback(self.MenuClosed, MainMenu, x)
 						menu_screen.setTitle(_("Standby / restart"))
 						break
 
@@ -504,6 +504,7 @@ from Components.config import config, configfile, ConfigText, ConfigYesNo, Confi
 config.crash = ConfigSubsection()
 config.crash.debugMultiBoot = ConfigYesNo(default=False)
 config.crash.debugKeyboards = ConfigYesNo(default=False)
+config.crash.debugOpkg = ConfigYesNo(default=False)
 config.crash.debugRemoteControls = ConfigYesNo(default=False)
 config.crash.debugScreens = ConfigYesNo(default=False)
 config.crash.debugSkin = ConfigYesNo(default=False)
@@ -514,17 +515,6 @@ config.crash.debugDVBScan = ConfigYesNo(default=False)
 config.plugins = ConfigSubsection()
 config.plugins.remotecontroltype = ConfigSubsection()
 config.plugins.remotecontroltype.rctype = ConfigInteger(default=0)
-
-
-# New Plugin Style
-config.misc.plugin_style = ConfigSelection(default="normallstyle", choices=[
-	("normallstyle", _("Normall Style")),
-	("newstyle1", _("New Style 1")),
-	("newstyle2", _("New Style 2")),
-	("newstyle3", _("New Style 3")),
-	("newstyle4", _("New Style 4")),
-	("newstyle5", _("New Style 5")),
-	("newstyle6", _("New Style 6"))])
 
 enigma.eProfileWrite("InitSetupDevices")
 import Components.SetupDevices
