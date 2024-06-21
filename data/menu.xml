@@ -150,7 +150,7 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 			<item key="parental_setup" weight="15" level="0" text="Parental control"><screen module="ParentalControlSetup" screen="ParentalControlSetup"/></item>
 			<item key="factory_reset" weight="15" level="0" text="Factory reset"><screen module="FactoryReset" screen="FactoryReset"/></item>
 			<item key="flash_online" level="0" text="Flash image Online" description="Download and flash images on your device." weight="13"><screen module="FlashManager" screen="FlashManager" /></item>
-			<item key="software_update" weight="15" level="0" text="Software update"><screen module="SoftwareUpdate" screen="UpdatePlugin"/></item>
+			<!--<item key="software_update" weight="15" level="0" text="Software update"><screen module="SoftwareUpdate" screen="UpdatePlugin"/></item>-->
 			<item key="backup_image" level="0" text="Image Backup" description="Backup your running %s %s image to HDD or USB." weight="19"><plugin system="SoftwareManager" screen="ImageBackup" /></item>
 		</menu>
 
