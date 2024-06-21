@@ -13,7 +13,7 @@ from Components.Renderer.FrontpanelLed import ledPatterns, PATTERN_ON, PATTERN_O
 from Components.ServiceList import refreshServiceList
 from Components.SystemInfo import BoxInfo
 from os import makedirs
-from os.path import exists, join as pathjoin, normpath
+from os.path import exists, isfile, join as pathjoin, normpath
 import os
 import locale
 
@@ -346,20 +346,34 @@ def InitUsageConfig():
 		choicelist.append((str(i), ngettext("%d minute", "%d minutes", m) % m))
 	config.usage.pip_last_service_timeout = ConfigSelection(default="0", choices=choicelist)
 
-	if not os.path.exists(resolveFilename(SCOPE_HDD)):
+	if not exists(resolveFilename(SCOPE_HDD)):
 		try:
 			os.mkdir(resolveFilename(SCOPE_HDD), 0o755)
 		except (IOError, OSError):
 			pass
-	defaultValue = resolveFilename(SCOPE_HDD)
-	config.usage.default_path = ConfigSelection(default=defaultValue, choices=[(defaultValue, defaultValue)])
+	defaultPath = resolveFilename(SCOPE_HDD)
+	config.usage.default_path = ConfigSelection(default=defaultPath, choices=[(defaultPath, defaultPath)])
 	config.usage.default_path.load()
-	if config.usage.default_path.saved_value:
-		savedValue = pathjoin(config.usage.default_path.saved_value, "")
-		if savedValue and savedValue != defaultValue:
-			config.usage.default_path.setChoices([(defaultValue, defaultValue), (savedValue, savedValue)], default=defaultValue)
-			config.usage.default_path.value = savedValue
+	savedPath = config.usage.default_path.saved_value
+	if savedPath:
+		savedPath = pathjoin(savedPath, "")
+		if savedPath and savedPath != defaultPath:
+			config.usage.default_path.setChoices(default=defaultPath, choices=[(defaultPath, defaultPath), (savedPath, savedPath)])
+			config.usage.default_path.value = savedPath
 	config.usage.default_path.save()
+	currentPath = config.usage.default_path.value
+	print("[UsageConfig] Checking/Creating current movie directory '%s'." % currentPath)
+	try:
+		makedirs(currentPath, 0o755, exist_ok=True)
+	except OSError as err:
+		print("[UsageConfig] Error %d: Unable to create current movie directory '%s'!  (%s)" % (err.errno, currentPath, err.strerror))
+		if defaultPath != currentPath:
+			print("[UsageConfig] Checking/Creating default movie directory '%s'." % defaultPath)
+			try:
+				makedirs(defaultPath, 0o755, exist_ok=True)
+			except OSError as err:
+				print("[UsageConfig] Error %d: Unable to create default movie directory '%s'!  (%s)" % (err.errno, defaultPath, err.strerror))
+
 	choiceList = [("<default>", "<default>"), ("<current>", "<current>"), ("<timer>", "<timer>")]
 	config.usage.timer_path = ConfigSelection(default="<default>", choices=choiceList)
 	config.usage.timer_path.load()
@@ -377,28 +391,50 @@ def InitUsageConfig():
 			config.usage.instantrec_path.setChoices(choiceList + [(savedValue, savedValue)], default="<default>")
 			config.usage.instantrec_path.value = savedValue
 	config.usage.instantrec_path.save()
-	if not os.path.exists(resolveFilename(SCOPE_TIMESHIFT)):
+	if not exists(resolveFilename(SCOPE_TIMESHIFT)):
 		try:
 			os.mkdir(resolveFilename(SCOPE_TIMESHIFT), 0o755)
 		except:
 			pass
-	defaultValue = resolveFilename(SCOPE_TIMESHIFT)
-	config.usage.timeshift_path = ConfigSelection(default=defaultValue, choices=[(defaultValue, defaultValue)])
-	config.usage.timeshift_path.load()
-	if config.usage.timeshift_path.saved_value:
-		savedValue = pathjoin(config.usage.timeshift_path.saved_value, "")
-		if savedValue and savedValue != defaultValue:
-			config.usage.timeshift_path.setChoices([(defaultValue, defaultValue), (savedValue, savedValue)], default=defaultValue)
-			config.usage.timeshift_path.value = savedValue
-	config.usage.timeshift_path.save()
-	config.usage.allowed_timeshift_paths = ConfigLocations(default=[resolveFilename(SCOPE_TIMESHIFT)])
+	config.timeshift = ConfigSubsection()
+	defaultPath = resolveFilename(SCOPE_TIMESHIFT)
+	config.timeshift.allowedPaths = ConfigLocations(default=[defaultPath])
+	config.usage.timeshift_path = ConfigText(default="")
+	if config.usage.timeshift_path.value:
+		defaultPath = config.usage.timeshift_path.value
+		config.usage.timeshift_path.value = config.usage.timeshift_path.default
+		config.usage.timeshift_path.save()
+	config.timeshift.path = ConfigSelection(default=defaultPath, choices=[(defaultPath, defaultPath)])
+	config.timeshift.path.load()
+	savedPath = config.timeshift.path.saved_value
+	if savedPath:
+		savedPath = pathjoin(savedPath, "")
+		if savedPath and savedPath != defaultPath:
+			config.timeshift.path.setChoices(default=defaultPath, choices=[(defaultPath, defaultPath), (savedPath, savedPath)])
+			config.timeshift.path.value = savedPath
+	config.timeshift.path.save()
+	currentPath = config.timeshift.path.value
+	print("[UsageConfig] Checking/Creating current time shift directory '%s'." % currentPath)
+	try:
+		makedirs(currentPath, 0o755, exist_ok=True)
+	except OSError as err:
+		print("[UsageConfig] Error %d: Unable to create current time shift directory '%s'!  (%s)" % (err.errno, currentPath, err.strerror))
+		if defaultPath != currentPath:
+			print("[UsageConfig] Checking/Creating default time shift directory '%s'." % defaultPath)
+			try:
+				makedirs(defaultPath, 0o755, exist_ok=True)
+			except OSError as err:
+				print("[UsageConfig] Error %d: Unable to create default time shift directory '%s'!  (%s)" % (err.errno, defaultPath, err.strerror))
+
+	# The following code temporarily maintains the deprecated timeshift_path so it is available for external plug ins.
+	config.usage.timeshift_path = NoSave(ConfigText(default=config.timeshift.path.value))
+
+	def updateOldTimeshiftPath(configElement):
+		config.usage.timeshift_path.value = configElement.value
+
+	config.timeshift.path.addNotifier(updateOldTimeshiftPath, immediate_feedback=False)
 	config.usage.timeshift_skipreturntolive = ConfigYesNo(default=False)
 
-	def setTimeshiftPath(configElement):
-		config.usage.timeshift_path.value = configElement.value
-		eSettings.setTimeshiftPath(configElement.value)
-
-	config.usage.timeshift_path.addNotifier(setTimeshiftPath)
 	config.usage.movielist_trashcan = ConfigYesNo(default=True)
 	config.usage.movielist_trashcan_days = ConfigNumber(default=8)
 	config.usage.movielist_trashcan_reserve = ConfigNumber(default=40)
@@ -1108,7 +1144,7 @@ def InitUsageConfig():
 			("on", _("On")),
 			("auto", _("Auto"))
 		]
-		if os.path.exists("/proc/stb/fp/fan_choices"):
+		if exists("/proc/stb/fp/fan_choices"):
 			print("[UsageConfig] Read /proc/stb/fp/fan_choices")
 			choicelist = [x for x in choicelist if x[0] in open("/proc/stb/fp/fan_choices").read().strip().split(" ")]
 		config.usage.fan = ConfigSelection(choicelist)
@@ -1282,8 +1318,8 @@ def InitUsageConfig():
 
 	hddchoises = [('/etc/enigma2/', 'Internal Flash')]
 	for p in harddiskmanager.getMountedPartitions():
-		if os.path.exists(p.mountpoint):
-			d = os.path.normpath(p.mountpoint)
+		if exists(p.mountpoint):
+			d = normpath(p.mountpoint)
 			if p.mountpoint != '/':
 				hddchoises.append((p.mountpoint, d))
 	config.misc.epgcachepath = ConfigSelection(default='/etc/enigma2/', choices=hddchoises)
@@ -1296,7 +1332,7 @@ def InitUsageConfig():
 		epgcache = eEPGCache.getInstance()
 		epgcache.save()
 		if not config.misc.epgcache_filename.value.startswith("/etc/enigma2/"):
-			if os.path.exists('/etc/enigma2/' + config.misc.epgcachefilename.value.replace('.dat', '') + '.dat'):
+			if exists('/etc/enigma2/' + config.misc.epgcachefilename.value.replace('.dat', '') + '.dat'):
 				os.remove('/etc/enigma2/' + config.misc.epgcachefilename.value.replace('.dat', '') + '.dat')
 	config.misc.epgcachepath.addNotifier(EpgCacheChanged, immediate_feedback=False)
 	config.misc.epgcachefilename.addNotifier(EpgCacheChanged, immediate_feedback=False)
@@ -1408,7 +1444,7 @@ def InitUsageConfig():
 	def updateStackTracePrinter(configElement):
 		from Components.StackTrace import StackTracePrinter
 		if configElement.value:
-			if (os.path.isfile("/tmp/doPythonStackTrace")):
+			if (isfile("/tmp/doPythonStackTrace")):
 				os.remove("/tmp/doPythonStackTrace")
 			from threading import current_thread
 			StackTracePrinter.getInstance().activate(current_thread().ident)
