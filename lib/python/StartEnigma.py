@@ -331,7 +331,7 @@ def runScreenTest():
 	processing = Processing(session)
 	enigma.eProfileWrite("PowerKey")
 	power = PowerKey(session)
-	if BoxInfo.getItem("VFDSymbols"):
+	if enigma.getVFDSymbolsPoll():
 		enigma.eProfileWrite("VFDSymbolsCheck")
 		from Components.VfdSymbols import SymbolsCheck
 		SymbolsCheck(session)

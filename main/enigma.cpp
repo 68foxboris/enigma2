@@ -435,6 +435,11 @@ const char *getBoxBrand()
 	return BOXBRAND;
 }
 
+int getVFDSymbolsPoll()
+{
+	return VFDSymbolsPoll;
+}
+
 #include <malloc.h>
 
 void dump_malloc_stats(void)
