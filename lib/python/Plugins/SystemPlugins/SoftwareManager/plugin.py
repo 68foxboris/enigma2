@@ -33,7 +33,6 @@ from enigma import RT_HALIGN_LEFT, RT_VALIGN_CENTER, eListbox, gFont, getDesktop
 from twisted.web import client
 from Plugins.SystemPlugins.SoftwareManager.BackupRestore import BackupSelection, RestoreMenu, BackupScreen, RestoreScreen, getBackupPath, getBackupFilename
 from Plugins.SystemPlugins.SoftwareManager.SoftwareTools import iSoftwareTools
-from .ImageBackup import ImageBackup
 from gettext import ngettext
 
 config.plugins.configurationbackup = ConfigSubsection()
@@ -88,10 +87,6 @@ def valid_cache(cache_file, cache_ttl):
 
 def load_cache(cache_file):
 	return pickle.load(open(cache_file, 'rb'))
-
-
-class ImageBackup(ImageBackup):
-	pass
 
 
 class UpdatePluginMenu(Screen):

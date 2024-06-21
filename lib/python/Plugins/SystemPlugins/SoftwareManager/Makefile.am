@@ -6,7 +6,6 @@ install_PYTHON =	\
 	__init__.py \
 	plugin.py \
 	BackupRestore.py \
-	ImageBackup.py \
 	SoftwareTools.py
 
 dist_install_DATA = \
