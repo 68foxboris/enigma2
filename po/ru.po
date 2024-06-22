@@ -2356,6 +2356,18 @@ msgstr "После записи"
 msgid "After zap"
 msgstr "После zap"
 
+msgid "AI-Powered translation color"
+msgstr "Цвет перевода на базе искусственного интеллекта"
+
+msgid "AI-Powered translation enabled"
+msgstr "Перевод с использованием искусственного интеллекта включён"
+
+msgid "AI-Powered translation language"
+msgstr "Язык перевода на основе искусственного интеллекта"
+
+msgid "AI-Powered translation subscription code"
+msgstr "Код подписки на перевод на основе искусственного интеллекта"
+
 msgid "Akan"
 msgstr "Акан"
 
@@ -4643,6 +4655,12 @@ msgstr "Комедия"
 msgid "Command '%s' is unknown"
 msgstr "Команда '%s' неизвестна"
 
+msgid "Command finished."
+msgid_plural "Commands finished."
+msgstr[0] "Команда закончена."
+msgstr[1] "Команды закончены."
+msgstr[2] "Команд закончено."
+
 msgid "Command execution..."
 msgstr "Выполнение команды..."
 
@@ -4841,6 +4859,12 @@ msgstr "Укажите тип пульта управления"
 
 msgid "Configure separator type used in full description for separate short and extended descriptions."
 msgstr "Настройте тип разделителя, используемый в полном описании, для отдельных кратких и расширенных описаний."
+
+msgid "Configure the AI-Powered translation language."
+msgstr "Настройте язык перевода на основе искусственного интеллекта."
+
+msgid "Configure the color of the AI-Powered translations."
+msgstr "Настройте цвет переводов с помощью искусственного интеллекта."
 
 msgid "Configure the DiSEqC mode for this LNB."
 msgstr "Настройка режима DiSEqC для этого LNB."
@@ -6970,6 +6994,9 @@ msgstr "Пустая корзина"
 msgid "Enable"
 msgstr "Включить"
 
+msgid "Enable AI-Powered translation for all teletext and DVB subtitles."
+msgstr "Включите перевод с помощью искусственного интеллекта для всех телетекстов и субтитров DVB."
+
 msgid "Enable %s pro:"
 msgstr "Включить %s pro:"
 
@@ -7317,6 +7344,9 @@ msgstr "Введите высокую частоту гетеродина низ
 
 msgid "Enter your low band local oscillator frequency. For more information consult the spec sheet of your LNB."
 msgstr "Введите низкую частоту гетеродина низкочастотного генератора. Для получения дополнительной информации смотрите спецификацию вашего LNB."
+
+msgid "Enter your subscription code, the unified code for trial is 15."
+msgstr "Введите код подписки, единый код для трейла 15."
 
 msgid "Entitlements"
 msgstr "Права"
