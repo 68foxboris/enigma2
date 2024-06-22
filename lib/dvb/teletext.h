@@ -53,7 +53,7 @@ public:
 	void setPageAndMagazine(int page, int magazine, const char *lang);
 	void setMagazine(int magazine);
 	void connectNewStream(const sigc::slot0<void> &slot, ePtr<eConnection> &connection);
-	void connectNewPage(const sigc::slot1<void, const eDVBTeletextSubtitlePage &> &slot, ePtr<eConnection> &connection);
+	void connectNewPage(const sigc::slot<void, const eDVBTeletextSubtitlePage &> &slot, ePtr<eConnection> &connection);
 	std::set<eDVBServicePMTHandler::subtitleStream> m_found_subtitle_pages;
 
 private:
