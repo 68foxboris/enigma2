@@ -549,6 +549,8 @@ fi
 
 if test "$BOXTYPE" == "sf4008" -o "$BOXTYPE" == "beyonwizu4"; then
 	AC_DEFINE(LCD_SCROLL_HEX, 1,[define LCD scroll values in hex])
+fi
+
 AS_IF([test "$BOXTYPE" == "classm" -o "$BOXTYPE" == "axodin" -o "$BOXTYPE" == "axodinc" -o "$BOXTYPE" == "starsatlx" -o "$BOXTYPE" == "evo" -o "$BOXTYPE" == "genius" -o "$BOXTYPE" == "galaxym6"],[AC_DEFINE(PROFILE1, 1,[profile1])])
 AS_IF([test "$BOXTYPE" == "gb800solo" -o "$BOXTYPE" == "gb800se" -o "$BOXTYPE" == "gb800seplus" -o "$BOXTYPE" == "gbultrase"],[AC_DEFINE(PROFILE2, 1,[profile2])])
 AS_IF([test "$BOXTYPE" == "osmini" -o "$BOXTYPE" == "spycatmini" -o "$BOXTYPE" == "osminiplus" -o "$BOXTYPE" == "spycatminiplus"],[AC_DEFINE(PROFILE3, 1,[profile3])])
