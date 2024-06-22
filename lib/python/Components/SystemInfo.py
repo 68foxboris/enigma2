@@ -443,7 +443,6 @@ BoxInfo.setItem("LCDsymbol_timeshift", fileCheck("/proc/stb/lcd/symbol_timeshift
 BoxInfo.setItem("LCDshow_symbols", (MODEL.startswith("et9") or MODEL in ("hd51", "vs1500")) and fileCheck("/proc/stb/lcd/show_symbols"))
 BoxInfo.setItem("LCDsymbol_hdd", MODEL in ("hd51", "vs1500") and fileCheck("/proc/stb/lcd/symbol_hdd"))
 BoxInfo.setItem("FrontpanelDisplayGrayscale", fileExists("/dev/dbox/oled0"))
-BoxInfo.setItem("VFDSymbol", BoxInfo.getItem("vfdsymbol"))
 BoxInfo.setItem("VFD_scroll_repeats", not MODEL.startswith("et8500") and fileCheck("/proc/stb/lcd/scroll_repeats"))
 BoxInfo.setItem("VFD_scroll_delay", not MODEL.startswith("et8500") and fileCheck("/proc/stb/lcd/scroll_delay"))
 BoxInfo.setItem("VFD_initial_scroll_delay", not MODEL.startswith("et8500") and fileCheck("/proc/stb/lcd/initial_scroll_delay"))
