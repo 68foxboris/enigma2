@@ -549,6 +549,16 @@ fi
 
 if test "$BOXTYPE" == "sf4008" -o "$BOXTYPE" == "beyonwizu4"; then
 	AC_DEFINE(LCD_SCROLL_HEX, 1,[define LCD scroll values in hex])
+
+# VFD Symbols Poll Time
+if test "$BOXTYPE" == "9910lx" -o "$BOXTYPE" == "9911lx" -o "$BOXTYPE" == "9920lx" -o "$BOXTYPE" == "dm7020hd" -o "$BOXTYPE" == "dm7020hdv2" -o "$BOXTYPE" == "dual" -o "$BOXTYPE" == "e4hd" -o "$BOXTYPE" == "e4hdhybrid" -o "$BOXTYPE" == "force3uhd" -o "$BOXTYPE" == "mbmicro" -o "$BOXTYPE" == "mbmicrov2" -o "$BOXTYPE" == "osnino" -o "$BOXTYPE" == "osninoplus" -o "$BOXTYPE" == "osninopro" -o "$BOXTYPE" == "revo4k" -o "$BOXTYPE" == "tmtwin4k" -o "$BOXTYPE" == "beyonwizv2" -o "$BOXTYPE" == "dags7362" -o "$BOXTYPE" == "dags73625" -o "$BOXTYPE" == "gbmv200" -o "$BOXTYPE" == "sf8008" -o "$BOXTYPE" == "sf8008m" -o "$BOXTYPE" == "sfx6008" -o "$BOXTYPE" == "sx888" -o "$BOXTYPE" == "sx88v2" -o "$BOXTYPE" == "ustym4kpro" -o "$BOXTYPE" == "ustym4ks2ottx" -o "$BOXTYPE" == "viper4k"; then
+	AC_DEFINE(VFDSymbolsPoll, 1,[define VFD Symbols Poll])
+else
+	if test "$BOXTYPE" == "u41" -o "$BOXTYPE" == "alphatriple" -o "$BOXTYPE" == "atemio5x00" -o "$BOXTYPE" == "beyonwizt3" -o "$BOXTYPE" == "et7500" -o "$BOXTYPE" == "maram9" -o "$BOXTYPE" == "mbmini" -o "$BOXTYPE" == "mbtwin" -o "$BOXTYPE" == "osmega" -o "$BOXTYPE" == "osminiplus" -o "$BOXTYPE" == "sezam1000hd" -o "$BOXTYPE" == "sezam5000hd" -o "$BOXTYPE" == "sf3038" -o "$BOXTYPE" == "spycat" -o "$BOXTYPE" == "spycat4kmini" -o "$BOXTYPE" == "uniboxhd1" -o "$BOXTYPE" == "uniboxhd2" -o "$BOXTYPE" == "uniboxhd3"; then
+		AC_DEFINE(VFDSymbolsPoll, 5,[define VFD Symbols Poll])
+	else
+		AC_DEFINE(VFDSymbolsPoll, 0,[define VFD Symbols Poll])
+	fi
 fi
 
 if test "$BOXTYPE" == "hd2400" -o "$BOXTYPE" == "hd11" -o "$BOXTYPE" == "hd1100" -o "$BOXTYPE" == "hd1200" -o "$BOXTYPE" == "hd500c" -o "$BOXTYPE" == "hd530c" -o "$BOXTYPE" == "hd1265" -o "$BOXTYPE" == "hd1500" -o "$BOXTYPE" == "hd51" -o "$BOXTYPE" == "hd60" -o "$BOXTYPE" == "hd61" -o "$BOXTYPE" == "hd66se" -o "$BOXTYPE" == "pulse4k" -o "$BOXTYPE" == "pulse4kmini" -o "$BOXTYPE" == "hd52" -o "$BOXTYPE" == "vs1000" -o "$BOXTYPE" == "vs1500"; then
