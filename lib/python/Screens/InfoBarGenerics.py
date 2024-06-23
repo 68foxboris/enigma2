@@ -391,7 +391,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			self.unDimmingTimer = eTimer()
 			self.unDimmingTimer.callback.append(self.unDimming)
 
-		self.hideTimer = eTimer()Co-Authored-By: jbleyel <jbleyel@gmx.net>
+		self.hideTimer = eTimer()
 		self.hideTimer.callback.append(self.doTimerHide)
 		self.hideTimer.start(5000, True)
 
