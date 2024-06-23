@@ -256,7 +256,7 @@ class InfoBarStreamRelay:
 					self.__services.remove(servicestring)
 				else:
 					self.__services.append(servicestring)
-					if nav.getCurrentlyPlayingServiceReference() == service:
+					if nav.getCurrentlyPlayingServiceReference() and nav.getCurrentlyPlayingServiceReference() == service:
 						nav.restartService()
 				self.write()
 
@@ -391,7 +391,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			self.unDimmingTimer = eTimer()
 			self.unDimmingTimer.callback.append(self.unDimming)
 
-		self.hideTimer = eTimer()
+		self.hideTimer = eTimer()Co-Authored-By: jbleyel <jbleyel@gmx.net>
 		self.hideTimer.callback.append(self.doTimerHide)
 		self.hideTimer.start(5000, True)
 
