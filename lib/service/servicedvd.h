@@ -66,6 +66,8 @@ public:
 	virtual ~eServiceDVD();
 		// not implemented (yet)
 	RESULT setTarget(int target, bool noaudio = false) { return -1; }
+	RESULT startAudio() { return -1; }
+	RESULT stopAudio() { return -1; }
 	RESULT audioChannel(ePtr<iAudioChannelSelection> &ptr) { ptr = nullptr; return -1; }
 	RESULT audioTracks(ePtr<iAudioTrackSelection> &ptr);
 	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr) { ptr = nullptr; return -1; }

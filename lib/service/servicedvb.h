@@ -113,6 +113,8 @@ public:
 	RESULT cueSheet(ePtr<iCueSheet> &ptr);
 	RESULT subtitle(ePtr<iSubtitleOutput> &ptr);
 	RESULT audioDelay(ePtr<iAudioDelay> &ptr);
+	RESULT startAudio();
+	RESULT stopAudio();
 	RESULT rdsDecoder(ePtr<iRdsDecoder> &ptr);
 	RESULT keys(ePtr<iServiceKeys> &ptr) { ptr = nullptr; return -1; }
 
