@@ -1491,7 +1491,7 @@ RESULT eDVBServicePlay::setTarget(int target, bool noaudio = false)
 	// start/stop audio
 	if (target == 1000)
 	{
-		if (noaгdio) // stop audio
+		if (noaudio) // stop audio
 		{
 			if (m_decoder && !m_noaudio)
 			{
