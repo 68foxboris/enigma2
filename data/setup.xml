@@ -68,7 +68,6 @@
 		<item level="1" text="Show background in radio mode" description="When enabled, a radio background image will be visible while listening to a radio channel.">config.misc.showradiopic</item>
 		<item level="2" text="Hide channel list in radio mode" description="When enabled, the channel selection list will be hidden while listening to a radio channel. When disabled, the option 'Auto play last service in radio mode' is available.">config.usage.e1like_radio_mode</item>
 		<item level="2" text="Auto play last service in radio mode" conditional="not config.usage.e1like_radio_mode.value" description="When enabled, it will automatically play to the last saved radio service when switching to radio mode.">config.usage.e1like_radio_mode_last_play</item>
-		<item level="2" text="Skip jumping to live TV while timeshifting with plugins" description="If set to 'yes', allows you to use timeshift with alternative audio plugins.">config.usage.timeshift_skipreturntolive</item>
 	</setup>
 	<setup key="DNS" title="DNS Settings">
 		<item level="0" text="DNS data source" description="Select the source of the default DNS settings.">config.usage.dns</item>
@@ -343,7 +342,7 @@
 		<if requires="AISubs">
 			<item level="2" text="AI-Powered translation enabled" description="Enable AI-Powered translation for all teletext and DVB subtitles.">config.subtitles.ai_enabled</item>
 			<item level="2" text="AI-Powered translation language" description="Configure the AI-Powered translation language.">config.subtitles.ai_translate_to</item>
-			<item level="2" text="AI-Powered translation subscription code" description="Enter your subscription code, the unified code for trial is 15.">config.subtitles.ai_subscription_code</item>
+			<item level="2" text="AI-Powered translation subscription code" description="Enter your subscription code, the unified code for trail is 15.">config.subtitles.ai_subscription_code</item>
 			<item level="2" text="AI-Powered translation color" description="Configure the color of the AI-Powered translations.">config.subtitles.ai_subtitle_colors</item>
 		</if>
 		<item level="0" text="Teletext subtitle color" description="Configure the color of the teletext subtitles.">config.subtitles.ttx_subtitle_colors</item>
@@ -381,6 +380,7 @@
 		<item level="0" text="Timeshift location" description="Set the default location for your timeshift files. Press OK to add new locations, LEFT/RIGHT to select any existing locations.">config.usage.timeshift_path</item>
 		<item level="1" text="Automatically start timeshift after" description="When enabled, timeshift starts automatically in background after the specified time.">config.usage.timeshift_start_delay</item>
 		<item level="1" text="Show warning when timeshift is stopped" description="When enabled, a warning will be displayed and the user will get an option to stop or to continue the timeshift.">config.usage.check_timeshift</item>
+		<item level="2" text="Skip jumping to live TV while timeshifting with plugins" description="If set to 'yes', allows you to use timeshift with alternative audio plugins.">config.usage.timeshift_skipreturntolive</item>
 		<!--
 		<item level="2" text="Timeshift-save action on zap" description="Select if timeshift should continue when set to record.">config.timeshift.favoriteSaveAction</item>
 		<item level="2" text="Stop timeshift while recording?" description="Stops timeshift being used if a recording is in progress. (Advisable for USB sticks)">config.timeshift.stopwhilerecording</item>
