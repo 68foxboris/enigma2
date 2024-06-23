@@ -767,8 +767,6 @@ public:
 		/** Set Displayed Audio PID and type */
 	virtual RESULT setAudioPID(int apid, int type)=0;
 
-	virtual RESULT stopAudio()=0;
-
 	enum { ac_left, ac_stereo, ac_right };
 		/** Set Displayed Audio Channel */
 	virtual RESULT setAudioChannel(int channel)=0;

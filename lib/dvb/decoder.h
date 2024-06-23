@@ -136,7 +136,6 @@ public:
 	virtual ~eTSMPEGDecoder();
 	RESULT setVideoPID(int vpid, int type);
 	RESULT setAudioPID(int apid, int type);
-	RESULT stopAudio();
 	RESULT setAudioChannel(int channel);
 	int getAudioChannel();
 	RESULT setPCMDelay(int delay);

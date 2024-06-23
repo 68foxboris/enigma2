@@ -1073,11 +1073,6 @@ RESULT eTSMPEGDecoder::setAudioPID(int apid, int type)
 	return 0;
 }
 
-RESULT eTSMPEGDecoder::stopAudio()
-{
-	return setAudioPID(-1, -1);
-}
-
 int eTSMPEGDecoder::m_audio_channel = -1;
 
 RESULT eTSMPEGDecoder::setAudioChannel(int channel)

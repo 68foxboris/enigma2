@@ -47,8 +47,6 @@ public:
 	RESULT start();
 	RESULT stop();
 	RESULT setTarget(int target, bool noaudio);
-	RESULT startAudio() { return -1; }
-	RESULT stopAudio() { return -1; }
 
 	RESULT pause(ePtr<iPauseableService> &ptr) { ptr = nullptr; return -1; }
 	RESULT seek(ePtr<iSeekableService> &ptr) { ptr = nullptr; return -1; }
