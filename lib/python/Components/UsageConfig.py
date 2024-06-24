@@ -7,7 +7,6 @@ from Components.config import ConfigSubsection, ConfigDirectory, ConfigYesNo, co
 from Tools.Directories import SCOPE_HDD, SCOPE_TIMESHIFT, defaultRecordingLocation, resolveFilename
 from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eSubtitleSettings, eSettings, eDVBLocalTimeHandler, eEPGCache
 from Components.About import GetIPsFromNetworkInterfaces
-from Components.Language import language
 from Components.NimManager import nimmanager
 from Components.Renderer.FrontpanelLed import ledPatterns, PATTERN_ON, PATTERN_OFF, PATTERN_BLINK
 from Components.ServiceList import refreshServiceList
@@ -150,10 +149,10 @@ def InitUsageConfig():
 		("deepstandby", _("Goto deep standby"))
 	])
 
-	choicelist = [("by skin", _("As defined by the skin"))]
+	choiceList = [("by skin", _("As defined by the skin"))]
 	for i in range(5, 41):
-		choicelist.append((str(i)))
-	config.usage.servicelist_number_of_services = ConfigSelection(default="by skin", choices=choicelist)
+		choiceList.append((str(i)))
+	config.usage.servicelist_number_of_services = ConfigSelection(default="by skin", choices=choiceList)
 	config.usage.servicelist_number_of_services.addNotifier(refreshServiceList)
 
 	config.usage.multiepg_ask_bouquet = ConfigYesNo(default=False)
@@ -172,17 +171,17 @@ def InitUsageConfig():
 	config.usage.quickzap_bouquet_change = ConfigYesNo(default=False)
 	config.usage.e1like_radio_mode = ConfigYesNo(default=True)
 	config.usage.e1like_radio_mode_last_play = ConfigYesNo(default=True)
-	choicelist = [("0", _("No timeout"))]
+	choiceList = [("0", _("No timeout"))]
 	for i in range(1, 12):
-		choicelist.append((str(i), ngettext("%d second", "%d seconds", i) % i))
-	config.usage.infobar_timeout = ConfigSelection(default="5", choices=choicelist)
+		choiceList.append((str(i), ngettext("%d second", "%d seconds", i) % i))
+	config.usage.infobar_timeout = ConfigSelection(default="5", choices=choiceList)
 	config.usage.fadeout = ConfigYesNo(default=False)
 	config.usage.show_infobar_do_dimming = ConfigYesNo(default=False)
 	config.usage.show_infobar_dimming_speed = ConfigSelectionNumber(min=1, max=40, stepwidth=1, default=40, wraparound=True)
 	config.usage.show_infobar_on_zap = ConfigYesNo(default=True)
 	config.usage.show_infobar_on_skip = ConfigYesNo(default=True)
 	config.usage.show_infobar_on_event_change = ConfigYesNo(default=False)
-	config.usage.show_second_infobar = ConfigSelection(default="0", choices=[("", _("None"))] + choicelist + [("EPG", _("EPG"))])
+	config.usage.show_second_infobar = ConfigSelection(default="0", choices=[("", _("None"))] + choiceList + [("EPG", _("EPG"))])
 	config.usage.show_simple_second_infobar = ConfigYesNo(default=False)
 	config.usage.show_infobar_adds = ConfigYesNo(default=False)
 	config.usage.infobar_frontend_source = ConfigSelection(default="settings", choices=[
@@ -310,16 +309,16 @@ def InitUsageConfig():
 	config.usage.tuxtxt_CleanAlgo.addNotifier(patchTuxtxtConfFile, initial_call=False, immediate_feedback=False)
 
 	config.usage.sort_settings = ConfigYesNo(default=False)
-	choicelist = []
+	choiceList = []
 	for i in (10, 30):
-		choicelist.append((str(i), ngettext("%d second", "%d seconds", i) % i))
+		choiceList.append((str(i), ngettext("%d second", "%d seconds", i) % i))
 	for i in (60, 120, 300, 600, 1200, 1800):
 		m = i / 60
-		choicelist.append((str(i), ngettext("%d minute", "%d minutes", m) % m))
+		choiceList.append((str(i), ngettext("%d minute", "%d minutes", m) % m))
 	for i in (3600, 7200, 14400):
 		h = i / 3600
-		choicelist.append((str(i), ngettext("%d hour", "%d hours", h) % h))
-	config.usage.hdd_standby = ConfigSelection(default="300", choices=[("0", _("No standby"))] + choicelist)
+		choiceList.append((str(i), ngettext("%d hour", "%d hours", h) % h))
+	config.usage.hdd_standby = ConfigSelection(default="300", choices=[("0", _("No standby"))] + choiceList)
 	config.usage.output_12V = ConfigSelection(default="do not change", choices=[
 		("do not change", _("Do not change")),
 		("off", _("Off")),
@@ -337,14 +336,14 @@ def InitUsageConfig():
 		("popup", _("With popup")),
 		("without popup", _("Without popup"))
 	])
-	choicelist = [
+	choiceList = [
 		("-1", _("Disabled")),
 		("0", _("No timeout"))
 	]
 	for i in [60, 300, 600, 900, 1800, 2700, 3600]:
 		m = i / 60
-		choicelist.append((str(i), ngettext("%d minute", "%d minutes", m) % m))
-	config.usage.pip_last_service_timeout = ConfigSelection(default="0", choices=choicelist)
+		choiceList.append((str(i), ngettext("%d minute", "%d minutes", m) % m))
+	config.usage.pip_last_service_timeout = ConfigSelection(default="0", choices=choiceList)
 
 	if not exists(resolveFilename(SCOPE_HDD)):
 		try:
@@ -520,12 +519,12 @@ def InitUsageConfig():
 		config.usage.poweroff_day[i] = ConfigEnableDisable(default=False)
 		config.usage.poweroff_time[i] = ConfigClock(default=((1 * 60 + 0) * 60))
 
-	choicelist = [("0", _("Do nothing")), ("1800", _("Standby in ") + _("half an hour"))]
+	choiceList = [("0", _("Do nothing")), ("1800", _("Standby in ") + _("half an hour"))]
 	for i in range(3600, 21601, 3600):
 		h = abs(i / 3600)
 		h = ngettext("%d hour", "%d hours", h) % h
-		choicelist.append((str(i), _("Standby in ") + h))
-	config.usage.inactivity_timer = ConfigSelection(default="0", choices=choicelist)
+		choiceList.append((str(i), _("Standby in ") + h))
+	config.usage.inactivity_timer = ConfigSelection(default="0", choices=choiceList)
 	config.usage.inactivity_timer_blocktime = ConfigYesNo(default=True)
 	config.usage.inactivity_timer_blocktime_begin = ConfigClock(default=mktime((1970, 1, 1, 18, 0, 0, 0, 0, 0)))
 	config.usage.inactivity_timer_blocktime_end = ConfigClock(default=mktime((1970, 1, 1, 23, 0, 0, 0, 0, 0)))
@@ -547,40 +546,40 @@ def InitUsageConfig():
 		config.usage.inactivity_timer_blocktime_extra_begin_day[i] = ConfigClock(default=mktime((1970, 1, 1, 6, 0, 0, 0, 0, 0)))
 		config.usage.inactivity_timer_blocktime_extra_end_day[i] = ConfigClock(default=mktime((1970, 1, 1, 9, 0, 0, 0, 0, 0)))
 
-	choicelist = [
+	choiceList = [
 		("0", _("Disabled")),
 		("event_standby", _("Standby after current event"))
 	]
 	for i in range(900, 7201, 900):
 		m = abs(i / 60)
 		m = ngettext("%d minute", "%d minutes", m) % m
-		choicelist.append((str(i), _("Standby in ") + m))
-	config.usage.sleep_timer = ConfigSelection(default="0", choices=choicelist)
+		choiceList.append((str(i), _("Standby in ") + m))
+	config.usage.sleep_timer = ConfigSelection(default="0", choices=choiceList)
 
-	choicelist = [("0", _("Disabled"))]
+	choiceList = [("0", _("Disabled"))]
 	for i in [300, 600] + list(range(900, 14401, 900)):
 		m = abs(i / 60)
 		m = ngettext("%d minute", "%d minutes", m) % m
-		choicelist.append((str(i), _("after ") + m))
-	config.usage.standby_to_shutdown_timer = ConfigSelection(default="0", choices=choicelist)
+		choiceList.append((str(i), _("after ") + m))
+	config.usage.standby_to_shutdown_timer = ConfigSelection(default="0", choices=choiceList)
 	config.usage.standby_to_shutdown_timer_blocktime = ConfigYesNo(default=False)
 	config.usage.standby_to_shutdown_timer_blocktime_begin = ConfigClock(default=mktime((1970, 1, 1, 6, 0, 0, 0, 0, 0)))
 	config.usage.standby_to_shutdown_timer_blocktime_end = ConfigClock(default=mktime((1970, 1, 1, 23, 0, 0, 0, 0, 0)))
 
-	choicelist = [("0", _("Disabled"))]
+	choiceList = [("0", _("Disabled"))]
 	for m in (1, 5, 10, 15, 30, 60):
-		choicelist.append((str(m * 60), ngettext("%d minute", "%d minutes", m) % m))
-	config.usage.screen_saver = ConfigSelection(default="300", choices=choicelist)
+		choiceList.append((str(m * 60), ngettext("%d minute", "%d minutes", m) % m))
+	config.usage.screen_saver = ConfigSelection(default="300", choices=choiceList)
 
 	config.usage.check_timeshift = ConfigYesNo(default=True)
 
-	choicelist = [("0", _("Disabled"))]
+	choiceList = [("0", _("Disabled"))]
 	for i in (2, 3, 4, 5, 10, 20, 30):
-		choicelist.append((str(i), ngettext("%d second", "%d seconds", i) % i))
+		choiceList.append((str(i), ngettext("%d second", "%d seconds", i) % i))
 	for i in (60, 120, 300):
 		m = i / 60
-		choicelist.append((str(i), ngettext("%d minute", "%d minutes", m) % m))
-	config.usage.timeshift_start_delay = ConfigSelection(default="0", choices=choicelist)
+		choiceList.append((str(i), ngettext("%d minute", "%d minutes", m) % m))
+	config.usage.timeshift_start_delay = ConfigSelection(default="0", choices=choiceList)
 
 	config.usage.alternatives_priority = ConfigSelection(default="0", choices=[
 		("0", "DVB-S/-C/-T"),
@@ -663,11 +662,11 @@ def InitUsageConfig():
 	def setHttpStartDelay(configElement):
 		eSettings.setHttpStartDelay(configElement.value)
 
-	choicelist = [(0, _("Disabled"))]
+	choiceList = [(0, _("Disabled"))]
 	for i in (10, 50, 100, 500, 1000, 2000):
-		choicelist.append(("%d" % i, _("%d ms") % i))
+		choiceList.append(("%d" % i, _("%d ms") % i))
 
-	config.usage.http_startdelay = ConfigSelection(default=0, choices=choicelist)
+	config.usage.http_startdelay = ConfigSelection(default=0, choices=choiceList)
 	config.usage.http_startdelay.addNotifier(setHttpStartDelay)
 
 	config.usage.show_timer_conflict_warning = ConfigYesNo(default=True)
@@ -1139,15 +1138,15 @@ def InitUsageConfig():
 		config.usage.time.display.value = config.usage.time.display.default
 
 	if BoxInfo.getItem("Fan"):
-		choicelist = [
+		choiceList = [
 			("off", _("Off")),
 			("on", _("On")),
 			("auto", _("Auto"))
 		]
 		if exists("/proc/stb/fp/fan_choices"):
 			print("[UsageConfig] Read /proc/stb/fp/fan_choices")
-			choicelist = [x for x in choicelist if x[0] in open("/proc/stb/fp/fan_choices").read().strip().split(" ")]
-		config.usage.fan = ConfigSelection(choicelist)
+			choiceList = [x for x in choiceList if x[0] in open("/proc/stb/fp/fan_choices").read().strip().split(" ")]
+		config.usage.fan = ConfigSelection(choiceList)
 
 		def fanChanged(configElement):
 			with open(BoxInfo.getItem("Fan"), "w") as fd:
@@ -1350,10 +1349,10 @@ def InitUsageConfig():
 
 	config.misc.showradiopic = ConfigYesNo(default=True)
 
-	choicelist = [("newline", _("new line")), ("2newlines", _("2 new lines")), ("space", _("space")), ("dot", " . "), ("dash", " - "), ("asterisk", " * "), ("nothing", _("nothing"))]
-	config.epg.fulldescription_separator = ConfigSelection(default="2newlines", choices=choicelist)
-	choicelist = [("no", _("no")), ("nothing", _("omit")), ("space", _("space")), ("dot", ". "), ("dash", " - "), ("asterisk", " * "), ("hashtag", " # ")]
-	config.epg.replace_newlines = ConfigSelection(default="no", choices=choicelist)
+	choiceList = [("newline", _("new line")), ("2newlines", _("2 new lines")), ("space", _("space")), ("dot", " . "), ("dash", " - "), ("asterisk", " * "), ("nothing", _("nothing"))]
+	config.epg.fulldescription_separator = ConfigSelection(default="2newlines", choices=choiceList)
+	choiceList = [("no", _("no")), ("nothing", _("omit")), ("space", _("space")), ("dot", ". "), ("dash", " - "), ("asterisk", " * "), ("hashtag", " # ")]
+	config.epg.replace_newlines = ConfigSelection(default="no", choices=choiceList)
 
 	def correctInvalidEPGDataChange(configElement):
 		eServiceEvent.setUTF8CorrectMode(int(configElement.value))
@@ -1528,40 +1527,40 @@ def InitUsageConfig():
 		def scroll_repeats(el):
 			with open(BoxInfo.getItem("VFD_scroll_repeats"), "w") as fd:
 				fd.write(el.value)
-		choicelist = []
+		choiceList = []
 		for i in range(1, 11, 1):
-			choicelist.append((str(i)))
-		config.usage.vfd_scroll_repeats = ConfigSelection(default="3", choices=choicelist)
+			choiceList.append((str(i)))
+		config.usage.vfd_scroll_repeats = ConfigSelection(default="3", choices=choiceList)
 		config.usage.vfd_scroll_repeats.addNotifier(scroll_repeats, immediate_feedback=False)
 
 	if BoxInfo.getItem("VFD_scroll_delay"):
 		def scroll_delay(el):
 			with open(BoxInfo.getItem("VFD_scroll_delay"), "w") as fd:
 				fd.write(el.value)
-		choicelist = []
+		choiceList = []
 		for i in range(0, 1001, 50):
-			choicelist.append((str(i)))
-		config.usage.vfd_scroll_delay = ConfigSelection(default="150", choices=choicelist)
+			choiceList.append((str(i)))
+		config.usage.vfd_scroll_delay = ConfigSelection(default="150", choices=choiceList)
 		config.usage.vfd_scroll_delay.addNotifier(scroll_delay, immediate_feedback=False)
 
 	if BoxInfo.getItem("VFD_initial_scroll_delay"):
 		def initial_scroll_delay(el):
 			with open(BoxInfo.getItem("VFD_initial_scroll_delay"), "w") as fd:
 				fd.write(el.value)
-		choicelist = []
+		choiceList = []
 		for i in range(0, 20001, 500):
-			choicelist.append((str(i)))
-		config.usage.vfd_initial_scroll_delay = ConfigSelection(default="1000", choices=choicelist)
+			choiceList.append((str(i)))
+		config.usage.vfd_initial_scroll_delay = ConfigSelection(default="1000", choices=choiceList)
 		config.usage.vfd_initial_scroll_delay.addNotifier(initial_scroll_delay, immediate_feedback=False)
 
 	if BoxInfo.getItem("VFD_final_scroll_delay"):
 		def final_scroll_delay(el):
 			with open(BoxInfo.getItem("VFD_final_scroll_delay"), "w") as fd:
 				fd.write(el.value)
-		choicelist = []
+		choiceList = []
 		for i in range(0, 20001, 500):
-			choicelist.append((str(i)))
-		config.usage.vfd_final_scroll_delay = ConfigSelection(default="1000", choices=choicelist)
+			choiceList.append((str(i)))
+		config.usage.vfd_final_scroll_delay = ConfigSelection(default="1000", choices=choiceList)
 		config.usage.vfd_final_scroll_delay.addNotifier(final_scroll_delay, immediate_feedback=False)
 
 	if BoxInfo.getItem("HasBypassEdidChecking"):
@@ -2248,9 +2247,9 @@ def InitUsageConfig():
 		config.autolanguage.subtitle_autoselect2.setChoices([x for x in subtitle_language_choices if x[0] and x[0] not in getselectedsublanguages((1, 3, 4)) or not x[0] and not config.autolanguage.subtitle_autoselect3.value])
 		config.autolanguage.subtitle_autoselect3.setChoices([x for x in subtitle_language_choices if x[0] and x[0] not in getselectedsublanguages((1, 2, 4)) or not x[0] and not config.autolanguage.subtitle_autoselect4.value])
 		config.autolanguage.subtitle_autoselect4.setChoices([x for x in subtitle_language_choices if x[0] and x[0] not in getselectedsublanguages((1, 2, 3)) or not x[0]])
-		choicelist = [(0, _("None"))]
+		choiceList = [(0, _("None"))]
 		for y in range(1, 15 if config.autolanguage.subtitle_autoselect4.value else (7 if config.autolanguage.subtitle_autoselect3.value else (4 if config.autolanguage.subtitle_autoselect2.value else (2 if config.autolanguage.subtitle_autoselect1.value else 0)))):
-			choicelist.append((y, ", ".join([eval("config.autolanguage.subtitle_autoselect%x.getText()" % x) for x in (y & 1, y & 2, y & 4 and 3, y & 8 and 4) if x])))
+			choiceList.append((y, ", ".join([eval("config.autolanguage.subtitle_autoselect%x.getText()" % x) for x in (y & 1, y & 2, y & 4 and 3, y & 8 and 4) if x])))
 		if config.autolanguage.subtitle_autoselect3.value:
 			choiceList.append((y + 1, _("All")))
 		config.autolanguage.equal_languages.setChoices(default=0, choices=choiceList)
@@ -2373,19 +2372,19 @@ def defaultMoviePath():
 
 
 def showrotorpositionChoicesUpdate(update=False):
-	choiceslist = [("no", _("no")), ("yes", _("yes")), ("withtext", _("with text")), ("tunername", _("with tuner name"))]
+	choicesList = [("no", _("no")), ("yes", _("yes")), ("withtext", _("with text")), ("tunername", _("with tuner name"))]
 	count = 0
 	for x in nimmanager.nim_slots:
 		if nimmanager.getRotorSatListForNim(x.slot, only_first=True):
-			choiceslist.append((str(x.slot), x.getSlotName() + _(" (auto detection)")))
+			choicesList.append((str(x.slot), x.getSlotName() + _(" (auto detection)")))
 			count += 1
 	if count > 1:
-		choiceslist.append(("all", _("all tuners") + _(" (auto detection)")))
-		choiceslist.remove(("tunername", _("with tuner name")))
+		choicesList.append(("all", _("all tuners") + _(" (auto detection)")))
+		choicesList.remove(("tunername", _("with tuner name")))
 	if not update:
-		config.misc.showrotorposition = ConfigSelection(default="no", choices=choiceslist)
+		config.misc.showrotorposition = ConfigSelection(default="no", choices=choicesList)
 	else:
-		config.misc.showrotorposition.setChoices(choiceslist, "no")
+		config.misc.showrotorposition.setChoices(choicesList, "no")
 	BoxInfo.setMutableItem("isRotorTuner", count > 0)
 
 
@@ -2539,7 +2538,7 @@ def patchTuxtxtConfFile(dummyConfigElement):
 	command = "sed -i -r '"
 	for f in tuxtxt2:
 		# Replace keyword (%s) followed by any value ([-0-9]+) by that keyword \1 and the new value %d.
-		command += r"s|(%s)\s+([-0-9]+)|\\1 %d|;" % (f[0], f[1])
+		command += "s|(%s)\s+([-0-9]+)|\\1 %d|;" % (f[0], f[1])
 	command += "' %s" % TUXTXT_CFG_FILE
 	for f in tuxtxt2:
 		# If keyword is not found in file, append keyword and value.

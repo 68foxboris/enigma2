@@ -803,7 +803,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 				getConfigMenuItem("ai_subtitle_colors")
 			])
 		if sub[0] == 0:  # dvb
-			menu = [
+			menu.extend([
 				getConfigMenuItem("dvb_subtitles_yellow"),
 				getConfigMenuItem("dvb_subtitles_backtrans"),
 				getConfigMenuItem("dvb_subtitles_original_position"),
@@ -811,9 +811,9 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 				getConfigMenuItem("subtitle_position"),
 				getConfigMenuItem("subtitle_bad_timing_delay"),
 				getConfigMenuItem("subtitle_noPTSrecordingdelay"),
-			]
+			])
 		elif sub[0] == 1:  # teletext
-			menu = [
+			menu.extend([
 				getConfigMenuItem("ttx_subtitle_colors"),
 				getConfigMenuItem("ttx_subtitle_original_position"),
 				getConfigMenuItem("subtitle_position"),
@@ -824,9 +824,9 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 				getConfigMenuItem("subtitle_alignment"),
 				getConfigMenuItem("subtitle_bad_timing_delay"),
 				getConfigMenuItem("subtitle_noPTSrecordingdelay"),
-			]
+			])
 		else: 		# pango
-			menu = [
+			menu.extend([
 				getConfigMenuItem("pango_subtitles_delay"),
 				getConfigMenuItem("pango_subtitle_colors"),
 				getConfigMenuItem("pango_subtitle_fontswitch"),
@@ -839,7 +839,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 				getConfigMenuItem("subtitle_borderwidth"),
 				getConfigMenuItem("subtitles_backtrans"),
 				getConfigMenuItem("pango_subtitles_fps"),
-			]
+			])
 			self["videofps"].setText(_("Video: %s fps") % (self.getFps().rstrip(".000")))
 
 		ConfigListScreen.__init__(self, menu, self.session, on_change=self.changedEntry)
@@ -876,13 +876,14 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 		self.infobar.setSeekState(self.infobar.SEEK_STATE_PLAY)
 
 	def getFps(self):
+		from enigma import iServiceInformation
 		service = self.session.nav.getCurrentService()
 		info = service and service.info()
 		if not info:
 			return ""
 		fps = info.getInfo(iServiceInformation.sFrameRate)
 		if fps > 0:
-			return "%6.3f" % (fps / 1000.0)
+			return "%6.3f" % (fps / 1000.)
 		return ""
 
 	def cancel(self):
