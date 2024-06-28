@@ -4389,6 +4389,12 @@ msgstr "Выберите порядок отображения элементо�
 msgid "Choose the option to correct invalid EPG data."
 msgstr "Выберите параметр для исправления неверных данных ТВ-гида."
 
+msgid "Choose the skin to be used for the GUI interface. Press 'GREEN' to activate the skin."
+msgstr "Выберите скин, который будет использоваться для графического интерфейса. Нажмите ЗЕЛЁНУЮ кнопку, для активации скина."
+
+msgid "Choose the skin to be used for the LCD/front panel interface. Press 'GREEN' to activate the skin."
+msgstr "Выберите оформление, которое будет использоваться для интерфейса ЖК-дисплея/передней панели. Нажмите ЗЕЛЁНУЮ кнопку для активации скина."
+
 msgid "Choose the target device for the slots."
 msgstr "Выберите целевое устройство для слотов."
 
@@ -15502,6 +15508,12 @@ msgstr "Скин"
 msgid "Skin Setting"
 msgstr "Настройки скина"
 
+msgid "Skin Settings"
+msgstr "Выбор скина"
+
+msgid "SkinSelection"
+msgstr "Выбор скина"
+
 msgid "Skin setting"
 msgstr "Настройки скина"
 
@@ -16852,12 +16864,18 @@ msgstr ""
 msgid "The user interface of your %s is restarting in debug mode"
 msgstr "Пользовательский интерфейс вашего %s перезагружается в режиме отладки"
 
+
+#, python-format
+msgid "The user interface of your %s %s is restarting"
+msgstr "Перезагрузка интерфейса Вашего %s %s"
+
+#, python-format
 msgid ""
-"The user interface of your receiver is restarting\n"
-"due to an error in mytest.py"
+"The user interface of your %s %s is restarting\n"
+"due to an error in StartEnigma.py"
 msgstr ""
-"Рестарт GUI Вашего ресивера\n"
-"из-за ошибки в mytest.py"
+"Интерфейс Вашего %s %s будет перезагружен\n"
+"по причине ошибки в StartEnigma.py"
 
 msgid "The user interface of your receiver is restarting in debug mode"
 msgstr "Рестарт GUI Вашего ресивера выполнен для режима отладки"

@@ -17,5 +17,5 @@ install_PYTHON = \
 	TextBox.py FactoryReset.py Recording.py UnhandledKey.py ServiceStopScreen.py \
 	InputDeviceSetup.py DVD.py SoftwareUpdate.py AutoDiseqc.py InstallWizard.py ScreenSaver.py \
 	Hotkey.py StreamingClientsInfo.py SoftcamSetup.py SetupFallbacktuner.py \
-	SkinSelector.py CronTimer.py OScamInfo.py LogManager.py Time.py OSDCalibration.py \
-	QuadPiP.py FlashManager.py MultiBootManager.py ImageBackup.py
+	CronTimer.py OScamInfo.py LogManager.py Time.py OSDCalibration.py \
+	QuadPiP.py FlashManager.py MultiBootManager.py ImageBackup.py SkinSelection.py
