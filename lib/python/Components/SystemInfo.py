@@ -282,7 +282,7 @@ BoxInfo.setMutableItem("RemoteDelay", 200 if repeat == 400 else 700)
 BoxInfo.setMutableItem("have24hz", eAVControl.getInstance().has24hz())
 BoxInfo.setItem("hashdmiin", BoxInfo.getItem("hdmifhdin") or BoxInfo.getItem("hdmihdin"))
 BoxInfo.setItem("MiniTV", fileCheck("/proc/stb/fb/sd_detach") or fileCheck("/proc/stb/lcd/live_enable"))
-
+BoxInfo.setItem("AISubs", fileExists("/etc/init.d/aisocket"))
 BoxInfo.setMutableItem("HDMI-PreEmphasis", fileExists("/proc/stb/hdmi/preemphasis"))
 
 try:
@@ -477,6 +477,3 @@ BoxInfo.setItem("CommonInterfaceCIDelay", fileCheck("/proc/stb/tsmux/rmx_delay")
 for ciSlot in range(BoxInfo.getItem("CommonInterface")):
 	BoxInfo.setItem(f"CI{ciSlot}SupportsHighBitrates", fileCheck(f"/proc/stb/tsmux/ci{ciSlot}_tsclk"))
 	BoxInfo.setItem(f"CI{ciSlot}RelevantPidsRoutingSupport", fileCheck(f"/proc/stb/tsmux/ci{ciSlot}_relevant_pids_routing"))
-
-# AI
-BoxInfo.setItem("AISubs", exists("/etc/init.d/aisocket"))
