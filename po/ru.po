@@ -6558,6 +6558,9 @@ msgstr "Вы хотите установить плагины?"
 msgid "Do you want to install a channel list?"
 msgstr "Вы хотите установить список каналов?"
 
+msgid "Do you want to install:"
+msgstr "Вы хотите установить:"
+
 msgid "Do you want to install the package:\n"
 msgstr "Вы хотите установить пакет:\n"
 
@@ -6591,6 +6594,12 @@ msgstr "Вы хотите перезагрузить Ваш ресивер?"
 
 msgid "Do you want to remove all the crahs logfiles"
 msgstr "Вы хотите удалить все файлы журнала сбоев"
+
+msgid "Do you want to remove:"
+msgstr "Вы хотите удалить:"
+
+msgid "Do you want to replace:"
+msgstr "Вы хотите заменить:"
 
 msgid "Do you want to remove the package:\n"
 msgstr "Вы хотите удалить пакет:\n"
@@ -6745,6 +6754,9 @@ msgstr "Загрузите выбранное изображение"
 
 msgid "Downmix"
 msgstr "Микширование"
+
+msgid "Driver Packages"
+msgstr "Пакеты драйверов"
 
 msgid "Driver and kernel information"
 msgstr "Информация о драйвере и ядре"
@@ -7661,6 +7673,9 @@ msgstr "Плагин расширенных настроек сети..."
 
 msgid "Extended setup..."
 msgstr "Расширенные настройки..."
+
+msgid "Extension Packages"
+msgstr "Пакеты расширений"
 
 msgid "Extensions"
 msgstr "Дополнения"
@@ -9277,6 +9292,29 @@ msgstr "Перейти на позицию"
 
 msgid "Install"
 msgstr "Установить"
+
+#, python-format
+msgid "Install %s"
+msgstr "Установить %s"
+
+#, python-format
+msgid "Install '%s' command"
+msgstr "Установить команду '%s'"
+
+msgid "Install 1/1"
+msgstr "Установка 1/1"
+
+msgid "Install Local Extension"
+msgstr "Установка локальных пакетов"
+
+msgid "Install Plugin"
+msgstr "Установить плагин"
+
+msgid "Install Plugins"
+msgstr "Установка плагинов"
+
+msgid "Install a new image with a USB stick"
+msgstr "Установить новый имидж с USB стика"
 
 msgid "Install channel list"
 msgstr "Установить список каналов"
@@ -11772,11 +11810,18 @@ msgstr "Настройки PiP"
 msgid "Picon"
 msgstr "Пикон"
 
+msgid "Picon Packages"
+msgstr "Пакеты пиконов"
+
+
 msgid "Picon Size"
 msgstr "Размер пикона"
 
 msgid "Picon Width"
 msgstr "Ширина пикона"
+
+msgid "Picon install location"
+msgstr "Целевое местоположение пакета Picon"
 
 msgid "Picon and Service Name"
 msgstr "Пикон и название сервиса"
@@ -12145,6 +12190,9 @@ msgstr "Действия навигации в браузере плагина"
 
 msgid "Plugin Browser Select Actions"
 msgstr "Действия по выбору браузера плагинов"
+
+msgid "Plugin Browser layout"
+msgstr "Макет браузера плагинов"
 
 msgid "Plugin Browser Style (Need Restart GUI)"
 msgstr "Стиль браузера плагинов (нужен перезапуск GUI)"
@@ -13043,6 +13091,12 @@ msgstr "Удалить все лог-файлы"
 msgid "Remove all new found flags"
 msgstr "Удалите все новые найденные флаги"
 
+msgid "Remove Plugin"
+msgstr "Удалить плагин"
+
+msgid "Remove Plugins"
+msgstr "Удаление плагинов"
+
 msgid "Remove all bouquet/tuning data"
 msgstr "Удалить все данные о букете / настройке"
 
@@ -13099,6 +13153,12 @@ msgstr "Удалять файлы из корзины через (в днях)"
 
 msgid "Remove new found flag"
 msgstr "Удалить флаг - новый найденный"
+
+msgid "Remove plugins ..."
+msgstr "Удалить плагины..."
+
+msgid "Remove Plugins"
+msgstr "Удалить плагины"
 
 msgid "Remove plugins"
 msgstr "Удаление плагинов"
@@ -13228,6 +13288,10 @@ msgstr "Зарезервировано"
 
 msgid "Reset"
 msgstr "Сброс"
+
+msgid "Reset Feeds"
+msgstr "Сбросить каналы"
+
 
 msgid "Reset Order"
 msgstr "Сбросить заказ"
@@ -13821,6 +13885,10 @@ msgstr "Второй кабель от LNB на моторе"
 msgid "Secondary DNS"
 msgstr "Вторичный DNS"
 
+msgid "Security Packages"
+msgstr "Пакеты безопасности"
+
+
 msgid "Seek"
 msgstr "Перемотка"
 
@@ -14117,11 +14185,18 @@ msgstr "Выбираем выделенное изображение и пере
 msgid "Select the highlighted slot and reboot"
 msgstr "Выберите выделенный слот и перезагрузитесь"
 
+msgid "Select the layout of the installed plugins in the Plugin Browser screen. NOTE: The change is not immediate but will be seen when Plugin Browser is restarted!"
+msgstr "Выберите расположение установленных плагинов на экране браузера плагинов. ПРИМЕЧАНИЕ: изменение не вступает в силу немедленно, но будет видно при перезапуске обозревателя плагинов!"
+
+
 msgid "Select the locale from a menu"
 msgstr "Выберите язык виртуальной клавиатуры из меню"
 
 msgid "Select the manufacturer of your SCR device. If the manufacturer is not listed, set 'SCR' to 'user defined' and enter the device parameters manually according to its spec sheet."
 msgstr "Выберите производителя вашего устройства SCR. Если производителя нет в списке, установите для параметра «SCR» значение «определено пользователем» и введите параметры устройства вручную в соответствии со спецификацией."
+
+msgid "Select the location where the picon files will be installed."
+msgstr "Выберите целевое место, куда будут установлены файлы пиконов."
 
 msgid "Select the method of restoring screen resolution and framebuffer when leaving teletext."
 msgstr "Выберите метод восстановления разрешения экрана и кадрового буфера при выходе из телетекста."
@@ -14155,6 +14230,9 @@ msgstr "Выберите спутник к которому подключена
 
 msgid "Select the shifted character set"
 msgstr "Выберите набор символов с виртуальной клавиатурой"
+
+msgid "Select the sort order of the Plugin Browser menu entries. User defined also allows the plugin entries to be hidden."
+msgstr "Выберите порядок сортировки пунктов меню обозревателя подключаемых модулей. Определяемый пользователем также позволяет скрывать записи плагина."
 
 msgid "Select the shifted character set for the next character only"
 msgstr "Выберите набор символов со сдвигом виртуальной клавиатуры только для следующего символа"
@@ -14671,6 +14749,9 @@ msgstr "Настройки"
 msgid "Settings..."
 msgstr "Настройки..."
 
+msgid "Setting Packages"
+msgstr "Пакеты настройки"
+
 msgid "Settings can be different for each directory separately (for non removeable devices only)."
 msgstr "Настройки могут отличаться для каждого каталога отдельно (только для несъемных устройств)."
 
@@ -14953,6 +15034,27 @@ msgstr "Показывать сообщения от CI"
 msgid "Show Clients"
 msgstr "Показать клиентов"
 
+msgid "Show Display packages"
+msgstr "Показать пакеты отображения"
+
+msgid "Show Driver packages"
+msgstr "Показать пакеты драйверов"
+
+msgid "Show Extension packages"
+msgstr "Показать пакеты расширений"
+
+msgid "Show Kernel packages"
+msgstr "Показать пакеты ядра"
+
+msgid "Show M2k packages"
+msgstr "Показать пакеты M2k"
+
+msgid "Show OpenPLi packages"
+msgstr "Показать пакеты OpenPLi"
+
+msgid "Show OpenViX packages"
+msgstr "Показать пакеты OpenViX"
+
 msgid "Show Display Icons"
 msgstr "Показывать информацию на дисплее"
 
@@ -15024,6 +15126,18 @@ msgstr "Показать Ридеры/Прокси"
 
 msgid "Show results"
 msgstr "Показать результаты"
+
+msgid "Show Security packages"
+msgstr "Показать пакеты безопасности"
+
+msgid "Show Setting packages"
+msgstr "Показать пакеты настроек"
+
+msgid "Show Skin packages"
+msgstr "Показать пакеты скинов"
+
+msgid "Show Skin Component packages"
+msgstr "Показать пакеты компонентов скина"
 
 msgid "Show SNR percentage instead of dB value"
 msgstr "Показать SNR проценты вместо dB значения"
@@ -15319,6 +15433,27 @@ msgstr "Показать выбор субсервисов (SKY DE)"
 msgid "Show subtitle selection"
 msgstr "Показать меню выбора субтитров"
 
+msgid "Show Development packages"
+msgstr "Показать пакеты разработки"
+
+msgid "Show Source packages"
+msgstr "Показать исходные пакеты"
+
+msgid "Show System Plugin packages"
+msgstr "Показать пакеты системных плагинов"
+
+msgid "Show Plugin Skin packages"
+msgstr "Показать пакеты скинов плагинов"
+
+msgid "Show Picon packages"
+msgstr "Показать пакеты Picon"
+
+msgid "Show Subscription packages"
+msgstr "Показать пакеты подписки"
+
+msgid "Show Web Link packages"
+msgstr "Показать пакеты веб-ссылок"
+
 msgid "Show symbols on display"
 msgstr "Показать символы на дисплее"
 
@@ -15501,6 +15636,9 @@ msgstr "Скин & разрешение: %s (%sx%s)\n"
 
 msgid "Skin Selection Actions"
 msgstr "Действия по выбору скина"
+
+msgid "Skin Packages"
+msgstr "Пакеты скинов"
 
 msgid "Skin"
 msgstr "Скин"
@@ -15685,6 +15823,9 @@ msgstr "Эмуляторы / CI"
 msgid "Softcam Actions"
 msgstr "Действия Softcam"
 
+msgid "Softcam Packages"
+msgstr "Пакеты softcam"
+
 msgid "Softcam Setup"
 msgstr "Настройки эмулятора"
 
@@ -15766,6 +15907,12 @@ msgstr "Сортировать дополнения по алфавиту"
 
 msgid "Sort Extensions list alphabetically"
 msgstr "Сортировать дополнения по алфавиту"
+
+msgid "Sort Plugin Browser"
+msgstr "Сортировать плагины"
+
+msgid "Sort Plugin Browser entries"
+msgstr "Сортировка записей обозревателя плагинов"
 
 msgid "Sort by"
 msgstr "Сортировка по"
@@ -16454,6 +16601,9 @@ msgstr "Системная информация"
 msgid "System Information"
 msgstr "Системная информация"
 
+
+msgid "System Plugin Packages"
+msgstr "Пакеты системных плагинов"
 
 msgid "System & Modulation"
 msgstr "Система & Модуляция"
@@ -17989,6 +18139,12 @@ msgstr "Вверх / Активно"
 msgid "Update"
 msgstr "Обновление"
 
+msgid "Update Plugin"
+msgstr "Обновить плагин"
+
+msgid "Update Plugins"
+msgstr "Обновление"
+
 msgid "Update and ask to reboot"
 msgstr "Обновить и спросить о перезагрузке"
 
@@ -18046,6 +18202,9 @@ msgstr "Обновления с фида не доступны."
 
 msgid "Updating"
 msgstr "Обновление"
+
+msgid "Updating package list."
+msgstr "Обновление списка пакетов."
 
 msgid "Updating software catalog"
 msgstr "Обновление каталога ПО"
@@ -18112,6 +18271,9 @@ msgstr "Использовать информацию ТВ-гида Virgin, ко
 
 msgid "Use a gateway"
 msgstr "Использовать шлюз"
+
+msgid "Use alternate GitHub DNS"
+msgstr "Используйте альтернативный DNS GitHub"
 
 msgid "Use adaptive date display"
 msgstr "Используйте адаптивный дисплей даты"
@@ -18256,6 +18418,9 @@ msgstr "Пользовательский диапазон %d (%s)"
 #, python-format
 msgid "User Band %d"
 msgstr "Пользовательский диапазон %d"
+
+msgid "User Feed URL"
+msgstr "Адрес фида пользователя"
 
 msgid "User bouquets"
 msgstr "Пользовательские букеты"
