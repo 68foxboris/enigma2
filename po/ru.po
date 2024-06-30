@@ -13157,9 +13157,6 @@ msgstr "Удалить флаг - новый найденный"
 msgid "Remove plugins ..."
 msgstr "Удалить плагины..."
 
-msgid "Remove Plugins"
-msgstr "Удалить плагины"
-
 msgid "Remove plugins"
 msgstr "Удаление плагинов"
 
