@@ -129,7 +129,7 @@ class MediaPlayer(Screen, InfoBarBase, InfoBarScreenSaver, InfoBarSeek, InfoBarA
 		defaultDir = config.mediaplayer.defaultDir.getValue()
 		if defaultDir is not None and not os.path.isdir(defaultDir):
 			defaultDir = None
-		self.filelist = FileList(defaultDir, matchingPattern=r"(?i)^.*\.(aac|ac3|alac|amr|ape|au|dts|flac|m2a|m4a|mid|mka|mp2|mp3|oga|ogg|wav|wave|wma|wv|m3u|pls|e2pls|3g2|3gp|asf|avi|av1|dat|divx|flv|m2ts|m4v|mkv|mov|mp4|mpe|mpeg|mpg|mpd|mts|ogm|ogv|pva|rm|rmvb|ts|vob|webm|wmv|wtv)", useServiceRef=True, additionalExtensions="4098:m3u 4098:e2pls 4098:pls")
+		self.filelist = FileList(defaultDir, matchingPattern=r"(?i)^.*\.(aac|ac3|alac|amr|ape|au|dts|flac|m2a|m4a|mid|mka|mp2|mp3|oga|ogg|wav|wave|wma|wv|m3u|pls|e2pls|3g2|3gp|asf|avi|av1|dat|divx|flv|m2ts|m4v|mkv|mov|mp4|mpe|mpeg|mpg|mpd|mts|ogm|ogv|pva|rm|rmvb|ts|vob|webm|wmv|wtv|stream)", useServiceRef=True, additionalExtensions="4098:m3u 4098:e2pls 4098:pls")
 		self["filelist"] = self.filelist
 
 		self.playlist = MyPlayList()
