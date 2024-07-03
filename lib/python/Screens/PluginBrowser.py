@@ -178,7 +178,8 @@ class PluginBrowser(Screen, NumericalTextInput, ProtectedScreen):
 		if config.usage.pluginListLayout.value == PLUGIN_LIST:
 			self["navigationActions"] = HelpableActionMap(self, ["NavigationActions"], {
 				"top": (self.keyTop, _("Move to the first line / screen")),
-				"pageUp": (self.keyPageUp, _("Move up a screen")),
+				"left": (self.keyPageUp, _("Move up a screen")),
+				"right": (self.keyPageDown, _("Move down a screen")),
 				"up": (self.keyUp, _("Move up a line")),
 				"down": (self.keyDown, _("Move down a line")),
 				"pageDown": (self.keyPageDown, _("Move down a screen")),
