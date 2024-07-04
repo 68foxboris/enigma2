@@ -16,7 +16,8 @@ def InitServiceListSettings():
 def InitServiceListSettings():
 	config.channelSelection = ConfigSubsection()
 	choiceList = [("", _("Legacy mode"))]
-	config.channelSelection.style = ConfigSelection(default="", choices=choiceList)
+	config.channelSelection.screenStyle = ConfigSelection(default="", choices=choiceList)
+	config.channelSelection.widgetStyle = ConfigSelection(default="", choices=choiceList)
 
 
 def refreshServiceList(configElement=None):
