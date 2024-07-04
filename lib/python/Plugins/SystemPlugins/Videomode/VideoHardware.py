@@ -108,7 +108,7 @@ class VideoHardware:
 	elif getChipSetNumber() == "8726":
 		modes["HDMI"] = ["720p", "1080p", "1080i"]
 	else:
-		modes["HDMI"] = ["720p", "1080i", "576p", "576i", "480p", "480i"]
+		modes["HDMI"] = ["720p", "1080p", "2160p", "2160p30", "1080i", "576p", "480p", "576i", "480i"]
 
 # For raspberrypi feel free to check https://pimylifeup.com/raspberry-pi-screen-resolution/ and adapt the code.
 
