@@ -1,20 +1,20 @@
-# -*- coding: utf-8 -*-
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
 from Components.Harddisk import harddiskmanager
 from Components.MenuList import MenuList
 from Components.Label import Label
+from Components.Pixmap import Pixmap
 from Screens.MessageBox import MessageBox
 
 
 class HarddiskSetup(Screen):
 	def __init__(self, session, hdd, action, text, question):
 		Screen.__init__(self, session)
+		self.setTitle(_("Setup Harddisk"))
 		self.action = action
 		self.question = question
-		self.setTitle(_("Format Disk"))
-		self["model"] = Label(_("Model: ") + hdd.model())
-		self["capacity"] = Label(_("Capacity: ") + hdd.capacity())
+		self["model"] = Label("%s: %s" % (_("Model"), hdd.model()))
+		self["capacity"] = Label("%s: %s" % (_("Capacity"), hdd.capacity()))
 		self["bus"] = Label(_("Bus: ") + hdd.bus())
 		self["key_red"] = Label(_("Cancel"))
 		self["key_green"] = Label(text)  # text can be either "Format" or "Check"
@@ -50,7 +50,7 @@ class HarddiskSetup(Screen):
 class HarddiskSelection(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		self.setTitle(_("Format Disk Settings"))
+		self.setTitle(_("Format Storage Device"))
 		self.skinName = "HarddiskSelection"  # For derived classes
 		if harddiskmanager.HDDCount() == 0:
 			tlist = []
@@ -75,7 +75,7 @@ class HarddiskSelection(Screen):
 		self.session.openWithCallback(self.close, HarddiskSetup, selection,
 			action=selection.createInitializeJob,
 			text=_("Format"),
-			question=_("Want to format the device to Linux file system?\nAll data on the device will be lost!"))
+			question=_("Do you really want to format the device?\nAll data on the disk will be lost!"))
 
 	def okbuttonClick(self):
 		selection = self["hddlist"].getCurrent()
@@ -86,6 +86,11 @@ class HarddiskSelection(Screen):
 
 
 class HarddiskFsckSelection(HarddiskSelection):
+	def __init__(self, session):
+		HarddiskSelection.__init__(self, session)
+		self.setTitle(_("File System Check"))
+		self.skinName = "HarddiskSelection"
+
 	def doIt(self, selection):
 		self.session.openWithCallback(self.close, HarddiskSetup, selection,
 			action=selection.createCheckJob,

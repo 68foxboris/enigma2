@@ -7975,6 +7975,12 @@ msgstr ""
 msgid "Filename"
 msgstr "Файл"
 
+msgid "File System Check"
+msgstr "Проверка файловой системы"
+
+msgid "File System Packages"
+msgstr "Пакеты файловой системы"
+
 msgid "Filesystem check"
 msgstr "Проверка файловой системы"
 
@@ -8113,6 +8119,15 @@ msgstr "Параметры форматирования диска"
 
 msgid "Format Disk"
 msgstr "Отформатировать диск"
+
+msgid "Format HDD"
+msgstr "Форматировать HDD"
+
+msgid "Format Storage Device"
+msgstr "Форматирование устройства хранения"
+
+msgid "Format your hard drive"
+msgstr "Форматировать жёсткий диск"
 
 msgid "Forward volume keys"
 msgstr "Кнопки увеличения звука"
