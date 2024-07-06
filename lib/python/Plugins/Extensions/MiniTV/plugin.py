@@ -10,7 +10,7 @@ from Components.Sources.StaticText import StaticText
 config.plugins.minitv = ConfigSubsection()
 config.plugins.minitv.enable = ConfigSelection(default="disable", choices=[("enable", "enable"), ("disable", "disable")])
 
-class MiniTVSetup(Screen, ConfigListScreen):
+class MiniTVSetup(ConfigListScreen, Screen):
 	skin = """
 		<screen position="center,center" size="400,270" title="MiniTV Setup" >
 			<ePixmap pixmap="skin_default/buttons/red.png" position="30,10" size="140,40" alphaTest="on" />
