@@ -1469,15 +1469,6 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 				# print("[Skin] DEBUG: Menu key='{key}', image='{image}'.")
 			else:
 				raise SkinError("Tag 'menuicon' needs key and image, got key='{key}' and image='{image}'")
-	for tag in domSkin.findall("screens"):
-		for screen in tag.findall("screen"):
-			key = screen.attrib.get("key")
-			image = screen.attrib.get("image")
-			if key and image:
-				screens[key] = image
-				# print("[Skin] DEBUG: Screen key='%s', image='%s'." % (key, image))
-			else:
-				raise SkinError("Tag 'screen' needs key and image, got key='%s' and image='%s'" % (key, image))
 	for tag in domSkin.findall("setups"):
 		for setup in tag.findall("setup"):
 			key = setup.attrib.get("key")
