@@ -56,7 +56,7 @@
 	</screen>
 
 <!-- channelselection-->
-	<screen name="ChannelSelection_summary" position="fill">
+	<screen name="ChannelSelectionSummary" position="fill">
 		<widget source="parent.ServiceEvent" render="Label" position="top" size="*,21" font="FdLcD;20" noWrap="1">
 			<convert type="ServiceName">Name</convert>
 		</widget>
@@ -171,7 +171,7 @@
 	</screen>
 
 <!-- Numberzap -->
-	<screen name="NumberZap_summary" position="fill">
+	<screen name="NumberZapSummary" position="fill">
 		<widget source="parent.number_summary" render="Label" position="top" size="*,25" font="FdLcD;20" horizontalAlignment="center" verticalAlignment="center" />
 		<widget source="parent.service_summary" render="Label" position="top" size="*,16" foregroundColor="#FFFF00" font="FdLcD;16" horizontalAlignment="center" verticalAlignment="top" />
 		<panel name="SummaryClockPanel" />
@@ -185,7 +185,7 @@
 	</screen>
 
 <!-- JobView Summary -->
-	<screen name="JobView_summary" position="fill">
+	<screen name="JobViewSummary" position="fill">
 		<widget source="parent.summary_job_name" render="Label" position="6,4" size="120,42" font="FdLcD;16" />
 		<widget source="parent.summary_job_task" render="Label" position="6,22" size="120,26" font="FdLcD;12" />
 		<widget source="parent.summary_job_progress" render="Progress" position="6,50" size="60,12" borderWidth="1" zPosition="1" />
@@ -193,20 +193,20 @@
 			<convert type="ProgressToText" />
 		</widget>
 	</screen>
-	<screen name="ChoiceBox_summary" position="fill">
+	<screen name="ChoiceBoxSummary" position="fill">
 		<widget source="parent.summary_list" render="Label" position="fill" font="FdLcD;11" />
 	</screen>
-	<screen name="MessageBox_summary" position="fill">
+	<screen name="MessageBoxSummary" position="fill">
 		<widget source="parent.Text" render="Label" position="top" size="*,52" font="FdLcD;11" horizontalAlignment="center" verticalAlignment="center" />
 		<widget source="parent.selectedChoice" conditional="parent.selectedChoice" render="Label" position="bottom" size="*,14" font="FdLcD;14" horizontalAlignment="center" verticalAlignment="center" />
 	</screen>
-	<screen name="MessageBoxSimple_summary" position="fill">
+	<screen name="MessageBoxSimpleSummary" position="fill">
 		<widget source="parent.Text" render="Label" position="top" size="*,52" font="FdLcD;11" horizontalAlignment="center" verticalAlignment="center" />
 		<widget source="parent.selectedChoice" conditional="parent.selectedChoice" render="Label" position="bottom" size="*,14" font="FdLcD;14" horizontalAlignment="center" verticalAlignment="center" />
 	</screen>
 
 <!-- EMC -->
-	<screen name="EMCSelection_summary" position="fill">
+	<screen name="EMCSelectionSummary" position="fill">
 		<!-- Channel name -->
 		<widget source="parent.Service" render="Label" position="top" size="*,16" font="FdLcD;16" horizontalAlignment="center" noWrap="1">
 			<convert type="EMCMovieInfo">RecordServiceName</convert>
