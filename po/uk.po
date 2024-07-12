@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-04 10:55+0300\n"
+"PO-Revision-Date: 2024-07-11 12:19+0300\n"
 "Last-Translator: kvinto\n"
 "Language-Team: kvinto\n"
 "Language: uk_UA\n"
@@ -137,6 +137,12 @@ msgstr " одноканальний LNB-вхід для двигуна"
 msgid "%(freespace)s %(percent)s free disk space"
 msgstr "%(freespace)s %(percent)s вільне місце на диску"
 
+msgid "%.0f GB"
+msgstr "%.0f ГБ"
+
+msgid "%.0f MB"
+msgstr "%.0f МБ"
+
 msgid "%.1f° E"
 msgstr "%.1f° Сх"
 
@@ -150,9 +156,9 @@ msgid "%.3f MHz"
 msgstr "%.3f МГц"
 
 msgid "%02d:%02d"
-msgstr "%2d:%02d"
+msgstr "%02d:%02d"
 
-msgid "%2.1f sec"
+msgid "%2.1f Seconds"
 msgstr "%2.1f сек"
 
 msgid "%3.01f dB"
@@ -182,8 +188,14 @@ msgstr "%a %e/%m  %-H:%M"
 msgid "%d GB"
 msgstr "%d ГБ"
 
+msgid "%d Hour"
+msgid_plural "%d Hours"
+msgstr[0] "%d Година"
+msgstr[1] "%d Години"
+msgstr[2] "%d Годин"
+
 msgid "%d Hours"
-msgstr "%d годин"
+msgstr "%d Годин"
 
 msgid "%d MB"
 msgstr "%d МБ"
@@ -205,12 +217,12 @@ msgstr "%d Хвилин"
 
 msgid "%d Second"
 msgid_plural "%d Seconds"
-msgstr[0] "%d секунда"
-msgstr[1] "%d секунди"
-msgstr[2] "%d секунд"
+msgstr[0] "%d Секунда"
+msgstr[1] "%d Секунди"
+msgstr[2] "%d Секунд"
 
 msgid "%d Seconds"
-msgstr "%d секунд"
+msgstr "%d Секунд"
 
 msgid "%d channel found"
 msgid_plural "%d channels found"
@@ -239,12 +251,6 @@ msgstr[2] "%d файлів"
 msgid "%d fps"
 msgstr "%d fps"
 
-msgid "%d hour"
-msgid_plural "%d hours"
-msgstr[0] "%d година"
-msgstr[1] "%d години"
-msgstr[2] "%d годин"
-
 msgid "%d job is running in the background!"
 msgid_plural "%d jobs are running in the background!"
 msgstr[0] "%d процес запущено у фоновому режимі!"
@@ -253,6 +259,12 @@ msgstr[2] "%d процесів запущено у фоновому режимі
 
 msgid "%d kB/s"
 msgstr "%d кБ/с"
+
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d Хвилина"
+msgstr[1] "%d Хвилини"
+msgstr[2] "%d Хвилин"
 
 msgid "%d ms"
 msgstr "%d мс"
@@ -367,6 +379,12 @@ msgstr[2] "%d плагінів недоступний:"
 
 msgid "%d sec"
 msgstr "%d сек"
+
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d Секунда"
+msgstr[1] "%d Секунди"
+msgstr[2] "%d Секунд"
 
 msgid "%d subdirectory"
 msgid_plural "%d subdirectories"
@@ -486,6 +504,9 @@ msgid "'Minimum send interval' needs to be enabled to use this option."
 msgstr ""
 "Щоб використовувати цю опцію, потрібно ввімкнути 'Мінімальний інтервал "
 "надсилання'."
+
+msgid "(Attention! There will be a restart after %d crashes.)"
+msgstr "(Увага! Відбудеться перезавантаження після %d збоїв.)"
 
 msgid "(VU+ type)"
 msgstr "(тип VU+)"
@@ -1039,6 +1060,9 @@ msgstr "Вихід 10біт"
 msgid "Allow 12bit"
 msgstr "Вихід 12біт"
 
+msgid "Allow forcing the frames per second."
+msgstr "Дозволити примусову кількість кадрів за секунду."
+
 msgid "Allow quitting movie player with exit"
 msgstr "Дозволити вийти з програвача при виході"
 
@@ -1291,6 +1315,12 @@ msgstr "Як визначено скіном"
 
 msgid "Ask user"
 msgstr "Запитати користувача"
+
+msgid "Ask user (with default as 'No')"
+msgstr "Запитати користувача (за замовчуванням 'ні')"
+
+msgid "Ask user (with default as 'Yes')"
+msgstr "Запитати користувача (за замовчуванням 'так')"
 
 msgid "Aspect ratio"
 msgstr "Співвідношення сторін"
@@ -1733,6 +1763,9 @@ msgstr "Інформація про збірку"
 msgid "Build Model"
 msgstr "Модель збірки"
 
+msgid "Build information"
+msgstr "Інформація про збірку"
+
 msgid "Bulgaria"
 msgstr "Болгарія"
 
@@ -1954,6 +1987,9 @@ msgstr "ПІП каскадом"
 
 msgid "Cayman Islands"
 msgstr "Кайманові острови"
+
+msgid "Center"
+msgstr "По центру"
 
 msgid "Center DVB subtitles"
 msgstr "Субтитри DVB по центру"
@@ -2269,6 +2305,9 @@ msgstr "Колір"
 msgid "Color format"
 msgstr "Формат кольору"
 
+msgid "Colored Text"
+msgstr "Кольоровий текст"
+
 msgid "Combined"
 msgstr "Комбіновані"
 
@@ -2290,6 +2329,12 @@ msgstr "Команда для запуску"
 
 msgid "Command type"
 msgstr "Тип команди"
+
+msgid "Commit Log"
+msgstr "Журнал фіксації"
+
+msgid "Commit Logs"
+msgstr "Перегляд змін"
 
 msgid "Commit info"
 msgstr "Фіксація інформації"
@@ -3333,6 +3378,9 @@ msgstr "Видалити Імідж"
 msgid "Delete all"
 msgstr "Видалити все"
 
+msgid "Delete all logs"
+msgstr "Видалити всі логи"
+
 msgid "Delete all the text"
 msgstr "Видалити весь текст"
 
@@ -3820,6 +3868,9 @@ msgstr "Е"
 
 msgid "ECM Info"
 msgstr "ECM Інфо"
+
+msgid "ECM information for '%s'"
+msgstr "Інформація ЕСМ для '%s'"
 
 msgid "EPG"
 msgstr "Телегід (EPG)"
@@ -4608,10 +4659,10 @@ msgstr "Резервний API не завантажив дійсний резу
 msgid "Fallback Font *"
 msgstr "Резервний шрифт *"
 
-msgid "Fallback Font 1"
+msgid "Fallback Font1"
 msgstr "Резервний шрифт 1"
 
-msgid "Fallback Font 2"
+msgid "Fallback Font2"
 msgstr "Резервний шрифт 2"
 
 msgid "Fallback Timer"
@@ -4701,6 +4752,9 @@ msgstr "URL фіду"
 msgid "Fiji"
 msgstr "Фіджі"
 
+msgid "File System Check"
+msgstr "Перевірка Файлової Системи"
+
 msgid "File appears to be busy.\n"
 msgstr "Файл зайнятий.\n"
 
@@ -4711,9 +4765,6 @@ msgid "Filesystem Check"
 msgstr "Перевірка файлової системи"
 
 msgid "Filesystem check"
-msgstr "Перевірка файлової системи"
-
-msgid "Filesystem Сheck"
 msgstr "Перевірка файлової системи"
 
 msgid "Final position at"
@@ -4828,6 +4879,9 @@ msgstr "Форматувати Диск"
 
 msgid "Format Disk Settings"
 msgstr "Параметри Форматування Диска"
+
+msgid "Format Storage Device"
+msgstr "Форматувати пристрій зберігання"
 
 msgid "Forward Error Correction (FEC)"
 msgstr "Корекція помилок (FEC)"
@@ -5214,11 +5268,11 @@ msgstr "Перейти в режим очікування з ТБ"
 msgid "Handle wakeup from TV"
 msgstr "Включити при включенні ТВ"
 
+msgid "Hard Disk Setup"
+msgstr "Налаштування Жорсткого Диску"
+
 msgid "Hard disk"
 msgstr "Жорсткий диск"
-
-msgid "Hard disk setup"
-msgstr "Налаштування Жорсткого Диску"
 
 msgid "Hard disk standby after"
 msgstr "Відключення HDD через"
@@ -5252,6 +5306,9 @@ msgstr "Іврит"
 
 msgid "Height"
 msgstr "Висота"
+
+msgid "Help"
+msgstr "Допомога"
 
 msgid "Helps setting up your antenna"
 msgstr "Допомога в налаштуванні антени"
@@ -5381,6 +5438,9 @@ msgstr "Венгерська"
 
 msgid "Hungary"
 msgstr "Венгрія"
+
+msgid "Hz"
+msgstr "Гц"
 
 msgid "I"
 msgstr "I"
@@ -6241,6 +6301,12 @@ msgstr "Блокування Співвідношення"
 msgid "Lock:"
 msgstr "З’єднання:"
 
+msgid "Log"
+msgstr "Лог"
+
+msgid "Log %d/%d"
+msgstr "Лог %d/%d"
+
 msgid "Log Manager"
 msgstr "Управління логами"
 
@@ -6249,12 +6315,6 @@ msgstr "Лог походження python-спінера?"
 
 msgid "Log python stack trace on spinner?"
 msgstr "Лог походження python спінера?"
-
-msgid "Log results to /tmp"
-msgstr "Записувати логи до /tmp"
-
-msgid "Logfile does not exist anymore"
-msgstr "Файл журналу логу більше не існує"
 
 msgid "Logs Settings"
 msgstr "Управління Логами"
@@ -6812,6 +6872,9 @@ msgstr "Конфігурація мережі"
 msgid "Network configuration..."
 msgstr "Конфігурація мережі..."
 
+msgid "Network information"
+msgstr "Інформація про мережу"
+
 msgid "Network information for %s %s"
 msgstr "Мережева інформація для %s %s"
 
@@ -7133,6 +7196,9 @@ msgstr ""
 
 msgid "Nothing to scan! Setup your tuner and try again."
 msgstr "Немає даних для сканування! Налаштуйте тюнер і повторіть спробу."
+
+msgid "Nothing to upgrade"
+msgstr "Оновлень немає"
 
 msgid "Now"
 msgstr "Зараз"
@@ -7557,11 +7623,11 @@ msgstr "Відтворити музику..."
 msgid "Play next"
 msgstr "Відтворити наступний"
 
-msgid "Play next (return to movie list)"
-msgstr "Відтворити наступний (повернутися до списку записів)"
-
 msgid "Play next (return to previous service)"
 msgstr "Відтворити наступний (повернення до попереднього каналу)"
+
+msgid "Play next in movie list"
+msgstr "Відтворити наступний зі списку записів"
 
 msgid "Play previous"
 msgstr "Відтворити попередній"
@@ -8353,6 +8419,9 @@ msgstr "Параметри прийому"
 msgid "Record"
 msgstr "Запис"
 
+msgid "Record Icon"
+msgstr "Значок Запису"
+
 msgid "Record time limited due to conflicting timer %s"
 msgstr "Час запису обмежено через конфлікт таймера %s"
 
@@ -8751,8 +8820,8 @@ msgstr "Перезапускати субтитри"
 msgid "Right"
 msgstr "Вправо"
 
-msgid "Right from servicename"
-msgstr "Після назви каналу"
+msgid "Right from service name"
+msgstr "Праворуч назви каналу"
 
 msgid "Roll-off"
 msgstr "Roll-off фактор"
@@ -9084,6 +9153,13 @@ msgstr "Перемотка вперед"
 msgid "Seek forward (enter time)"
 msgstr "Перемотка вперед (введіть час)"
 
+msgid ""
+"Seems your receiver has a software problem. Since the last reboot it has "
+"occurred %d times.\n"
+msgstr ""
+"У Вашому приймачі виявлено проблему з ПЗ. Після останнього перезавантаження "
+"воно пройшло %d разів.\n"
+
 msgid "Select"
 msgstr "Вибрати"
 
@@ -9317,6 +9393,9 @@ msgstr "Вибір Емулятора"
 
 msgid "Select a bouquet"
 msgstr "Вибрати фаворит"
+
+msgid "Select a debug log file to view:"
+msgstr "Виберіть файл журналу налагодження для перегляду:"
 
 msgid "Select a movie"
 msgstr "Вибрати відео"
@@ -9940,8 +10019,8 @@ msgid "Set the aspect ratio of the service picons."
 msgstr "Встановити співвідношення сторін піконів каналу."
 
 msgid ""
-"Set the default location for your instant recordings. Press 'OK' to add new "
-"locations, press 'LEFT'/'RIGHT' to select from previously defined locations."
+"Set the default location for your instant recordings. Press OK to add new "
+"locations, LEFT/RIGHT to select from any existing locations."
 msgstr ""
 "Призначте розташування для файлів миттєвого запису. Натисніть 'OK' щоб "
 "додати новий каталог, або кнопками вправо/вліво виберіть існуючийкаталог."
@@ -10576,11 +10655,11 @@ msgstr "Пакети скінів"
 msgid "Skin Selection Actions"
 msgstr "Дії при виборі скіну"
 
-msgid "Skin Setting"
-msgstr "Налаштування скіну"
+msgid "Skin Settings"
+msgstr "Вибір Скіна"
 
 msgid "Skin setting"
-msgstr "Вибір скіну"
+msgstr "Налаштування скіну"
 
 msgid "SkinSelection"
 msgstr "Вибір Скіна"
@@ -10698,6 +10777,9 @@ msgstr "Програмне забезпечення"
 
 msgid "Software MultiBoot"
 msgstr "ПЗ MultiBoot"
+
+msgid "Software Update"
+msgstr "Оновлення ПЗ"
 
 msgid "Software information"
 msgstr "Інформація про ПЗ"
@@ -11123,6 +11205,15 @@ msgstr "Запит потоку"
 
 msgid "Streaming clients info"
 msgstr "Інформація про потокові клієнти"
+
+msgid "Stretch full"
+msgstr "Розтягнути повністю"
+
+msgid "Stretch linear"
+msgstr "Розтягнути лінійно"
+
+msgid "Stretch nonlinear"
+msgstr "Розтягнути нелінійно"
 
 msgid "Strongest position"
 msgstr "Кінцева позиція"
@@ -12607,6 +12698,9 @@ msgstr "Канал Оновленя не доступний."
 msgid "Update has completed."
 msgstr "Оновлення завершено."
 
+msgid "Updates available:"
+msgstr "Доступні оновлення:"
+
 msgid "Updating"
 msgstr "Оновлення"
 
@@ -12794,6 +12888,9 @@ msgstr "Фаворити користувача"
 msgid "User defined"
 msgstr "Визначені користувачем"
 
+msgid "User defined 0x%02x"
+msgstr "Визначені користувачем 0x%02x"
+
 msgid "User defined transponder"
 msgstr "Транспондер вручну"
 
@@ -12853,6 +12950,12 @@ msgstr "Вертикальна"
 
 msgid "Vertical turning speed"
 msgstr "Швидкість повороту по вертикалі"
+
+msgid "Very fast"
+msgstr "Дуже швидко"
+
+msgid "Very slow"
+msgstr "Дуже повільно"
 
 msgid "Video Codec, Size & Format"
 msgstr "Відеокодек, розмір і формат"
@@ -13945,6 +14048,9 @@ msgstr ""
 
 msgid "Your internet connection is working (IP address: %s)"
 msgstr "Ваше інтернет з'єднання працює (IP: %s)"
+
+msgid "Your is rebooting"
+msgstr "Ваш приймач перезавантажується"
 
 msgid "Your network configuration has been activated."
 msgstr "Конфігурація мережі активована."
