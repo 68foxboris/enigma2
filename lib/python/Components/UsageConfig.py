@@ -1,24 +1,25 @@
+from glob import glob
+import locale
+from os import makedirs, remove
+from os.path import exists, isfile, join as pathjoin, normpath
 from time import mktime
-from gettext import ngettext
 from skin import parameters
 from Components.Harddisk import harddiskmanager
 from Components.Console import Console
 from Components.config import ConfigSubsection, ConfigDirectory, ConfigYesNo, config, ConfigSelection, ConfigText, ConfigNumber, ConfigSet, ConfigLocations, ConfigSelectionNumber, ConfigClock, ConfigSlider, ConfigEnableDisable, ConfigSubDict, ConfigDictionarySet, ConfigInteger, ConfigSequence, ConfigPassword, ConfigIP, NoSave, ConfigBoolean
-from Tools.Directories import SCOPE_HDD, SCOPE_TIMESHIFT, defaultRecordingLocation, resolveFilename
+from Tools.Directories import SCOPE_HDD, SCOPE_TIMESHIFT, defaultRecordingLocation, resolveFilename, fileWriteLine
 from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eSubtitleSettings, eSettings, eDVBLocalTimeHandler, eEPGCache
 from Components.About import GetIPsFromNetworkInterfaces
 from Components.NimManager import nimmanager
 from Components.Renderer.FrontpanelLed import ledPatterns, PATTERN_ON, PATTERN_OFF, PATTERN_BLINK
 from Components.ServiceList import refreshServiceList
 from Components.SystemInfo import BoxInfo
-from os import makedirs
-from os.path import exists, isfile, join as pathjoin, normpath
-import os
-import locale
 
 
 originalAudioTracks = "orj dos ory org esl qaa qaf und mis mul ORY ORJ Audio_ORJ oth"
 visuallyImpairedCommentary = "NAR qad"
+
+MODULE_NAME = __name__.split(".")[-1]
 
 MODEL = BoxInfo.getItem("model")
 PLATFORM = BoxInfo.getItem("platform")
@@ -88,7 +89,9 @@ def InitUsageConfig():
 	config.usage.record_indicator_mode.addNotifier(refreshServiceList)
 
 	# Just merge note, config.usage.servicelist_column was already there.
-	config.usage.servicelist_column = ConfigSelection(default="-1", choices=[("-1", _("Disable"))
+	config.usage.servicelist_column = ConfigSelection(default="-1", choices=[
+		("-1", _("Disable")),
+		("0", _("Event name only"))
 	] + [(str(x), ngettext("%d Pixel wide", "%d Pixels wide", x) % x) for x in range(100, 1325, 25)])
 	config.usage.servicelist_column.addNotifier(refreshServiceList)
 	# Two lines options.
@@ -221,7 +224,7 @@ def InitUsageConfig():
 		("small", _("Small")),
 		("large", _("Large"))
 	])
-	config.usage.enable_tt_caching = ConfigYesNo(default=False)
+	config.usage.enable_tt_caching = ConfigYesNo(default=True)
 
 	config.usage.tuxtxt_font_and_res = ConfigSelection(default="TTF_SD", choices=[
 		("X11_SD", _("Fixed X11 font (SD)")),
@@ -230,14 +233,9 @@ def InitUsageConfig():
 		("TTF_FHD", _("TrueType font (Full-HD)")),
 		("expert_mode", _("Expert mode"))
 	])
-	config.usage.tuxtxt_UseTTF = ConfigSelection(default="1", choices=[
-		("0", "0"),
-		("1", "1")
-	])
-	config.usage.tuxtxt_TTFBold = ConfigSelection(default="1", choices=[
-		("0", "0"),
-		("1", "1")
-	])
+	config.usage.tuxtxt_UseTTF = ConfigSelection(default="1", choices=[("0", "0"), ("1", "1")])
+	config.usage.tuxtxt_TTFBold = ConfigSelection(default="1", choices=[("0", "0"), ("1", "1")])
+
 	config.usage.tuxtxt_TTFScreenResX = ConfigSelection(default="720", choices=[
 		("720", "720"),
 		("1280", "1280"),
@@ -247,48 +245,9 @@ def InitUsageConfig():
 	config.usage.tuxtxt_EndX = ConfigInteger(default=670, limits=(500, 1920))
 	config.usage.tuxtxt_StartY = ConfigInteger(default=30, limits=(0, 200))
 	config.usage.tuxtxt_EndY = ConfigInteger(default=555, limits=(400, 1080))
-	config.usage.tuxtxt_TTFShiftY = ConfigSelection(default="2", choices=[
-		("-9", "-9"),
-		("-8", "-8"),
-		("-7", "-7"),
-		("-6", "-6"),
-		("-5", "-5"),
-		("-4", "-4"),
-		("-3", "-3"),
-		("-2", "-2"),
-		("-1", "-1"),
-		("0", "0"),
-		("1", "1"),
-		("2", "2"),
-		("3", "3"),
-		("4", "4"),
-		("5", "5"),
-		("6", "6"),
-		("7", "7"),
-		("8", "8"),
-		("9", "9")
-	])
-	config.usage.tuxtxt_TTFShiftX = ConfigSelection(default="0", choices=[
-		("-9", "-9"),
-		("-8", "-8"),
-		("-7", "-7"),
-		("-6", "-6"),
-		("-5", "-5"),
-		("-4", "-4"),
-		("-3", "-3"),
-		("-2", "-2"),
-		("-1", "-1"),
-		("0", "0"),
-		("1", "1"),
-		("2", "2"),
-		("3", "3"),
-		("4", "4"),
-		("5", "5"),
-		("6", "6"),
-		("7", "7"),
-		("8", "8"),
-		("9", "9")
-	])
+	choiceList = [(str(x), str(x)) for x in range(-9, 10)]
+	config.usage.tuxtxt_TTFShiftY = ConfigSelection(default="2", choices=choiceList)
+	config.usage.tuxtxt_TTFShiftX = ConfigSelection(default="0", choices=choiceList)
 	config.usage.tuxtxt_TTFWidthFactor16 = ConfigInteger(default=29, limits=(8, 31))
 	config.usage.tuxtxt_TTFHeightFactor16 = ConfigInteger(default=14, limits=(8, 31))
 	config.usage.tuxtxt_CleanAlgo = ConfigInteger(default=0, limits=(0, 9))
@@ -309,16 +268,10 @@ def InitUsageConfig():
 	config.usage.tuxtxt_CleanAlgo.addNotifier(patchTuxtxtConfFile, initial_call=False, immediate_feedback=False)
 
 	config.usage.sort_settings = ConfigYesNo(default=False)
-	choiceList = []
-	for i in (10, 30):
-		choiceList.append((str(i), ngettext("%d second", "%d seconds", i) % i))
-	for i in (60, 120, 300, 600, 1200, 1800):
-		m = i / 60
-		choiceList.append((str(i), ngettext("%d minute", "%d minutes", m) % m))
-	for i in (3600, 7200, 14400):
-		h = i / 3600
-		choiceList.append((str(i), ngettext("%d hour", "%d hours", h) % h))
-	config.usage.hdd_standby = ConfigSelection(default="300", choices=[("0", _("No standby"))] + choiceList)
+	choiceList = [
+		("0", _("No standby"))
+	] + [(str(x), _("%d Seconds") % x) for x in (10, 30)] + [(str(x * 60), ngettext("%d Minute", "%d Minutes", x) % x) for x in (1, 2, 5, 10, 20, 30)] + [(str(x * 3600), ngettext("%d Hour", "%d Hours", x) % x) for x in (1, 2, 4)]
+	config.usage.hdd_standby = ConfigSelection(default="300", choices=choiceList)
 	config.usage.output_12V = ConfigSelection(default="do not change", choices=[
 		("do not change", _("Do not change")),
 		("off", _("Off")),
@@ -339,15 +292,12 @@ def InitUsageConfig():
 	choiceList = [
 		("-1", _("Disabled")),
 		("0", _("No timeout"))
-	]
-	for i in [60, 300, 600, 900, 1800, 2700, 3600]:
-		m = i / 60
-		choiceList.append((str(i), ngettext("%d minute", "%d minutes", m) % m))
-	config.usage.pip_last_service_timeout = ConfigSelection(default="0", choices=choiceList)
+	] + [(str(x * 60), ngettext("%d Minute", "%d Minutes", x) % x) for x in (1, 5, 10, 15, 30, 45, 60)]
+	config.usage.pip_last_service_timeout = ConfigSelection(default="-1", choices=choiceList)
 
 	if not exists(resolveFilename(SCOPE_HDD)):
 		try:
-			os.mkdir(resolveFilename(SCOPE_HDD), 0o755)
+			mkdir(resolveFilename(SCOPE_HDD), 0o755)
 		except (IOError, OSError):
 			pass
 	defaultPath = resolveFilename(SCOPE_HDD)
@@ -373,7 +323,11 @@ def InitUsageConfig():
 			except OSError as err:
 				print("[UsageConfig] Error %d: Unable to create default movie directory '%s'!  (%s)" % (err.errno, defaultPath, err.strerror))
 
-	choiceList = [("<default>", "<default>"), ("<current>", "<current>"), ("<timer>", "<timer>")]
+	choiceList = [
+		("<default>", "<Default>"),
+		("<current>", "<Current>"),
+		("<timer>", "<Timer>")
+	]
 	config.usage.timer_path = ConfigSelection(default="<default>", choices=choiceList)
 	config.usage.timer_path.load()
 	if config.usage.timer_path.saved_value:
@@ -382,6 +336,7 @@ def InitUsageConfig():
 			config.usage.timer_path.setChoices(choiceList + [(savedValue, savedValue)], default="<default>")
 			config.usage.timer_path.value = savedValue
 	config.usage.timer_path.save()
+
 	config.usage.instantrec_path = ConfigSelection(default="<default>", choices=choiceList)
 	config.usage.instantrec_path.load()
 	if config.usage.instantrec_path.saved_value:
@@ -392,7 +347,7 @@ def InitUsageConfig():
 	config.usage.instantrec_path.save()
 	if not exists(resolveFilename(SCOPE_TIMESHIFT)):
 		try:
-			os.mkdir(resolveFilename(SCOPE_TIMESHIFT), 0o755)
+			mkdir(resolveFilename(SCOPE_TIMESHIFT), 0o755)
 		except:
 			pass
 	config.timeshift = ConfigSubsection()
@@ -619,16 +574,16 @@ def InitUsageConfig():
 		("4", _("Blinking red"))
 	])
 
-	def remote_fallback_changed(configElement):
-		if configElement.value:
-			configElement.value = "%s%s" % (not configElement.value.startswith("http://") and "http://" or "", configElement.value)
-			configElement.value = "%s%s" % (configElement.value, configElement.value.count(":") == 1 and ":8001" or "")
-
 	def setRemoteFallbackEnabled(configElement):
 		eSettings.setRemoteFallbackEnabled(configElement.value)
 
 	config.usage.remote_fallback_enabled = ConfigYesNo(default=False)
 	config.usage.remote_fallback_enabled.addNotifier(setRemoteFallbackEnabled)
+
+	def remote_fallback_changed(configElement):
+		if configElement.value:
+			configElement.value = "%s%s" % (not configElement.value.startswith("http://") and "http://" or "", configElement.value)
+			configElement.value = "%s%s" % (configElement.value, configElement.value.count(":") == 1 and ":8001" or "")
 	config.usage.remote_fallback = ConfigText(default="", fixed_size=False)
 	config.usage.remote_fallback.addNotifier(remote_fallback_changed, immediate_feedback=False)
 	config.usage.remote_fallback_import_url = ConfigText(default="", fixed_size=False)
@@ -640,12 +595,7 @@ def InitUsageConfig():
 	config.usage.remote_fallback_dvb_c.addNotifier(remote_fallback_changed, immediate_feedback=False)
 	config.usage.remote_fallback_atsc = ConfigText(default="", fixed_size=False)
 	config.usage.remote_fallback_atsc.addNotifier(remote_fallback_changed, immediate_feedback=False)
-	config.usage.remote_fallback_import = ConfigSelection(default="", choices=[
-		("", _("No")),
-		("channels", _("Channels only")),
-		("channels_epg", _("Channels and EPG")),
-		("epg", _("EPG only"))
-	])
+	config.usage.remote_fallback_import = ConfigSelection(default="", choices=[("", _("No")), ("channels", _("Channels only")), ("channels_epg", _("Channels and EPG")), ("epg", _("EPG only"))])
 	config.usage.remote_fallback_import_restart = ConfigYesNo(default=False)
 	config.usage.remote_fallback_import_standby = ConfigYesNo(default=False)
 	config.usage.remote_fallback_ok = ConfigYesNo(default=False)
@@ -662,11 +612,7 @@ def InitUsageConfig():
 	def setHttpStartDelay(configElement):
 		eSettings.setHttpStartDelay(configElement.value)
 
-	choiceList = [(0, _("Disabled"))]
-	for i in (10, 50, 100, 500, 1000, 2000):
-		choiceList.append(("%d" % i, _("%d ms") % i))
-
-	config.usage.http_startdelay = ConfigSelection(default=0, choices=choiceList)
+	config.usage.http_startdelay = ConfigSelection(default=0, choices=[(0, _("Disabled"))] + [(x, _("%d ms") % x) for x in (10, 50, 100, 500, 1000, 2000)])
 	config.usage.http_startdelay.addNotifier(setHttpStartDelay)
 
 	config.usage.show_timer_conflict_warning = ConfigYesNo(default=True)
@@ -743,52 +689,41 @@ def InitUsageConfig():
 	config.usage.movielist_unseen = ConfigYesNo(default=False)
 
 	config.usage.swap_snr_on_osd = ConfigYesNo(default=False)
-	config.usage.swap_time_display_on_osd = ConfigSelection(default="0", choices=[
-		("0", _("Skin setting")),
+	choiceList = [
+		("0", _("Skin Setting")),
 		("1", _("Minutes")),
 		("2", _("Minutes Seconds")),
 		("3", _("Hours Minutes")),
 		("4", _("Hours Minutes Seconds")),
 		("5", _("Percentage"))
-	])
-	config.usage.swap_media_time_display_on_osd = ConfigSelection(default="0", choices=[
-		("0", _("Skin setting")),
-		("1", _("Minutes")),
-		("2", _("Minutes Seconds")),
-		("3", _("Hours Minutes")),
-		("4", _("Hours Minutes Seconds")),
-		("5", _("Percentage"))
-	])
-	config.usage.swap_time_remaining_on_osd = ConfigSelection(default="0", choices=[
+	]
+	config.usage.swap_time_display_on_osd = ConfigSelection(default="0", choices=choiceList)
+	config.usage.swap_media_time_display_on_osd = ConfigSelection(default="0", choices=choiceList)
+	config.usage.swap_time_display_on_vfd = ConfigSelection(default="0", choices=choiceList)
+	config.usage.swap_media_time_display_on_vfd = ConfigSelection(default="0", choices=choiceList)
+	choiceList = [
 		("0", _("Remaining")),
 		("1", _("Elapsed")),
 		("2", _("Elapsed & Remaining")),
 		("3", _("Remaining & Elapsed"))
-	])
+	]
+	config.usage.swap_time_remaining_on_osd = ConfigSelection(default="0", choices=choiceList)
+	config.usage.swap_time_remaining_on_vfd = ConfigSelection(default="0", choices=choiceList)
 	config.usage.elapsed_time_positive_osd = ConfigYesNo(default=False)
-	config.usage.swap_time_display_on_vfd = ConfigSelection(default="0", choices=[
-		("0", _("Skin setting")),
-		("1", _("Minutes")),
-		("2", _("Minutes Seconds")),
-		("3", _("Hours Minutes")),
-		("4", _("Hours Minutes Seconds")),
-		("5", _("Percentage"))
-	])
-	config.usage.swap_media_time_display_on_vfd = ConfigSelection(default="0", choices=[
-		("0", _("Skin setting")),
-		("1", _("Minutes")),
-		("2", _("Minutes Seconds")),
-		("3", _("Hours Minutes")),
-		("4", _("Hours Minutes Seconds")),
-		("5", _("Percentage"))
-	])
-	config.usage.swap_time_remaining_on_vfd = ConfigSelection(default="0", choices=[
-		("0", _("Remaining")),
-		("1", _("Elapsed")),
-		("2", _("Elapsed & Remaining")),
-		("3", _("Remaining & Elapsed"))
-	])
 	config.usage.elapsed_time_positive_vfd = ConfigYesNo(default=False)
+	config.usage.lcd_scroll_delay = ConfigSelection(default="10000", choices=[
+		("10000", _("%d Seconds") % 10),
+		("20000", _("%d Seconds") % 20),
+		("30000", _("%d Seconds") % 30),
+		("60000", _("%d Minute") % 1),
+		("300000", _("%d Minutes") % 5),
+		("noscrolling", _("Off"))
+	])
+	config.usage.lcd_scroll_speed = ConfigSelection(default="300", choices=[
+		("500", _("Slow")),
+		("300", _("Normal")),
+		("100", _("Fast"))
+	])
 
 	def SpinnerOnOffChanged(configElement):
 		setSpinnerOnOff(int(configElement.value))
@@ -824,9 +759,9 @@ def InitUsageConfig():
 	config.usage.show_update_disclaimer = ConfigYesNo(default=True)
 	config.usage.pic_resolution = ConfigSelection(default=None, choices=[
 		(None, _("Same resolution as skin")),
-		("(720, 576)", _("720x576")),
-		("(1280, 720)", _("1280x720")),
-		("(1920, 1080)", _("1920x1080"))
+		("(720, 576)", "720x576"),
+		("(1280, 720)", "1280x720"),
+		("(1920, 1080)", "1920x1080")
 	][:BoxInfo.getItem("HasFullHDSkinSupport") and 4 or 3])
 
 	config.usage.date = ConfigSubsection()
@@ -1220,27 +1155,18 @@ def InitUsageConfig():
 	config.epg.opentv = ConfigYesNo(default=False)
 	config.epg.saveepg = ConfigYesNo(default=True)
 
-	config.epg.maxdays = ConfigSelectionNumber(min=1, max=365, stepwidth=1, default=7, wraparound=True)
+	def showEPGChanged(configElement):
+		from enigma import eEPGCache
+		eEPGCache.getInstance().setSave(configElement.value)
+
+	config.epg.saveepg.addNotifier(showEPGChanged, immediate_feedback=False, initial_call=False)
+
 	config.epg.joinAbbreviatedEventNames = ConfigYesNo(default=True)
 	config.epg.eventNamePrefixes = ConfigText(default="")
 	config.epg.eventNamePrefixMode = ConfigSelection(choices=[(0, _("Off")), (1, _("Remove")), (2, _("Move to description"))])
 
-	def EpgmaxdaysChanged(configElement):
-		eEPGCache.getInstance().setEpgmaxdays(config.epg.maxdays.getValue())
-	config.epg.maxdays.addNotifier(EpgmaxdaysChanged)
-
-	config.misc.epgratingcountry = ConfigSelection(default="", choices=[
-		("", _("Auto detect")),
-		("ETSI", _("Generic")),
-		("AUS", _("Australia"))
-	])
-	config.misc.epggenrecountry = ConfigSelection(default="", choices=[
-		("", _("Auto detect")),
-		("ETSI", _("Generic")),
-		("AUS", _("Australia"))
-	])
-
 	def EpgSettingsChanged(configElement):
+		from enigma import eEPGCache
 		mask = 0xffffffff
 		if not config.epg.eit.value:
 			mask &= ~(eEPGCache.NOWNEXT | eEPGCache.SCHEDULE | eEPGCache.SCHEDULE_OTHER)
@@ -1265,18 +1191,26 @@ def InitUsageConfig():
 	config.epg.virgin.addNotifier(EpgSettingsChanged)
 	config.epg.opentv.addNotifier(EpgSettingsChanged)
 
+	config.epg.maxdays = ConfigSelectionNumber(min=1, max=365, stepwidth=1, default=7, wraparound=True)
+
+	def EpgmaxdaysChanged(configElement):
+		from enigma import eEPGCache
+		eEPGCache.getInstance().setEpgmaxdays(config.epg.maxdays.getValue())
+	config.epg.maxdays.addNotifier(EpgmaxdaysChanged)
+
 	config.epg.histminutes = ConfigSelectionNumber(min=0, max=120, stepwidth=15, default=0, wraparound=True)
 
 	def EpgHistorySecondsChanged(configElement):
-		from enigma import eEPGCache
-		eEPGCache.getInstance().setEpgHistorySeconds(config.epg.histminutes.getValue() * 60)
+		eEPGCache.getInstance().setEpgHistorySeconds(config.epg.histminutes.value * 60)
 	config.epg.histminutes.addNotifier(EpgHistorySecondsChanged)
 
 	config.epg.cacheloadsched = ConfigYesNo(default=False)
 	config.epg.cachesavesched = ConfigYesNo(default=False)
+
 	def EpgCacheLoadSchedChanged(configElement):
 		import Components.EpgLoadSave
 		Components.EpgLoadSave.EpgCacheLoadCheck()
+
 	def EpgCacheSaveSchedChanged(configElement):
 		import Components.EpgLoadSave
 		Components.EpgLoadSave.EpgCacheSaveCheck()
@@ -1284,6 +1218,21 @@ def InitUsageConfig():
 	config.epg.cachesavesched.addNotifier(EpgCacheSaveSchedChanged, immediate_feedback=False)
 	config.epg.cacheloadtimer = ConfigSelectionNumber(default=24, stepwidth=1, min=1, max=24, wraparound=True)
 	config.epg.cachesavetimer = ConfigSelectionNumber(default=24, stepwidth=1, min=1, max=24, wraparound=True)
+
+	def debugEPGhanged(configElement):
+		from enigma import eEPGCache
+		eEPGCache.getInstance().setDebug(configElement.value)
+
+	hddChoices = [("/etc/enigma2/", _("Internal Flash"))]
+	for partition in harddiskmanager.getMountedPartitions():
+		if exists(partition.mountpoint):
+			path = normpath(partition.mountpoint)
+			if partition.mountpoint != "/":
+				hddChoices.append((partition.mountpoint, path))
+	config.misc.epgcachepath = ConfigSelection(default="/etc/enigma2/", choices=hddChoices)
+	config.misc.epgcachefilename = ConfigText(default="epg", fixed_size=False)
+	epgCacheFilename = "%s.dat" % config.misc.epgcachefilename.value.replace(".dat", "")
+	config.misc.epgcache_filename = ConfigText(default=pathjoin(config.misc.epgcachepath.value, epgCacheFilename))
 
 	if BoxInfo.getItem("AmlogicFamily"):
 		from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
@@ -1315,37 +1264,41 @@ def InitUsageConfig():
 		("mode2", _("Mode 2"))
 	])
 
-	hddchoises = [('/etc/enigma2/', 'Internal Flash')]
-	for p in harddiskmanager.getMountedPartitions():
-		if exists(p.mountpoint):
-			d = normpath(p.mountpoint)
-			if p.mountpoint != '/':
-				hddchoises.append((p.mountpoint, d))
-	config.misc.epgcachepath = ConfigSelection(default='/etc/enigma2/', choices=hddchoises)
-	config.misc.epgcachefilename = ConfigText(default='epg', fixed_size=False)
-	config.misc.epgcache_filename = ConfigText(default=(config.misc.epgcachepath.value + config.misc.epgcachefilename.value.replace('.dat', '') + '.dat'))
 	def EpgCacheChanged(configElement):
-		config.misc.epgcache_filename.setValue(os.path.join(config.misc.epgcachepath.value, config.misc.epgcachefilename.value.replace('.dat', '') + '.dat'))
+		config.misc.epgcache_filename.setValue(pathjoin(config.misc.epgcachepath.value, epgCacheFilename))
 		config.misc.epgcache_filename.save()
 		eEPGCache.getInstance().setCacheFile(config.misc.epgcache_filename.value)
 		epgcache = eEPGCache.getInstance()
 		epgcache.save()
 		if not config.misc.epgcache_filename.value.startswith("/etc/enigma2/"):
-			if exists('/etc/enigma2/' + config.misc.epgcachefilename.value.replace('.dat', '') + '.dat'):
-				os.remove('/etc/enigma2/' + config.misc.epgcachefilename.value.replace('.dat', '') + '.dat')
+			epgCachePath = pathjoin("/etc/enigma2/", epgCacheFilename)
+			if exists(epgCachePath):
+				remove(epgCachePath)
 	config.misc.epgcachepath.addNotifier(EpgCacheChanged, immediate_feedback=False)
 	config.misc.epgcachefilename.addNotifier(EpgCacheChanged, immediate_feedback=False)
 
-	config.misc.epgratingcountry = ConfigSelection(default="", choices=[
-		("", _("Auto detect")),
+	def partitionListChanged(action, device):
+		hddchoises = [("/etc/enigma2/", _("Internal Flash"))]
+		for partition in harddiskmanager.getMountedPartitions():
+			if exists(partition.mountpoint):
+				path = normpath(partition.mountpoint)
+				if partition.mountpoint != "/":
+					hddchoises.append((partition.mountpoint, path))
+		config.misc.epgcachepath.setChoices(hddchoises)
+		if config.misc.epgcachepath.saved_value and config.misc.epgcachepath.saved_value != config.misc.epgcachepath.value and config.misc.epgcachepath.saved_value in [x[0] for x in hddchoises]:
+			print(f"[UsageConfig] epgcachepath changed from '{config.misc.epgcachepath.value}' to '{config.misc.epgcachepath.saved_value}'")
+			eEPGCache.getInstance().setCacheFile("")
+			config.misc.epgcachepath.value = config.misc.epgcachepath.saved_value
+
+	harddiskmanager.on_partition_list_change.append(partitionListChanged)
+
+	choiceList = [
+		("", _("Auto Detect")),
 		("ETSI", _("Generic")),
 		("AUS", _("Australia"))
-	])
-	config.misc.epggenrecountry = ConfigSelection(default="", choices=[
-		("", _("Auto detect")),
-		("ETSI", _("Generic")),
-		("AUS", _("Australia"))
-	])
+	]
+	config.misc.epgratingcountry = ConfigSelection(default="", choices=choiceList)
+	config.misc.epggenrecountry = ConfigSelection(default="", choices=choiceList)
 
 	config.misc.showradiopic = ConfigYesNo(default=True)
 
@@ -1378,7 +1331,7 @@ def InitUsageConfig():
 	config.crash.bsodpython = ConfigYesNo(default=True)
 	config.crash.bsodpython_ready = NoSave(ConfigYesNo(default=False))
 	choiceList = [("0", _("Never"))] + [(str(x), str(x)) for x in range(1, 11)]
-	config.crash.bsodhide = ConfigSelection(default="0", choices=choiceList)
+	config.crash.bsodhide = ConfigSelection(default="1", choices=choiceList)
 	config.crash.bsodmax = ConfigSelection(default="3", choices=choiceList)
 
 	config.crash.enabledebug = ConfigYesNo(default=False)
@@ -1394,7 +1347,7 @@ def InitUsageConfig():
 		("2", _("Local time")),
 		("3", _("Boot time and local time")),
 		("6", _("Local date/time")),
-		("7", _("Boot time and local data/time"))
+		("7", _("Boot time and local date/time"))
 	])
 	config.crash.debugTimeFormat.save_forced = True
 
@@ -1419,38 +1372,32 @@ def InitUsageConfig():
 
 	config.crash.coredump = ConfigYesNo(default=False)
 
-	debugpath = [('/home/root/logs/', '/home/root/')]
-	for p in harddiskmanager.getMountedPartitions():
-		if exists(p.mountpoint):
-			d = normpath(p.mountpoint)
-			if p.mountpoint != '/':
-				debugpath.append((p.mountpoint + 'logs/', d))
-	config.crash.debug_path = ConfigSelection(default="/home/root/logs/", choices=debugpath)
-	if not exists("/home"):
-		os.mkdir("/home", 0o755)
-	if not exists("/home/root"):
-		os.mkdir("/home/root", 0o755)
+	def updateDebugPath(configElement):
+		debugPath = config.crash.debug_path.value
+		try:
+			makedirs(debugPath, 0o755, exist_ok=True)
+		except OSError as err:
+			print("[UsageConfig] Error %d: Unable to create log directory '%s'!  (%s)" % (err.errno, debugPath, err.strerror))
 
-	def updatedebug_path(configElement):
-		if not exists(config.crash.debug_path.value):
-			try:
-				os.mkdir(config.crash.debug_path.value, 0o755)
-			except:
-				print("Failed to create log path: %s" % config.crash.debug_path.value)
-	config.crash.debug_path.addNotifier(updatedebug_path, immediate_feedback=False)
+	choiceList = [("/home/root/logs/", "/home/root/")]
+	for partition in harddiskmanager.getMountedPartitions():
+		if exists(partition.mountpoint) and partition.mountpoint != "/":
+			choiceList.append((pathjoin(partition.mountpoint, "logs", ""), normpath(partition.mountpoint)))
+	config.crash.debug_path = ConfigSelection(default="/home/root/logs/", choices=choiceList)
+	config.crash.debug_path.addNotifier(updateDebugPath, immediate_feedback=False)
 	config.crash.skin_error_crash = ConfigYesNo(default=True)
 
 	def updateStackTracePrinter(configElement):
 		from Components.StackTrace import StackTracePrinter
 		if configElement.value:
 			if (isfile("/tmp/doPythonStackTrace")):
-				os.remove("/tmp/doPythonStackTrace")
+				remove("/tmp/doPythonStackTrace")
 			from threading import current_thread
 			StackTracePrinter.getInstance().activate(current_thread().ident)
 		else:
 			StackTracePrinter.getInstance().deactivate()
 
-	config.crash.pystackonspinner = ConfigYesNo(default=False)
+	config.crash.pystackonspinner = ConfigYesNo(default=True)
 	config.crash.pystackonspinner.addNotifier(updateStackTracePrinter, immediate_feedback=False, initial_call=True)
 
 	config.seek = ConfigSubsection()
@@ -1495,15 +1442,17 @@ def InitUsageConfig():
 	def updateEraseFlags(el):
 		eBackgroundFileEraser.getInstance().setEraseFlags(int(el.value))
 	config.misc.erase_speed = ConfigSelection(default="20", choices=[
-		("10", _("10 MB/s")),
-		("20", _("20 MB/s")),
-		("50", _("50 MB/s")),
-		("100", _("100 MB/s"))])
+		("10", _("%d MB/s") % 10),
+		("20", _("%d MB/s") % 20),
+		("50", _("%d MB/s") % 50),
+		("100", _("%d MB/s") % 100)
+	])
 	config.misc.erase_speed.addNotifier(updateEraseSpeed, immediate_feedback=False)
 	config.misc.erase_flags = ConfigSelection(default="1", choices=[
 		("0", _("Disable")),
 		("1", _("Internal hdd only")),
-		("3", _("Everywhere"))])
+		("3", _("Everywhere"))
+	])
 	config.misc.erase_flags.addNotifier(updateEraseFlags, immediate_feedback=False)
 
 	config.misc.zapkey_delay = ConfigSelectionNumber(default=5, stepwidth=1, min=0, max=20, wraparound=True)
@@ -1511,8 +1460,8 @@ def InitUsageConfig():
 
 	if BoxInfo.getItem("ZapMode"):
 		def setZapmode(el):
-			with open(BoxInfo.getItem("ZapMode"), "w") as fd:
-				fd.write(el.value)
+			fileWriteLine(BoxInfo.getItem("ZapMode"), el.value, source=MODULE_NAME)
+
 		config.misc.zapmode = ConfigSelection(default="mute", choices=[
 			("mute", _("Black screen")),
 			("hold", _("Hold screen")),
@@ -1521,7 +1470,11 @@ def InitUsageConfig():
 		])
 		config.misc.zapmode.addNotifier(setZapmode, immediate_feedback=False)
 
-	config.usage.historymode = ConfigSelection(default='1', choices=[('0', _('Just zap')), ('1', _('Show menu'))])
+	config.usage.historymode = ConfigSelection(default="1", choices=[
+		("0", _("Just zap")),
+		("1", _("Show menu"))
+	])
+
 
 	if BoxInfo.getItem("VFD_scroll_repeats"):
 		def scroll_repeats(el):
@@ -1957,7 +1910,7 @@ def InitUsageConfig():
 	if default == "zh":
 		default = "zh-CN"
 	if default not in [x[0] for x in langsAI]:
-		default = "es"
+		default = "en"
 
 	def setAiTranslateTo(configElement):
 		eSubtitleSettings.setAiTranslateTo(configElement.value)
@@ -2116,6 +2069,12 @@ def InitUsageConfig():
 	config.autolanguage.subtitle_usecache = ConfigYesNo(default=True)
 	config.autolanguage.subtitle_usecache.addNotifier(setSubtitleUseCache)
 
+	config.logmanager = ConfigSubsection()
+	config.logmanager.showinextensions = ConfigYesNo(default=False)
+	config.logmanager.path = ConfigText(default="/")
+	config.logmanager.sentfiles = ConfigLocations(default=[])
+
+
 	config.oscaminfo = ConfigSubsection()
 	if BoxInfo.getItem("OScamInstalled") or BoxInfo.getItem("NCamInstalled"):
 		config.oscaminfo.showInExtensions = ConfigYesNo(default=True)
@@ -2154,10 +2113,6 @@ def InitUsageConfig():
 	config.misc.softcam_streamrelay_port = ConfigInteger(default=17999, limits=(0, 65535))
 	config.misc.softcam_streamrelay_delay = ConfigSelectionNumber(min=0, max=2000, stepwidth=50, default=0, wraparound=True)
 
-	config.logmanager = ConfigSubsection()
-	config.logmanager.showinextensions = ConfigYesNo(default=False)
-	config.logmanager.path = ConfigText(default="/")
-	config.logmanager.sentfiles = ConfigLocations(default='')
 
 	config.misc.useNTPminutes = ConfigSelection(default="30", choices=[("30", _("%d Minutes") % 30), ("60", _("%d Hour") % 1), ("1440", _("%d Hours") % 24)])
 
