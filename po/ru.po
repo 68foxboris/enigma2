@@ -5189,7 +5189,7 @@ msgid "Configures which video output connector will be used."
 msgstr "Настройка - какой разъем видеовыхода будет использован."
 
 msgid "Configuring"
-msgstr "Настройки"
+msgstr "Настройка"
 
 msgid "Conflict not resolved!"
 msgstr "Конфликт не решен!"
@@ -5906,6 +5906,13 @@ msgstr "Продолжительность по умолчанию: %d мину�
 
 msgid "Default movie location"
 msgstr "Дефолтное место записей"
+
+#, python-format
+msgid "Default movie location (%s)"
+msgstr "Местоположение файла по умолчанию (%s)"
+
+msgid "Default movie selection location"
+msgstr "Место сохранения записей по умолчанию"
 
 msgid "Default settings"
 msgstr "Дефолтные настройки"
@@ -9170,6 +9177,9 @@ msgstr "Включать AIT в http стрим потоки"
 msgid "Include CI assignment"
 msgstr "Включить CI назначение"
 
+msgid "Include DVB scan data"
+msgstr "Включить данные сканирования DVB"
+
 msgid "Include ECM in http streams"
 msgstr "Включать ECM в http стрим потоки"
 
@@ -9181,6 +9191,15 @@ msgstr "Включить данные мультизагрузки *"
 
 msgid "Include keyboard data"
 msgstr "Включить данные клавиатуры"
+
+msgid "Include opkg output data"
+msgstr "Включить выходные данные opkg"
+
+msgid "Include remote control data"
+msgstr "Указать тип пульта управления"
+
+msgid "Include skin data"
+msgstr "Включить данные о скине"
 
 msgid "Include screen load data"
 msgstr "Включить данные о загрузке экрана"
@@ -9354,6 +9373,10 @@ msgstr "Инсталляция или удаление завершено."
 
 msgid "Installing"
 msgstr "Установка"
+
+#, python-format
+msgid "Installing %s (%s)..."
+msgstr "Установка %s (%s)..."
 
 msgid "Installing TMBD"
 msgstr "Инсталляция TMBD"
@@ -11654,6 +11677,21 @@ msgstr "ПРАЙМ-ТАЙМ"
 msgid "PVR"
 msgstr "PVR"
 
+msgid "Package"
+msgstr "Пакет"
+
+msgid "Package Manager"
+msgstr "Управление пакетами"
+
+msgid "Package files:"
+msgstr "Файлы пакета:"
+
+msgid "Package information currently not available!"
+msgstr "Информация о пакете в настоящее время недоступна!"
+
+msgid "Package installation failed."
+msgstr "Установка пакета не удалась."
+
 msgid "PVR long"
 msgstr "PVR долгая"
 
@@ -11661,7 +11699,7 @@ msgid "Package list"
 msgstr "Список пакетов"
 
 msgid "Package list update"
-msgstr "Список пакетов обновления"
+msgstr "Обновление списка пакетов"
 
 msgid "Packages to update"
 msgstr "Пакеты для обновления"
@@ -11697,28 +11735,28 @@ msgid "PageUp"
 msgstr "Страница вверх"
 
 msgid "Pakistan"
-msgstr "Pakistan"
+msgstr "Пакистан"
 
 msgid "Palau"
-msgstr "Palau"
+msgstr "Палау"
 
 msgid "Palestine, State of"
-msgstr "Palestine, State of"
+msgstr "Палестина"
 
 msgid "Pan&scan"
 msgstr "Панорама"
 
 msgid "Panama"
-msgstr "Panama"
+msgstr "Панама"
 
 msgid "Panic to"
 msgstr "Переключение на канал и очистка истории (если паника)"
 
 msgid "Papua New Guinea"
-msgstr "Papua New Guinea"
+msgstr "Папуа-Новая Гвинея"
 
 msgid "Paraguay"
-msgstr "Paraguay"
+msgstr "Парагвай"
 
 msgid "Parent directory"
 msgstr "Родительский каталог"
@@ -12161,6 +12199,39 @@ msgstr "Пожалуйста подождите во время сканиров
 msgid "Please wait while scanning is in progress..."
 msgstr "Пожалуйста подождите пока идет сканирование..."
 
+msgid "Please wait while the data is extracted..."
+msgstr "Пожалуйста, подождите, пока данные будут извлечены..."
+
+msgid "Please wait while the feeds are reset (cleared and reloaded)..."
+msgstr "Пожалуйста, подождите, пока каналы будут сброшены (очищены и перезагружены)..."
+
+msgid "Please wait while the file is read and processed..."
+msgstr "Пожалуйста, подождите, пока файл будет прочитан и обработан..."
+
+msgid "Please wait while the list downloads..."
+msgstr "Пожалуйста, подождите, пока список загрузится..."
+
+msgid "Please wait while the plugin is installed."
+msgid_plural "Please wait while the plugins are installed."
+msgstr[0] "Пожалуйста, подождите, пока плагин будет установлен."
+msgstr[1] "Пожалуйста, подождите, пока плагина установятся."
+msgstr[2] "Пожалуйста, подождите, пока плагины установятся."
+
+msgid "Please wait while the plugin is removed."
+msgid_plural "Please wait while the plugins are removed."
+msgstr[0] "Подождите, пока плагин будет удалён."
+msgstr[1] "Подождите, пока плагины будут удалены."
+msgstr[2] "Подождите, пока плагины будут удалены."
+
+msgid "Please wait while the plugin is replaced."
+msgstr "Пожалуйста, подождите, пока плагин будет заменён."
+
+msgid "Please wait while the plugin is updated."
+msgstr "Подождите, пока плагин обновится."
+
+msgid "Please wait while we check your installed plugins..."
+msgstr "Пожалуйста, подождите, пока мы проверим Ваши установленные плагины..."
+
 msgid "Please wait while we configure your network..."
 msgstr "Пожалуйста подождите пока идет настройка Вашей сети..."
 
@@ -12581,6 +12652,9 @@ msgstr "Приоритет LNB"
 
 msgid "Process"
 msgstr "Процесс"
+
+msgid "Processing"
+msgstr "Обработка"
 
 msgid "Processor information"
 msgstr "Информация о процессоре"
@@ -13443,14 +13517,29 @@ msgstr "Возобновление воспроизведения"
 msgid "Result successfully saved in /tmp/speedtest.png"
 msgstr "Результат успешно сохранен в /tmp/speedtest.png"
 
-msgid "Retrieving image list - Please wait..."
-msgstr "Получение списка имиджей - пожалуйста, подождите..."
+#, python-format
+msgid "Retrieving '%s' commit log, please wait..."
+msgstr "Получение лога %s, подождите..."
 
-msgid "Retrieving image list,please wait..."
-msgstr "Получение списка имиджей,пожалуйста, подождите..."
+#, python-format
+msgid "Retrieving '%s' information, please wait..."
+msgstr "Получение информации '%s', пожалуйста, подождите..."
+
+#, python-format
+msgid "Retrieving '%s' log, please wait..."
+msgstr "Получение лога '%s', пожалуйста, подождите..."
+
+msgid "Retrieving boot slot information..."
+msgstr "Получение информации о загрузочном слоте..."
+
+msgid "Retrieving image list, please wait..."
+msgstr "Получаем список эмуляторов. Пожалуйста подождите..."
 
 msgid "Retrieving image slots - Please wait..."
-msgstr "Получение мест для имиджей. Подождите..."
+msgstr "Идёт распаковка имиджей, пожалуйста подождите..."
+
+msgid "Retrieving network server information, please wait..."
+msgstr "Получение информации о сетевом сервере, пожалуйста, подождите..."
 
 msgid "Return to movie list"
 msgstr "Вернуться к списку видео"
@@ -14656,6 +14745,12 @@ msgstr ""
 msgid "Set the User ID of the OpenWebif from your fallback tuner"
 msgstr "Установите идентификатор пользователя OpenWebif из вашего запасного тюнера"
 
+msgid "Set the default location to store your time shift buffer files. Press 'OK' to add new locations, press 'LEFT'/'RIGHT' to select from previously defined locations."
+msgstr "Назначьте расположение для файлов таймшифта. Нажмите 'OK', чтобы добавить новый каталог, либо кнопками ВПРАВО/ВЛЕВО для выбора существующего каталога."
+
+msgid "Set the default movie selection location for your media files. Press 'OK' to add new locations, press 'LEFT'/'RIGHT' to select from previously defined locations."
+msgstr "Назначьте расположение для файлов записи. Нажмите 'OK' чтобы добавить новый каталог, либо кнопками ВПРАВО/ВЛЕВО выберите существующий каталог."
+
 msgid "Set the default location for your instant recordings. Press OK to add new locations, LEFT/RIGHT to select from any existing locations."
 msgstr "Установите местоположение по умолчанию для мгновенных записей. Нажмите OK, чтобы добавить новые местоположения, ВЛЕВО / ВПРАВО, чтобы выбрать любое из существующих местоположений."
 
@@ -15141,6 +15236,9 @@ msgstr "Показать результаты"
 
 msgid "Show Security packages"
 msgstr "Показать пакеты безопасности"
+
+msgid "Show setup default values"
+msgstr "Показать значения настройки по умолчанию"
 
 msgid "Show Setting packages"
 msgstr "Показать пакеты настроек"
@@ -15642,6 +15740,9 @@ msgstr "Размер: "
 
 msgid "Skin & Resolution"
 msgstr "Скин и разрешение"
+
+msgid "Skin Component Packages"
+msgstr "Пакеты компонентов скина"
 
 msgid "Skin & Resolution: %s (%sx%s)\n"
 msgstr "Скин & разрешение: %s (%sx%s)\n"
@@ -16368,6 +16469,12 @@ msgstr "Определено DLNA"
 
 msgid "Stripes"
 msgstr "Полосы"
+
+msgid "Style:"
+msgstr "Стиль:"
+
+msgid "Subscription Packages"
+msgstr "Пакеты подписки"
 
 msgid "Strongest position"
 msgstr "Лучшая позиция"
@@ -17599,6 +17706,9 @@ msgstr "Удалить буфер таймшифта после переключ
 msgid "Timeshift buffer limit [in hours]"
 msgstr "Ограничить буфер таймшифта [В часах]"
 
+msgid "Time shift buffer location"
+msgstr "Расположение таймшифта"
+
 msgid "Timeshift checking for free space?"
 msgstr "Проверить наличие свободного дискового пространства?"
 
@@ -18350,9 +18460,6 @@ msgstr "Используйте кнопки ВВЕРХ/ВНИЗ для выбо�
 msgid "Use the LEFT/RIGHT buttons on your remote to adjust the height of the OSD. LEFT button decreases the height, RIGHT increases the height."
 msgstr "Используйте кнопки ВЛЕВО/ВПРАВО на пульте дистанционного управления, чтобы отрегулировать высоту экранного меню. Кнопка ВЛЕВО уменьшает высоту, ВПРАВО увеличивает высоту."
 
-msgid "Use the LEFT/RIGHT buttons on your remote to adjust the width of the OSD. LEFT button decreases the width, RIGHT increases the width."
-msgstr ""
-
 msgid "Use the LEFT/RIGHT buttons on your remote to move the OSD bottom."
 msgstr "Используйте кнопки Влево/Вправо на пульте дистанционного управления, чтобы переместить пользовательский интерфейс вниз."
 
@@ -18370,6 +18477,15 @@ msgstr "Используйте кнопки ВЛЕВО/ВПРАВО на пул�
 
 msgid "Use the LEFT/RIGHT buttons on your remote to move the OSD up/down."
 msgstr "Используйте кнопки ВЛЕВО/ВПРАВО на пульте дистанционного управления для перемещения экранного меню вверх/вниз."
+
+msgid "Use the LEFT/RIGHT buttons on your remote to move the user interface left/right"
+msgstr "Используйте кнопки ВЛЕВО/ВПРАВО на пульте дистанционного управления для перемещения пользовательского интерфейса влево/вправо"
+
+msgid "Use the LEFT/RIGHT buttons on your remote to adjust the size of the user interface.LEFT button decreases the size, RIGHT increases the height."
+msgstr "Используйте кнопки ВЛЕВО/ВПРАВО на пульте дистанционного управления, чтобы отрегулировать размер пользовательского интерфейса. Кнопка ВЛЕВО уменьшает размер, кнопка ВПРАВО увеличивает высоту."
+
+msgid "Use the LEFT/RIGHT buttons on your remote to adjust the width of the OSD. LEFT button decreases the width, RIGHT increases the width."
+msgstr ""
 
 msgid ""
 "Use the deletion time to sort Trash directories.\n"
@@ -19863,10 +19979,10 @@ msgid "Zap and record"
 msgstr "Переключить и записать"
 
 msgid "Zap back to previously tuned service?"
-msgstr "Вернутся на предыдущий сервис?"
+msgstr "Вернуться на предыдущий сервис?"
 
 msgid "Zap back to service before positioner setup?"
-msgstr "Вернутся на предыдущий сервис до начала настроек позиционера?"
+msgstr "Вернуться на предыдущий сервис до начала настроек позиционера?"
 
 msgid "Zap bouquets blindly on zap buttons"
 msgstr "Смена букетов без выбора канала"
@@ -19962,7 +20078,10 @@ msgid "Zoom In/Out TV"
 msgstr "Увеличение/уменьшение ТВ"
 
 msgid "Zoom In/Out TV..."
-msgstr "Увеличение/уменьшение ТВ."
+msgstr "Увеличение/уменьшение масштаба телевизора..."
+
+msgid "Zoom Off"
+msgstr "Выключение масштабирования"
 
 msgid "Zoom Off..."
 msgstr "Увеличение выкл..."
