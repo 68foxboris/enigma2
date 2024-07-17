@@ -1,6 +1,6 @@
 from glob import glob
 import locale
-from os import makedirs, remove
+from os import mkdir, makedirs, remove
 from os.path import exists, isfile, join as pathjoin, normpath
 from time import mktime
 from skin import parameters
