@@ -211,7 +211,7 @@ def getChipsetString():
 		chipset = "73625"
 	elif MODEL in ("dm900", "dm920", "et13000"):
 		chipset = "7252S"
-	elif MODEL in ("hd51", "vs1500", "h7"):
+	elif MODEL in ("hd51", "vs1500", "h7", "h17"):
 		chipset = "7251S"
 	elif MODEL in ("dreamone", "dreamtwo"):
 		chipset = "S922X"
@@ -325,6 +325,7 @@ BoxInfo.setItem("canFlashWithOfgwrite", not (MODEL.startswith("dm")))
 BoxInfo.setItem("CanMeasureFrontendInputPower", eDVBResourceManager.getInstance().canMeasureFrontendInputPower())
 BoxInfo.setItem("canDualBoot", fileExists("/dev/block/by-name/flag"))
 BoxInfo.setItem("canMultiBoot", MultiBoot.getBootSlots())
+BoxInfo.setItem("canRecovery", MODEL in ("hd51", "vs1500", "h7", "h17", "8100s") and ("disk.img", "mmcblk0p1") or MODEL in ("xc7439", "osmio4k", "osmio4kplus", "osmini4k") and ("emmc.img", "mmcblk1p1") or MODEL in ("gbmv200", "sf8008", "sf8008m", "sx988", "ip8", "ustym4kpro", "ustym4kottpremium", "ustym4ks2ottx", "beyonwizv2", "viper4k", "og2ott4k", "og2s4k", "sx88v2", "sx888") and ("usb_update.bin", "none"))
 BoxInfo.setItem("Display", BoxInfo.getItem("FrontpanelDisplay") or BoxInfo.getItem("StandbyLED"))
 BoxInfo.setItem("HasKexecMultiboot", fileHas("/proc/cmdline", "kexec=1"))
 BoxInfo.setItem("CanChangeOsdAlpha", access("/proc/stb/video/alpha", R_OK) and True or False)

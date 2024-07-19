@@ -263,11 +263,11 @@ class RemoteControlType(ConfigListScreen, Screen):
 			("18", _("F1/F3/F4/F4-TURBO")),
 			("19", _("HD2400")),
 			("20", _("Zgemma Star S/2S/H1/H2")),
-			("21", _("Zgemma H.S/H.2S/H.2H/H5/H7(old model)")),
+			("21", _("Zgemma H.S/H.2S/H.2H/H5/H7/H17(old model)")),
 			("24", _("Axas E4HD Ultra")),
 			("25", _("Zgemma H9(old model)/I55Plus/H8")),
 			("27", _("HD60/HD66SE/Multibox/Multibox SE")),
-			("28", _("I55SE/H7(new model)/H9(new model)/H9COMBO/H9TWIN/H9SE/H9COMBOSE/H10/H11")),
+			("28", _("I55SE/H7(new model)/H17/H9(new model)/H9COMBO/H9TWIN/H9SE/H9COMBOSE/H10/H11")),
 			("30", _("PULSe 4K(mini)"))
 		]
 
@@ -308,6 +308,7 @@ class RemoteControlType(ConfigListScreen, Screen):
 			("sh1", 20),
 			("h3", 21),
 			("h5", 21),
+			("h17", 21),
 			("e4hd", 24),
 			("h8", 25),
 			("h9se", 28),
@@ -320,6 +321,7 @@ class RemoteControlType(ConfigListScreen, Screen):
 			("h9twinse", 28),
 			("h10", 28),
 			("h11", 28),
+			("h17", 28),
 			("pulse4k", 30),
 			("pulse4kmini", 30)
 		]
