@@ -8,7 +8,6 @@ from os.path import isfile
 from platform import libc_ver
 from re import search
 from socket import AF_INET, SOCK_DGRAM, inet_ntoa, socket
-from gettext import ngettext
 from struct import pack, unpack
 from sys import maxsize, modules, version as pyversion
 from time import localtime, strftime
@@ -23,10 +22,10 @@ MODEL = BoxInfo.getItem("model")
 
 
 def _ifinfo(sock, addr, ifname):
-	iface = pack('256s', bytes(ifname[:15], encoding="UTF-8"))
+	iface = pack('256s', bytes(ifname[:15], 'utf-8'))
 	info = ioctl(sock.fileno(), addr, iface)
 	if addr == 0x8927:
-		return ''.join(['%02x:' % ord(char) for char in info[18:24]])[:-1].upper()
+		return ''.join(['%02x:' % ord(chr(char)) for char in info[18:24]])[:-1].upper()
 	else:
 		return inet_ntoa(info[20:24])
 
