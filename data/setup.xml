@@ -76,6 +76,8 @@
 		<item level="2" text="Auto play last service in radio mode" conditional="not config.usage.e1like_radio_mode.value" description="When enabled, it will automatically play to the last saved radio service when switching to radio mode.">config.usage.e1like_radio_mode_last_play</item>
 	</setup>
 	<setup key="DNS" title="DNS Settings">
+		<item level="0" text="DNS mode" description="Select the mode of the DNS.">config.usage.dnsMode</item>
+		<item level="0" text="DNS suffix" description="Define the DNS suffix.">config.usage.dnsSuffix</item>
 		<item level="0" text="DNS data source" description="Select the source of the default DNS settings.">config.usage.dns</item>
 	</setup>
 	<setup key="EPG" title="EPG Setup">
