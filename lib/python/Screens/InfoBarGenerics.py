@@ -310,16 +310,11 @@ class InfoBarUnhandledKey:
 		self.flags = (1 << 1)
 		self.uflags = 0
 		self.sibIgnoreKeys = (
-			KEYIDS["KEY_VOLUMEDOWN"],  # 114.
-			KEYIDS["KEY_VOLUMEUP"],  # 115.
-			KEYIDS["KEY_INFO"],  # 358.
-			KEYIDS["KEY_OK"],  # 352.
-			KEYIDS["KEY_UP"],  # 103.
-			KEYIDS["KEY_DOWN"],  # 108.
-			KEYIDS["KEY_CHANNELUP"],  # 402.
-			KEYIDS["KEY_CHANNELDOWN"],  # 403.
-			KEYIDS["KEY_NEXT"],  #407.
-			KEYIDS["KEY_PREVIOUS"]  # 412.
+			KEYIDS["KEY_VOLUMEDOWN"], KEYIDS["KEY_VOLUMEUP"],
+			KEYIDS["KEY_EXIT"], KEYIDS["KEY_OK"],
+			KEYIDS["KEY_UP"], KEYIDS["KEY_DOWN"],
+			KEYIDS["KEY_CHANNELUP"], KEYIDS["KEY_CHANNELDOWN"],
+			KEYIDS["KEY_NEXT"], KEYIDS["KEY_PREVIOUS"]
 		)
 
 	# This function is called on every keypress!
@@ -508,7 +503,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 
 	def toggleShowLong(self):
 		if not config.usage.ok_is_channelselection.value:
-			self.toggleSecondInfoBar()
+			self.toggleViews()
 
 	def hideLong(self):
 		if config.usage.ok_is_channelselection.value:
@@ -518,7 +513,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		if self.shown:
 			self.toggleInfoBarAddon()
 		else:
-			self.toggleViews()
+			self.toggleSecondInfoBar()
 
 	def toggleSecondInfoBar(self):
 		if self.actualSecondInfoBarScreen and not self.actualSecondInfoBarScreen.shown and self.secondInfoBarScreenSimple.skinAttributes and self.secondInfoBarScreen.skinAttributes:
