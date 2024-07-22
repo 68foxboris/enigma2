@@ -3592,7 +3592,7 @@ msgstr "Настройка кнопок пульта"
 msgid "ButtonSetup"
 msgstr "Настройка кнопок пульта"
 
-msgid "When set to \"Yes\", all locations where SNR is displayed in dB will show an SNR percentage, and vice versa."
+msgid "When set to 'Yes', all locations where SNR is displayed in dB will show an SNR percentage, and vice versa."
 msgstr "Если установлено значение «Да», во всех местах, где отображается SNR в дБ, будет отображаться процент SNR, и наоборот."
 msgid "Bypass HDMI EDID checking"
 msgstr "Обход HDMI EDID проверки"
