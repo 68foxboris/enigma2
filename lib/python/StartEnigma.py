@@ -503,7 +503,6 @@ from Components.config import config, configfile, ConfigText, ConfigYesNo, Confi
 #
 config.crash = ConfigSubsection()
 config.crash.debugMultiBoot = ConfigYesNo(default=False)
-config.crash.debugActionMaps = ConfigYesNo(default=False)
 config.crash.debugKeyboards = ConfigYesNo(default=False)
 config.crash.debugOpkg = ConfigYesNo(default=False)
 config.crash.debugRemoteControls = ConfigYesNo(default=False)
@@ -649,13 +648,13 @@ enigma.eProfileWrite("AutoLogManager")
 from Screens.LogManager import AutoLogManager
 AutoLogManager()
 
+enigma.eProfileWrite("Keymapparser")
+import keymapparser
+keymapparser.readKeymap(config.usage.keymap.value)
+
 enigma.eProfileWrite("NTPSyncPoller")
 from Components.NetworkTime import ntpSyncPoller
 ntpSyncPoller.startTimer()
-
-enigma.eProfileWrite("KeymapParser")
-from Components.ActionMap import loadKeymap
-loadKeymap(config.usage.keymap.value)
 
 enigma.eProfileWrite("InitNetwork")
 from Components.Network import InitNetwork
