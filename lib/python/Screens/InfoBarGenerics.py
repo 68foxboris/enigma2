@@ -39,7 +39,7 @@ from ServiceReference import ServiceReference, isPlayableForCur, getStreamRelayR
 from Tools.ASCIItranslit import legacyEncode
 from Tools.Directories import fileExists, fileReadLines, fileWriteLines, fileReadLinesISO, getRecordingFilename, moveFiles
 from Tools.Notifications import AddPopup, AddNotificationWithCallback, current_notifications, lock, notificationAdded, notifications, RemovePopup
-from keyids import KEYFLAGS, KEYIDS, KEYIDNAMES
+from keyids import KEYFLAGS, KEYIDNAMES, KEYIDS
 from enigma import eAVControl, eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, iPlayableService, eServiceReference, eEPGCache, eActionMap, getDesktop, eDVBDB, eDBoxLCD
 from skin import findSkinScreen
 from time import time, localtime, strftime
@@ -492,9 +492,10 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.doWriteAlpha(config.av.osd_alpha.value)
 
 	def doWriteAlpha(self, value):
-		if BoxInfo.getItem("CanChangeOsdAlpha"):
-#			print("[InfoBarGenerics] Write to /proc/stb/video/alpha")
-			open("/proc/stb/video/alpha", "w").write(str(value))
+		if exists("/proc/stb/video/alpha"):
+			f = open("/proc/stb/video/alpha", "w")
+			f.write("%i" % (value))
+			f.close()
 			if value == config.av.osd_alpha.value:
 				self.lastResetAlpha = True
 			else:

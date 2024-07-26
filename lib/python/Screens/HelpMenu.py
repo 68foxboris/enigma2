@@ -182,9 +182,9 @@ class HelpMenu(Screen, ShowRemoteControl):
 		self["buttonlist"] = Label("")
 		self["description"] = Label("")
 		self["key_help"] = StaticText(_("HELP"))
-		self["helpActions"] = ActionMap(["HelpActions", "OkCancelActions"], {
+		self["helpActions"] = ActionMap(["HelpActions"], {
 			"cancel": self.close,  # self.closeHelp,
-			"ok": self.enterItem,
+			"select": self.selectItem,
 			"displayHelp": self.showHelp,
 			"displayHelpLong": self.showButtons
 		}, prio=-1)
@@ -200,8 +200,8 @@ class HelpMenu(Screen, ShowRemoteControl):
 		self.onClose.append(self.closeHelp)
 		self.onLayoutFinish.append(self.selectionChanged)
 
-	def enterItem(self):
-		self["list"].enterItem()  # def enterItem(self) HelpMenuList.
+	def selectItem(self):
+		self["list"].select()
 
 	def closeHelp(self):
 		eActionMap.getInstance().unbindAction("", self["list"].handleButton)
@@ -256,10 +256,10 @@ class HelpMenu(Screen, ShowRemoteControl):
 			self["description"].setText(isinstance(helpText, (list, tuple)) and len(helpText) > 1 and helpText[1] or "")
 
 
-# HelpList structure:
+# Helplist structure:
 # [ ( actionmap, context, [(action, help), (action, help), ...] ), (actionmap, ... ), ... ]
 #
-# The helpList is ordered by the order that the Helpable[Number]ActionMaps
+# The helplist is ordered by the order that the Helpable[Number]ActionMaps
 # are initialised.
 #
 # The lookup of actions is by searching the HelpableActionMaps by priority,
@@ -478,7 +478,7 @@ class HelpMenuList(List):
 				self.longSeen = False
 		return 0  # Report keyId not handled.
 
-	def enterItem(self):
+	def select(self):
 		# A list entry has a "private" tuple as first entry...
 		item = self.getCurrent()
 		if item is None:

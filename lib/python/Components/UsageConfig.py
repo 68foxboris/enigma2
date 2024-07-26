@@ -39,6 +39,7 @@ def InitUsageConfig():
 	config.usage.alternative_number_mode = ConfigYesNo(default=False)
 
 	config.misc.usegstplaybin3 = ConfigYesNo(default=False)
+	config.misc.actionLeftRightToPageUpPageDown = ConfigYesNo(default=True)
 
 	config.misc.spinnerPosition = ConfigSequence(default=[50, 50], limits=[(0, 1260), (0, 700)], seperator=",")
 
