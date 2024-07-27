@@ -35,9 +35,6 @@ def InitUsageConfig():
 	config.pluginbrowser.languages_po = ConfigYesNo(default=False)
 	config.pluginbrowser.src = ConfigYesNo(default=False)
 
-
-	config.usage.alternative_number_mode = ConfigYesNo(default=False)
-
 	config.misc.usegstplaybin3 = ConfigYesNo(default=False)
 	config.misc.actionLeftRightToPageUpPageDown = ConfigYesNo(default=True)
 
@@ -45,10 +42,20 @@ def InitUsageConfig():
 
 	config.usage.informationExtraSpacing = ConfigYesNo(False)
 
-	def alternativeNumberModeChange(configElement):
+	def setNumberModeChange(configElement):
 		eDVBDB.getInstance().setNumberingMode(configElement.value)
+		config.usage.alternative_number_mode.value = config.usage.numberMode != 0
 		refreshServiceList()
-	config.usage.alternative_number_mode.addNotifier(alternativeNumberModeChange)
+
+	config.usage.numberMode = ConfigSelection(default=0, choices=[
+		(0, _("Unique numbering")),
+		(1, _("Bouquets start at 1")),
+		(2, _("LCN numbering"))
+	])
+	config.usage.numberMode.addNotifier(setNumberModeChange, initial_call=False)
+
+	# Fallback old settigs will be removed later because this setting is probably used in plugins
+	config.usage.alternative_number_mode = ConfigYesNo(default=config.usage.numberMode != 0)
 
 	config.usage.hide_number_markers = ConfigYesNo(default=True)
 	config.usage.hide_number_markers.addNotifier(refreshServiceList)
