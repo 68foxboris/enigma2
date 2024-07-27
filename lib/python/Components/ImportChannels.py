@@ -59,6 +59,7 @@ class ImportChannels:
 		if 'url' in self.settings and 'result' in self.settings['url'] and self.settings['url']['result'] == True:
 				for key, value in self.settings['url']['settings']:
 					if key.endswith(e2settingname): #use the config key when the endpart but also the whole part matches
+						return value
 		return ""
 
 	def getTerrestrialUrl(self):
@@ -131,7 +132,7 @@ class ImportChannels:
 				try:
 					open(os.path.join(self.tmp_dir, os.path.basename(file)), "wb").write(self.getUrl(f"{self.url}/file?file={self.e2path}/{quote(file)}"))
 				except Exception as e:
-					print(f"[Import Channels] Exception: {str(e}")
+					print(f"[Import Channels] Exception: (str(e)")
 
 			print("[Import Channels] Enumerate local files")
 			files = self.ImportGetFilelist(False, 'bouquets.tv', 'bouquets.radio')
