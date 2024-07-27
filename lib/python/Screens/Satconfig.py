@@ -5,6 +5,7 @@ from Components.SystemInfo import BoxInfo
 from Components.ActionMap import ActionMap
 from Components.NimManager import nimmanager
 from Components.Button import Button
+from Components.International import international
 from Components.Label import Label
 from Components.UsageConfig import showrotorpositionChoicesUpdate, preferredTunerChoicesUpdate
 from Components.SelectionList import SelectionList, SelectionEntryComponent

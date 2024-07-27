@@ -36,14 +36,14 @@
 		<color name="WindowTitleBackground" color="#25062748" />
 		<!-- Main screen border png's -->
 		<borderset name="bsWindow">
-			<pixmap pos="bpTopLeft" filename="skin_default/b_tl.png" />
-			<pixmap pos="bpTop" filename="skin_default/b_t.png" />
-			<pixmap pos="bpTopRight" filename="skin_default/b_tr.png" />
-			<pixmap pos="bpLeft" filename="skin_default/b_l.png" />
-			<pixmap pos="bpRight" filename="skin_default/b_r.png" />
-			<pixmap pos="bpBottomLeft" filename="skin_default/b_bl.png" />
-			<pixmap pos="bpBottom" filename="skin_default/b_b.png" />
-			<pixmap pos="bpBottomRight" filename="skin_default/b_br.png" />
+			<pixmap pos="bpTopLeft" filename="b_tl.png" />
+			<pixmap pos="bpTop" filename="b_t.png"  />
+			<pixmap pos="bpTopRight" filename="b_tr.png" />
+			<pixmap pos="bpLeft" filename="b_l.png"  />
+			<pixmap pos="bpRight" filename="b_r.png"  />
+			<pixmap pos="bpBottomLeft" filename="b_bl.png" />
+			<pixmap pos="bpBottom" filename="b_b.png"  />
+			<pixmap pos="bpBottomRight" filename="b_br.png" />
 		</borderset>
 	</windowstyle>
 	<!-- id=1 is for 132x64 LCD or OLED -->
@@ -92,8 +92,8 @@
 		<color name="secondBG" value="#18101214"/>
 	</colors>
 	<switchpixmap>
-		<pixmap name="menu_on" filename="skin_default/icons/menu_on.png"/>
-		<pixmap name="menu_off" filename="skin_default/icons/menu_off.png"/>
+		<pixmap name="menu_on" filename="icons/menu_on.png"/>
+		<pixmap name="menu_off" filename="icons/menu_off.png"/>
 	</switchpixmap>
 	<!-- About screen -->
 	<screen name="About" position="center,center" size="540,490" title="About">
@@ -384,8 +384,8 @@ self.autoResize()
 		<widget name="txt_gamma" position="20,100" size="120,20"/>
 		<widget name="sld_gamma" position="150,100" size="290,20"/>
 	</screen>
-	<!-- Video wizard -->
-	<screen name="VideoWizard" position="fill" title="Welcome..." flags="wfNoBorder">
+	<!-- Default wizard -->
+	<screen name="DefaultWizard" position="fill" title="Welcome..." flags="wfNoBorder">
 		<panel name="WizardMarginsTemplate"/>
 		<panel name="WizardPictureLangTemplate"/>
 		<panel name="RemoteControlTemplate"/>
@@ -1099,43 +1099,31 @@ self.autoResize()
 		<widget name="InfoPixmap" pixmap="icons/input_info.png" position="5,5" size="53,53" alphaTest="on"/>
 		<widget name="list" position="100,100" size="480,375"/>
 		<applet type="onLayoutFinish">
-# this should be factored out into some helper code, but currently demonstrates applets.
-from enigma import eSize, ePoint
-
-orgwidth = self.instance.size().width()
-orgheight = self.instance.size().height()
-orgpos = self.instance.position()
-textsize = self[&quot;text&quot;].getSize()
-lenlist = len(self.list)*25
-if (lenlist &gt; 125):
-	lenlist = 125
-
-# y size still must be fixed in font stuff...
-textsize = (textsize[0] + 50, textsize[1] + 50)
-offset = 0
-if self.type == self.TYPE_YESNO:
-	offset = lenlist+10
-wsizex = textsize[0] + 60
-wsizey = textsize[1] + offset
-if (280 &gt; wsizex):
-	wsizex = 280
-wsize = (wsizex, wsizey)
-
-
-# resize
-self.instance.resize(eSize(*wsize))
-
-# resize label
-self[&quot;text&quot;].instance.resize(eSize(*textsize))
-
-# move list
-listsize = (wsizex, lenlist)
-self[&quot;list&quot;].instance.move(ePoint(0, textsize[1]))
-self[&quot;list&quot;].instance.resize(eSize(*listsize))
-
-# center window
-newwidth = wsize[0]
-self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth) // 2, orgpos.y() + (orgheight - wsizey) // 2))
+from enigma import getDesktop, ePoint, eSize
+try:
+	maxw = 520
+	count = len(self.list) if hasattr(self, "list") and self.list else 0
+	poffset = 65 if hasattr(self, "picon") and self.picon else 0
+	if self["text"].text:
+		textsize = self["text"].getSize()
+		if textsize[0] &lt; textsize[1]:
+			textsize = (textsize[1], textsize[0] + 10)
+		textsize = (textsize[0] if textsize[0] &gt; maxw else maxw, textsize[1] + 25)
+		listsize = (textsize[0], 25 * count)
+		self["text"].instance.resize(eSize(*textsize))
+		self["text"].instance.move(ePoint(poffset + 10, 10))
+	else:
+		textsize = (maxw, 0)
+		listsize = (maxw, 25 * count)
+	if hasattr(self, "list"):
+		self["list"].instance.resize(eSize(*listsize))
+		self["list"].instance.move(ePoint(poffset, textsize[1]))
+	wsizex = textsize[0] + poffset
+	wsizey = textsize[1] + listsize[1]
+	self.instance.resize(eSize(*(wsizex, wsizey)))
+	self.instance.move(ePoint(int((getDesktop(0).size().width() - wsizex) // 2), int((getDesktop(0).size().height() - wsizey) // 2)))
+except Exception as e:
+	print("[MessageBoxTemplate] onLayoutFinish Error: %s", str(e))
 		</applet>
 	</screen>
 	<screen name="MessageBox" position="center,center" size="600,10" title="Message">
@@ -2010,9 +1998,9 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth) // 2, orgpos.y() + 
 			<widget name="languagetext" position="fill" font="Regular;18"/>
 		</panel>
 	</screen>
-	<!-- StartWizard panel Video Wizard -->
+	<!-- it's the same screen... -->
 	<screen name="StartWizard" position="fill" title="Welcome..." flags="wfNoBorder">
-		<panel name="VideoWizard"/>
+		<panel name="DefaultWizard"/>
 	</screen>
 	<!-- Subservice quickzap -->
 	<screen name="SubservicesQuickzap" position="center,center" size="512,200" title="Subservices" backgroundColor="transparent" flags="wfNoBorder">
@@ -2200,6 +2188,76 @@ self.instance.move(ePoint(orgpos.x() + (orgwidth - newwidth) // 2, orgpos.y() + 
 				 "itemHeight": 80
 				}
 			</convert>
+		</widget>
+	</screen>
+	<!-- LocaleSelection -->
+	<!-- Icons PACK_AVAILABLE, PACK_INSTALLED, PACK_IN_USE -->
+	<screen name="LocaleSelection" position="center,center" size="1000,560" resolution="1280,720">
+		<widget name="icons" position="0,0" size="30,27" pixmaps="icons/menu_download.png,icons/menu_off.png,icons/menu_on.png" alphatest="blend" />
+		<widget source="locales" render="Listbox" position="10,10" size="e-20,442" enableWrapAround="1" scrollbarMode="showOnDemand">
+			<convert type="TemplatedMultiContent">
+				{
+				"template":
+					[
+					MultiContentEntryPixmapAlphaBlend(pos = (5, 2), size = (60, 30), flags = BT_SCALE, png = 0),  # Flag.
+					MultiContentEntryText(pos = (80, 0), size = (400, 34), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 1),  # Language name (Native).
+					MultiContentEntryText(pos = (490, 0), size = (330, 34), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 2),  # Language name (English).
+					# MultiContentEntryText(pos = (810, 0), size = (90, 34), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 3),  # Locale name.
+					MultiContentEntryText(pos = (810, 0), size = (90, 34), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 4),  # Package name.
+					MultiContentEntryPixmapAlphaBlend(pos = (910, 7), size = (49, 19), flags = BT_SCALE, png = 5)  # Status icon.
+					],
+				"fonts": [parseFont("MultiLingual;25")],
+				"itemHeight": 34
+				}
+			</convert>
+		</widget>
+		<widget source="description" render="Label" position="10,e-85" size="e-20,25" font="Regular;20" valign="center" />
+		<widget source="key_red" render="Label" position="10,e-50" size="140,40" backgroundColor="#009f1313" font="Regular;20" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_green" render="Label" position="160,e-50" size="140,40" backgroundColor="#001f771f" font="Regular;20" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_yellow" render="Label" position="310,e-50" size="140,40" backgroundColor="#00a08500" font="Regular;20" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_menu" render="Label" position="e-450,e-50" size="140,40" backgroundColor="#00313131" font="Regular;20" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_info" render="Label" position="e-300,e-50" size="140,40" backgroundColor="#00313131" font="Regular;20" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_help" render="Label" position="e-150,e-50" size="140,40" backgroundColor="#00313131" font="Regular;20" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+	</screen>
+	<!-- LocaleWizard -->
+	<screen name="LocaleWizard" position="center,center" size="1000,560" resolution="1280,720">
+		<widget name="icons" position="0,0" size="30,27" pixmaps="icons/menu_download.png,icons/menu_off.png,icons/menu_on.png" alphatest="blend" />
+		<widget source="locales" render="Listbox" position="10,10" size="e-20,442" enableWrapAround="1" scrollbarMode="showOnDemand">
+			<convert type="TemplatedMultiContent">
+				{
+				"template":
+					[
+					MultiContentEntryPixmapAlphaBlend(pos = (5, 3), size = (56, 28), flags = BT_SCALE, png = 0),
+					MultiContentEntryText(pos = (80, 0), size = (265, 34), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 1),
+					MultiContentEntryText(pos = (570, 0), size = (75, 34), font = 0, flags = RT_HALIGN_CENTER | RT_VALIGN_CENTER, text = 3),
+					#MultiContentEntryText(pos = (345, 0), size = (225, 34), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 2),
+					#MultiContentEntryPixmapAlphaBlend(pos = (645, 10), size = (40, 14), flags = BT_SCALE, png = 4)
+					],
+				"fonts": [gFont("Regular",20)],
+				"itemHeight": 34
+				}
+			</convert>
+		</widget>
+		<widget source="key_red" render="Label" position="10,e-50" size="140,40" backgroundColor="#009f1313" font="Regular;20" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_green" render="Label" position="160,e-50" size="140,40" backgroundColor="#001f771f" font="Regular;20" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_help" render="Label" position="e-150,e-50" size="140,40" backgroundColor="#00313131" font="Regular;20" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
 		</widget>
 	</screen>
 </skin>

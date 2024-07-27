@@ -1,10 +1,11 @@
 from glob import glob
-import locale
+from locale import AM_STR, PM_STR, nl_langinfo
 from os import mkdir, makedirs, remove
 from os.path import exists, isfile, join as pathjoin, normpath
 from time import mktime
 from skin import parameters
 from Components.Harddisk import harddiskmanager
+from Components.International import international
 from Components.Console import Console
 from Components.config import ConfigSubsection, ConfigDirectory, ConfigYesNo, config, ConfigSelection, ConfigText, ConfigNumber, ConfigSet, ConfigLocations, ConfigSelectionNumber, ConfigClock, ConfigSlider, ConfigEnableDisable, ConfigSubDict, ConfigDictionarySet, ConfigInteger, ConfigSequence, ConfigPassword, ConfigIP, NoSave, ConfigBoolean
 from Tools.Directories import SCOPE_HDD, SCOPE_TIMESHIFT, defaultRecordingLocation, resolveFilename, fileWriteLine, fileReadXML, SCOPE_SKIN
@@ -1870,50 +1871,8 @@ def InitUsageConfig():
 	])
 	config.subtitles.ai_subtitle_colors.addNotifier(setAiSubtitleColors)
 
-	LANGUAGE_DATA = {
-		"ar": ("Arabic", _("Arabic")),
-		"bg": ("Български", _("Български")),
-		"nb": ("Norsk Bokmål", _("Norsk Bokmål")),
-		"ca": ("Català", _("Català")),
-		"cs": ("Česky", _("Česky")),
-		"zh": ("Chinese", _("Chinese")),
-		"da": ("Dansk", _("Dansk")),
-		"de": ("Deutsch", _("Deutsch")),
-		"el": ("Ελληνικά", _("Ελληνικά")),
-		"en": ("English", _("English")),
-		"es": ("Español", _("Español")),
-		"et": ("Eesti", _("Eesti")),
-		"fa": ("Persian", _("Persian")),
-		"fi": ("Suomi", _("Suomi")),
-		"fr": ("Français", _("Français")),
-		"fy": ("Frysk", _("Frysk")),
-		"he": ("Hebrew", _("Hebrew")),
-		"hr": ("Hrvatski", _("Hrvatski")),
-		"hu": ("Magyar", _("Magyar")),
-		"id": ("Indonesian", _("Indonesian")),
-		"is": ("Íslenska", _("Íslenska")),
-		"it": ("Italiano", _("Italiano")),
-		"ku": ("Kurdish", _("Kurdish")),
-		"lt": ("Lietuvių", _("Lietuvių")),
-		"lv": ("Latviešu", _("Latviešu")),
-		"nl": ("Nederlands", _("Nederlands")),
-		"no": ("Norsk", _("Norsk")),
-		"pl": ("Polski", _("Polski")),
-		"pt": ("Portuguese", _("Portuguese")),
-		"ro": ("Romanian", _("Romanian")),
-		"ru": ("Русский", _("Русский")),
-		"sk": ("Slovensky", _("Slovensky")),
-		"sl": ("Slovenščina", _("Slovenščina")),
-		"sr": ("Srpski", _("Srpski")),
-		"sv": ("Svenska", _("Svenska")),
-		"th": ("ภาษาไทย", _("ภาษาไทย")),
-		"tr": ("Türkçe", _("Türkçe")),
-		"uk": ("Українська", _("Українська")),
-		"vi": ("Tiếng Việt", _("Tiếng Việt"))
-	}
-
-	langsAI = ["ar", "bg", "nb", "ca", "cs", "zh", "da", "de", "el", "en", "es", "et", "fa", "fi", "fr", "fy", "he", "hr", "hu", "id", "is", "it", "ku", "lt", "lv", "nl", "no", "pl", "pt", "ro", "ru", "sk", "sl", "sr", "sv", "th", "tr", "uk", "vi"]
-	langsAI = [(x, LANGUAGE_DATA[x][1]) for x in langsAI]
+	langsAI = ['af', 'sq', 'am', 'ar', 'hy', 'az', 'eu', 'be', 'bn', 'bs', 'bg', 'ca', 'zh', 'co', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'fr', 'fi', 'fy', 'gl', 'ka', 'de', 'el', 'ht', 'ha', 'hu', 'is', 'ig', 'ga', 'it', 'ja', 'jv', 'kn', 'kk', 'km', 'rw', 'ko', 'ku', 'ky', 'lo', 'la', 'lv', 'lt', 'lb', 'mk', 'mg', 'ms', 'mt', 'mi', 'mr', 'mn', 'no', 'ny', 'or', 'ps', 'fa', 'pl', 'pt', 'ro', 'ru', 'sm', 'gd', 'sr', 'st', 'sn', 'sk', 'sl', 'so', 'es', 'su', 'sw', 'sv', 'tl', 'tg', 'te', 'th', 'tr', 'tk', 'uk', 'ur', 'ug', 'uz', 'cy', 'xh', 'yi', 'yo', 'zu']
+	langsAI = [(x, international.LANGUAGE_DATA[x][1]) for x in langsAI]
 	langsAI.append(("zh-CN", _("Chinese (Simplified)")))
 	langsAI.append(("ceb", _("Cebuano")))
 	langsAI.append(("haw", _("Hawaiian")))
@@ -1922,7 +1881,7 @@ def InitUsageConfig():
 	langsAI.append(("ckb", _("Kurdish (Sorani)")))
 	langsAI.sort(key=lambda x: x[1])
 
-	default = config.osd.language.value
+	default = config.misc.locale.value
 	default = default.split("_")[0] if "_" in default else default
 	if default == "zh":
 		default = "zh-CN"

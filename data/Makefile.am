@@ -18,10 +18,11 @@ dist_pkgdata_DATA = \
 	setup.xml \
 	skin_subtitles.xml \
 	startwizard.xml \
+	wizardlanguage.xml \
+	dnsservers.xml \
 	unicable.xml \
 	hd-testcard.mvi \
-	lcd_picon_default.png \
-	dnsservers.xml
+	lcd_picon_default.png
 
 iso-639-3.pck: $(srcdir)/iso-639-3.tab
 	python3 $(srcdir)/convert-iso-639-3.py $< $@
