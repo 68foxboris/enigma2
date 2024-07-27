@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from os import listdir, remove
 from os.path import basename, dirname, join
 from re import match
@@ -39,7 +40,7 @@ class ImportChannels:
 		if self.header:
 			request.add_header("Authorization", self.header)
 		try:
-			result = urlopen(request, timeout=timeout)
+			result = urlopen(request, timeout=timeout).read()
 		except URLError as e:
 			if "[Errno -3]" in str(e.reason):
 				print("[Import Channels] Network is not up yet, delay 5 seconds")
@@ -55,7 +56,7 @@ class ImportChannels:
 		return url[:url.rfind(":")] if url else self.url
 
 	def getFallbackSettings(self):
-		result = self.getUrl(f"{self.getTerrestrialUrl()}/api/settings").read()
+		result = self.getUrl(f"{self.getTerrestrialUrl()}/api/settings")
 		if result:
 			result = loads(result.decode("utf-8"))
 			if result.get("result"):
@@ -85,15 +86,14 @@ class ImportChannels:
 	Enumerate all the files that make up the bouquet system, either local or on a remote machine
 	"""
 
-	def ImportGetFilelist(self, remote=False, *files):
+	def ImportGetFilelist(self, remote=False, radio=False, *files):
 		result = []
 		for file in files:
 			# read the contents of the file
 			try:
 				if remote:
 					try:
-						content = self.getUrl(f"{self.url}/file?file={self.e2path}/{quote(file)}").readlines()
-						content = map(lambda l: l.decode("utf-8", "replace"), content)
+						content = self.getUrl(f"{self.url}/file?file={self.e2path}/{quote(file)}").decode('utf-8', 'replace').split('\n')
 					except Exception as e:
 						print(f"[Import Channels] Exception: {str(e)}")
 						continue
@@ -107,12 +107,13 @@ class ImportChannels:
 
 			# check the contents for more bouquet files
 			for line in content:
-#				print ("[Import Channels] %s" % line)
+				print (f"[Import Channels] {line}")
 				# check if it contains another bouquet reference, first tv type then radio type
 				r = match('#SERVICE 1:7:1:0:0:0:0:0:0:0:FROM BOUQUET "(.*)" ORDER BY bouquet', line) or match('#SERVICE 1:7:2:0:0:0:0:0:0:0:FROM BOUQUET "(.*)" ORDER BY bouquet', line)
 				if r:
 					# recurse
 					result.extend(self.ImportGetFilelist(remote, r.group(1)))
+
 			# add add the file itself
 			result.append(file)
 
@@ -127,7 +128,7 @@ class ImportChannels:
 		if "epg" in self.remote_fallback_import:
 			print("[Import Channels] Writing epg.dat file on server box")
 			try:
-				result = loads(self.getUrl(f"{self.url}/api/saveepg", timeout=30).read().decode("utf-8"))
+				result = loads(self.getUrl(f"{self.url}/api/saveepg", timeout=30).decode("utf-8"))
 				if "result" not in result and result["result"] == False:
 					self.ImportChannelsDone(False, _("Error when writing epg.dat on the fallback receiver"))
 			except Exception as e:
@@ -138,9 +139,9 @@ class ImportChannels:
 			try:
 				epgdatfile = self.getFallbackSettingsValue(settings, "config.misc.epgcache_filename") or "/media/hdd/epg.dat"
 				try:
-					files = [file for file in loads(self.getUrl(f"{self.url}/file?dir={dirname(epgdatfile)}").read())["files"] if basename(file).startswith(basename(epgdatfile))]
+					files = [file for file in loads(self.getUrl(f"{self.url}/file?dir={dirname(epgdatfile)}"))["files"] if basename(file).startswith(basename(epgdatfile))]
 				except:
-					files = [file for file in loads(self.getUrl(f"{self.url}/file?dir=/").read())["files"] if basename(file).startswith("epg.dat")]
+					files = [file for file in loads(self.getUrl(f"{self.url}/file?dir=/"))["files"] if basename(file).startswith("epg.dat")]
 				epg_location = files[0] if files else None
 			except Exception as e:
 				print(f"[Import Channels] Exception: {str(e)}")
@@ -149,7 +150,7 @@ class ImportChannels:
 			if epg_location:
 				print("[Import Channels] Copy EPG file...")
 				try:
-					open(join(self.tmp_dir, "epg.dat"), "wb").write(self.getUrl(f"{self.url}/file?file={epg_location}").read())
+					open(join(self.tmp_dir, "epg.dat"), "wb").write(self.getUrl(f"{self.url}/file?file={epg_location}"))
 				except Exception as e:
 					print(f"[Import Channels] Exception: {str(e)}")
 					self.ImportChannelsDone(False, _("Error while retrieving epg.dat from the fallback receiver"))
@@ -168,39 +169,39 @@ class ImportChannels:
 				self.ImportChannelsDone(False, _("No epg.dat file found on the fallback receiver"))
 
 		if "channels" in self.remote_fallback_import:
-			print("[Import Channels] Enumerate remote files")
+			print("[Import Channels] enumerate remote files")
 			files = self.ImportGetFilelist(True, "bouquets.tv", "bouquets.radio")
 
 			print("[Import Channels] Enumerate remote support files")
-			supportfiles = ("lamedb", "blacklist", "whitelist", "alternatives.")
+			supportfiles = ('lamedb', 'bouquets.', 'userbouquet.', 'blacklist', 'whitelist', 'alternatives.')
 
-			for file in loads(self.getUrl(f"{self.url}/file?dir={self.e2path}").read())["files"]:
+			for file in loads(self.getUrl(f"{self.url}/file?dir={self.e2path}"))["files"]:
 				if basename(file).startswith(supportfiles):
 					files.append(file.replace(self.e2path, ""))
 
-			print("[Import Channels] Fetch remote files")
+			print("[Import Channels] fetch remote files")
 			for file in files:
-#				print("[Import Channels] Downloading %s..." % file)
+				print(f"[Import Channels] Downloading {file}...")
 				try:
-					open(join(self.tmp_dir, basename(file)), "wb").write(self.getUrl(f"{self.url}/file?file={self.e2path}/{quote(file)}").read())
+					open(join(self.tmp_dir, basename(file)), "wb").write(self.getUrl(f"{self.url}/file?file={self.e2path}/{quote(file)}"))
 				except Exception as e:
 					print(f"[Import Channels] Exception: {str(e)}")
 
-			print("[Import Channels] Enumerate local files")
+			print("[Import Channels] enumerate local files")
 			files = self.ImportGetFilelist(False, "bouquets.tv", "bouquets.radio")
 
 			print("[Import Channels] Removing old local files...")
 			for file in files:
-#				print("- Removing %s..." % file)
+#				print("[Import Channels] Removing %s..." % file)
 				try:
 					remove(join(self.e2path, file))
 				except OSError:
 					print(f"[Import Channels] File {file} did not exist")
 
-			print("[Import Channels] Updating files...")
+			print("[Import Channels] copying files...")
 			files = [x for x in listdir(self.tmp_dir)]
 			for file in files:
-#				print("- Moving %s..." % file)
+				print(f"[Import Channels] Moving {file}...")
 				move(join(self.tmp_dir, file), join(self.e2path, file))
 
 		self.ImportChannelsDone(True, {"channels": _("Channels"), "epg": _("EPG"), "channels_epg": _("Channels and EPG")}[self.remote_fallback_import])
