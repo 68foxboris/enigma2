@@ -905,7 +905,7 @@ def InitUsageConfig():
 	config.usage.date.dayfull.addNotifier(setDateStyles)
 
 	# TRANSLATORS: full time representation hour:minute:seconds
-	if locale.nl_langinfo(locale.AM_STR) and locale.nl_langinfo(locale.PM_STR):
+	if nl_langinfo(AM_STR) and nl_langinfo(PM_STR):
 		config.usage.time.long = ConfigSelection(default=_("%T"), choices=[
 			(_("%T"), _("HH:mm:ss")),
 			(_("%-H:%M:%S"), _("H:mm:ss")),
@@ -1046,7 +1046,7 @@ def InitUsageConfig():
 	config.usage.date.display.addNotifier(setDateDisplayStyles)
 
 	# TRANSLATORS: short time representation hour:minute (Same as "Default")
-	if locale.nl_langinfo(locale.AM_STR) and locale.nl_langinfo(locale.PM_STR):
+	if nl_langinfo(AM_STR) and nl_langinfo(PM_STR):
 		config.usage.time.display = ConfigSelection(default=_("%R"), choices=[
 			("", _("Hidden / Blank")),
 			(_("%R"), _("HH:mm")),
