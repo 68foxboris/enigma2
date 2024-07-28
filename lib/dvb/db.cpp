@@ -169,7 +169,7 @@ const eDVBService::cacheID eDVBService::audioCacheTags[] = {
 const int eDVBService::nAudioCacheTags = sizeof(eDVBService::audioCacheTags) / sizeof(eDVBService::audioCacheTags[0]);
 
 eDVBService::eDVBService()
-	:m_cache(0), m_flags(0)
+	:m_cache(0), m_flags(0), m_lcn(0)
 {
 }
 
@@ -892,6 +892,7 @@ void eDVBDB::loadServicelist(const char *file)
 		ePtr<eDVBService> s = new eDVBService;
 		s->m_service_name = line;
 		s->genSortName();
+		s->m_lcn = 0;
 
 		if (!fgets(line, sizeof(line), f))
 			break;
@@ -902,6 +903,15 @@ void eDVBDB::loadServicelist(const char *file)
 			s->m_provider_name = line;
 		else
 			parseServiceData(s, line);
+
+		if (m_lcnmap.size())
+		{
+			eServiceReferenceDVB channel = eServiceReferenceDVB(ref.toString());
+			channel.setServiceType(0);
+			std::map<eServiceReferenceDVB, int>::iterator it = m_lcnmap.find(channel);
+			if (it != m_lcnmap.end())
+				s->m_lcn = it->second;
+		}
 		addService(ref, s);
 		scount++;
 	}
@@ -1468,6 +1478,9 @@ int eDVBDB::renumberBouquet(eBouquet &bouquet, int startChannelNum)
 			}
 			else
 				ref.number = startChannelNum++;
+
+			if(ref.number > m_max_number)
+				m_max_number = ref.number;
 		}
 
 		// add is in bouquet flag to m_services
@@ -1486,7 +1499,7 @@ int eDVBDB::renumberBouquet(eBouquet &bouquet, int startChannelNum)
 eDVBDB *eDVBDB::instance;
 
 eDVBDB::eDVBDB()
-	: m_load_unlinked_userbouquets(true)
+	: m_load_unlinked_userbouquets(true), m_max_number(0)
 {
 	instance = this;
 	m_numbering_mode = eSimpleConfig::getInt("config.usage.numberMode", 0);
@@ -2697,6 +2710,8 @@ eDVBDBQuery::eDVBDBQuery(eDVBDB *db, const eServiceReference &source, eDVBChanne
 
 RESULT eDVBDBQuery::getNextResult(eServiceReferenceDVB &ref)
 {
+	bool lcn = m_db->m_numbering_mode == 2;
+
 	while (m_cursor != m_db->m_services.end())
 	{
 		ePtr<eDVBService> service = m_cursor->second;
@@ -2707,6 +2722,9 @@ RESULT eDVBDBQuery::getNextResult(eServiceReferenceDVB &ref)
 			ref = m_cursor->first;
 			if (service->m_flags & 8192)
 				ref.flags |= 8192;
+
+			if (lcn)
+				ref.number = service->getLCN();
 
 			int res = (!m_query) || service->checkFilter(ref, *m_query);
 

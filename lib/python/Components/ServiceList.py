@@ -16,7 +16,6 @@ def InitServiceListSettings():
 def InitServiceListSettings():
 	config.channelSelection = ConfigSubsection()
 	config.channelSelection.showNumber = ConfigYesNo(default=True)
-	config.channelSelection.showLCN = ConfigYesNo(default=False)
 	config.channelSelection.showPicon = ConfigYesNo(default=False)
 	config.channelSelection.showServiceTypeIcon = ConfigYesNo(default=False)
 	config.channelSelection.showCryptoIcon = ConfigYesNo(default=False)
