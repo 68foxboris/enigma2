@@ -244,7 +244,7 @@ def getHotkeyFunctions():
 	hotkey.functions.append((_("Recording Setup"), "Setup/recording", "Setup"))
 	hotkey.functions.append((_("Harddisk Setup"), "Setup/harddisk", "Setup"))
 	hotkey.functions.append((_("Subtitles Settings"), "Setup/subtitlesetup", "Setup"))
-	hotkey.functions.append((_("Language"), "Module/Screens.LanguageSelection/LanguageSelection", "Setup"))
+	hotkey.functions.append((_("Language"), "Module/Screens.LocaleSelection/LocaleSelection", "Setup"))
 	hotkey.functions.append((_("OScam Information"), "Module/Screens.OScamInfo/OSCamInfo", "Plugins"))
 	hotkey.functions.append((_("Memory Info"), "Module/Screens.About/MemoryInfo", "Setup"))
 	if BoxInfo.getItem("canMultiBoot"):

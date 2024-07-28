@@ -6,7 +6,7 @@ from skin import fonts, parameters
 from Components.ActionMap import HelpableNumberActionMap
 from Components.Input import Input
 from Components.Label import Label
-from Components.Language import language
+from Components.International import international
 from Components.MenuList import MenuList
 from Components.MultiContent import MultiContentEntryPixmapAlphaBlend, MultiContentEntryText
 from Components.Sources.StaticText import StaticText
@@ -340,22 +340,28 @@ class VirtualKeyboard(Screen):
 		]
 		self.latvian = [
 			[
-				["`", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "BACKSPACEICON"],
-				["TABICON", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\"],
-				["CAPSLOCKICON", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", self.green, self.green],
-				["SHIFTICON", "SHIFTICON", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "SHIFTICON", "SHIFTICON"],
+				["", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "f", "BACKSPACEICON"],
+				["TABICON", "\u016B", "g", "j", "r", "m", "v", "n", "z", "\u0113", "\u010D", "\u017E", "h", "\u0137"],
+				["CAPSLOCKICON", "\u0161", "u", "s", "i", "l", "d", "a", "t", "e", "c", "\u00B4", self.green, self.green],
+				["SHIFTICON", "\u0123", "\u0146", "b", "\u012B", "k", "p", "o", "\u0101", ",", ".", "\u013C", "SHIFTICON", "SHIFTICON"],
 				self.footer
 			], [
-				["~", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "BACKSPACEICON"],
-				["TABICON", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|"],
-				["CAPSLOCKICON", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", "\"", self.green, self.green],
-				["SHIFTICON", "SHIFTICON", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "SHIFTICON", "SHIFTICON"],
+				["?", "!", "\u00AB", "\u00BB", "$", "%", "/", "&", "\u00D7", "(", ")", "_", "F", "BACKSPACEICON"],
+				["TABICON", "\u016A", "G", "J", "R", "M", "V", "N", "Z", "\u0112", "\u010C", "\u017D", "H", "\u0136"],
+				["CAPSLOCKICON", "\u0160", "U", "S", "I", "L", "D", "A", "T", "E", "C", "\u00B0", self.green, self.green],
+				["SHIFTICON", "\u0122", "\u0145", "B", "\u012A", "K", "P", "O", "\u0100", ";", ":", "\u013B", "SHIFTICON", "SHIFTICON"],
 				self.footer
 			], [
-				["\u00b4", "\u00b9", "\u00b2", "\u00b3", "\u20ac", "\u00bd", "\u00be", "\u007b", "\u005b", "\u005d", "\u007d ", "\u005c", "\u2013", "BACKSPACEICON"],
-				["TABICON", "q", "\u0113", "\u0112", "\u0157", "\u0156", "\u016B", "\u016A", "\u012B", "\u012A", "\u014D", "\u014C", "\u00ab", "\u00bb"],
-				["CAPSLOCKICON", "\u0101", "\u0100", "\u0161", "\u0160", "\u0123", "\u0122", "\u0137", "\u0136", "\u013C", "\u013B", "\u003b", self.green, self.green],
-				["SHIFTICON", "SHIFTICON", "\u017E", "\u017D", "\u010D", "\u010C", "b", "\u0146", "\u0145", "\u0060", "\u00b7", "\u002f", "SHIFTICON", "SHIFTICON"],
+				["", "\u00AB", "", "", "\u20AC", "\"", "'", "", ":", "", "", "\u2013", "=", "BACKSPACEICON"],
+				["TABICON", "q", "\u0123", "", "\u0157", "w", "y", "", "", "", "", "[", "]", ""],
+				["CAPSLOCKICON", "", "", "", "", "", "", "", "", "\u20AC", "", "\u00B4", self.green, self.green],
+				["SHIFTICON", "\\", "", "x", "", "\u0137", "", "\u00F5", "", "<", ">", "", "SHIFTICON", "SHIFTICON"],
+				self.footer
+			], [
+				["", "", "@", "#", "$", "~", "^", "\u00B1", "", "", "", "\u2014", ";", "BACKSPACEICON"],
+				["TABICON", "Q", "\u0122", "", "\u0156", "W", "Y", "", "", "", "", "{", "}", ""],
+				["CAPSLOCKICON", "", "", "", "", "", "", "", "", "", "", "\u00A8", self.green, self.green],
+				["SHIFTICON", "|", "", "X", "", "\u0136", "", "\u00D5", "", "", "", "", "SHIFTICON", "SHIFTICON"],
 				self.footer
 			]
 		]
@@ -515,13 +521,13 @@ class VirtualKeyboard(Screen):
 			"9": (self.keyNumberGlobal, _("Number or SMS style data entry")),
 			"gotAsciiCode": (self.keyGotAscii, _("Keyboard data entry"))
 		}, -2, description=_("Virtual Keyboard Actions"))
-		self.lang = language.getLanguage()
+		self.locale = international.getLocale()
 		self["prompt"] = Label(prompt)
 		self["text"] = Input(text=text.replace("\t", self.TAB_GLYPH), maxSize=maxSize, visible_width=visibleWidth, type=type, currPos=len(text) if currPos is None else currPos, allMarked=allMarked)
 		self["list"] = VirtualKeyboardList([])
 		self["mode"] = Label(_("INS"))
-		self["locale"] = Label(_("Locale") + ": " + self.lang)
-		self["language"] = Label(_("Language") + ": " + self.lang)
+		self["locale"] = Label(f"{_('Locale')}: {self.locale}")
+		self["language"] = Label(f"{_('Language')}: {self.locale}")
 		self["key_info"] = StaticText(_("INFO"))
 		self["key_red"] = StaticText(_("Exit"))
 		self["key_green"] = StaticText(_(greenLabel))
@@ -544,8 +550,6 @@ class VirtualKeyboard(Screen):
 		self.padding = parameters.get("VirtualKeyboardPadding", parameters.get("VirtualKeyBoardPadding", (4, 4)))
 		# Text color for each shift level.  (Ensure there is a color for each shift level!)
 		self.shiftColors = parameters.get("VirtualKeyboardShiftColors", parameters.get("VirtualKeyBoardShiftColors", (0x00ffffff, 0x00ffffff, 0x0000ffff, 0x00ff00ff)))
-		self.language = None
-		self.location = None
 		self.keyList = []
 		self.shiftLevels = 0
 		self.shiftLevel = 0
@@ -708,7 +712,7 @@ class VirtualKeyboard(Screen):
 		keyList[0][2][10] = "\u00E9"
 		keyList[0][2][11] = "\u00E1"
 		keyList[0][3][1] = "\u00ED"
-		keyList[1][0] = ["\u00A7", "'", "\"", "+", "!", "%", "/", "=", "(", ")", "\u00D6", "\u00DC", "\u00D3", "BACSPACEICON"]
+		keyList[1][0] = ["\u00A7", "'", "\"", "+", "!", "%", "/", "=", "(", ")", "\u00D6", "\u00DC", "\u00D3", "BACKSPACEICON"]
 		keyList[1][1][11] = "\u0150"
 		keyList[1][1][12] = "\u00DA"
 		keyList[1][1][13] = "\u0170"
@@ -882,14 +886,15 @@ class VirtualKeyboard(Screen):
 			self.processSelect()
 
 	def setLocale(self):
-		self.language, self.location, self.keyList = self.locales.get(self.lang, [None, None, None])
-		if self.language is None or self.location is None or self.keyList is None:
-			self.lang = "en_EN"
-			self.language = _("English")
-			self.location = _("Various")
+		language = international.getLanguageTranslated(self.locale)
+		country = international.getCountryTranslated(self.locale)
+		self.keyList, location = self.locales.get(self.locale, [None, None])
+		country = country if country else location
+		if self.keyList is None:
+			self.locale = "en_EN"
 			self.keyList = self.english
 		self.shiftLevel = 0
-		self["locale"].setText(_("Locale") + ": " + self.lang + "  (" + self.language + " - " + self.location + ")")
+		self["locale"].setText(f"{_('Locale')}: {self.locale}  ({language} - {country})")
 
 	def buildVirtualKeyboard(self):
 		self.shiftLevels = len(self.keyList)  # Check the current shift level is available / valid in this layout.
@@ -1050,24 +1055,26 @@ class VirtualKeyboard(Screen):
 			self.close(self["text"].getText().replace(self.TAB_GLYPH, "\t"))
 
 	def localeMenu(self):
+		def localeMenuCallback(choice):
+			if choice:
+				self.locale = choice[1]
+				self.setLocale()
+				self.buildVirtualKeyboard()
+
 		languages = []
-		for locale, data in self.locales.items():
-			languages.append((data[0] + "  -  " + data[1] + "  (" + locale + ")", locale))
+		for locale in self.locales.keys():
+			language = international.getLanguageTranslated(locale)
+			country = international.getCountryTranslated(locale)
+			country = country if country else self.locales[locale][1]
+			languages.append((f"{language}  -  {country}  ({locale})", locale))
 		languages = sorted(languages)
-		index = 0
+
 		default = 0
-		for item in languages:
-			if item[1] == self.lang:
+		for index, item in enumerate(languages):
+			if item[1] == self.locale:
 				default = index
 				break
-			index += 1
 		self.session.openWithCallback(self.localeMenuCallback, ChoiceBox, _("Available locales are:"), list=languages, selection=default, keys=[])
-
-	def localeMenuCallback(self, choice):
-		if choice:
-			self.lang = choice[1]
-			self.setLocale()
-			self.buildVirtualKeyboard()
 
 	def shiftSelected(self):
 		if self.shiftHold == -1:

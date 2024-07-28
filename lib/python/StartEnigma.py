@@ -510,7 +510,7 @@ config.crash.debugRemoteControls = ConfigYesNo(default=False)
 config.crash.debugScreens = ConfigYesNo(default=False)
 config.crash.debugSkin = ConfigYesNo(default=False)
 config.crash.debugDVBScan = ConfigYesNo(default=False)
-
+config.crash.debugInternational = ConfigYesNo(default=False)
 
 # config.plugins needs to be defined before InputDevice < HelpMenu < MessageBox < InfoBar
 config.plugins = ConfigSubsection()
@@ -537,6 +537,18 @@ enigma.eProfileWrite("LoadBouquets")
 config.misc.load_unlinked_userbouquets = ConfigYesNo(default=True)
 config.misc.load_unlinked_userbouquets.addNotifier(setLoadUnlinkedUserbouquets)
 enigma.eDVBDB.getInstance().reloadBouquets()
+
+def localeNotifier(configElement):
+	international.activateLocale(configElement.value)
+
+
+enigma.eProfileWrite("International")
+from Components.International import international
+
+config.misc.locale = ConfigText(default="en_US")
+config.misc.locale.addNotifier(localeNotifier)
+config.misc.language = ConfigText(default=international.getLanguage("en_US"))
+config.misc.country = ConfigText(default=international.getCountry("en_US"))
 
 enigma.eProfileWrite("ParentalControl")
 import Components.ParentalControl

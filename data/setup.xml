@@ -183,12 +183,17 @@
 	<setup key="keyboard" title="Keyboard setup">
 		<item level="0" text="Keyboard map">config.keyboard.keymap</item>
 	</setup>
+	<setup key="Locale" title="Locale Selection Settings" menuTitle="Locale">
+		<item level="0" text="Locales to be displayed" description="Display the base locales or all locales for a language.">config.locales.packageLocales</item>
+		<item level="0" text="Locale list sort order" description="Sort order for the language list.">config.locales.localesSortBy</item>
+	</setup>
 	<setup key="Logs" title="Logs Setup">
 		<item level="2" text="Logs location" description="Choose the location for crash and debuglogs.">config.crash.debug_path</item>
 		<item level="2" text="Handle Python crashes" description="Try to prevent reboots for software errors and maintain of the availability for the receiver.">config.crash.bsodpython</item>
 		<item level="2" text="Show crash info on screen and write crash log for x times" description="If 'never', will write crash log despite that for the first crash." requires="config.crash.bsodpython">config.crash.bsodhide</item>
 		<item level="2" text="Restart GUI after x crashes" description="If 'never', will force restart despite that after 100 crashes." requires="config.crash.bsodpython">config.crash.bsodmax</item>
 		<item level="2" text="Enable debug log *" description="Allows you to enable the debug log. They contain very detailed information of everything the system does.">config.crash.enabledebug</item>
+		<item level="2" text="Include international data *" description="Enable this option to add international language and country load information detected during system boot to the debug log file.">config.crash.debugInternational</item>
 		<item level="2" text="Include MultiBoot data *" description="Enable this option to add MultiBoot information detected during system boot to the debug log file.">config.crash.debugMultiBoot</item>
 		<item level="2" text="Include skin data" description="Enable this option to add skin load information detected during system boot to the debug log file.">config.crash.debugSkin</item>
 		<item level="2" text="Include keyboard data" description="Enable this option to add keyboard key map data to the debug log file.">config.crash.debugKeyboards</item>
