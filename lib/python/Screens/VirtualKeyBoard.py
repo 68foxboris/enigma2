@@ -12,7 +12,7 @@ from Components.MultiContent import MultiContentEntryPixmapAlphaBlend, MultiCont
 from Components.Sources.StaticText import StaticText
 from Screens.ChoiceBox import ChoiceBox
 from Screens.Screen import Screen
-from Tools.Directories import SCOPE_CURRENT_SKIN, resolveFilename
+from Tools.Directories import SCOPE_GUISKIN, resolveFilename
 from Tools.LoadPixmap import LoadPixmap
 from Tools.NumericalTextInput import NumericalTextInput
 
@@ -45,7 +45,7 @@ class VirtualKeyboard(Screen):
 	def __init__(self, session, title=_("Virtual Keyboard Text:"), text="", maxSize=False, visibleWidth=False, type=Input.TEXT, currPos=None, allMarked=False, style=VKB_ENTER_ICON):
 		Screen.__init__(self, session, enableHelp=True)
 		self.skinName = ["VirtualKeyboard", "VirtualKeyBoard"]
-		self.setTitle(_("Virtual keyboard"))
+		self.setTitle(_("Virtual Keyboard"))
 		prompt = title  # Title should only be used for screen titles!
 		self["key_info"] = StaticText(_("INFO"))
 		self["key_text"] = StaticText(_("TEXT"))
@@ -62,60 +62,60 @@ class VirtualKeyboard(Screen):
 			self.VKB_SAVE_TEXT: ("Save", _("Save")),
 			self.VKB_SEARCH_TEXT: ("Search", _("Search"))
 		}.get(style, ("Enter", "ENTERICON"))
-		self.bg = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_bg.png"))  # Legacy support only!
-		self.bg_l = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_bg_l.png"))
-		self.bg_m = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_bg_m.png"))
-		self.bg_r = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_bg_r.png"))
-		self.sel_l = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_sel_l.png"))
-		self.sel_m = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_sel_m.png"))
-		self.sel_r = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_sel_r.png"))
-		key_red_l = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_red_l.png"))
-		key_red_m = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_red_m.png"))
-		key_red_r = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_red_r.png"))
-		key_green_l = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_green_l.png"))
-		key_green_m = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_green_m.png"))
-		key_green_r = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_green_r.png"))
-		key_yellow_l = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_yellow_l.png"))
-		key_yellow_m = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_yellow_m.png"))
-		key_yellow_r = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_yellow_r.png"))
-		key_blue_l = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_blue_l.png"))
-		key_blue_m = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_blue_m.png"))
-		key_blue_r = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_blue_r.png"))
-		key_backspace = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_backspace.png"))
-		key_clear = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_clear.png"))
-		key_delete = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_delete.png"))
-		key_enter = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_enter.png"))
-		key_exit = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_exit.png"))
-		key_first = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_first.png"))
-		key_last = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_last.png"))
-		key_left = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_left.png"))
-		key_locale = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_locale.png"))
-		key_right = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_right.png"))
-		key_shift = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_shift.png"))
-		key_shift0 = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_shift0.png"))
-		key_shift1 = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_shift1.png"))
-		key_shift2 = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_shift2.png"))
-		key_shift3 = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_shift3.png"))
-		key_space = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_space.png"))
-		key_space_alt = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_space_alt.png"))
-		key_tab = LoadPixmap(path=resolveFilename(SCOPE_CURRENT_SKIN, "buttons/vkey_tab.png"))
-		self.keyHighlights = {  # This is a table of cell highlight components (left, middle and right)
-			"EXIT": (key_red_l, key_red_m, key_red_r),
-			"EXITICON": (key_red_l, key_red_m, key_red_r),
-			"DONE": (key_green_l, key_green_m, key_green_r),
-			"ENTER": (key_green_l, key_green_m, key_green_r),
-			"ENTERICON": (key_green_l, key_green_m, key_green_r),
-			"OK": (key_green_l, key_green_m, key_green_r),
-			"SAVE": (key_green_l, key_green_m, key_green_r),
-			# "LOC": (key_yellow_l, key_yellow_m, key_yellow_r),
-			# "LOCALE": (key_yellow_l, key_yellow_m, key_yellow_r),
-			# "LOCALEICON": (key_yellow_l, key_yellow_m, key_yellow_r),
-			"SHIFT": (key_yellow_l, key_yellow_m, key_yellow_r),
-			"SHIFTICON": (key_yellow_l, key_yellow_m, key_yellow_r),
-			"CAPS": (key_blue_l, key_blue_m, key_blue_r),
-			"LOCK": (key_blue_l, key_blue_m, key_blue_r),
-			"CAPSLOCK": (key_blue_l, key_blue_m, key_blue_r),
-			"CAPSLOCKICON": (key_blue_l, key_blue_m, key_blue_r)
+		# self.iconBackground = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_bg.png"))  # Legacy support only!
+		self.iconBackgroundLeft = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_bg_l.png"))
+		self.iconBackgroundMiddle = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_bg_m.png"))
+		self.iconBackgroundRight = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_bg_r.png"))
+		self.iconSelectedLeft = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_sel_l.png"))
+		self.iconSelectedMiddle = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_sel_m.png"))
+		self.iconSelectedRight = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_sel_r.png"))
+		iconRedLeft = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_red_l.png"))
+		iconRedMiddle = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_red_m.png"))
+		iconRedRight = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_red_r.png"))
+		iconGreenLeft = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_green_l.png"))
+		iconGreenMiddle = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_green_m.png"))
+		iconGreenRight = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_green_r.png"))
+		iconYellowLeft = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_yellow_l.png"))
+		iconYellowMiddle = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_yellow_m.png"))
+		iconYellowRight = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_yellow_r.png"))
+		iconBlueLeft = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_blue_l.png"))
+		iconBlueMiddle = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_blue_m.png"))
+		iconBlueRight = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_blue_r.png"))
+		iconBackspace = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_backspace.png"))
+		iconClear = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_clear.png"))
+		iconDelete = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_delete.png"))
+		iconEnter = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_enter.png"))
+		iconExit = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_exit.png"))
+		iconFirst = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_first.png"))
+		iconLast = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_last.png"))
+		iconLeft = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_left.png"))
+		iconLocale = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_locale.png"))
+		iconRight = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_right.png"))
+		iconShift = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_shift.png"))
+		iconShift0 = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_shift0.png"))
+		iconShift1 = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_shift1.png"))
+		iconShift2 = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_shift2.png"))
+		iconShift3 = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_shift3.png"))
+		iconSpace = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_space.png"))
+		iconSpaceAlt = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_space_alt.png"))
+		iconTab = LoadPixmap(path=resolveFilename(SCOPE_GUISKIN, "buttons/vkey_tab.png"))
+		self.iconHighlights = {  # This is a table of cell highlight components (left, middle and right)
+			"EXIT": (iconRedLeft, iconRedMiddle, iconRedRight),
+			"EXITICON": (iconRedLeft, iconRedMiddle, iconRedRight),
+			"DONE": (iconGreenLeft, iconGreenMiddle, iconGreenRight),
+			"ENTER": (iconGreenLeft, iconGreenMiddle, iconGreenRight),
+			"ENTERICON": (iconGreenLeft, iconGreenMiddle, iconGreenRight),
+			"OK": (iconGreenLeft, iconGreenMiddle, iconGreenRight),
+			"SAVE": (iconGreenLeft, iconGreenMiddle, iconGreenRight),
+			# "LOC": (iconYellowLeft, iconYellowMiddle, iconYellowRight),
+			# "LOCALE": (iconYellowLeft, iconYellowMiddle, iconYellowRight),
+			# "LOCALEICON": (iconYellowLeft, iconYellowMiddle, iconYellowRight),
+			"SHIFT": (iconYellowLeft, iconYellowMiddle, iconYellowRight),
+			"SHIFTICON": (iconYellowLeft, iconYellowMiddle, iconYellowRight),
+			"CAPS": (iconBlueLeft, iconBlueMiddle, iconBlueRight),
+			"LOCK": (iconBlueLeft, iconBlueMiddle, iconBlueRight),
+			"CAPSLOCK": (iconBlueLeft, iconBlueMiddle, iconBlueRight),
+			"CAPSLOCKICON": (iconBlueLeft, iconBlueMiddle, iconBlueRight)
 		}
 		self.shiftMsgs = [
 			_("Lower case"),
@@ -123,70 +123,74 @@ class VirtualKeyboard(Screen):
 			_("Special 1"),
 			_("Special 2")
 		]
-		self.keyImages = [{
-			"BACKSPACEICON": key_backspace,
-			"CAPSLOCKICON": key_shift0,
-			"CLEARICON": key_clear,
-			"DELETEICON": key_delete,
-			"ENTERICON": key_enter,
-			"EXITICON": key_exit,
-			"FIRSTICON": key_first,
-			"LASTICON": key_last,
-			"LOCALEICON": key_locale,
-			"LEFTICON": key_left,
-			"RIGHTICON": key_right,
-			"SHIFTICON": key_shift,
-			"SPACEICON": key_space,
-			"SPACEICONALT": key_space_alt,
-			"TABICON": key_tab
+		self.keyIcons = [{
+			# "ALLICON": iconAll,
+			"BACKSPACEICON": iconBackspace,
+			"CAPSLOCKICON": iconShift0,
+			"CLEARICON": iconClear,
+			"DELETEICON": iconDelete,
+			"ENTERICON": iconEnter,
+			"EXITICON": iconExit,
+			"FIRSTICON": iconFirst,
+			"LASTICON": iconLast,
+			"LOCALEICON": iconLocale,
+			"LEFTICON": iconLeft,
+			"RIGHTICON": iconRight,
+			"SHIFTICON": iconShift,
+			"SPACEICON": iconSpace,
+			"SPACEICONALT": iconSpaceAlt,
+			"TABICON": iconTab
 		}, {
-			"BACKSPACEICON": key_backspace,
-			"CAPSLOCKICON": key_shift1,
-			"CLEARICON": key_clear,
-			"DELETEICON": key_delete,
-			"ENTERICON": key_enter,
-			"EXITICON": key_exit,
-			"FIRSTICON": key_first,
-			"LASTICON": key_last,
-			"LEFTICON": key_left,
-			"LOCALEICON": key_locale,
-			"RIGHTICON": key_right,
-			"SHIFTICON": key_shift,
-			"SPACEICON": key_space,
-			"SPACEICONALT": key_space_alt,
-			"TABICON": key_tab
+			# "ALLICON": iconAll,
+			"BACKSPACEICON": iconBackspace,
+			"CAPSLOCKICON": iconShift1,
+			"CLEARICON": iconClear,
+			"DELETEICON": iconDelete,
+			"ENTERICON": iconEnter,
+			"EXITICON": iconExit,
+			"FIRSTICON": iconFirst,
+			"LASTICON": iconLast,
+			"LEFTICON": iconLeft,
+			"LOCALEICON": iconLocale,
+			"RIGHTICON": iconRight,
+			"SHIFTICON": iconShift,
+			"SPACEICON": iconSpace,
+			"SPACEICONALT": iconSpaceAlt,
+			"TABICON": iconTab
 		}, {
-			"BACKSPACEICON": key_backspace,
-			"CAPSLOCKICON": key_shift2,
-			"CLEARICON": key_clear,
-			"DELETEICON": key_delete,
-			"ENTERICON": key_enter,
-			"EXITICON": key_exit,
-			"FIRSTICON": key_first,
-			"LASTICON": key_last,
-			"LEFTICON": key_left,
-			"LOCALEICON": key_locale,
-			"RIGHTICON": key_right,
-			"SHIFTICON": key_shift,
-			"SPACEICON": key_space,
-			"SPACEICONALT": key_space_alt,
-			"TABICON": key_tab
+			# "ALLICON": iconAll,
+			"BACKSPACEICON": iconBackspace,
+			"CAPSLOCKICON": iconShift2,
+			"CLEARICON": iconClear,
+			"DELETEICON": iconDelete,
+			"ENTERICON": iconEnter,
+			"EXITICON": iconExit,
+			"FIRSTICON": iconFirst,
+			"LASTICON": iconLast,
+			"LEFTICON": iconLeft,
+			"LOCALEICON": iconLocale,
+			"RIGHTICON": iconRight,
+			"SHIFTICON": iconShift,
+			"SPACEICON": iconSpace,
+			"SPACEICONALT": iconSpaceAlt,
+			"TABICON": iconTab
 		}, {
-			"BACKSPACEICON": key_backspace,
-			"CAPSLOCKICON": key_shift3,
-			"CLEARICON": key_clear,
-			"DELETEICON": key_delete,
-			"ENTERICON": key_enter,
-			"EXITICON": key_exit,
-			"FIRSTICON": key_first,
-			"LASTICON": key_last,
-			"LEFTICON": key_left,
-			"LOCALEICON": key_locale,
-			"RIGHTICON": key_right,
-			"SHIFTICON": key_shift,
-			"SPACEICON": key_space,
-			"SPACEICONALT": key_space_alt,
-			"TABICON": key_tab
+			# "ALLICON": iconAll,
+			"BACKSPACEICON": iconBackspace,
+			"CAPSLOCKICON": iconShift3,
+			"CLEARICON": iconClear,
+			"DELETEICON": iconDelete,
+			"ENTERICON": iconEnter,
+			"EXITICON": iconExit,
+			"FIRSTICON": iconFirst,
+			"LASTICON": iconLast,
+			"LEFTICON": iconLeft,
+			"LOCALEICON": iconLocale,
+			"RIGHTICON": iconRight,
+			"SHIFTICON": iconShift,
+			"SPACEICON": iconSpace,
+			"SPACEICONALT": iconSpaceAlt,
+			"TABICON": iconTab
 		}]
 		self.cmds = {
 			"": "pass",
@@ -450,45 +454,47 @@ class VirtualKeyboard(Screen):
 			]
 		]
 		self.locales = {
-			"ar_BH": [_("Arabic"), _("Bahrain"), self.arabic(self.english)],
-			"ar_EG": [_("Arabic"), _("Egypt"), self.arabic(self.english)],
-			"ar_JO": [_("Arabic"), _("Jordan"), self.arabic(self.english)],
-			"ar_KW": [_("Arabic"), _("Kuwait"), self.arabic(self.english)],
-			"ar_LB": [_("Arabic"), _("Lebanon"), self.arabic(self.english)],
-			"ar_OM": [_("Arabic"), _("Oman"), self.arabic(self.english)],
-			"ar_QA": [_("Arabic"), _("Qatar"), self.arabic(self.english)],
-			"ar_SA": [_("Arabic"), _("Saudi Arabia"), self.arabic(self.english)],
-			"ar_SY": [_("Arabic"), _("Syrian Arab Republic"), self.arabic(self.english)],
-			"ar_AE": [_("Arabic"), _("United Arab Emirates"), self.arabic(self.english)],
-			"ar_YE": [_("Arabic"), _("Yemen"), self.arabic(self.english)],
-			"cs_CZ": [_("Czech"), _("Czechia"), self.czech],
-			"nl_NL": [_("Dutch"), _("Netherlands"), self.dutch(self.english)],
-			"en_AU": [_("English"), _("Australian"), self.english],
-			"en_GB": [_("English"), _("United Kingdom"), self.unitedKingdom(self.english)],
-			"en_US": [_("English"), _("United States"), self.english],
-			"en_EN": [_("English"), _("Various"), self.english],
-			"et_EE": [_("Estonian"), _("Estonia"), self.estonian(self.scandinavian)],
-			"fi_FI": [_("Finnish"), _("Finland"), self.scandinavian],
-			"fr_BE": [_("French"), _("Belgian"), self.belgian(self.french)],
-			"fr_FR": [_("French"), _("France"), self.french],
-			"fr_CH": [_("French"), _("Switzerland"), self.frenchSwiss(self.german)],
-			"de_DE": [_("German"), _("Germany"), self.german],
-			"de_CH": [_("German"), _("Switzerland"), self.germanSwiss(self.german)],
-			"el_GR": [_("Greek"), _("Greece"), self.greek],
-			"hu_HU": [_("Hungarian"), _("Hungary"), self.hungarian(self.german)],
-			"lv_LV": [_("Latvian"), _("Latvia"), self.latvian],
-			"lt_LT": [_("Lithuanian"), _("Lithuania"), self.lithuanian(self.english)],
-			"nb_NO": [_("Norwegian"), _("Norway"), self.norwegian(self.scandinavian)],
-			"fa_IR": [_("Persian"), _("Iran, Islamic Republic"), self.persian(self.english)],
-			"pl_01": [_("Polish"), _("Alternative"), self.polish(self.german)],
-			"pl_PL": [_("Polish"), _("Poland"), self.polishProgrammers(self.english)],
-			"ru_RU": [_("Russian"), _("Russian Federation"), self.russian],
-			"sk_SK": [_("Slovak"), _("Slovakia"), self.slovak(self.german)],
-			"es_ES": [_("Spanish"), _("Spain"), self.spanish],
-			"sv_SE": [_("Swedish"), _("Sweden"), self.scandinavian],
-			"th_TH": [_("Thai"), _("Thailand"), self.thai],
-			"uk_01": [_("Ukrainian"), _("Russian"), self.ukranian(self.russian)],
-			"uk_UA": [_("Ukrainian"), _("Ukraine"), self.ukranianEnhanced(self.russian)]
+			"ar_BH": [self.arabic(self.english), None],
+			"ar_EG": [self.arabic(self.english), None],
+			"ar_JO": [self.arabic(self.english), None],
+			"ar_KW": [self.arabic(self.english), None],
+			"ar_LB": [self.arabic(self.english), None],
+			"ar_OM": [self.arabic(self.english), None],
+			"ar_QA": [self.arabic(self.english), None],
+			"ar_SA": [self.arabic(self.english), None],
+			"ar_SY": [self.arabic(self.english), None],
+			"ar_AE": [self.arabic(self.english), None],
+			"ar_YE": [self.arabic(self.english), None],
+			"cs_CZ": [self.czech, None],
+			"nl_NL": [self.dutch(self.english), None],
+			"en_AU": [self.english, None],
+			"en_GB": [self.unitedKingdom(self.english), None],
+			"en_US": [self.english, None],
+			"en_EN": [self.english, _("Various")],
+			"et_EE": [self.estonian(self.scandinavian), None],
+			"fa_IR": [self.farsi(self.english), None],
+			"fi_FI": [self.scandinavian, None],
+			"fr_BE": [self.belgian(self.french), None],
+			"fr_FR": [self.french, None],
+			"fr_CH": [self.frenchSwiss(self.german), None],
+			"de_DE": [self.german, None],
+			"de_CH": [self.germanSwiss(self.german), None],
+			"el_GR": [self.greek, None],
+			"hu_HU": [self.hungarian(self.german), None],
+			"lv_01": [self.latvianStandard(self.english), _("Alternative 1")],
+			"lv_02": [self.latvian, _("Alternative 2")],
+			"lv_LV": [self.latvianQWERTY(self.english), None],
+			"lt_LT": [self.lithuanian(self.english), None],
+			"nb_NO": [self.norwegian(self.scandinavian), None],
+			"pl_01": [self.polish(self.german), _("Alternative")],
+			"pl_PL": [self.polishProgrammers(self.english), None],
+			"ru_RU": [self.russian, None],
+			"sk_SK": [self.slovak(self.german), None],
+			"es_ES": [self.spanish, None],
+			"sv_SE": [self.scandinavian, None],
+			"th_TH": [self.thai, None],
+			"uk_01": [self.ukranian(self.russian), _("Russian")],
+			"uk_UA": [self.ukranianEnhanced(self.russian), None]
 		}
 		self["actions"] = HelpableNumberActionMap(self, ["VirtualKeyBoardActions", "NumberActions", "TextEditActions"], {
 			"cancel": (self.cancel, _("Cancel any text changes and exit")),
@@ -520,7 +526,7 @@ class VirtualKeyboard(Screen):
 			"8": (self.keyNumberGlobal, _("Number or SMS style data entry")),
 			"9": (self.keyNumberGlobal, _("Number or SMS style data entry")),
 			"gotAsciiCode": (self.keyGotAscii, _("Keyboard data entry"))
-		}, -2, description=_("Virtual Keyboard Actions"))
+		}, prio=0, description=_("Virtual Keyboard Actions"))
 		self.locale = international.getLocale()
 		self["prompt"] = Label(prompt)
 		self["text"] = Input(text=text.replace("\t", self.TAB_GLYPH), maxSize=maxSize, visible_width=visibleWidth, type=type, currPos=len(text) if currPos is None else currPos, allMarked=allMarked)
@@ -536,12 +542,12 @@ class VirtualKeyboard(Screen):
 		self["key_text"] = StaticText(_("TEXT"))
 		self["key_help"] = StaticText(_("HELP"))
 		width, height = parameters.get("VirtualKeyboard", parameters.get("VirtualKeyBoard", (45, 45)))
-		if self.bg_l is None or self.bg_m is None or self.bg_r is None:
+		if self.iconBackgroundLeft is None or self.iconBackgroundMiddle is None or self.iconBackgroundRight is None:
 			self.width = width
 			self.height = height
 		else:
-			self.width = self.bg_l.size().width() + self.bg_m.size().width() + self.bg_r.size().width()
-			self.height = self.bg_m.size().height()
+			self.width = self.iconBackgroundLeft.size().width() + self.iconBackgroundMiddle.size().width() + self.iconBackgroundRight.size().width()
+			self.height = self.iconBackgroundMiddle.size().height()
 		# Alignment -> (Horizontal, Vertical):
 		# 	Horizontal alignment: 0=Auto, 1=Left, 2=Center, 3=Right (Auto=Left on left, Center on middle, Right on right).
 		# 	Vertical alignment: 0=Auto, 1=Top, 2=Center, 3=Bottom (Auto=Center).
@@ -655,6 +661,24 @@ class VirtualKeyboard(Screen):
 		del keyList[3]
 		return keyList
 
+	def farsi(self, base):
+		keyList = deepcopy(base)
+		keyList.append([
+			["\u00F7", "\u06F1", "\u06F2", "\u06F3", "\u06F4", "\u06F5", "\u06F6", "\u06F7", "\u06F8", "\u06F9", "\u06F0", "-", "=", "BACKSPACEICON"],
+			["TABICON", "\u0636", "\u0635", "\u062B", "\u0642", "\u0641", "\u063A", "\u0639", "\u0647", "\u062E", "\u062D", "\u062C", "\u0686", "\u067E"],
+			["CAPSLOCKICON", "\u0634", "\u0633", "\u06CC", "\u0628", "\u0644", "\u0627", "\u062A", "\u0646", "\u0645", "\u06A9", "\u06AF", self.green, self.green],
+			["SHIFTICON", "\u0649", "\u0638", "\u0637", "\u0632", "\u0631", "\u0630", "\u062F", "\u0626", "\u0648", ".", "/", "SHIFTICON", "SHIFTICON"],
+			self.footer
+		])
+		keyList.append([
+			["\u00D7", "!", "@", "#", "$", "%", "^", "&", "*", ")", "(", "_", "+", "BACKSPACEICON"],
+			["TABICON", "\u064B", "\u064C", "\u064D", "\u0631", "\u060C", "\u061B", ",", "]", "[", "\\", "}", "{", "|"],
+			["CAPSLOCKICON", "\u064E", "\u064F", "\u0650", "\u0651", "\u06C0", "\u0622", "\u0640", "\u00AB", "\u00BB", ":", "\"", self.green, self.green],
+			["SHIFTICON", "|", "\u0629", "\u064A", "\u0698", "\u0624", "\u0625", "\u0623", "\u0621", "<", ">", "\u061F", "SHIFTICON", "SHIFTICON"],
+			self.footer
+		])
+		return keyList
+
 	def frenchSwiss(self, base):
 		keyList = self.germanSwiss(base)
 		keyList[0][0][11] = "'"
@@ -730,6 +754,33 @@ class VirtualKeyboard(Screen):
 		])
 		return keyList
 
+	def latvianQWERTY(self, base):
+		keyList = self.latvianStandard(base)
+		keyList[0][1][13] = "\u00B0"
+		keyList[2][1][9] = "\u00F5"
+		keyList[3][1][9] = "\u00D5"
+		return keyList
+
+	def latvianStandard(self, base):
+		keyList = deepcopy(base)
+		keyList[0][3][1] = "\\"
+		keyList[1][3][1] = "|"
+		keyList.append([
+			["", "", "\u00AB", "\u00BB", "\u20AC", "", "\u2019", "", "", "", "", "\u2013", "", "BACKSPACEICON"],
+			["TABICON", "", "", "\u0113", "\u0157", "", "", "\u016B", "\u012B", "\u014D", "", "", "", ""],
+			["CAPSLOCKICON", "\u0101", "\u0161", "", "", "\u0123", "", "", "\u0137", "\u013C", "", "\u00B4", self.green, self.green],
+			["SHIFTICON", "", "\u017E", "", "\u010D", "", "", "\u0146", "", "", "", "", "SHIFTICON", "SHIFTICON"],
+			self.footer
+		])
+		keyList.append([
+			["", "", "", "", "\u00A7", "\u00B0", "", "\u00B1", "\u00D7", "", "", "\u2014", "", "BACKSPACEICON"],
+			["TABICON", "", "", "\u0112", "\u0156", "", "", "\u016A", "\u012A", "\u014C", "", "", "", ""],
+			["CAPSLOCKICON", "\u0100", "\u0160", "", "", "\u0122", "", "", "\u0136", "\u013B", "", "\u00A8", self.green, self.green],
+			["SHIFTICON", "", "\u017D", "", "\u010C", "", "", "\u0145", "", "", "", "", "SHIFTICON", "SHIFTICON"],
+			self.footer
+		])
+		return keyList
+
 	def lithuanian(self, base):
 		keyList = deepcopy(base)
 		keyList[0][0] = ["`", "\u0105", "\u010D", "\u0119", "\u0117", "\u012F", "\u0161", "\u0173", "\u016B", "9", "0", "-", "\u017E", "BACKSPACEICON"]
@@ -757,24 +808,6 @@ class VirtualKeyboard(Screen):
 		keyList[2][0][11] = ""
 		keyList[2][0][12] = "\u00B4"
 		keyList[2][3][1] = ""
-		return keyList
-
-	def persian(self, base):
-		keyList = deepcopy(base)
-		keyList.append([
-			["\u00F7", "\u06F1", "\u06F2", "\u06F3", "\u06F4", "\u06F5", "\u06F6", "\u06F7", "\u06F8", "\u06F9", "\u06F0", "-", "=", "BACKSPACEICON"],
-			["TABICON", "\u0636", "\u0635", "\u062B", "\u0642", "\u0641", "\u063A", "\u0639", "\u0647", "\u062E", "\u062D", "\u062C", "\u0686", "\u067E"],
-			["CAPSLOCKICON", "\u0634", "\u0633", "\u06CC", "\u0628", "\u0644", "\u0627", "\u062A", "\u0646", "\u0645", "\u06A9", "\u06AF", self.green, self.green],
-			["SHIFTICON", "\u0649", "\u0638", "\u0637", "\u0632", "\u0631", "\u0630", "\u062F", "\u0626", "\u0648", ".", "/", "SHIFTICON", "SHIFTICON"],
-			self.footer
-		])
-		keyList.append([
-			["\u00D7", "!", "@", "#", "$", "%", "^", "&", "*", ")", "(", "_", "+", "BACKSPACEICON"],
-			["TABICON", "\u064B", "\u064C", "\u064D", "\u0631", "\u060C", "\u061B", ",", "]", "[", "\\", "}", "{", "|"],
-			["CAPSLOCKICON", "\u064E", "\u064F", "\u0650", "\u0651", "\u06C0", "\u0622", "\u0640", "\u00AB", "\u00BB", ":", "\"", self.green, self.green],
-			["SHIFTICON", "|", "\u0629", "\u064A", "\u0698", "\u0624", "\u0625", "\u0623", "\u0621", "<", ">", "\u061F", "SHIFTICON", "SHIFTICON"],
-			self.footer
-		])
 		return keyList
 
 	def polish(self, base):
@@ -903,11 +936,11 @@ class VirtualKeyboard(Screen):
 		self.keyboardWidth = len(self.keyList[self.shiftLevel][0])  # Determine current keymap size.
 		self.keyboardHeight = len(self.keyList[self.shiftLevel])
 		self.maxKey = self.keyboardWidth * (self.keyboardHeight - 1) + len(self.keyList[self.shiftLevel][-1]) - 1
-		# print("[VirtualKeyboard] DEBUG: Width=%d, Height=%d, Keys=%d, maxKey=%d, shiftLevels=%d" % (self.keyboardWidth, self.keyboardHeight, self.maxKey + 1, self.maxKey, self.shiftLevels))
+		# print(f"[VirtualKeyboard] DEBUG: Width={self.keyboardWidth}, Height={self.keyboardHeight}, Keys={self.maxKey + 1}, maxKey={self.maxKey}, shiftLevels={self.shiftLevels}")
 		self.index = 0
-		self.list = []
+		self.keyboardList = []
 		for keys in self.keyList[self.shiftLevel]:  # Process all the buttons in this shift level.
-			self.list.append(self.virtualKeyboardEntryComponent(keys))
+			self.keyboardList.append(self.virtualKeyboardEntryComponent(keys))
 		self.previousSelectedKey = None
 		if self.selectedKey is None:  # Start on the first character of the forth row (FIRSTICON button).
 			self.selectedKey = self.keyboardWidth * 4
@@ -924,33 +957,33 @@ class VirtualKeyboard(Screen):
 		prevKey = None
 		for key in keys:
 			if key != prevKey:
-				xData = xPos + self.padding[0]
+				xPadded = xPos + self.padding[0]
 				start, width = self.findStartAndWidth(self.index)
-				if self.bg_l is None or self.bg_m is None or self.bg_r is None:  # If available display the cell background.
+				if self.iconBackgroundLeft is None or self.iconBackgroundMiddle is None or self.iconBackgroundRight is None:  # If available display the cell background.
 					xPos += self.width * width
 				else:
-					w = self.bg_l.size().width()
-					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(w, self.height), png=self.bg_l))
-					xPos += w
-					w = self.bg_m.size().width() + (self.width * (width - 1))
-					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(w, self.height), png=self.bg_m, flags=BT_SCALE))
-					xPos += w
-					w = self.bg_r.size().width()
-					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(w, self.height), png=self.bg_r))
-					xPos += w
-				highlight = self.keyHighlights.get(key.upper(), (None, None, None))  # Check if the cell needs to be highlighted.
+					iconWidth = self.iconBackgroundLeft.size().width()
+					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(iconWidth, self.height), png=self.iconBackgroundLeft))
+					xPos += iconWidth
+					iconWidth = self.iconBackgroundMiddle.size().width() + (self.width * (width - 1))
+					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(iconWidth, self.height), png=self.iconBackgroundMiddle, flags=BT_SCALE))
+					xPos += iconWidth
+					iconWidth = self.iconBackgroundRight.size().width()
+					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(iconWidth, self.height), png=self.iconBackgroundRight))
+					xPos += iconWidth
+				highlight = self.iconHighlights.get(key.upper(), (None, None, None))  # Check if the cell needs to be highlighted.
 				if highlight[0] is None or highlight[1] is None or highlight[2] is None:  # If available display the cell highlight.
 					xHighlight += self.width * width
 				else:
-					w = highlight[0].size().width()
-					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xHighlight, 0), size=(w, self.height), png=highlight[0]))
-					xHighlight += w
-					w = highlight[1].size().width() + (self.width * (width - 1))
-					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xHighlight, 0), size=(w, self.height), png=highlight[1], flags=BT_SCALE))
-					xHighlight += w
-					w = highlight[2].size().width()
-					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xHighlight, 0), size=(w, self.height), png=highlight[2]))
-					xHighlight += w
+					iconWidth = highlight[0].size().width()
+					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xHighlight, 0), size=(iconWidth, self.height), png=highlight[0]))
+					xHighlight += iconWidth
+					iconWidth = highlight[1].size().width() + (self.width * (width - 1))
+					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xHighlight, 0), size=(iconWidth, self.height), png=highlight[1], flags=BT_SCALE))
+					xHighlight += iconWidth
+					iconWidth = highlight[2].size().width()
+					res.append(MultiContentEntryPixmapAlphaBlend(pos=(xHighlight, 0), size=(iconWidth, self.height), png=highlight[2]))
+					xHighlight += iconWidth
 				if self.alignment[0] == 1:  # Determine the cell alignment.
 					horizontalAlignment = RT_HALIGN_LEFT
 				elif self.alignment[0] == 2:
@@ -972,50 +1005,51 @@ class VirtualKeyboard(Screen):
 					verticalAlignment = RT_VALIGN_CENTER
 				width = (width * self.width) - (self.padding[0] * 2)  # Determine the cell data area.
 				height = self.height - (self.padding[1] * 2)
-				image = self.keyImages[self.shiftLevel].get(key, None)  # Check if the cell contains an image.
-				if image:  # Display the cell image.
-					left = xData
-					wImage = image.size().width()
+				icon = self.keyIcons[self.shiftLevel].get(key, None)  # Check if the cell contains an icon.
+				if icon:  # Display the cell icon.
+					left = xPadded
+					iconWidth = icon.size().width()
 					if horizontalAlignment == RT_HALIGN_CENTER:
-						left += (width - wImage) // 2
+						left += (width - iconWidth) // 2
 					elif horizontalAlignment == RT_HALIGN_RIGHT:
-						left += width - wImage
+						left += width - iconWidth
 					top = self.padding[1]
-					hImage = image.size().height()
+					iconHeight = icon.size().height()
 					if verticalAlignment == RT_VALIGN_CENTER:
-						top += (height - hImage) // 2
+						top += (height - iconHeight) // 2
 					elif verticalAlignment == RT_VALIGN_BOTTOM:
-						top += height - hImage
-					res.append(MultiContentEntryPixmapAlphaBlend(pos=(left, top), size=(wImage, hImage), png=image))
-					# print("[VirtualKeyboard] DEBUG: Left=%d, Top=%d, Width=%d, Height=%d, Image Width=%d, Image Height=%d" % (left, top, w, h, wImage, hImage))
+						top += height - iconHeight
+					res.append(MultiContentEntryPixmapAlphaBlend(pos=(left, top), size=(iconWidth, iconHeight), png=icon))
+					# print(f"[VirtualKeyboard] DEBUG: Left={left}, Top={top}, Width={width}, Height={height}, Icon Width={iconWidth}, Icon Height={iconHeight}")
 				else:  # Display the cell text.
+					skey = key
 					if len(key) > 1:  # NOTE: UTF8 / Unicode glyphs only count as one character here.
-						text.append(MultiContentEntryText(pos=(xData, self.padding[1]), size=(width, height), font=1, flags=horizontalAlignment | verticalAlignment, text=key, color=self.shiftColors[self.shiftLevel]))
+						text.append(MultiContentEntryText(pos=(xPadded, self.padding[1]), size=(width, height), font=1, flags=horizontalAlignment | verticalAlignment, text=skey, color=self.shiftColors[self.shiftLevel]))
 					else:
-						text.append(MultiContentEntryText(pos=(xData, self.padding[1]), size=(width, height), font=0, flags=horizontalAlignment | verticalAlignment, text=key, color=self.shiftColors[self.shiftLevel]))
+						text.append(MultiContentEntryText(pos=(xPadded, self.padding[1]), size=(width, height), font=0, flags=horizontalAlignment | verticalAlignment, text=skey, color=self.shiftColors[self.shiftLevel]))
 			prevKey = key
 			self.index += 1
 		return res + text
 
 	def markSelectedKey(self):
-		if self.sel_l is None or self.sel_m is None or self.sel_r is None:
+		if self.iconSelectedLeft is None or self.iconSelectedMiddle is None or self.iconSelectedRight is None:
 			return
 		if self.previousSelectedKey is not None:
-			del self.list[self.previousSelectedKey // self.keyboardWidth][-3:]
+			del self.keyboardList[self.previousSelectedKey // self.keyboardWidth][-3:]
 		if self.selectedKey > self.maxKey:
 			self.selectedKey = self.maxKey
 		start, width = self.findStartAndWidth(self.selectedKey)
 		xPos = start * self.width
-		w = self.sel_l.size().width()
-		self.list[self.selectedKey // self.keyboardWidth].append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(w, self.height), png=self.sel_l))
-		xPos += w
-		w = self.sel_m.size().width() + (self.width * (width - 1))
-		self.list[self.selectedKey // self.keyboardWidth].append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(w, self.height), png=self.sel_m, flags=BT_SCALE))
-		xPos += w
-		w = self.sel_r.size().width()
-		self.list[self.selectedKey // self.keyboardWidth].append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(w, self.height), png=self.sel_r))
+		iconWidth = self.iconSelectedLeft.size().width()
+		self.keyboardList[self.selectedKey // self.keyboardWidth].append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(iconWidth, self.height), png=self.iconSelectedLeft))
+		xPos += iconWidth
+		iconWidth = self.iconSelectedMiddle.size().width() + (self.width * (width - 1))
+		self.keyboardList[self.selectedKey // self.keyboardWidth].append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(iconWidth, self.height), png=self.iconSelectedMiddle, flags=BT_SCALE))
+		xPos += iconWidth
+		iconWidth = self.iconSelectedRight.size().width()
+		self.keyboardList[self.selectedKey // self.keyboardWidth].append(MultiContentEntryPixmapAlphaBlend(pos=(xPos, 0), size=(iconWidth, self.height), png=self.iconSelectedRight))
 		self.previousSelectedKey = self.selectedKey
-		self["list"].setList(self.list)
+		self["list"].setList(self.keyboardList)
 
 	def findStartAndWidth(self, key):
 		if key > self.maxKey:
@@ -1033,7 +1067,7 @@ class VirtualKeyboard(Screen):
 			if start + width >= max or self.keyList[self.shiftLevel][row][start + width] != self.keyList[self.shiftLevel][row][key]:
 				break
 			width += 1
-		# print("[VirtualKeyboard] DEBUG: Key='%s', Position=%d, Start=%d, Width=%d" % (self.keyList[self.shiftLevel][row][key], key, start, width))
+		# print(f"[VirtualKeyboard] DEBUG: Key='{self.keyList[self.shiftLevel][row][key]}', Position={key}, Start={start}, Width={width}")
 		return (start, width)
 
 	def processSelect(self):
@@ -1068,13 +1102,12 @@ class VirtualKeyboard(Screen):
 			country = country if country else self.locales[locale][1]
 			languages.append((f"{language}  -  {country}  ({locale})", locale))
 		languages = sorted(languages)
-
 		default = 0
 		for index, item in enumerate(languages):
 			if item[1] == self.locale:
 				default = index
 				break
-		self.session.openWithCallback(self.localeMenuCallback, ChoiceBox, _("Available locales are:"), list=languages, selection=default, keys=[])
+		self.session.openWithCallback(localeMenuCallback, ChoiceBox, _("Available locales are:"), list=languages, selection=default, keys=[])
 
 	def shiftSelected(self):
 		if self.shiftHold == -1:
@@ -1099,10 +1132,7 @@ class VirtualKeyboard(Screen):
 	def keyToggleOW(self):
 		self["text"].toggleOverwrite()
 		self.overwrite = not self.overwrite
-		if self.overwrite:
-			self["mode"].setText(_("OVR"))
-		else:
-			self["mode"].setText(_("INS"))
+		self["mode"].setText(_("OVR") if self.overwrite else _("INS"))
 
 	def backSelected(self):
 		self["text"].deleteBackward()

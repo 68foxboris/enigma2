@@ -19031,23 +19031,23 @@ msgstr "Virgin Islands (British)"
 msgid "Virgin Islands (U.S.)"
 msgstr "Virgin Islands (U.S.)"
 
-msgid "Virtual KeyBoard"
-msgstr "Виртуальная Клавиатура"
+msgid "Virtual Keyboard"
+msgstr "Виртуальная клавиатура"
 
-msgid "Virtual KeyBoard Functions"
+msgid "Virtual Keyboard Actions"
+msgstr "Действия виртуальной клавиатуры"
+
+msgid "Virtual Keyboard Text:"
+msgstr "Текст виртуальной клавиатуры:"
+
+msgid "Virtual Keyboard Functions"
 msgstr "Функции виртуальной клавиатуры"
 
 msgid "Virtual keyboard skin"
 msgstr "Скин виртуальной клавиатуры"
 
-msgid "Virtual KeyBoard Style"
+msgid "Virtual Keyboard Style"
 msgstr "Стиль виртуальной клавиатуры"
-
-msgid "Virtual KeyBoard Text:"
-msgstr "Текст Виртуальной Клавиатуры:"
-
-msgid "Virtual keyboard"
-msgstr "Виртуальная клавиатура"
 
 msgid "Visually impaired commentary"
 msgstr "Комментарий для слабовидящих"
