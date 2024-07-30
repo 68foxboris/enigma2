@@ -42,6 +42,14 @@ class CurrentService(PerServiceBase, Source):
 
 	serviceref = property(getCurrentServiceRef)
 
+	@cached
+	def getCurrentBouquetName(self):
+		if NavigationInstance.instance is not None:
+			return NavigationInstance.instance.currentBouquetName
+		return ""
+
+	currentBouquetName = property(getCurrentBouquetName)
+
 	def destroy(self):
 		PerServiceBase.destroy(self)
 		Source.destroy(self)

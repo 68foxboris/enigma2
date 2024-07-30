@@ -9,7 +9,7 @@ from Components.Label import Label
 from Components.Sources.Boolean import Boolean
 from Components.Pixmap import Pixmap
 from Components.ServiceList import ServiceList, ServiceListLegacy, refreshServiceList
-from Components.ActionMap import NumberActionMap, ActionMap, HelpableActionMap
+from Components.ActionMap import NumberActionMap, ActionMap, HelpableActionMap, HelpableNumberActionMap
 from Components.MenuList import MenuList
 from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
 from enigma import eDBoxLCD, eServiceReference, eServiceReferenceDVB, eEPGCache, eServiceCenter, eRCInput, eTimer, eDVBDB, iPlayableService, iServiceInformation, getPrevAsciiCode, loadPNG, eProfileWrite
@@ -789,6 +789,8 @@ class SelectionEventInfo:
 		self.timer.callback.append(self.updateEventInfo)
 		self.onShown.append(self.__selectionChanged)
 		self.onHide.append(self.__stopTimer)
+		self.currentBouquetPath = ""
+		self.newBouquet = ""
 
 	def __stopTimer(self):
 		self.timer.stop()
@@ -799,12 +801,37 @@ class SelectionEventInfo:
 			self.update_root = False
 			self.timer.start(100, True)
 
+	def updateBouquetPath(self, newBouquetPath):
+		if self.currentBouquetPath != newBouquetPath:
+			self.currentBouquetPath = newBouquetPath
+			if "FROM BOUQUET" in self.currentBouquetPath:
+				currentBouquet = [x for x in self.currentBouquetPath.split(";") if x]
+				currentBouquet = currentBouquet[-1] if currentBouquet else ""
+				serviceHandler = eServiceCenter.getInstance()
+				bouquet = eServiceReference(currentBouquet)
+				info = serviceHandler.info(bouquet)
+				name = info and info.getName(bouquet) or ""
+			elif "FROM PROVIDERS" in self.currentBouquetPath:
+				name = _("Provider")
+			elif "FROM SATELLITES" in self.currentBouquetPath:
+				name = _("Satellites")
+			elif ") ORDER BY name" in self.currentBouquetPath:
+				name = _("All Services")
+			else:
+				name = "N/A"
+			if self.newBouquet != name:
+				self.newBouquet = name
+				self.session.nav.currentBouquetName = name
+
 	def updateEventInfo(self):
 		cur = self.getCurrentSelection()
 		service = self["Service"]
 		try:
 			service.newService(cur)
 			self["Event"].newEvent(service.event)
+			if self.newBouquet:
+				service.newBouquetName(self.newBouquet)
+				self.newBouquet = ""
 			if cur and service.event:
 				if self.update_root and self.shown and self.getMutableList():
 					root = self.getRoot()
@@ -1488,6 +1515,11 @@ singlebouquet_radio_ref = serviceRefAppendPath(service_types_radio_ref, ' FROM B
 
 class ChannelSelectionBase(Screen):
 	def __init__(self, session, forceLegacy=False):
+		def leftHelp():
+			return _("Move to previous marker") if self.servicelist.isVertical() else _("Move to the previous item")
+
+		def rightHelp():
+			return _("Move to next marker") if self.servicelist.isVertical() else _("Move to the next item")
 		Screen.__init__(self, session)
 		self["key_red"] = Button(_("All"))
 		self["key_green"] = Button(_("Satellites"))
@@ -1520,16 +1552,12 @@ class ChannelSelectionBase(Screen):
 		self.movemode = False
 		self.showSatDetails = False
 
-		self["ChannelSelectBaseActions"] = NumberActionMap(["ChannelSelectBaseActions", "NumberActions", "InputAsciiActions"],
+		self["channelSelectBaseActions"] = HelpableNumberActionMap(self, ["ColorActions", "NumberActions", "InputAsciiActions"],
 			{
-				"showFavourites": self.showFavourites,
-				"showAllServices": self.showAllServices,
-				"showProviders": self.showProviders,
-				"showSatellites": boundFunction(self.showSatellites, changeMode=True),
-				"nextBouquet": self.nextBouquet,
-				"prevBouquet": self.prevBouquet,
-				"nextMarker": self.nextMarker,
-				"prevMarker": self.prevMarker,
+				"red": (self.showAllServices, _("Show all available services")),
+				"green": (boundFunction(self.showSatellites, changeMode=True), _("Show list of transponders")),
+				"yellow": (self.showProviders, _("Show list of providers")),
+				"blue": (self.showFavourites, _("Show list of bouquets")),
 				"gotAsciiCode": self.keyAsciiCode,
 				"keyLeft": self.keyLeft,
 				"keyRight": self.keyRight,
@@ -1545,11 +1573,31 @@ class ChannelSelectionBase(Screen):
 				"9": self.keyNumberGlobal,
 				"0": self.keyNumber0
 			}, -2)
+		self["legacyNavigationActions"] = HelpableActionMap(self, ["NavigationActions", "PreviousNextActions"], {
+			"pageUp": (self.prevBouquet, _("Move to previous bouquet")),
+			"previous": (self.prevMarker, _("Move to previous marker")),
+			"left": (self.servicelist.goLeft, _("Move up a screen / Move to previous item")),
+			"right": (self.servicelist.goRight, _("Move down a screen / Move to next item")),
+			"next": (self.nextMarker, _("Move to next marker")),
+			"pageDown": (self.nextBouquet, _("Move to next bouquet"))
+		}, prio=0, description=_("Channel Selection Navigation Actions"))
+		self["newNavigationActions"] = HelpableActionMap(self, ["NavigationActions"], {
+			"pageUp": (self.servicelist.goPageUp, _("Move up a screen")),
+			"first": (self.prevBouquet, _("Move to previous bouquet")),
+			"left": (self.moveLeft, leftHelp),
+			"right": (self.moveRight, rightHelp),
+			"last": (self.nextBouquet, _("Move to next bouquet")),
+			"pageDown": (self.servicelist.goPageDown, _("Move down a screen"))
+		}, prio=0, description=_("Channel Selection Navigation Actions"))
 		self.maintitle = _("Channel selection")
 		self.modetitle = ""
 		self.servicetitle = ""
 		self.functiontitle = ""
 		self.recallBouquetMode()
+		self.onLayoutFinish.append(self.layoutFinished)
+
+	def layoutFinished(self):
+		self.servicelist.instance.enableAutoNavigation(config.misc.actionLeftRightToPageUpPageDown.value)  # Override list box navigation.
 
 	def compileTitle(self):
 		self.setTitle("%s%s%s%s" % (self.maintitle, self.modetitle, self.functiontitle, self.servicetitle))
@@ -1659,6 +1707,18 @@ class ChannelSelectionBase(Screen):
 
 	def moveDown(self):
 		self.servicelist.moveDown()
+
+	def moveLeft(self):
+		if self.servicelist.isVertical():
+			self.prevMarker()
+		else:
+			self.servicelist.goLeft()
+
+	def moveRight(self):
+		if self.servicelist.isVertical():
+			self.nextMarker()
+		else:
+			self.servicelist.goRight()
 
 	def clearPath(self):
 		del self.servicePath[:]
@@ -1773,7 +1833,7 @@ class ChannelSelectionBase(Screen):
 									service.setName("%s - %s" % (service_name, service_type))
 									self.servicelist.addService(service)
 						cur_ref = self.session.nav.getCurrentlyPlayingServiceReference()
-						self.servicelist.l.sort()
+						self.servicelist.sort()
 						if cur_ref:
 							ref = eServiceReference(self.service_types_ref)
 							path = '(channelID == %08x%04x%04x) && %s ORDER BY name' % (
@@ -1788,7 +1848,7 @@ class ChannelSelectionBase(Screen):
 							ref = eServiceReference(service_ref)
 							ref.setName(service_name)
 							self.servicelist.addService(ref, beforeCurrent=True)
-						self.servicelist.l.FillFinished()
+						self.servicelist.FillFinished()
 						if prev is not None:
 							self.setCurrentSelection(prev)
 						elif cur_ref:
@@ -2480,6 +2540,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 				self.setModeRadio()
 			self.lastroot.value = path
 			self.lastroot.save()
+			self.updateBouquetPath(path)
 
 	def restoreRoot(self):
 		tmp = [x for x in self.lastroot.value.split(';') if x != '']
@@ -2694,11 +2755,11 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		# RDS Radiotext / Rass Support BEGIN
 		self.infobar = infobar  # reference to real infobar (the one and only)
 		self["RdsDecoder"] = self.info["RdsDecoder"]
-		self["RdsActions"] = HelpableActionMap(self, ["InfobarRdsActions"],
+		self["rdsActions"] = HelpableActionMap(self, ["InfobarRdsActions"],
 		{
 			"startRassInteractive": (self.startRassInteractive, _("View Rass interactive..."))
 		}, -1)
-		self["RdsActions"].setEnabled(False)
+		self["rdsActions"].setEnabled(False)
 		infobar.rds_display.onRassInteractivePossibilityChanged.append(self.RassInteractivePossibilityChanged)
 		self.onClose.append(self.__onClose)
 		self.onExecBegin.append(self.__onExecBegin)
@@ -2718,7 +2779,7 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		self.infobar.RassSlidePicChanged()
 
 	def RassInteractivePossibilityChanged(self, state):
-		self["RdsActions"].setEnabled(state)
+		self["rdsActions"].setEnabled(state)
 		# RDS Radiotext / Rass Support END
 
 	def __onExecBegin(self):
@@ -2752,6 +2813,7 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		if path and path != config.radio.lastroot.value:
 			config.radio.lastroot.value = path
 			config.radio.lastroot.save()
+			self.updateBouquetPath(path)
 
 	def restoreRoot(self):
 		tmp = [x for x in config.radio.lastroot.value.split(';') if x != '']
