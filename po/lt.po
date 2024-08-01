@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PLi enigma2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-19 08:16+0200\n"
+"POT-Creation-Date: 2024-08-01 15:48+0200\n"
 "PO-Revision-Date: 2022-10-23 15:37+0300\n"
 "Last-Translator: Audronis <adga45@gmail.com>\n"
 "Language-Team: Adga (C) <adga45@gmail.com>\n"
@@ -158,6 +158,9 @@ msgstr "%Y %B %e, %A"
 
 msgid "%H:%M"
 msgstr "%H:%M"
+
+msgid "%R"
+msgstr ""
 
 #. TRANSLATORS: full date representations short dayname daynum monthname long year in strftime() format! See 'man strftime'
 msgid "%a %e %B %Y"
@@ -366,6 +369,10 @@ msgstr[0] "galimas %s paketo atnaujinimas"
 msgstr[1] "galimas %s paketų atnaujinimas"
 msgstr[2] "galimas %s paketų atnaujinimas"
 
+#, python-format
+msgid "%s%s(Default: %s)"
+msgstr ""
+
 msgid "'Minimum send interval' needs to be enabled to use this option."
 msgstr "Norint naudoti šią parinktį, reikia įjungti \"Minimalų siuntimo intervalą\"."
 
@@ -383,7 +390,7 @@ msgid "(activated +%d min)"
 msgstr "(veikia +%d min.)"
 
 #, fuzzy
-msgid "(current)"
+msgid "(current image)"
 msgstr "Dabartinis"
 
 msgid "(empty)"
@@ -397,6 +404,9 @@ msgstr "(rodyti pasirinktinį DVD garso meniu)"
 
 msgid "(unknown)"
 msgstr "(nežinomas)"
+
+msgid "* = Restart Required"
+msgstr ""
 
 msgid "* Only available if more than one interface is active."
 msgstr "* Galima, jei tik daugiau kaip viena sąsaja yra aktyvi."
@@ -536,9 +546,6 @@ msgstr "<nežinomas>"
 
 msgid "=NO STREAM\n"
 msgstr "=SRAUTO NĖRA\n"
-
-msgid "??"
-msgstr "??"
 
 msgid "A"
 msgstr "A"
@@ -1053,9 +1060,6 @@ msgstr "Menas/kultūra (be muzikos, bendras)"
 msgid "Aruba"
 msgstr "Aruba"
 
-msgid "As defined by the skin"
-msgstr "Kaip numatyta temoje"
-
 msgid "Ask user"
 msgstr "Klausti vartotojo"
 
@@ -1195,6 +1199,10 @@ msgstr "Automatinis diegimas baigtas"
 
 msgid "Autoinstalling please wait for packages being updated"
 msgstr "Automatinis įdiegimas, palaukite kol naujinami paketai"
+
+#, fuzzy
+msgid "Automatic Language"
+msgstr "Automatinė paieška"
 
 msgid "Automatic Scan"
 msgstr "Automatinė paieška"
@@ -1369,6 +1377,10 @@ msgstr "\"Kvadratavimosi\" triukšmų šalinimas"
 msgid "Blue"
 msgstr "Mėlynas"
 
+#, fuzzy
+msgid "Blue button function"
+msgstr "Pasirinkite funkciją"
+
 msgid "Bolivia (Plurinational State of)"
 msgstr "Bolivija (daugiatautė valstybė)"
 
@@ -1453,9 +1465,6 @@ msgstr "Burundis"
 msgid "Bus: "
 msgstr "Jungtis: "
 
-msgid "By default, SNR will be shown in dB (when supported by the tuner). This setting forces SNR to be shown as a percentage instead."
-msgstr "Numatyta, kad triukšmų lygis signale (SNR) būtų rodomas dB (jei palaiko imtuvas). Įjungus, SNR bus rodomas procentais."
-
 msgid "Bypass HDMI EDID checking"
 msgstr "Praleiskite HDMI EDID patikrinimą"
 
@@ -1474,6 +1483,10 @@ msgstr "KAN.%s"
 
 msgid "CI (Common Interface) Setup"
 msgstr "CI (įstatomo modulio) sąranka"
+
+#, fuzzy
+msgid "CI Boot Delay"
+msgstr "DVB CI delsa"
 
 msgid "CI assignment"
 msgstr "CI priskyrimas"
@@ -1565,6 +1578,14 @@ msgstr "Kanados"
 
 msgid "Cancel"
 msgstr "Atšaukti"
+
+#, fuzzy
+msgid "Cancel any changed settings and exit"
+msgstr "Atšaukti bet kokius tekstinius pakeitimus ir užverti"
+
+#, fuzzy
+msgid "Cancel any changed settings and exit all menus"
+msgstr "Atšaukite bet kokius, šiuo metu aktyvios temos keitimus ir užverkite visus meniu"
 
 msgid "Cancel any changes to the currently active skin"
 msgstr "Atšaukti bet kokius šiuo metu aktyvios temos keitimus"
@@ -1659,6 +1680,10 @@ msgstr "Kanalas"
 
 msgid "Channel Info"
 msgstr "Kanalo informacija"
+
+#, fuzzy
+msgid "Channel Selection"
+msgstr "Kanalo pasirinkimas"
 
 msgid "Channel context menu"
 msgstr "Kanalo kontekstinis meniu"
@@ -1882,6 +1907,10 @@ msgstr "Įstatomi moduliai"
 msgid "Common Interface assignment"
 msgstr "Įstatomo modulio priskyrimas"
 
+#, fuzzy
+msgid "Common Setup Actions"
+msgstr "Temos pasirinkimo veiksmai"
+
 msgid "Communication"
 msgstr "Ryšio palaikymas"
 
@@ -1955,16 +1984,19 @@ msgstr "Nustatykite, kaip turi būti konstruojami įrašų failų pavadinimai."
 msgid "Configure how the fan should operate"
 msgstr "Nustatykite, kaip turi veikti aušintuvas"
 
-msgid "Configure if and how crypto icons will be shown in the channel selection list."
+#, fuzzy
+msgid "Configure if and how crypto icons will be shown in the channel selection list (left alignment only available in single line mode)."
 msgstr "Nustatykite, ar ir kaip kanalų pasirinkimo sąrašo lange turi būti rodomos kodavimo piktogramos."
 
 msgid "Configure if and how long the latest service in Picture in Picture mode will be remembered."
 msgstr "Konfigūruokite, ar ir kaip ilgai bus įsimenami kanalai PiP režimu."
 
-msgid "Configure if and how service type icons will be shown in the channel selection list."
+#, fuzzy
+msgid "Configure if and how service type icons will be shown in the channel selection list (left alignment only available in single line mode)."
 msgstr "Nustatykite, ar ir kur kanalų pasirinkimo sąrašo lange bus rodomos kanalo tipo (palydovinis/kabelinis/antžeminis) piktogramos."
 
-msgid "Configure if and how the record indicator will be shown in the channel selection list."
+#, fuzzy
+msgid "Configure if and how the record indicator will be shown in the channel selection list (left alignment only available in single line mode)."
 msgstr "Nustatykite, ar ir kaip kanalų pasirinkimo sąrašo lange bus rodomas įrašymo indikatorius."
 
 msgid "Configure if and how wide columns will be shown in the channel selection list."
@@ -2045,7 +2077,8 @@ msgstr "Nustatykite trukmę valandomis, po kurios imtuvas išsijungs, jei per t�
 msgid "Configure the duration in minutes for the screensaver."
 msgstr "Nustatykite trukmę minutėmis, po kurios įsijungs ekrano užsklanda."
 
-msgid "Configure the duration in minutes for the sleeptimer. Select this entry and click OK or green to start/stop the sleeptimer"
+#, fuzzy
+msgid "Configure the duration in minutes for the sleeptimer. Select this entry and press blue to start/restart the sleeptimer or use yellow for stop active sleeptimer."
 msgstr "Nustatykite miego laikmatį, po kelių minučių pereiti į budėjimo režimą. Miego laikmačiui paleisti/sustabdyti, pasirinkite šį elementą ir paspauskite 'OK', arba 'ŽALIĄ' mygtuką"
 
 msgid "Configure the duration when the receiver should go to shut down in case the receiver is in standby mode."
@@ -2237,9 +2270,6 @@ msgstr "Konfigūruokite savo vidinį tinklą"
 msgid "Configure your network again"
 msgstr "Konfigūruokite savo tinklą dar kartą"
 
-msgid "Configure your network settings and press OK to scan"
-msgstr "Konfigūruokite savo tinklo nustatymus ir ieškokite, paspaudę OK mygtuką"
-
 msgid "Configure your wireless LAN again"
 msgstr "Konfigūruokite belaidį tinklą (LAN) dar kartą"
 
@@ -2303,7 +2333,7 @@ msgstr "Tęsti atkūrimą"
 msgid "Continue playing"
 msgstr "Tęsti žiūrėjimą"
 
-msgid "Continues play (loop)"
+msgid "Continuous play (loop)"
 msgstr "Ištisinis kartojimas ratu (kilpa)"
 
 msgid "Contrast"
@@ -2571,6 +2601,10 @@ msgstr "Numatytasis laikmačio tipas"
 msgid "Default+Picon"
 msgstr "Numatytasis + logotipas"
 
+#, fuzzy, python-format
+msgid "Default: '%s'."
+msgstr "Numatytasis"
+
 msgid "Define additional delay in milliseconds before start of http(s) streams, e.g. to connect a remote tuner, you use a complex system of DiSEqC."
 msgstr "Nustatykite papildomą milisekundžių delsą prieš paleidžiant http (-us) srautus, pvz., norėdami prijungti nuotolinį imtuvą, naudokite sudėtingą DiSEqC sistemą."
 
@@ -2643,6 +2677,9 @@ msgstr "Delsa (msek) prieš teksto slinkimo pradžią."
 msgid "Delay in miliseconds between scrolling characters on display."
 msgstr "Delsa (msek) tarp simbolių slinkimo."
 
+msgid "Delay when closing a stream relay service before reallocating the tuner for another service. Using '0' is only recommended for boxes with multiple satellite tuners."
+msgstr ""
+
 msgid "Delete"
 msgstr "Ištrinti"
 
@@ -2651,6 +2688,14 @@ msgstr "Ištrinti atvaizdą"
 
 msgid "Delete all the text"
 msgstr "Ištrinti visą tekstą"
+
+#, fuzzy
+msgid "Delete character to left of cursor or select AM times"
+msgstr "Trinti simbolį teksto žymeklio kairėje"
+
+#, fuzzy
+msgid "Delete character under cursor or select PM times"
+msgstr "Trinti po teksto žymekliu esantį simbolį"
 
 msgid "Delete entry"
 msgstr "Ištrinti įrašą"
@@ -2699,6 +2744,14 @@ msgstr "Dekoduoti gaunamus http srautus"
 
 msgid "Descramble sending http streams"
 msgstr "Dekoduoti siunčiamus http srautus"
+
+#, fuzzy
+msgid "Descramble service via streamrelay port"
+msgstr "Dekoduoti gaunamus http srautus"
+
+#, fuzzy
+msgid "Descramble service via streamrelay url"
+msgstr "Dekoduoti gaunamus http srautus"
 
 msgid "Description"
 msgstr "Aprašymas"
@@ -2805,6 +2858,10 @@ msgstr "Išjungti dabartinį įvykį, bet ne po jo einančius"
 msgid "Disable move mode"
 msgstr "Išjungti perkėlimą"
 
+#, fuzzy
+msgid "Disable operator profiles"
+msgstr "Galimi kintami formatai"
+
 msgid "Disable timer"
 msgstr "Išjungti laikmatį"
 
@@ -2850,6 +2907,9 @@ msgstr "Rodyti filmo ilgį filmų sąraše (išskyrus vienos linijos stilių)."
 
 msgid "Display setup"
 msgstr "Monitoriaus nustatymai"
+
+msgid "Display the virtual keyboard for data entry"
+msgstr ""
 
 msgid "Djibouti"
 msgstr "Džibutis"
@@ -3006,6 +3066,10 @@ msgstr "Dominikos Respublika"
 msgid "Don't save and stop timeshift"
 msgstr "Stabdyti laiko poslinkį, neišsaugant"
 
+#, fuzzy
+msgid "Don't show default"
+msgstr "Nustatykite numatytuoju"
+
 msgid "Don't stop current event but disable coming events"
 msgstr "Nestabdyti dabartinio įvykio, bet išjungti sekančius"
 
@@ -3030,7 +3094,7 @@ msgstr[2] "Baigta - įdiegta,atnaujinta ar pašalinta %d paketų (%s)"
 
 #, python-format
 msgid ""
-"Download Successsful\n"
+"Download Successful\n"
 "%s"
 msgstr ""
 
@@ -3103,10 +3167,6 @@ msgstr "Elektroninis programų vadovas:"
 #, python-format
 msgid "ERROR - failed to scan (%s)!"
 msgstr "KLAIDA - paieška nepavyko (%s)!"
-
-#, python-format
-msgid "ERROR downloading file %s/%s"
-msgstr "Failų %s/%s atsisiuntimo KLAIDA"
 
 msgid "East"
 msgstr "Rytai"
@@ -3346,7 +3406,7 @@ msgid "Enter URL"
 msgstr "Įrašykite internetinį adresą"
 
 #, fuzzy
-msgid "Enter an URL where alternative images could be listed for FlashImage. Enter text 'all' for automatic access of many images."
+msgid "Enter an URL where alternative images could be listed for FlashImage."
 msgstr "Įveskite URL, kuriame vidiniame atvaizde gali būti įrašyti alternatyvūs atvaizdai"
 
 msgid "Enter if you are in the east or west hemisphere."
@@ -3502,6 +3562,9 @@ msgstr "Visur"
 
 msgid "Exceeds dual layer medium!"
 msgstr "Viršija dvejų sluoksnių laikmeną!"
+
+msgid "Exclude first CA device"
+msgstr ""
 
 msgid "Execution finished!!"
 msgstr "Vykdymas baigtas!!"
@@ -4173,6 +4236,10 @@ msgstr "HDMI-CEC adresas"
 msgid "HDMI-CEC setup"
 msgstr "HDMI-CEC sąranka"
 
+#, fuzzy
+msgid "HDMI-In"
+msgstr "HDMI"
+
 msgid "HDR10 support"
 msgstr "HDR10 palaikymas"
 
@@ -4332,7 +4399,8 @@ msgstr "I"
 msgid "I do not want to perform any service scans"
 msgstr "Aš nenoriu atlikti jokių kanalų paieškos"
 
-msgid "I55SE/H7(new model)/H9(new model)/H9COMBO/H9TWIN/H9SE/H9COMBOSE/H10/H11"
+#, fuzzy
+msgid "I55SE/H7(new model)/H9(new model)/H9COMBO/H9TWIN/H9SE/H9COMBOSE/H10/H11/H17"
 msgstr "I55SE/H7(naujas modelis)/H9(naujas modelis)/H9COMBO/H9TWIN/H9SE/H9COMBOSE/H10/H11"
 
 msgid "IDLE"
@@ -4472,6 +4540,9 @@ msgstr "Importuoti epg iš nuotolinio imtuvo URL"
 msgid "Import remote receiver URL"
 msgstr "Importuoti nuotolinio imtuvo URL"
 
+msgid "In Setup screens choose whether to show the default value of the selected item in the description field."
+msgstr ""
+
 msgid "In order to record a timer, the TV was switched to the recording service!\n"
 msgstr "Pradėjus rašyti pagal pasirinktą laikmatį, TV bus perjungtas į įrašomą kanalą!\n"
 
@@ -4580,6 +4651,14 @@ msgstr "Įvesties įrenginio nustatymas"
 
 msgid "Input devices"
 msgstr "Įvesties įrenginiai"
+
+#, fuzzy
+msgid "Insert Service"
+msgstr "Apie kanalą"
+
+#, fuzzy
+msgid "Insert entry"
+msgstr "Laikmačio įrašas"
 
 msgid "Install"
 msgstr "Įdiegti"
@@ -4698,7 +4777,8 @@ msgstr "Italų"
 msgid "Italy"
 msgstr "Italija"
 
-msgid "Items per page "
+#, fuzzy
+msgid "Items per page"
 msgstr "Elementų skaičius puslapyje "
 
 msgid "Items per page for list screen"
@@ -4727,6 +4807,12 @@ msgstr "Peršokti į sąrašo pradžią"
 
 msgid "Jump to end of list"
 msgstr "Peršokti į sąrašo pabaigą"
+
+msgid "Jump to first item in list or the start of text"
+msgstr ""
+
+msgid "Jump to last item in list or the end of text"
+msgstr ""
 
 msgid "Jump to next marked position"
 msgstr "Peršokti į sekančią pažymėtą poziciją"
@@ -5011,6 +5097,9 @@ msgstr "Liuksemburgiečių"
 msgid "MB"
 msgstr "MB"
 
+msgid "MENU"
+msgstr ""
+
 msgid "MHz"
 msgstr "MHz"
 
@@ -5156,6 +5245,10 @@ msgstr "Atminties indeksas"
 msgid "Menu"
 msgstr "Meniu"
 
+#, fuzzy
+msgid "Menu button function"
+msgstr "Pasirinkite funkciją"
+
 #, python-format
 msgid "Menusort (%s)"
 msgstr "Meniu rūšiavimas (%s)"
@@ -5262,6 +5355,14 @@ msgstr "Perkelti PiP į pagrindinį vaizdą"
 msgid "Move Picture in Picture"
 msgstr "Perkelti vaizdą vaizde"
 
+#, fuzzy
+msgid "Move down a line"
+msgstr "Sąrašu žemyn"
+
+#, fuzzy
+msgid "Move down a screen"
+msgstr "perkelti žemyn prie paskutinio įrašo"
+
 msgid "Move east"
 msgstr "Sukti į rytus"
 
@@ -5289,6 +5390,14 @@ msgstr "Perkelkite teksto žymeklį į pirmąjį ženklą"
 msgid "Move the text cursor to the last character"
 msgstr "Perkelkite teksto žymeklį į paskutinį simbolį"
 
+#, fuzzy
+msgid "Move to first line / screen"
+msgstr "Pereiti į kitą temą"
+
+#, fuzzy
+msgid "Move to last line / screen"
+msgstr "Pereiti į kitą temą"
+
 msgid "Move to position X"
 msgstr "Sukti į poziciją X"
 
@@ -5303,6 +5412,13 @@ msgstr "Pereiti į ankstesnį puslapį"
 
 msgid "Move to the previous skin"
 msgstr "Pereiti prie ankstesnės temos"
+
+#, fuzzy
+msgid "Move up a line"
+msgstr "Pasukta į poziciją ties žyme"
+
+msgid "Move up a screen"
+msgstr ""
 
 msgid "Move west"
 msgstr "Sukti į vakarus"
@@ -5538,6 +5654,10 @@ msgstr "Nėra aktyvių papildomų paslaugų."
 msgid "No age block"
 msgstr "Be amžiaus ribojimo"
 
+#, fuzzy
+msgid "No config items available"
+msgstr "Atnaujinimų nėra"
+
 msgid ""
 "No data on transponder!\n"
 "(Timeout reading PAT)"
@@ -5754,6 +5874,10 @@ msgstr "Teksto pasikartojimų ekrane skaičius."
 msgid "Number or SMS style data entry"
 msgstr "Skaičių ar SMS stiliaus duomenų įvedimas"
 
+#, fuzzy
+msgid "OE Version: "
+msgstr "Enigmos versija: "
+
 msgid "OK"
 msgstr "Gerai"
 
@@ -5933,6 +6057,9 @@ msgstr "PMT PID"
 msgid "PPanel"
 msgstr "PLi skydelis"
 
+msgid "PREVIOUS"
+msgstr ""
+
 msgid "PULSe 4K(mini)"
 msgstr "PULSe 4K(mini)"
 
@@ -6053,6 +6180,10 @@ msgstr "Juostos šonuose"
 msgid "Pilot"
 msgstr "Pilotinis signalas"
 
+#, fuzzy
+msgid "Pin Userbouquet"
+msgstr "Vartotojo paketai"
+
 msgid "Pitcairn"
 msgstr "Pitkernas"
 
@@ -6110,6 +6241,12 @@ msgstr "Paleisti ankstesnį"
 msgid "Play recorded movies..."
 msgstr "Žiūrėti įrašytus filmus..."
 
+msgid "Play service with streamrelay"
+msgstr ""
+
+msgid "Play service without streamrelay"
+msgstr ""
+
 msgid "Please add titles to the compilation."
 msgstr "Prašome pridėti pavadinimus į kompiliaciją."
 
@@ -6131,6 +6268,9 @@ msgstr ""
 
 msgid "Please connect your receiver to the internet"
 msgstr "Prašome prisijungti savo imtuvą prie interneto"
+
+msgid "Please contact the manufacturer for clarification."
+msgstr ""
 
 msgid "Please do not change any values unless you know what you are doing!"
 msgstr "Prašome nekeisti reikšmių, jeigu Jūs nežinote ką darote!"
@@ -6666,6 +6806,10 @@ msgstr "Python išorinės sąsajos dėl /tmp/mmi.socket"
 msgid "Python version: "
 msgstr "Python versija: "
 
+#, fuzzy
+msgid "Pythonscript"
+msgstr "Grafinės aplinkos scenarijus"
+
 msgid "Qatar"
 msgstr "Kataras"
 
@@ -6748,9 +6892,6 @@ msgstr "Rec"
 
 msgid "Recall to previous service"
 msgstr "Grįžti į ankstesnį kanalą"
-
-msgid "Receiver or driver does not support FCC"
-msgstr "Imtuvas arba tvarkyklės nepalaiko FCC"
 
 msgid "Reception settings"
 msgstr "Priėmimo nustatymai"
@@ -7020,6 +7161,10 @@ msgstr "Paleisti iš naujo"
 msgid "Restart GUI now?"
 msgstr "Paleisti iš naujo grafinę aplinką dabar?"
 
+#, fuzzy
+msgid "Restart Sleeptimer"
+msgstr "Miego laikmatis"
+
 msgid "Restart both"
 msgstr "Paleisti iš naujo abu"
 
@@ -7263,6 +7408,10 @@ msgid "Save"
 msgstr "Išsaugoti"
 
 msgid "Save / Enter text and exit"
+msgstr "Įrašykite / įveskite tekstą ir išeikite"
+
+#, fuzzy
+msgid "Save all changed settings and exit"
 msgstr "Įrašykite / įveskite tekstą ir išeikite"
 
 msgid "Save and activate the currently selected skin"
@@ -7514,6 +7663,10 @@ msgstr "Pasirinkite greitą DiSEqC, jei jūsų sistema palaiko tai. Jei jūs ne�
 msgid "Select HDD"
 msgstr "Pasirinkite HDD"
 
+#, fuzzy
+msgid "Select Service"
+msgstr "Pasirinkite filmą"
+
 msgid "Select Softcam"
 msgstr "Pasirinkite emuliatorių"
 
@@ -7630,7 +7783,15 @@ msgstr "Pasirinkite atnaujinimo dažnį"
 msgid "Select satellites"
 msgstr "Pasirinkite palydovus"
 
+#, fuzzy
+msgid "Select service name"
+msgstr "Kanalo pavadinimas"
+
 msgid "Select service to add..."
+msgstr "Pasirinkite kanalą, kurį norite pridėti..."
+
+#, fuzzy
+msgid "Select service type"
 msgstr "Pasirinkite kanalą, kurį norite pridėti..."
 
 msgid "Select slot"
@@ -7638,6 +7799,14 @@ msgstr "Pasirinkite lizdą"
 
 msgid "Select sort method:"
 msgstr "Pasirinkite rūšiavimo būdą:"
+
+#, fuzzy
+msgid "Select stream URL"
+msgstr "Pasirinkite emuliatorių"
+
+#, fuzzy
+msgid "Select stream type"
+msgstr "Pasirinkite imtuvą"
 
 msgid "Select target folder"
 msgstr "Pasirinkite paskirties katalogą"
@@ -7665,6 +7834,13 @@ msgstr "Pasirinkite SCR įrenginio modelio numerį. Jei modelio numeris nenurody
 
 msgid "Select the movie path"
 msgstr "Pasirinkite filmo kelią"
+
+#, fuzzy
+msgid "Select the next item in list or move cursor right"
+msgstr "Pasirinkite laiko juostą, toje teritorijoje arba regione."
+
+msgid "Select the previous item in list or move cursor left"
+msgstr ""
 
 msgid "Select the protocol used by your SCR device. Choices are 'SCR Unicable' (Unicable), or 'SCR JESS' (JESS, also known as Unicable II)."
 msgstr "Pasirinkite protokolą, kurį naudoja jūsų SCR įrenginys. Pasirinkimai yra 'SCR Unicable' (Unicable) arba 'SCR JESS' (JESS, taip pat žinomas kaip Unicable II)."
@@ -7695,6 +7871,10 @@ msgstr "Pasirinkite paslinktų simbolių rinkinį tik kitam simboliui"
 
 msgid "Select the time zone within the area or region."
 msgstr "Pasirinkite laiko juostą, toje teritorijoje arba regione."
+
+#, fuzzy
+msgid "Select the timer from the fallback tuner by default"
+msgstr "Kai įjungta, atsarginio imtuvo laikmatis yra importuojamas"
 
 msgid "Select the tuner that controls the motorised dish."
 msgstr "Pasirinkite imtuvą, kuris kontroliuoja motorizuotą anteną."
@@ -7754,14 +7934,14 @@ msgstr "Pasirinkite savo šalį. Jei nėra pasirinkti 'visos'."
 msgid "Select your provider and region. If not present in this list you will need to select one of the other 'service scan types'."
 msgstr "Pasirinkite teikėją ir regioną. Jei šio sąrašo nėra, turėsite pasirinkti vieną iš kitų 'kanalų paieškos tipų'."
 
-msgid "Select your provider, and press OK to start the scan"
-msgstr "Pasirinkite teikėją ir spauskite OK paieškai pradėti"
-
 msgid "Select your region. If not available change 'Country' to 'all' and select one of the default alternatives."
 msgstr "Pasirinkite savo regioną. Jei negalima, pakeiskite 'Šalis' į 'visos' ir pasirinkite vieną iš numatytųjų alternatyvų."
 
 msgid "Select your time zone area or region."
 msgstr "Pasirinkite laiko juostos teritoriją arba regioną."
+
+msgid "Select, toggle, process or edit the current entry"
+msgstr ""
 
 msgid "Selecting satellites 1 (USALS)"
 msgstr "Pasirenkami palydovai 1 (USALS)"
@@ -7811,6 +7991,14 @@ msgstr "Kanalai ir PIDs"
 msgid "Service ID"
 msgstr "Kanalo ID"
 
+#, fuzzy
+msgid "Service Name"
+msgstr "Kanalo pavadinimas"
+
+#, fuzzy
+msgid "Service Type"
+msgstr "Kanalo pavadinimas"
+
 msgid "Service belongs to a parental protected bouquet"
 msgstr "Šis paketas apsaugotas tėvų kontrolės"
 
@@ -7841,6 +8029,10 @@ msgstr "Kanalo informacija - imtuvo tiesioginės reikšmės"
 msgid "Service info - tuner setting values"
 msgstr "Kanalo informacija - imtuvo nustatymų reikšmės"
 
+#, fuzzy
+msgid "Service info font size"
+msgstr "Apie kanalą"
+
 msgid ""
 "Service invalid!\n"
 "(Timeout reading PMT)"
@@ -7851,12 +8043,20 @@ msgstr ""
 msgid "Service name"
 msgstr "Kanalo pavadinimas"
 
+#, fuzzy
+msgid "Service name font size"
+msgstr "Kanalo pavadinimas"
+
 msgid ""
 "Service not found!\n"
 "(SID not found in PAT)"
 msgstr ""
 "Kanalas nerastas!\n"
 "(SID nerastas PAT)"
+
+#, fuzzy
+msgid "Service number font size"
+msgstr "Subtitrų šrifto dydis"
 
 msgid "Service reference"
 msgstr "Kanalo nuoroda"
@@ -7891,6 +8091,9 @@ msgstr "Nustatykite veiksmą, kai filmo atkūrimas baigtas."
 
 msgid "Set all hotkey to default?"
 msgstr "Perjungti greitųjų klavišų reikšmes į numatytąsias?"
+
+msgid "Set all the settings back as they were"
+msgstr ""
 
 msgid "Set alternative fallback tuners for DVB-T/C or ATSC"
 msgstr "Nustatykite alternatyvius DVB-T/C arba ATSC atsarginius imtuvus"
@@ -7947,7 +8150,8 @@ msgstr "Nustatykite OpenWebif slaptažodį iš atsarginio derintuvo"
 msgid "Set the port of the OpenWebif from your fallback tuner"
 msgstr "Nustatykite OpenWebif jungtį iš savo atsarginio imtuvo"
 
-msgid "Set the type of the progress indication in the channel selection screen."
+#, fuzzy
+msgid "Set the type of the progress indication in the channel selection screen (right alignment only available in single line mode)."
 msgstr "Nustatykite pasirinkto kanalo progreso indikacijos tipą ekrane."
 
 msgid "Set time window to 1 hour"
@@ -8035,9 +8239,6 @@ msgstr "Rodyti info juostą"
 msgid "Show PiP"
 msgstr "Rodyti PiP"
 
-msgid "Show SNR percentage instead of dB value"
-msgstr "Vietoje dB rodyti SNR procentus"
-
 msgid "Show True/False as graphical switch"
 msgstr "Rodyti teisinga/klaidinga kaip grafinį jungiklį"
 
@@ -8046,6 +8247,10 @@ msgstr "Rodyti VCR SCART pagrindiniame meniu"
 
 msgid "Show WLAN status"
 msgstr "Rodyti belaidžio tinklo būseną"
+
+#, fuzzy
+msgid "Show additional information on infobar"
+msgstr "Rodyti kodavimo informaciją info juostoje"
 
 msgid "Show alternatives"
 msgstr "Rodyti alternatyvas"
@@ -8077,8 +8282,19 @@ msgstr "Rodyti kodavimo piktogramas"
 msgid "Show crypto info in infobar"
 msgstr "Rodyti kodavimo informaciją info juostoje"
 
+#, fuzzy
+msgid "Show default after description"
+msgstr "Rodyti išplėstinį aprašymą"
+
+#, fuzzy
+msgid "Show default on new line"
+msgstr "Rodyti informacinę eilutę"
+
 msgid "Show detailed event info"
 msgstr "Rodyti išsamią įvykio informaciją"
+
+msgid "Show disabled timers (local only)"
+msgstr ""
 
 msgid "Show event details"
 msgstr "Rodyti įvykio detales"
@@ -8206,8 +8422,20 @@ msgstr "Rodyti kanalo tipo piktogramas"
 msgid "Show servicelist or movies"
 msgstr "Rodyti kanalų sąrašą arba filmus"
 
+#, fuzzy
+msgid "Show setup default values"
+msgstr "Rodyti įvykio detales"
+
+#, fuzzy
+msgid "Show simple second infobar"
+msgstr "Rodyti antrą info juostą"
+
 msgid "Show single service EPG"
 msgstr "Rodyti vieno kanalo EPG"
+
+#, fuzzy
+msgid "Show softcam information"
+msgstr "Programinės įrangos valdymo informacija"
 
 msgid "Show softcam setup in extensions menu"
 msgstr "Emuliatoriaus tvarkyklę rodyti plėtinių meniu"
@@ -8323,9 +8551,6 @@ msgstr "Vienas"
 msgid "Single EPG"
 msgstr "Vieno kanalo EPG"
 
-msgid "Single line mode"
-msgstr "Vienos eilutės režimas"
-
 msgid "Single satellite"
 msgstr "Vienas palydovas"
 
@@ -8344,6 +8569,10 @@ msgstr "Vietos ilguma"
 #, python-format
 msgid "Skin & Resolution: %s (%sx%s)\n"
 msgstr "Tema ir rezoliucija: %s (%sx%s)\n"
+
+#, fuzzy
+msgid "Skin Selection"
+msgstr "Temos pasirinkimo veiksmai"
 
 msgid "Skin Selection Actions"
 msgstr "Temos pasirinkimo veiksmai"
@@ -8621,6 +8850,22 @@ msgstr "Ventiliatoriaus įtampa %d budėjimo režime"
 msgid "Standby in "
 msgstr "Į budėjimo režimą po "
 
+#, fuzzy
+msgid "Start CableScan"
+msgstr "Kabelinės TV kanalų paieška"
+
+#, fuzzy
+msgid "Start Cablescan"
+msgstr "Pradėti testą"
+
+#, fuzzy
+msgid "Start Fastscan"
+msgstr "Greita paieška"
+
+#, fuzzy
+msgid "Start Sleeptimer"
+msgstr "Miego laikmatis"
+
 msgid "Start directory"
 msgstr "Pradinis katalogas"
 
@@ -8690,6 +8935,10 @@ msgstr "Stabdyti"
 
 msgid "Stop PiP"
 msgstr "Stabdyti PiP"
+
+#, fuzzy
+msgid "Stop Sleeptimer"
+msgstr "Miego laikmatis"
 
 msgid "Stop all current recordings"
 msgstr "Sustabdyti visus dabartinius įrašus"
@@ -8782,6 +9031,18 @@ msgid "Stored position"
 msgstr "Išsaugota padėtis"
 
 msgid "Stream"
+msgstr "Srautas"
+
+#, fuzzy
+msgid "Stream Relay delay"
+msgstr "Slinkties delsa"
+
+#, fuzzy
+msgid "Stream Type"
+msgstr "Srautas"
+
+#, fuzzy
+msgid "Stream URL"
 msgstr "Srautas"
 
 msgid "Stream request"
@@ -9109,6 +9370,9 @@ msgstr "Iki įvykio pabaigos liko %d min."
 msgid "The DVD standard doesn't support H.264 (HDTV) video streams. Do you want to create a special format data DVD (which will not play in stand-alone DVD players) instead?"
 msgstr "DVD standartas nesupranta H.264 (HDTV) vaizdo srauto. Todėl vietoje to gal geriau sukurti STB formato duomenų DVD (bet šis pasileis NE visuose DVD grotuvuose)?"
 
+msgid "The IP address from the streamrelay server that is used to descramble services that can only be encrypted via streamrelay"
+msgstr ""
+
 msgid "The PIN code has been changed successfully."
 msgstr "PIN kodas pakeistas sėkmingai."
 
@@ -9139,6 +9403,11 @@ msgid ""
 msgstr ""
 "Katalogas % s nėra įrašomas.\n"
 "Įsitikinkite, kad pasirinkote rašymui tinkamą katalogą."
+
+msgid ""
+"The enigma.info file for the boxinformation is not available or the content is invalid.\n"
+"Press any key to continue?"
+msgstr ""
 
 msgid "The following files were found..."
 msgstr "Kiti failai buvo surasti..."
@@ -9199,6 +9468,9 @@ msgstr ""
 #, python-format
 msgid "The path %s already exists."
 msgstr "Kelias %s jau yra."
+
+msgid "The port from the streamrelay server that is used to descramble services that can only be encrypted via streamrelay"
+msgstr ""
 
 #, python-format
 msgid "The results have been written to %s"
@@ -9281,6 +9553,9 @@ msgstr ""
 
 msgid "This DVD RW medium is already formatted - reformatting will erase all content on the disc."
 msgstr "Šis DVD RW diskas jau yra suformatuotas - formatavimas iš naujo, ištrins visą disko turinį."
+
+msgid "This allows you to change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size"
+msgstr ""
 
 msgid "This bouquet is protected by a parental control PIN"
 msgstr "šis paketas apsaugotas tėvų kontrolės PIN kodu"
@@ -9571,6 +9846,10 @@ msgstr ""
 msgid "Timer overview"
 msgstr "Laikmačio apžvaga"
 
+#, fuzzy
+msgid "Timer recording failed. No space left on device!\n"
+msgstr "Laikmačio įrašymo vieta"
+
 msgid "Timer recording location"
 msgstr "Laikmačio įrašymo vieta"
 
@@ -9636,6 +9915,10 @@ msgstr "Subtitrų pasirinkimas"
 msgid "Today"
 msgstr "Šiandien"
 
+#, fuzzy
+msgid "Toggle Configuration Mode or AutoDisqc"
+msgstr "Konfigūravimo būdas: %s"
+
 msgid "Toggle HDMI In"
 msgstr "Perjungti HDMI įėjimą"
 
@@ -9665,6 +9948,9 @@ msgstr "Perjungti rodyti/slėpti"
 
 msgid "Toggle subtitles show/hide"
 msgstr "Perjungti subtitrus rodyti / slėpti"
+
+msgid "Toggle the SNR values displayed"
+msgstr "Vietoje dB rodyti SNR procentus"
 
 msgid "Toggle the tv and the radio player..."
 msgstr "Perjungti tv ir radijo grotuvus..."
@@ -9822,9 +10108,11 @@ msgstr "Tuvalu"
 msgid "Two"
 msgstr "Du"
 
+#, fuzzy
 msgid "Two lines"
 msgstr "Dvi linijos"
 
+#, fuzzy
 msgid "Two lines and next event"
 msgstr "Dvi eilutės ir kitas įvykis"
 
@@ -9939,11 +10227,19 @@ msgstr "Universalus LNB"
 msgid "Unknown"
 msgstr "Nežinoma"
 
+#, fuzzy
+msgid "Unknown image"
+msgstr "Nežinoma"
+
 msgid "Unmark service as dedicated 3D service"
 msgstr "Nuimti 'grynai 3D' kanalo žymę"
 
 msgid "Unmount"
 msgstr "Atjungti"
+
+#, fuzzy
+msgid "Unpin Userbouquet"
+msgstr "Vartotojo paketai"
 
 msgid "Unsupported"
 msgstr "Nepalaikoma"
@@ -10049,6 +10345,10 @@ msgstr "Naudokite Virgin EPG informaciją, kai ji yra prieinama."
 msgid "Use a gateway"
 msgstr "Naudoti tinklų sąsają"
 
+#, fuzzy
+msgid "Use alternative skin"
+msgstr "Pridėti alternatyvas"
+
 msgid "Use as PiP if possible"
 msgstr "Jei įmanoma, naudokite kaip PiP"
 
@@ -10081,6 +10381,14 @@ msgstr "Naudokite originalią teleteksto poziciją"
 
 msgid "Use power measurement"
 msgstr "Naudokite įtampos išmatavimus"
+
+#, fuzzy
+msgid "Use skin default"
+msgstr "Nustatykite numatytuoju"
+
+#, fuzzy
+msgid "Use the alternative screen"
+msgstr "Redaguoti alternatyvas"
 
 msgid "Use the network wizard to configure selected network adapter"
 msgstr "Naudokite tinklo vedlį, kad konfigūruoti pasirinkto tinklo adapterį"
@@ -10218,6 +10526,10 @@ msgstr "Vaizdo režimo pasirinkimas."
 
 msgid "Video output"
 msgstr "Vaizdo išvestis"
+
+#, fuzzy
+msgid "Video settings"
+msgstr "Garso ir vaizdo nustatymai"
 
 msgid "Video setup"
 msgstr "Vaizdo sąranka"
@@ -10477,8 +10789,14 @@ msgstr "Vakarinė Sahara"
 msgid "What type of service scan do you want?"
 msgstr "Kokio tipo kanalų nuskaitymo norite?"
 
+msgid "When enabled a simplified version from the second infobar is shown. This can also be toggled instantly by holding the OK buttin when the second infobar is visible. The infobar will shortly disappear and then shown in the other mode."
+msgstr ""
+
 msgid "When enabled enigma2 will load unlinked userbouquets. This means that userbouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are updated"
 msgstr "Kai čia įjungta enigma2 bus įkelti atsieti vartotojo paketai. Tai reiškia, kad vartotojo paketai, kurie yra prieinami, tačiau nėra įtraukti į paketai.tv ar paketai.radijas failus, vis tiek bus įkelti. Tai leidžia jums pvz. saugoti savo vartotojo paketus, o įdiegti nustatymai bus atnaujinti"
+
+msgid "When enabled extra information is shown on the infobar. This can also be toggled instantly by holding the OK button when the inforbar is not visible."
+msgstr ""
 
 msgid "When enabled the Picture in Picture window can be closed with 'exit' button."
 msgstr "Įjungus PiP gali būti uždarytas su 'exit' mygtuku."
@@ -10499,6 +10817,10 @@ msgid "When enabled the set top box is able to wakeup on LAN"
 msgstr "Kai čia įjungta, aparatą galima pažadinti nuo tinklo veiklos"
 
 msgid "When enabled the timer from the fallback tuner is imported"
+msgstr "Kai įjungta, atsarginio imtuvo laikmatis yra importuojamas"
+
+#, fuzzy
+msgid "When enabled the timer from the fallback tuner is the default timer"
 msgstr "Kai įjungta, atsarginio imtuvo laikmatis yra importuojamas"
 
 msgid "When enabled then when you select a new channel in the channel selection the channel selection will not close. It will only close when you select the current playing service. This is a kind of preview mode"
@@ -10693,6 +11015,10 @@ msgstr "Kai imtuvas atsibunda iš budėjimo režimo, jis duos komandą televizor
 msgid "When selected this allows video modes to be selected even if they are not reported as supported."
 msgstr "Pasirinkus šį variantą, galima pasirinkti vaizdo režimus, net jei jie nepateikiami kaip palaikomi."
 
+#, fuzzy
+msgid "When set to 'Yes', all locations where SNR is displayed in dB's will show an SNR percentage, and vice versa."
+msgstr "Jei nustatyta į Taip, visose vietose, kur rodomas SNR dB, bus rodomas SNR procentas ir atvirkščiai."
+
 msgid "When the content has an aspect ratio of 16:9, choose whether to scale/stretch the picture."
 msgstr "Kai turinys yra kraštinių santykis 16:9, pasirinkti, ar didinti mastelį/ištempti vaizdą."
 
@@ -10777,6 +11103,10 @@ msgstr "Geltonas"
 
 msgid "Yellow DVB subtitles"
 msgstr "Geltonos spalvos DVB subtitrai"
+
+#, fuzzy
+msgid "Yellow button function"
+msgstr "Pasirinkite funkciją"
 
 msgid "Yemen"
 msgstr "Jemenas"
@@ -11100,9 +11430,6 @@ msgstr "kad priskirti kanalus/teikėjus/caids bendriems įstatomiems moduliams"
 msgid "about to start"
 msgstr "apie pradžią"
 
-msgid "activate network adapter configuration"
-msgstr "aktyvuokite tinklo plokštės konfigūraciją"
-
 msgid "active"
 msgstr "aktyvus"
 
@@ -11380,14 +11707,15 @@ msgstr "vykdyti iškirpimus (reikia MovieCut priedo)"
 msgid "exit DVD player or return to file browser"
 msgstr "užverti DVD grotuvą arba grįžti į failų naršyklę"
 
-msgid "exit network adapter configuration"
-msgstr "užverti tinklo adapterio konfigūravimą"
-
 msgid "exit networkadapter setup menu"
 msgstr "užverti tinklo adapterio sąrankos meniu"
 
 msgid "experimental film/video"
 msgstr "eksperimentinis filmas/video"
+
+#, fuzzy
+msgid "extra high"
+msgstr "ypač platus"
 
 msgid "extra wide"
 msgstr "ypač platus"
@@ -11464,6 +11792,9 @@ msgstr "užgriebti vaizdą bmp formatu"
 msgid "green"
 msgstr "žalia"
 
+msgid "half an hour"
+msgstr ""
+
 msgid "handicraft"
 msgstr "amatai, rankdarbiai"
 
@@ -11472,6 +11803,9 @@ msgstr "aukštis"
 
 msgid "help..."
 msgstr "pagalba..."
+
+msgid "high"
+msgstr ""
 
 msgid "horizontal"
 msgstr "horizontali"
@@ -11577,6 +11911,10 @@ msgstr "medicina, fiziologija, psichologija"
 
 msgid "menu"
 msgstr "meniu"
+
+#, fuzzy
+msgid "min"
+msgstr " min"
 
 msgid "mins"
 msgstr "min"
@@ -12141,3 +12479,9 @@ msgstr "perjungta"
 
 msgid "®"
 msgstr "®"
+
+msgid "°E"
+msgstr ""
+
+msgid "°W"
+msgstr ""
