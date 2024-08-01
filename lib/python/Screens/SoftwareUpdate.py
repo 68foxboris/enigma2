@@ -16,9 +16,8 @@ from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
 from Screens.MessageBox import MessageBox
 from Screens.ParentalControlSetup import ProtectedScreen
-from Screens.ChoiceBox import ChoiceBox
 from Screens.Screen import Screen, ScreenSummary
-from Screens.Standby import QUIT_REBOOT, QUIT_RESTART, TryQuitMainloop
+from Screens.Standby import QUIT_REBOOT, TryQuitMainloop
 from Tools.Directories import SCOPE_GUISKIN, resolveFilename
 from Tools.LoadPixmap import LoadPixmap
 
@@ -427,6 +426,9 @@ class RunSoftwareUpdate(Screen):
 			self.downloadCount += 1
 			if parameter.find("_") == -1:  # Only display the downloading of the feed packages.
 				self["update"].appendText(f"{_("Downloading")}: '{parameter}'.\n")
+		elif event == OpkgComponent.EVENT_UPDATED:
+			self.updateCount += 1
+			self["update"].appendText(f"{_("Updated")}: {parameter}\n")
 		elif event == OpkgComponent.EVENT_UPVERSION:
 			self.upgradeCount += 1
 			self["update"].appendText(f"{_("Updating")} {self.upgradeCount}/{self.packageTotal}: '{parameter}'.\n")
@@ -492,22 +494,11 @@ class RunSoftwareUpdate(Screen):
 	def keyCancel(self):
 		def keyCancelCallback(result=None):
 			def rebootCallback(answer):
-				try:
-					if answer[1] == "hot":
-						self.session.open(TryQuitMainloop, retvalue=QUIT_RESTART)
-					elif answer[1] == "cold":
-						self.session.open(TryQuitMainloop, retvalue=QUIT_REBOOT)
-					else:
-						self.close()
-					self.close()
-				except:
-					self.close()
+				if answer:
+					self.session.open(TryQuitMainloop, retvalue=QUIT_REBOOT)
+				self.close()
 
-			TEXT = "Upgrade finished. Do you want to"
-			choices = [(_('%s Restart GUI ?!' % TEXT), 'hot'),
-					(_('%s Full Reboot (recommended) ?!' % TEXT), 'cold'),
-					(_('%s Exit without Action !!' % TEXT), 'exit')]
-			self.session.openWithCallback(rebootCallback, ChoiceBox, list=choices, windowTitle=self.title)
+			self.session.openWithCallback(rebootCallback, MessageBox, f"{_("Upgrade finished.")} {_("Do you want to reboot your %s %s?") % getBoxDisplayName()}")
 
 		if self.opkg.isRunning():
 			self.opkg.stop()

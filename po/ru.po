@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2024-06-10 20:32+0300\n"
+"PO-Revision-Date: 2024-08-01 20:51+0300\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -1663,7 +1663,6 @@ msgstr "4"
 
 msgid "4 hours"
 msgstr "4 часа"
-
 
 msgid "480p 24Hz"
 msgstr "480p 24Гц"
@@ -3481,6 +3480,12 @@ msgstr "Список фаворитов"
 msgid "BouquetList"
 msgstr "Список букетов"
 
+msgid "Bouquets"
+msgstr "Букеты"
+
+msgid "Bouquets start at 1"
+msgstr "Букеты начинаются от 1"
+
 msgid "Bouvet Island"
 msgstr "Остров Буве"
 
@@ -3597,6 +3602,7 @@ msgstr "Настройка кнопок пульта"
 
 msgid "When set to 'Yes', all locations where SNR is displayed in dB will show an SNR percentage, and vice versa."
 msgstr "Если установлено значение «Да», во всех местах, где отображается SNR в дБ, будет отображаться процент SNR, и наоборот."
+
 msgid "Bypass HDMI EDID checking"
 msgstr "Обход HDMI EDID проверки"
 
@@ -5618,7 +5624,6 @@ msgstr "Режим DNS"
 msgid "DNS suffix"
 msgstr "DNS-суффикс"
 
-
 msgid ""
 "DO NOT POWER OFF YOUR DEVICE WHILE UPDATING!\n"
 "Update now?"
@@ -6558,10 +6563,12 @@ msgid "Do you want to delete all log files?"
 msgstr "Вы хотите удалить все файлы журналов?"
 
 msgid ""
-"Do you want to delete all the selected files?\n\n"
+"Do you want to delete all the selected files?\n"
+"\n"
 "choose \"No\" to only delete the currently selected file."
 msgstr ""
-"Вы хотите удалить все выбранные файлы?\n\n"
+"Вы хотите удалить все выбранные файлы?\n"
+"\n"
 "выберите «Нет», чтобы удалить только выбранный в данный момент файл."
 
 msgid ""
@@ -6640,6 +6647,9 @@ msgstr "Вы хотите обновить Ваш ресивер от %s?"
 
 msgid "Do you want to update your receiver?"
 msgstr "Вы хотите обновить ваш ресивер?"
+
+msgid "Do you want to update:"
+msgstr "Вы хотите обновить:"
 
 msgid "DNS server name"
 msgstr "Имя DNS-сервера"
@@ -6758,6 +6768,9 @@ msgstr "Загрузка имиджа"
 
 msgid "Download and flash images on your %s %s."
 msgstr "Загрузите и flash images на свой %s %s."
+
+msgid "Downloading latest update list. Please wait..."
+msgstr "Скачивание последнего списка обновлений. Пожалуйста подождите..."
 
 msgid "Downloading a new packet list. Please wait..."
 msgstr "Пытаемся загрузить новый список пакетов. Пожалуйста, подождите..."
@@ -7215,7 +7228,6 @@ msgstr "Включите этот параметр, чтобы добавить 
 msgid "Enable this option to add opkg output data to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить выходные данные opkg в файл лога отладки."
 
-
 msgid "Enable this option to add remote control data to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить данные удаленного управления в файл журнала отладки."
 
@@ -7324,7 +7336,6 @@ msgstr "Ввод"
 #, python-format
 msgid "Enter DNS (Dynamic Name Server) %d's IP address."
 msgstr "Введите IP-адрес DNS (сервер динамических имён) %d's."
-
 
 msgid "Enter IP address"
 msgstr "Ввод IP-адреса"
@@ -7469,17 +7480,20 @@ msgstr ""
 "Ошибка при распаковке имиджа\n"
 "%s"
 
+msgid "Error moving 'epg.dat' to its destination!"
+msgstr "Ошибка при перемещении epg.dat в место назначения!"
+
 msgid "Error stop stream!"
 msgstr "Ошибка при остановке стрима!"
 
 msgid "Error when writing epg.dat on the fallback receiver"
 msgstr "Ошибка при записи epg.dat на резервный приемник"
 
-msgid "Error while moving epg.dat to its destination"
-msgstr "Ошибка при перемещении epg.dat к месту назначения"
+msgid "Error retrieving 'epg.dat' from the remote receiver!"
+msgstr "Ошибка при извлечении epg.dat из резервного ресивера!"
 
-msgid "Error while retrieving epg.dat from the fallback receiver"
-msgstr "Ошибка при получении epg.dat из резервного приемника"
+msgid "Error retrieving location of 'epg.dat' on the remote receiver!"
+msgstr "Ошибка при получении местоположения epg.dat на резервном ресивере!"
 
 msgid ""
 "Error while retrieving fallback timer information\n"
@@ -7521,6 +7535,12 @@ msgstr "Ошибка: невозможно удалить каталог '%s'! (
 
 msgid "Error: Unable to rename directory '%s' to '%s'!"
 msgstr "Ошибка: невозможно переименовать каталог '%s' в '%s'!"
+
+msgid "Error writing '/etc/enigma2/epg.dat' on the remote receiver!"
+msgstr "Ошибка записи «/etc/enigma2/epg.dat» на удаленном приемнике!"
+
+msgid "Error writing 'epg.dat' on the remote receiver!"
+msgstr "Ошибка при записи epg.dat на резервный ресивер!"
 
 msgid "Estonia"
 msgstr "Эстония"
@@ -9731,6 +9751,9 @@ msgstr "Настройки LCD"
 msgid "LCD Setup"
 msgstr "Настройки LCD"
 
+msgid "LCN numbering"
+msgstr "LCN-нумерация"
+
 msgid "LCN plugin for DVB-T/T2 services"
 msgstr "LCN-плагин для каналов DVB-T/T2"
 
@@ -10017,7 +10040,6 @@ msgstr "Действия по выбору локали / языка"
 
 msgid "Locales to be displayed"
 msgstr "Отображаемые локали"
-
 
 msgid "Location"
 msgstr "Расположение"
@@ -10341,6 +10363,7 @@ msgstr "Меню"
 
 msgid "  Menu key : Select quad channel"
 msgstr "  Клавиша меню: выбор четырехканального канала"
+
 msgid "Menusort (%s)"
 msgstr "Сортировка меню (%s)"
 
@@ -10573,6 +10596,9 @@ msgstr "Двигаться вниз по линии"
 msgid "Move down a page"
 msgstr "Переместить вниз к последней записи"
 
+msgid "Move down a screen / Move to next item"
+msgstr "Перейти на экран вниз / Перейти к следующему элементу"
+
 msgid "Move down to last entry"
 msgstr "Переместить вниз к последней записи"
 
@@ -10630,11 +10656,17 @@ msgstr "Перейти к последней строке / экрану"
 msgid "Move to position X"
 msgstr "Перемещение к позиции Х"
 
+msgid "Move to the next item"
+msgstr "Перейти к следующему пункту"
+
 msgid "Move to the next page"
 msgstr "Перейти на следующую страницу"
 
 msgid "Move to the next skin"
 msgstr "Перейти к следующему скину"
+
+msgid "Move to the previous item"
+msgstr "Перейти к предыдущему элементу"
 
 msgid "Move to the previous page"
 msgstr "Перейти на предыдущую страницу"
@@ -10647,6 +10679,9 @@ msgstr "Двигаться вверх по линии"
 
 msgid "Move up a page"
 msgstr "Переместить страницу вверх"
+
+msgid "Move up a screen / Move to previous item"
+msgstr "Перейти на экран вверх / Перейти к предыдущему элементу"
 
 msgid "Move up to first entry"
 msgstr "Переместить вверх к первой записи"
@@ -11111,6 +11146,9 @@ msgstr "Нет отображаемых файлов на этом носите�
 msgid "No epg.dat file found server"
 msgstr "Файл epg.dat не найден на сервере"
 
+msgid "No 'epg.dat' file found on the remote receiver!"
+msgstr "Файл epg.dat на резервном ресивере не найден!"
+
 msgid "No epg.dat file found on the fallback receiver"
 msgstr "На резервном приемнике не найден файл epg.dat"
 
@@ -11354,6 +11392,9 @@ msgid ""
 msgstr ""
 "Нечего сканировать!\n"
 "Пожалуйста, настройте ваш тюнер перед началом сканирования сервисов."
+
+msgid "Nothing to upgrade"
+msgstr "Обновлений пока нет"
 
 msgid "Nothing to scan! Setup your tuner and try again."
 msgstr ""
@@ -11955,7 +11996,6 @@ msgstr "Пикон"
 msgid "Picon Packages"
 msgstr "Пакеты пиконов"
 
-
 msgid "Picon Size"
 msgstr "Размер пикона"
 
@@ -11983,11 +12023,14 @@ msgstr "Чёрные полосы слева и справа"
 msgid "Pilot"
 msgstr "Пилот"
 
+msgid "Pin Userbouquet"
+msgstr ""
+
 msgid "Pitcairn"
 msgstr "Pitcairn"
 
 msgid "Pixels\n"
-msgstr "Пиксель\n"
+msgstr "Пиксели\n"
 
 msgid "Play"
 msgstr "Воспроизвести"
@@ -12710,6 +12753,9 @@ msgstr "Нажмите ОК, чтобы использовать этот язы
 #, python-format
 msgid "Press OK to use this locale.  [%s]"
 msgstr "Нажмите OK, чтобы использовать эту локаль.  [%s]"
+
+msgid "Press the UP/DOWN buttons to select a slot and press OK or GREEN to reboot to that image. If available, YELLOW will either delete or wipe the image. A deleted image can be restored with the BLUE button. A wiped image is completely removed and cannot be restored!"
+msgstr "Нажимайте кнопки ВВЕРХ/ВНИЗ, для выбора слота, и нажмите OK или ЗЕЛЁНУЮ кнопку, чтобы 'перезагрузить' этот имидж. Если доступно, ЖЁЛТЫЙ будет или 'Удалить', или 'Стереть' имидж. 'Удалённый' имидж можно 'Восстановить' с помощью СИНЕЙ кнопки. Полностью удалённый 'Wipe' образ восстановить НЕЛЬЗЯ!"
 
 msgid "Press OK, save and exit..."
 msgstr "Нажмите ОК, сохранить и выйти..."
@@ -13502,7 +13548,6 @@ msgstr "Сброс"
 msgid "Reset Feeds"
 msgstr "Сбросить каналы"
 
-
 msgid "Reset Order"
 msgstr "Сбросить заказ"
 
@@ -14116,7 +14161,6 @@ msgstr "Вторичный DNS"
 msgid "Security Packages"
 msgstr "Пакеты безопасности"
 
-
 msgid "Seek"
 msgstr "Перемотка"
 
@@ -14230,7 +14274,6 @@ msgstr "Выбрать жёсткий диск"
 
 msgid "Select the sort order of the Extension Menu entries."
 msgstr "Выберите порядок сортировки записей меню расширений."
-
 
 msgid "Select softcam"
 msgstr "Выбрать эмулятор"
@@ -14675,7 +14718,6 @@ msgstr "Информация о сервисе и PID"
 #, python-format
 msgid "Service and PID information for '%s'"
 msgstr "Информация о сервисе и PID для '%s'"
-
 
 msgid "Service ID"
 msgstr "ID сервиса"
@@ -16088,9 +16130,6 @@ msgstr "Настройки эмулятора"
 msgid "Software"
 msgstr "ПО"
 
-msgid "Software information"
-msgstr "Информация о программном обеспечении"
-
 msgid "Software MultiBoot"
 msgstr "Мультизагрузка ПО"
 
@@ -16105,6 +16144,19 @@ msgstr "Обновление ПО"
 
 msgid "Software update"
 msgstr "Обновление ПО"
+
+msgid "Software Update Actions"
+msgstr "Действия при обновлении ПО"
+
+msgid "Software information"
+msgstr "Информация о ПО"
+
+msgid ""
+"Software update starting, please wait.\n"
+"\n"
+msgstr ""
+"Начинается обновление ПО, пожалуйста, подождите.\n"
+"\n"
 
 msgid "Softwaremanager information"
 msgstr "Информация менеджера ПО"
@@ -16857,7 +16909,6 @@ msgstr "Системная информация"
 msgid "System Information"
 msgstr "Системная информация"
 
-
 msgid "System Plugin Packages"
 msgstr "Пакеты системных плагинов"
 
@@ -17275,7 +17326,6 @@ msgstr ""
 
 msgid "The user interface of your %s is restarting in debug mode"
 msgstr "Пользовательский интерфейс вашего %s перезагружается в режиме отладки"
-
 
 #, python-format
 msgid "The user interface of your %s %s is restarting"
@@ -18304,6 +18354,9 @@ msgstr "Не удалось выполнить бекап настроек, та
 msgid "Unable to change password!"
 msgstr "Невозможно изменить пароль!"
 
+msgid "Unable to initialize Kexec MultiBoot!"
+msgstr "Не удалось инициализировать Kexec MultiBoot!"
+
 msgid "Unable to complete - Kexec Multiboot files missing!"
 msgstr "Невозможно выполнить - отсутствуют файлы Vu+ мультибута!"
 
@@ -18373,20 +18426,23 @@ msgstr "Unicable задержка после последней команды D
 msgid "Uninstall"
 msgstr "Удалить"
 
+msgid "Unique numbering"
+msgstr "Уникальная нумерация"
+
 msgid "United Arab Emirates"
 msgstr "United Arab Emirates"
 
 msgid "United Kingdom"
-msgstr "United Kingdom"
+msgstr "Великобритания"
 
 msgid "United States"
 msgstr "United States"
 
 msgid "United States Minor Outlying Islands"
-msgstr "United States Minor Outlying Islands"
+msgstr "Малые отдалённые острова Соединённых Штатов"
 
 msgid "United States of America"
-msgstr "United States of America"
+msgstr "Соединённые Штаты Америки"
 
 msgid "Universal LNB"
 msgstr "Универсальный LNB"
@@ -18417,6 +18473,9 @@ msgstr "Обновить плагин"
 
 msgid "Update Plugins"
 msgstr "Обновление"
+
+msgid "Update completed."
+msgstr "Обновление завершено."
 
 msgid "Update and ask to reboot"
 msgstr "Обновить и спросить о перезагрузке"
@@ -18473,6 +18532,9 @@ msgstr ""
 msgid "Updatefeed not available."
 msgstr "Обновления с фида не доступны."
 
+msgid "Updates available:"
+msgstr "Доступны обновления:"
+
 msgid "Updating"
 msgstr "Обновление"
 
@@ -18484,6 +18546,25 @@ msgstr "Обновление каталога ПО"
 
 msgid "Upper / Lower"
 msgstr "Верхний / Нижний"
+
+msgid "Upgrade (Flash & restore all)"
+msgstr "Обновление (прошить и восстановить всё)"
+
+msgid "Upgrade finished."
+msgstr "Обновление завершено."
+
+#, python-format
+msgid ""
+"Upgrade in progress\n"
+"Please wait until your %s %s reboots\n"
+"This may take a few minutes"
+msgstr ""
+"Идёт обновление\n"
+"Дождитесь перезагрузки %s %s\n"
+"Это может занять несколько минут"
+
+msgid "Upgrade with GUI"
+msgstr "Показать ход обновления"
 
 msgid "Upper case"
 msgstr "Верхний регистр"
@@ -19190,7 +19271,8 @@ msgstr ""
 "Нужно ли сбросить счетчик сбоев,чтобы предотвратить перезапуск?"
 
 msgid ""
-"Warning!\n\n"
+"Warning!\n"
+"\n"
 "This is an option for advanced users.\n"
 "Really disable timer conflict detection?"
 msgstr ""
@@ -19328,10 +19410,10 @@ msgstr "Западная Австралия"
 msgid "Western Sahara"
 msgstr "Западная Сахара"
 
-msgid "What date of month ?"
+msgid "What date of month?"
 msgstr "Какой день месяца?"
 
-msgid "What day of week ?"
+msgid "What day of week?"
 msgstr "Какой день недели?"
 
 msgid "What type of service scan do you want?"
@@ -20082,11 +20164,19 @@ msgstr "У вашего [BRANDMODEL] нет подключения к Интер
 msgid "Your timezone in the area."
 msgstr "Ваш часовой пояс в этом районе."
 
-msgid "You want to delete this log?\n\n"
-msgstr "Вы хотите удалить этот журнал?\n\n"
+msgid ""
+"You want to delete this log?\n"
+"\n"
+msgstr ""
+"Вы хотите удалить этот журнал?\n"
+"\n"
 
-msgid "You want to delete all the selected logs?\n\n"
-msgstr "Вы хотите удалить все выбранные журналы?\n\n"
+msgid ""
+"You want to delete all the selected logs?\n"
+"\n"
+msgstr ""
+"Вы хотите удалить все выбранные журналы?\n"
+"\n"
 
 msgid ""
 "Your wireless LAN internet connection could not be started!\n"
