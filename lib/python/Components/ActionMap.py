@@ -1,4 +1,5 @@
 from sys import maxsize
+
 from enigma import eActionMap
 
 from keyids import KEYIDS
@@ -8,6 +9,7 @@ from Tools.Directories import fileReadXML
 MODULE_NAME = __name__.split(".")[-1]
 
 keyBindings = {}
+unmapDict = {}
 
 
 def addKeyBinding(filename, keyId, context, mapto, flags):
@@ -39,8 +41,8 @@ def removeContext(context, actionMapInstance):  # Remove all entries for a conte
 
 def removeKeyBinding(keyId, context, mapto, wild=True):
 	if wild and mapto == "*":
-		for contextBinding, mapto in keyBindings.keys():
-			if contextBinding == context:
+		for contxt, mapto in keyBindings.keys():
+			if contxt == context:
 				removeKeyBinding(keyId, context, mapto, False)
 		return
 	contextAction = (context, mapto)
@@ -94,11 +96,11 @@ def parseKeymap(filename, context, actionMapInstance, device, domKeys):
 		mapto = key.attrib.get("mapto")
 		unmap = key.attrib.get("unmap")
 		if mapto is None and unmap is None:
-			print("[ActionMap] Error: At least one of the attributes 'mapto' or 'unmap' in context '{context}' id '{keyName}' ({keyId}) in file '{filename}' must be specified!")
+			print(f"[ActionMap] Error: At least one of the attributes 'mapto' or 'unmap' in context '{context}' id '{keyName}' ({keyId}) in file '{filename}' must be specified!")
 			error = True
 		flags = key.attrib.get("flags")
 		if flags is None:
-			print("[ActionMap] Error: Attribute 'flag' in context '{context}' id '{keyName}' ({keyId}) in file '{filename}' must be specified!")
+			print(f"[ActionMap] Error: Attribute 'flag' in context '{context}' id '{keyName}' ({keyId}) in file '{filename}' must be specified!")
 			error = True
 		else:
 			flagToValue = lambda x: {
@@ -123,6 +125,7 @@ def parseKeymap(filename, context, actionMapInstance, device, domKeys):
 				actionMapInstance.unbindPythonKey(context, keyId, unmap)
 				unmapDict.update({(context, keyName, unmap): filename})
 
+
 def getKeyId(id):
 	if len(id) == 1:
 		keyid = ord(id) | 0x8000
@@ -142,22 +145,22 @@ def getKeyId(id):
 
 
 def parseTrans(filename, actionmap, device, keys):
- 	for toggle in keys.findall("toggle"):
- 		get_attr = toggle.attrib.get
- 		toggle_key = get_attr("from")
- 		toggle_key = getKeyId(toggle_key)
- 		actionmap.bindToggle(filename, device, toggle_key)
- 	for key in keys.findall("key"):
- 		get_attr = key.attrib.get
- 		keyin = get_attr("from")
- 		keyout = get_attr("to")
- 		toggle = get_attr("toggle") or "0"
- 		assert keyin, f"[ActionMap] {filename}: must specify key to translate from '{keyin}'"
- 		assert keyout, f"[ActionMap] {filename}: must specify key to translate to '{keyout}'"
- 		keyin = getKeyId(keyin)
- 		keyout = getKeyId(keyout)
- 		toggle = int(toggle)
- 		actionmap.bindTranslation(filename, device, keyin, keyout, toggle)
+	for toggle in keys.findall("toggle"):
+		get_attr = toggle.attrib.get
+		toggle_key = get_attr("from")
+		toggle_key = getKeyId(toggle_key)
+		actionmap.bindToggle(filename, device, toggle_key)
+	for key in keys.findall("key"):
+		get_attr = key.attrib.get
+		keyin = get_attr("from")
+		keyout = get_attr("to")
+		toggle = get_attr("toggle") or "0"
+		assert keyin, f"[ActionMap] {filename}: must specify key to translate from '{keyin}'"
+		assert keyout, f"[ActionMap] {filename}: must specify key to translate to '{keyout}'"
+		keyin = getKeyId(keyin)
+		keyout = getKeyId(keyout)
+		toggle = int(toggle)
+		actionmap.bindTranslation(filename, device, keyin, keyout, toggle)
 
 
 def loadKeymap(filename, replace=False):
@@ -165,6 +168,7 @@ def loadKeymap(filename, replace=False):
 	domKeymap = fileReadXML(filename, source=MODULE_NAME)
 	if domKeymap is not None:
 		replace = replace or (domKeymap.get("load", "") == "replace")
+		print(f"[ActionMap] LoadKeymap '{filename}' with replace {replace}.")
 		for domMap in domKeymap.findall("map"):
 			context = domMap.attrib.get("context")
 			if context is None:
@@ -175,6 +179,9 @@ def loadKeymap(filename, replace=False):
 				parseKeymap(filename, context, actionMapInstance, "generic", domMap)
 				for domDevice in domMap.findall("device"):
 					parseKeymap(filename, context, actionMapInstance, domDevice.attrib.get("name"), domDevice)
+		for domMap in domKeymap.findall("translate"):
+			for domDevice in domMap.findall("device"):
+				parseTrans(filename, actionMapInstance, domDevice.attrib.get("name"), domDevice)
 
 
 def removeKeymap(filename):
