@@ -5,5 +5,6 @@ install_PYTHON = \
 	plugin.py
 
 dist_install_DATA = \
+	LCNScanner.png \
 	rules.xml \
 	setup.xml
