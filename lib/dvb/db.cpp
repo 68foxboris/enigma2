@@ -973,7 +973,7 @@ void eDVBDB::addLcnToDB(int ns, int onid, int tsid, int sid, uint16_t lcn, uint3
 	}
 }
 
-void eDVBDB eDVBDB::saveServicelist(const char *file)
+void eDVBDB::saveServicelist(const char *file)
 {
 	eDebug("[eDVBDB] Saving lame channel db.");
 	std::string filename = file;
