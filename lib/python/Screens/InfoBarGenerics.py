@@ -596,6 +596,15 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			else:
 				self.DimmingTimer.stop()
 				self.hide()
+		elif self.__state == self.STATE_HIDDEN and self.secondInfoBarScreen and self.secondInfoBarScreen.shown:
+			if self.dimmed > 0:
+				self.doWriteAlpha((config.av.osd_alpha.value * self.dimmed / config.usage.show_infobar_dimming_speed.value))
+				self.DimmingTimer.start(5, True)
+			else:
+				self.DimmingTimer.stop()
+				self.secondInfoBarScreen.hide()
+				self.secondInfoBarWasShown = False
+				self.resetAlpha()
 
 	def okButtonCheck(self):
 		if config.usage.ok_is_channelselection.value and hasattr(self, "openServiceList"):
@@ -638,19 +647,17 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			self.hideTimer.stop()
 
 	def unlockShow(self):
-		if config.usage.fadeout.value is True:
-			if config.usage.show_infobar_do_dimming.value and self.lastResetAlpha is False:
-				self.doWriteAlpha(config.av.osd_alpha.value)
-			try:
-				self.__locked -= 1
-			except:
-				self.__locked = 0
-			if self.__locked < 0:
-				self.__locked = 0
-		else:
+		if config.usage.show_infobar_do_dimming.value and self.lastResetAlpha is False:
+			self.doWriteAlpha(config.av.osd_alpha.value)
+		try:
 			self.__locked -= 1
+		except Exception:
+			self.__locked = 0
+		if self.__locked < 0:
+			self.__locked = 0
 		if self.execing:
 			self.startHideTimer()
+
 
 	def checkHideVBI(self, service=None):
 		service = service or self.session.nav.getCurrentlyPlayingServiceReference()
