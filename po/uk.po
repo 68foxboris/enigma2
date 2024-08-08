@@ -901,6 +901,9 @@ msgstr "Почати запис (зупинити після цієї перед
 msgid "Add service"
 msgstr "Додати канал"
 
+msgid "Add service names to each #SERVICE entry."
+msgstr "Додайте до назви каналу запис #SERVICE."
+
 msgid "Add service to bouquet"
 msgstr "Додати канал в фаворит"
 
@@ -1095,6 +1098,9 @@ msgstr "Також імпортуйте при включенні тюнера �
 
 msgid "Also on standby"
 msgstr "Також і в режимі очікування"
+
+msgid "Also use a #DESCRIPTION line after each #SERVICE line to hold the service's name."
+msgstr "Використовуйте рядок #DESCRIPTION після кожного рядка #SERVICE, щоб містити назву каналу."
 
 msgid "Alternative"
 msgstr "Альтернативний"
@@ -1773,8 +1779,20 @@ msgstr "Швидкість/к-сть ядер ЦПУ"
 msgid "Cable"
 msgstr "Кабельне ТБ"
 
+msgid "Cable Radio bouquet"
+msgstr "Фаворит кабельного Радіо"
+
+msgid "Cable Radio bouquet to be used to store the scanned cable Radio services."
+msgstr "Фаворит кабельного радіо, який буде використовуватися для зберігання відсканованих каналів кабельного радіо."
+
 msgid "Cable Scan"
-msgstr "Сканування Кабельного ТВ"
+msgstr "Сканування Кабельного ТБ"
+
+msgid "Cable TV bouquet"
+msgstr "Фаворит кабельного ТБ"
+
+msgid "Cable TV bouquet to be used to store the scanned cable TV services."
+msgstr "Фаворит кабельного ТБ, який буде використовуватися для зберігання відсканованих каналів кабельного ТБ."
 
 msgid "Cable scan executable utility not found '%s'!"
 msgstr "Плагін сканування кабельних каналів не знайдено '%s'!"
@@ -5609,8 +5627,26 @@ msgstr "LCD/Передня панель *"
 msgid "LCD Setup"
 msgstr "Налаштування LED"
 
-msgid "LED Setup"
-msgstr "Налаштування LED"
+msgid "LCN Scanner"
+msgstr "Сканер LCN"
+
+msgid "LCN Scanner Actions"
+msgstr "Дії сканера LCN"
+
+msgid "LCN Scanner Settings"
+msgstr "Налаштування сканера LCN"
+
+msgid "LCN Scanner plugin for DVB-C/T/T2 services"
+msgstr "Плагін LCN Scanner для послуг DVB-C/T/T2"
+
+msgid "LCN numbering"
+msgstr "Нумерація LCN"
+
+msgid "LCN rules"
+msgstr "Правила LCN"
+
+msgid "LCN style QuickSelect entry selection"
+msgstr "Вибір запису QuickSelect у стилі LCN"
 
 msgid "LNB"
 msgstr "Конвертор"
@@ -6677,6 +6713,15 @@ msgstr "Не протестовано:"
 msgid "Nothing"
 msgstr "Нічого"
 
+msgid ""
+"NOTE: This feature is intended for people who cannot disable overscan on their television / display.  Please first try to disable overscan before using this feature.\n\n"
+"USAGE: Adjust the screen size and position settings so that the shaded user interface layer *just* covers the test pattern in the background.\n\n"
+"Select Yes to continue or No to exit."
+msgstr ""
+"ПРИМІТКА. Ця функція призначена для людей, які не можуть вимкнути надмірне сканування на телевізорі/дисплеї. Спершу спробуйте вимкнути надмірне сканування, перш ніж використовувати цю функцію.\n\n"
+"ВИКОРИСТАННЯ: Налаштуйте параметри розміру екрана та розташування так, щоб затінений шар інтерфейсу користувача *лише* покривав тестовий шаблон у фоновому режимі.\n\n"
+"Виберіть Так, щоб продовжити, або Ні, щоб вийти"
+
 msgid "Note: when enabled, and you do want standby mode after wake up, set option 'Startup to Standby' as 'No, except Wakeup timer'."
 msgstr "Примітка: якщо цей параметр увімкнено, і Вам потрібен режим очікування після пробудження, встановіть опцію `Запуск в режим очікування' як `Ні, крім таймера пробудження'."
 
@@ -6734,6 +6779,9 @@ msgstr "OSD Позиція"
 
 msgid "OSD name request"
 msgstr "Запит імені OSD"
+
+msgid "OSD position"
+msgstr "OSD позиція"
 
 msgid "OSD settings"
 msgstr "OSD налаштування"
@@ -8341,6 +8389,18 @@ msgstr "Сб"
 msgid "Satellite"
 msgstr "Супутник"
 
+msgid "Satellite Radio bouquet"
+msgstr "Фаворит супутникового Радіо"
+
+msgid "Satellite Radio bouquet to be used to store the scanned satellite radio services."
+msgstr "Фаворит супутникового Радіо, який буде використовуватися для зберігання відсканованих каналів кабельного ТБ."
+
+msgid "Satellite TV bouquet"
+msgstr "Фаворит супутникового ТБ"
+
+msgid "Satellite TV bouquet to be used to store the scanned satellite TV services."
+msgstr "Фаворит супутникового ТБ, який буде використовуватися для зберігання відсканованих каналів кабельного ТБ."
+
 msgctxt "Satellite configuration mode"
 msgid "Mode"
 msgstr "Режим"
@@ -8860,6 +8920,11 @@ msgstr "Виберіть послідовність відображення п�
 
 msgid "Select the layout of the installed plugins in the Plugin Browser screen. NOTE: The change is not immediate but will be seen when Plugin Browser is restarted!"
 msgstr "Виберіть макет встановлених плагінів на екрані браузера плагінів. ПРИМІТКА: Зміни не відбуваються негайно, але будуть помітні після перезапуску браузера плагінів!"
+
+
+msgid "Select the list of LCN rules to be applied to the scan."
+msgstr "Виберіть список правил LCN, які будуть застосовані до сканування."
+
 
 msgid "Select the locale from a menu"
 msgstr "Виберіть необхідну мову в меню"
@@ -9506,6 +9571,9 @@ msgstr "Показати іконки для нових/невидимих ел�
 
 msgid "Show in extensions menu"
 msgstr "Показати в розширеному меню"
+
+msgid "Show in Plugin Browser"
+msgstr "Показати в Браузері плагінів"
 
 msgid "Show info"
 msgstr "Показати інформацію"
@@ -10567,7 +10635,7 @@ msgstr "ТЕКСТ"
 
 msgid "TRANSLATOR_INFO"
 msgstr ""
-"Переклад:  kvinto - 23.06.2024\n"
+"Переклад:  kvinto - 08.08.2024\n"
 "Пошта:  badsystem@ukr.net"
 
 msgid "TS file is too large for ISO9660 level 1!"
@@ -10623,6 +10691,18 @@ msgstr "Контроль температури та вентилятора"
 
 msgid "Terrestrial"
 msgstr "Наземний"
+
+msgid "Terrestrial Radio bouquet"
+msgstr "Фаворит наземного Радіо"
+
+msgid "Terrestrial Radio bouquet to be used to store the scanned terrestrial radio services."
+msgstr "Фаворит наземного Радіо, який буде використовуватися для зберігання відсканованих каналів наземного Радіо."
+
+msgid "Terrestrial TV bouquet"
+msgstr "Фаворит наземного ТБ"
+
+msgid "Terrestrial TV bouquet to be used to store the scanned terrestrial TV services."
+msgstr "Фаворит наземного ТБ, який буде використовуватися для зберігання відсканованих каналів наземного ТБ."
 
 msgid "Test DiSEqC settings"
 msgstr "Тест налаштувань DiSEqC"
@@ -11710,6 +11790,9 @@ msgstr "Використовуйте як PiP, якщо це можливо"
 msgid "Use circular LNB"
 msgstr "Використовувати круговий LNB"
 
+msgid "Use description lines"
+msgstr "Використовуйте рядки опису"
+
 msgid "Use fastscan channel names"
 msgstr "Швидкий пошук по іменах каналів"
 
@@ -11745,6 +11828,12 @@ msgstr "Використати окремий пакет піконів для �
 
 msgid "Use skin default"
 msgstr "Встановити скін за замовчуванням"
+
+msgid "Use spacer lines"
+msgstr "Використовуйте роздільні лінії"
+
+msgid "Use spacer lines to pad the bouquet to make the #SERVICE line numbers match the LCN."
+msgstr "Використовуйте роздільні лінії, щоб заповнити фаворит і номери рядків #SERVICE збігалися з LCN."
 
 msgid "Use the alternative screen"
 msgstr "Використати альтернативний екран"
