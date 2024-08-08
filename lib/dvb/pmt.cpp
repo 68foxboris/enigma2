@@ -230,8 +230,6 @@ void eDVBServicePMTHandler::PATready(int)
 		int pmtpid = -1;
 		int cnt=0;
 		std::vector<ProgramAssociationSection*>::const_iterator i;
-		if(eDVBServicePMTHandler::m_debug)
-			eDebug("[eDVBServicePMTHandler] PAT TSID: 0x%04x (%d)", tsid, tsid);
 		for (i = ptr->getSections().begin(); pmtpid == -1 && i != ptr->getSections().end(); ++i)
 		{
 			const ProgramAssociationSection &pat = **i;
