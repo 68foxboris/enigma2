@@ -502,6 +502,7 @@ from Components.config import config, configfile, ConfigText, ConfigYesNo, Confi
 # These entries should be moved back to UsageConfig.py when it is safe to bring UsageConfig init to this location in StartEnigma.py.
 #
 config.crash = ConfigSubsection()
+config.crash.debugInternational = ConfigYesNo(default=False)
 config.crash.debugMultiBoot = ConfigYesNo(default=False)
 config.crash.debugActionMaps = ConfigYesNo(default=False)
 config.crash.debugKeyboards = ConfigYesNo(default=False)
@@ -510,7 +511,9 @@ config.crash.debugRemoteControls = ConfigYesNo(default=False)
 config.crash.debugScreens = ConfigYesNo(default=False)
 config.crash.debugSkin = ConfigYesNo(default=False)
 config.crash.debugDVBScan = ConfigYesNo(default=False)
-config.crash.debugInternational = ConfigYesNo(default=False)
+config.crash.debugDVBTime = ConfigYesNo(default=False)
+config.crash.debugDVB = ConfigYesNo(default=False)
+
 
 # config.plugins needs to be defined before InputDevice < HelpMenu < MessageBox < InfoBar
 config.plugins = ConfigSubsection()

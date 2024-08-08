@@ -5,6 +5,7 @@
 
 #include <lib/base/eerror.h>
 #include <lib/base/estring.h>
+#include <lib/base/esimpleconfig.h>
 #include <lib/base/wrappers.h>
 #include <lib/dvb/cahandler.h>
 #include <lib/dvb/idvb.h>
@@ -1684,8 +1685,13 @@ void eDVBChannelFilePush::filterRecordData(const unsigned char *_data, int len)
 
 DEFINE_REF(eDVBChannel);
 
+int eDVBChannel::m_debug = -1;
+
 eDVBChannel::eDVBChannel(eDVBResourceManager *mgr, eDVBAllocatedFrontend *frontend): m_state(state_idle), m_mgr(mgr)
 {
+	if(eDVBChannel::m_debug < 0)
+		eDVBChannel::m_debug = eSimpleConfig::getBool("config.crash.debugDVB", false) ? 1 : 0;
+
 	m_frontend = frontend;
 
 	m_pvr_thread = 0;
@@ -1718,11 +1724,13 @@ void eDVBChannel::frontendStateChanged(iDVBFrontend*fe)
 
 	if (state == iDVBFrontend::stateLock)
 	{
-		eDebug("[eDVBChannel] OURSTATE: ok");
+		if(eDVBChannel::m_debug)
+			eDebug("[eDVBChannel] OURSTATE: tuner %d ok", tuner_id);
 		ourstate = state_ok;
 	} else if (state == iDVBFrontend::stateTuning)
 	{
-		eDebug("[eDVBChannel] OURSTATE: tuning");
+		if(eDVBChannel::m_debug)
+			eDebug("[eDVBChannel] OURSTATE: tuner %d tuning", tuner_id);
 		ourstate = state_tuning;
 	} else if (state == iDVBFrontend::stateLostLock)
 	{
@@ -2252,8 +2260,8 @@ RESULT eDVBChannel::getDemux(ePtr<iDVBDemux> &demux, int cap)
 {
 	ePtr<eDVBAllocatedDemux> &our_demux = (cap & capDecode) ? m_decoder_demux : m_demux;
 
-	eDebug("[eDVBChannel] getDemux cap=%02X", cap);
-
+	if(eDVBChannel::m_debug)
+		eDebug("[eDVBChannel] getDemux cap=%02X", cap);
 	if (!m_frontend)
 	{
 		/* in dvr mode, we have to stick to a single demux (the one connected to our dvr device) */
