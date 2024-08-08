@@ -1725,12 +1725,12 @@ void eDVBChannel::frontendStateChanged(iDVBFrontend*fe)
 	if (state == iDVBFrontend::stateLock)
 	{
 		if(eDVBChannel::m_debug)
-			eDebug("[eDVBChannel] OURSTATE: tuner %d ok", tuner_id);
+			eDebug("[eDVBChannel] OURSTATE: ok");
 		ourstate = state_ok;
 	} else if (state == iDVBFrontend::stateTuning)
 	{
 		if(eDVBChannel::m_debug)
-			eDebug("[eDVBChannel] OURSTATE: tuner %d tuning", tuner_id);
+			eDebug("[eDVBChannel] OURSTATE: tuning");
 		ourstate = state_tuning;
 	} else if (state == iDVBFrontend::stateLostLock)
 	{
@@ -2262,6 +2262,7 @@ RESULT eDVBChannel::getDemux(ePtr<iDVBDemux> &demux, int cap)
 
 	if(eDVBChannel::m_debug)
 		eDebug("[eDVBChannel] getDemux cap=%02X", cap);
+
 	if (!m_frontend)
 	{
 		/* in dvr mode, we have to stick to a single demux (the one connected to our dvr device) */
