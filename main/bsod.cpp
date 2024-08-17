@@ -127,7 +127,7 @@ bool bsodRestart()
 }
 void bsodFatal(const char *component)
 {
-	//handle python crashes	
+	//handle python crashes
 	bool bsodpython = (eConfigManager::getConfigBoolValue("config.crash.bsodpython", false) && eConfigManager::getConfigBoolValue("config.crash.bsodpython_ready", false));
 	//hide bs after x bs counts and no more write crash log	-> setting values 0-10 (always write the first crashlog)
 	int bsodhide = eConfigManager::getConfigIntValue("config.crash.bsodhide", 5);
@@ -312,7 +312,7 @@ void bsodFatal(const char *component)
 
 	std::string logtail;
 	int lines = 20;
-	
+
 	if (logp2)
 	{
 		unsigned int size = logs2;
