@@ -5828,8 +5828,11 @@ msgstr "Локальна мережа"
 msgid "Local time"
 msgstr "Локальна година"
 
-msgid "Locale"
-msgstr "Мова"
+msgid "Locale / Language Settings"
+msgstr "Налаштування Мови"
+
+msgid "Locale/Language Selection"
+msgstr "Вибір Мови"
 
 msgid "Location"
 msgstr "Розташування"
@@ -6720,7 +6723,7 @@ msgid ""
 msgstr ""
 "ПРИМІТКА. Ця функція призначена для людей, які не можуть вимкнути надмірне сканування на телевізорі/дисплеї. Спершу спробуйте вимкнути надмірне сканування, перш ніж використовувати цю функцію.\n\n"
 "ВИКОРИСТАННЯ: Налаштуйте параметри розміру екрана та розташування так, щоб затінений шар інтерфейсу користувача *лише* покривав тестовий шаблон у фоновому режимі.\n\n"
-"Виберіть Так, щоб продовжити, або Ні, щоб вийти"
+"Виберіть Так, щоб продовжити, або Ні, щоб вийти."
 
 msgid "Note: when enabled, and you do want standby mode after wake up, set option 'Startup to Standby' as 'No, except Wakeup timer'."
 msgstr "Примітка: якщо цей параметр увімкнено, і Вам потрібен режим очікування після пробудження, встановіть опцію `Запуск в режим очікування' як `Ні, крім таймера пробудження'."
@@ -7747,6 +7750,9 @@ msgstr "Текуча IP-адреса"
 
 msgid "Puerto Rico"
 msgstr "Пуерто Ріко"
+
+msgid "Purge"
+msgstr "Очистити"
 
 msgid "Purge deleted user bouquets"
 msgstr "Очистити видалені фаворити користувача"
@@ -9367,6 +9373,9 @@ msgstr "Шифт"
 
 msgid "Short filenames"
 msgstr "Короткі назви файлів"
+
+msgid "Should the crash counter be reset to prevent a restart?"
+msgstr "Чи потрібно скинути лічильник крешів, щоб запобігти перезавантаженню?"
 
 msgid "Show"
 msgstr "Шоу"
@@ -11176,6 +11185,9 @@ msgstr ""
 msgid "This test detects your configured LAN adapter."
 msgstr "Цей тест визначить Ваш мережевий адаптер."
 
+msgid "This is the currently selected language.  [%s]"
+msgstr "Це поточна вибрана мова. [%s]"
+
 msgid "This valid ONID/TSID"
 msgstr "Це дійсний ONID/TSID"
 
@@ -11505,7 +11517,7 @@ msgstr "Статус тюнера:"
 msgid "Tuner type"
 msgstr "Тип тюнера"
 
-msgid "Tuners & scanning"
+msgid "Tuners & Scanning"
 msgstr "Пошук каналів"
 
 msgid "Tunisia"
@@ -12190,6 +12202,11 @@ msgstr ""
 "Увага!\n"
 "Це опція для досвідчених користувачів.\n"
 "Дійсно вимкнути виявлення конфлікту за таймером?"
+
+msgid ""
+"Warning! This is the last crash before an automatic restart is performed.\n"
+msgstr ""
+"Попередження! Це останній креш перед виконанням автоматичного перезапуску.\n"
 
 msgid "Warning: FBC-C V1 tuner should be connected to the first slot to work correctly. Otherwise, only 2 out of 8 demodulators will be available when connected in the second slot. "
 msgstr "Попередження: для коректної роботи тюнер FBC-C V1 слід вставити у перший слот. В іншому випадку лише 2 з 8 декодерів будуть доступні при підключенні у другому слоті. "
