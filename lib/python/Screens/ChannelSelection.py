@@ -1514,7 +1514,7 @@ singlebouquet_radio_ref = serviceRefAppendPath(service_types_radio_ref, ' FROM B
 
 
 class ChannelSelectionBase(Screen):
-	def __init__(self, session, forceLegacy=False):
+	def __init__(self, session):
 		def leftHelp():
 			return _("Move to previous marker") if self.servicelist.isVertical() else _("Move to the previous item")
 
@@ -1529,7 +1529,7 @@ class ChannelSelectionBase(Screen):
 		self["key_menu"] = StaticText(_("MENU"))
 		self["key_info"] = StaticText(_("INFO"))
 
-		self["list"] = ServiceListLegacy(self) if config.channelSelection.screenStyle.value == "" or config.channelSelection.widgetStyle.value == "" or forceLegacy else ServiceList(self)
+		self["list"] = ServiceListLegacy(self) if config.channelSelection.screenStyle.value == "" or config.channelSelection.widgetStyle.value == "" else ServiceList(self)
 		self.servicelist = self["list"]
 
 		self.numericalTextInput = NumericalTextInput(handleTimeout=False)
@@ -2141,9 +2141,9 @@ config.servicelist.startupmode = ConfigText(default="tv")
 
 class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelectionEPG, SelectionEventInfo):
 
-	def __init__(self, session, forceLegacy=False):
-		ChannelSelectionBase.__init__(self, session, forceLegacy)
-		if config.channelSelection.screenStyle.value and not forceLegacy:
+	def __init__(self, session):
+		ChannelSelectionBase.__init__(self, session)
+		if config.channelSelection.screenStyle.value:
 			self.skinName = [config.channelSelection.screenStyle.value]
 		ChannelSelectionEdit.__init__(self)
 		ChannelSelectionEPG.__init__(self)
@@ -2725,7 +2725,7 @@ class RadioInfoBar(Screen):
 class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelectionEPG, InfoBarBase, SelectionEventInfo, InfoBarScreenSaver):
 
 	def __init__(self, session, infobar):
-		ChannelSelectionBase.__init__(self, session, forceLegacy=True)
+		ChannelSelectionBase.__init__(self, session)
 		ChannelSelectionEdit.__init__(self)
 		ChannelSelectionEPG.__init__(self)
 		InfoBarBase.__init__(self)
