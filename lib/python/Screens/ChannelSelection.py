@@ -1848,7 +1848,7 @@ class ChannelSelectionBase(Screen):
 							ref = eServiceReference(service_ref)
 							ref.setName(service_name)
 							self.servicelist.addService(ref, beforeCurrent=True)
-						self.servicelist.FillFinished()
+						self.servicelist.fillFinished()
 						if prev is not None:
 							self.setCurrentSelection(prev)
 						elif cur_ref:
