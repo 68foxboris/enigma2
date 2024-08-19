@@ -45,6 +45,7 @@ enigma2_LDADD = \
 	@LIBDDVD_LIBS@ \
 	@ALSA_LIBS@ \
 	@AVAHI_LIBS@ \
+        @LIBHIACCEL_LIBS@ \
 	@LIBDL_LIBS@ \
 	-ltuxtxt32bpp
 
