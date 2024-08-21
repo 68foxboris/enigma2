@@ -1,0 +1,142 @@
+<!--
+	This is only an additional keymap including differences to keymap.xml
+-->
+
+<keymap>
+
+	<map context="ChannelSelectBaseActions">
+		<key id="KEY_RED" mapto="showAllServices" flags="m" />
+		<key id="KEY_GREEN" mapto="showSatellites" flags="m" />
+		<key id="KEY_YELLOW" mapto="showProviders" flags="m" />
+		<key id="KEY_BLUE" mapto="showFavourites" flags="m" />
+		<key id="KEY_RIGHT" mapto="nextBouquet" flags="m" />
+		<key id="KEY_LEFT" mapto="prevBouquet" flags="m" />
+		<key id="KEY_UP" mapto="keyUp" flags="mr"/>
+		<key id="KEY_DOWN" mapto="keyDown" flags="mr"/>
+		<key id="KEY_PREVIOUS" mapto="prevMarker" flags="m" />
+		<key id="KEY_NEXT" mapto="nextMarker" flags="m" />
+		<key id="KEY_BACK" mapto="prevMarker" flags="m" />
+		<key id="KEY_FORWARD" mapto="nextMarker" flags="m" />
+	</map>
+
+	<map context="EPGSelectActions">
+		<key id="KEY_GREEN" mapto="timerAdd" flags="b" />
+		<key id="KEY_CHANNELUP" mapto="nextService" flags="m" />
+		<key id="KEY_CHANNELDOWN" mapto="prevService" flags="m" />
+		<key id="KEY_RIGHT" mapto="nextBouquet" flags="m" />
+		<key id="KEY_LEFT" mapto="prevBouquet" flags="m" />
+		<key id="KEY_MENU" mapto="menu" flags="m" />
+		<key id="KEY_TEXT" mapto="input_date_time" flags="m" />
+		<key id="KEY_I" mapto="info" flags="b" />
+		<key id="KEY_INFO" mapto="info" flags="b" />
+		<key id="KEY_INFO" mapto="infolong" flags="l" />
+		<key id="KEY_EPG" mapto="epg" flags="b" />
+		<key id="KEY_TV" mapto="tv" flags="b" />
+		<key id="KEY_TV" mapto="tvlong" flags="l" />
+		<key id="KEY_FASTFORWARD" mapto="nextBouquet" flags="m" />
+		<key id="KEY_REWIND" mapto="prevBouquet" flags="m" />
+		<key id="KEY_RED" mapto="red" flags="m" />
+		<key id="KEY_YELLOW" mapto="yellow" flags="m" />
+		<key id="KEY_BLUE" mapto="blue" flags="m" />
+	</map>
+
+	<map context="InfobarChannelSelection">
+		<key id="KEY_LEFT" mapto="historyBack" flags="b" />
+		<key id="KEY_RIGHT" mapto="historyNext" flags="b" />
+		<key id="KEY_UP" mapto="zapDown" flags="mr" />
+		<key id="KEY_DOWN" mapto="zapUp" flags="mr" />
+		<key id="KEY_OK" mapto="openServiceList" flags="mr" />
+		<key id="KEY_PREVIOUS" mapto="historyBack" flags="mr" />
+		<key id="KEY_NEXT" mapto="historyNext" flags="mr" />
+		<key id="KEY_BACK" mapto="historyBack" flags="b" />
+		<key id="KEY_FORWARD" mapto="historyNext" flags="mr" />
+		<key id="KEY_ARCHIVE" mapto="historyBack" flags="b" />
+		<key id="KEY_CHANNELUP" mapto="openServiceList" flags="b" />
+		<key id="KEY_CHANNELDOWN" mapto="openServiceList" flags="b" />
+		<key id="BTN_0" mapto="zapUp" flags="mr" />
+		<key id="BTN_1" mapto="zapDown" flags="mr" />
+		<!--key id="KEY_SAT" mapto="openSatellites" flags="m" /-->
+	</map>
+
+	<map context="InfobarSeekActions">
+		<key id="KEY_PLAYPAUSE" mapto="playpauseService" flags="m" />
+		<key id="KEY_PAUSE" mapto="pauseService" flags="m" />
+		<key id="KEY_PLAY" mapto="playpauseService" flags="m" />
+		<key id="KEY_REWIND" mapto="seekBack" flags="b" />
+		<key id="KEY_FASTFORWARD" mapto="seekFwd" flags="b" />
+		<key id="KEY_REWIND" mapto="SeekbarBack" flags="l" />
+		<key id="KEY_FASTFORWARD" mapto="SeekbarFwd" flags="l" />
+		<key id="KEY_LEFT" mapto="seekBack" flags="b" />
+		<key id="KEY_RIGHT" mapto="seekFwd" flags="b" />
+		<key id="KEY_LEFT" mapto="seekBackManual" flags="l" />
+		<key id="KEY_RIGHT" mapto="seekFwdManual" flags="l" />
+		<key id="KEY_PREVIOUSSONG" mapto="seekBack" flags="b" />
+		<key id="KEY_NEXTSONG" mapto="seekFwd" flags="b" />
+		<key id="KEY_PREVIOUSSONG" mapto="SeekbarBack" flags="l" />
+		<key id="KEY_NEXTSONG" mapto="SeekbarFwd" flags="l" />
+		<key id="KEY_OK" mapto="toggleShow" flags="m" />
+		<key id="KEY_1" mapto="seekdef:1" flags="m" />
+		<key id="KEY_3" mapto="seekdef:3" flags="m" />
+		<key id="KEY_4" mapto="seekdef:4" flags="m" />
+		<key id="KEY_6" mapto="seekdef:6" flags="m" />
+		<key id="KEY_7" mapto="seekdef:7" flags="m" />
+		<key id="KEY_9" mapto="seekdef:9" flags="m" />
+	</map>
+
+	<map context="InfobarShowHideActions">
+		<key id="KEY_OK" mapto="toggleShow" flags="m" />
+		<key id="KEY_OK" mapto="LongOKPressed" flags="l" />
+		<key id="KEY_ENTER" mapto="toggleShow" flags="m" />
+		<key id="KEY_EXIT" mapto="toggleShow" flags="b" />
+		<key id="KEY_ESC" mapto="hide" flags="m" />
+	</map>
+
+	<map context="InfobarSubserviceQuickzapActions">
+		<key id="KEY_PREVIOUS" mapto="prevSubservice" flags="m" />
+		<key id="KEY_NEXT" mapto="nextSubservice" flags="m" />
+		<key id="KEY_LEFT" mapto="prevSubservice" flags="m" />
+		<key id="KEY_RIGHT" mapto="nextSubservice" flags="m" />
+		<key id="KEY_EXIT" mapto="exit" flags="m" />
+		<key id="KEY_ESC" mapto="exit" flags="m" />
+		<key id="KEY_TV" mapto="exit" flags="m" />
+	</map>
+
+	<map context="KeyboardInputActions">
+		<key id="KEY_LEFT" mapto="left" flags="mr" />
+		<key id="KEY_RIGHT" mapto="right" flags="mr" />
+		<key id="KEY_HOME" mapto="home" flags="mr" />
+		<key id="KEY_END" mapto="end" flags="mr" />
+		<key id="KEY_BACK" mapto="home" flags="mr" />
+		<key id="KEY_FORWARD" mapto="end" flags="mr" />
+		<key id="KEY_DELETE" mapto="deleteForward" flags="mr" />
+		<key id="KEY_BACKSPACE" mapto="deleteBackward" flags="mr" />
+		<key id="KEY_TAB" mapto="tab" flags="mr" />
+		<key id="KEY_INSERT" mapto="toggleOverwrite" flags="m" />
+		<!--key id="KEY_PAGEUP" mapto="pageUp" flags="mr" />
+		<key id="KEY_PAGEDOWN" mapto="pageDown" flags="mr" />
+		<key id="KEY_CHANNELUP" mapto="pageUp" flags="mr" />
+		<key id="KEY_CHANNELDOWN" mapto="pageDown" flags="mr" /-->
+	</map>
+
+	<map context="ListboxActions">
+		<device name="keyboard">
+			<key id="a" mapto="up" flags="mr" />
+			<key id="b" mapto="down" flags="mr" />
+		</device>
+		<key id="KEY_UP" mapto="moveUp" flags="mr" />
+		<key id="KEY_DOWN" mapto="moveDown" flags="mr" />
+		<key id="KEY_HOME" mapto="moveTop" flags="mr" />
+		<key id="KEY_END" mapto="moveEnd" flags="mr" />
+		<key id="KEY_PAGEUP" mapto="pageUp" flags="mr" />
+		<key id="KEY_PAGEDOWN" mapto="pageDown" flags="mr" />
+		<key id="KEY_CHANNELUP" mapto="pageUp" flags="mr" />
+		<key id="KEY_CHANNELDOWN" mapto="pageDown" flags="mr" />
+		<!--
+		<key id="KEY_LEFT" mapto="moveLeft" flags="mr" />
+		<key id="KEY_RIGHT" mapto="moveRight" flags="mr" />
+		-->
+		<key id="1" mapto="moveUp" flags="mr" />
+		<key id="2" mapto="moveDown" flags="mr" />
+	</map>
+
+</keymap>

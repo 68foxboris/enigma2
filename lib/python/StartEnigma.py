@@ -1,4 +1,4 @@
-from os.path import isdir, islink, join
+from os.path import isdir, islink, join, exists
 import sys  # This is needed for the twisted redirection access to stderr and stdout.
 from time import time
 import Tools.RedirectOutput
@@ -653,7 +653,7 @@ from Components.RecordingConfig import InitRecordingConfig
 InitRecordingConfig()
 
 enigma.eProfileWrite("InitUsageConfig")
-from Components.UsageConfig import InitUsageConfig
+from Components.UsageConfig import InitUsageConfig, DEFAULTKEYMAP
 InitUsageConfig()
 
 enigma.eProfileWrite("InitTimeZones")
@@ -670,7 +670,12 @@ ntpSyncPoller.startTimer()
 
 enigma.eProfileWrite("KeymapParser")
 from Components.ActionMap import loadKeymap
-loadKeymap(config.usage.keymap.value)
+loadKeymap(DEFAULTKEYMAP)
+if config.usage.keymap.value != DEFAULTKEYMAP:
+	if exists(config.usage.keymap.value):
+		loadKeymap(config.usage.keymap.value, replace=True)
+if exists(config.usage.keymap_usermod.value):
+	loadKeymap(config.usage.keymap_usermod.value)
 
 enigma.eProfileWrite("InitNetwork")
 from Components.Network import InitNetwork
