@@ -378,10 +378,6 @@ def runScreenTest():
 	return 0
 
 
-def setLoadUnlinkedUserbouquets(configElement):
-	enigma.eDVBDB.getInstance().setLoadUnlinkedUserbouquets(configElement.value)
-
-
 def dump(dir, p=""):
 	had = dict()
 	if isinstance(dir, dict):
@@ -537,13 +533,15 @@ enigma.eProfileWrite("ScreenSummary")
 from Screens.Screen import ScreenSummary
 
 enigma.eProfileWrite("LoadBouquets")
-config.misc.load_unlinked_userbouquets = ConfigYesNo(default=True)
+config.misc.load_unlinked_userbouquets = ConfigSelection(default="1", choices=[("0", _("Off")), ("1", _("Top")), ("2", _("Bottom"))])
+if config.misc.load_unlinked_userbouquets.value.lower() in ("true", "false"):
+	config.misc.load_unlinked_userbouquets.value = "1" if config.misc.load_unlinked_userbouquets.value.lower() == "true" else "0"
+
+def setLoadUnlinkedUserbouquets(configElement):
+	enigma.eDVBDB.getInstance().setLoadUnlinkedUserbouquets(int(configElement.value))
+
 config.misc.load_unlinked_userbouquets.addNotifier(setLoadUnlinkedUserbouquets)
 enigma.eDVBDB.getInstance().reloadBouquets()
-
-def localeNotifier(configElement):
-	international.activateLocale(configElement.value)
-
 
 enigma.eProfileWrite("International")
 from Components.International import international
@@ -552,6 +550,9 @@ config.misc.locale = ConfigText(default="en_US")
 config.misc.locale.addNotifier(localeNotifier)
 config.misc.language = ConfigText(default=international.getLanguage("en_US"))
 config.misc.country = ConfigText(default=international.getCountry("en_US"))
+
+def localeNotifier(configElement):
+	international.activateLocale(configElement.value)
 
 enigma.eProfileWrite("ParentalControl")
 import Components.ParentalControl
