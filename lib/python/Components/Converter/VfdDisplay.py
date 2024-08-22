@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-from enigma import iPlayableService
 from datetime import datetime
+
 from Components.Converter.Poll import Poll
 from Components.Converter.Converter import Converter
 from Components.Element import cached
@@ -30,22 +29,17 @@ class VfdDisplay(Poll, Converter):
 						break
 				if 'loop' in self.type and self.delay:
 					self.loop = self.delay
-			if '12h' in self.type and 'nozero' in self.type:
-				self.hour = '%l'
-			elif '12h' in self.type:
-				self.hour = '%I'
-			elif 'nozero' in self.type:
-				self.hour = '%k'
+			if 'nozero' in self.type:
+				self.hour = '%-'
 			else:
-				self.hour = '%H'
+				self.hour = '%'
+			if '12h' in self.type:
+				self.hour = self.hour + 'I'
+			else:
+				self.hour = self.hour + 'H'
 
 	@cached
 	def getText(self):
-		if hasattr(self.source, 'text'):
-			if 'nozero' in self.type:
-				return self.source.text.rjust(4)
-			else:
-				return self.source.text.zfill(4)
 		if self.showclock == 0:
 			if self.delay:
 				self.poll_interval = self.delay
@@ -59,13 +53,13 @@ class VfdDisplay(Poll, Converter):
 				else:
 					self.poll_interval = 1000
 					self.showclock = 3
-				clockformat = self.hour + '%02M'
+				clockformat = self.hour + '%M'
 			elif self.showclock == 2:
 				self.showclock = 3
-				clockformat = self.hour + '%02M'
+				clockformat = self.hour + '%M'
 			else:
 				self.showclock = 2
-				clockformat = self.hour + ':%02M'
+				clockformat = self.hour + ':%M'
 			if self.loop != -1:
 				self.loop -= 1000
 				if self.loop <= 0:
@@ -76,14 +70,12 @@ class VfdDisplay(Poll, Converter):
 	text = property(getText)
 
 	def changed(self, what):
-		if what[0] is self.CHANGED_SPECIFIC and (what[1] in (iPlayableService.evStart, iPlayableService.evEnd, iPlayableService.evNewProgramInfo)) and self.delay >= 0:
+		if what[0] is self.CHANGED_SPECIFIC and self.delay >= 0:
 			self.showclock = 0
 			if self.loop != -1:
 				self.loop = self.delay
 			service = self.source.serviceref
-			self.num = service and ('%4d' if 'nozero' in self.type else '%04d') % service.getChannelNum() or None
+			self.num = service and ('%d' if 'nozero' in self.type else '%04d') % service.getChannelNum() or None
 			Converter.changed(self, what)
 		elif what[0] is self.CHANGED_POLL:
-			Converter.changed(self, what)
-		elif what[0] is self.CHANGED_ALL:
 			Converter.changed(self, what)
