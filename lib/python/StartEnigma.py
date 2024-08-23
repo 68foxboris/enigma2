@@ -471,6 +471,13 @@ try:  # Configure the twisted logging.
 except ImportError:
 	print("[StartEnigma] Error: Twisted not available!")
 
+def localeNotifier(configElement):
+	international.activateLocale(configElement.value)
+
+# Initialize the country, language and locale data.
+#
+enigma.eProfileWrite("International")
+from Components.International import international
 
 enigma.eProfileWrite("BoxInfo")
 from Components.SystemInfo import BoxInfo
@@ -494,6 +501,10 @@ if BoxInfo.getItem("architecture") in ("aarch64"):
 from traceback import print_exc
 from Components.config import config, configfile, ConfigText, ConfigYesNo, ConfigInteger, ConfigSelection, ConfigSubsection, NoSave
 
+config.misc.locale = ConfigText(default="en_US")
+config.misc.locale.addNotifier(localeNotifier)
+config.misc.language = ConfigText(default=international.getLanguage("en_US"))
+config.misc.country = ConfigText(default=international.getCountry("en_US"))
 
 # These entries should be moved back to UsageConfig.py when it is safe to bring UsageConfig init to this location in StartEnigma.py.
 #
@@ -542,17 +553,6 @@ def setLoadUnlinkedUserbouquets(configElement):
 
 config.misc.load_unlinked_userbouquets.addNotifier(setLoadUnlinkedUserbouquets)
 enigma.eDVBDB.getInstance().reloadBouquets()
-
-enigma.eProfileWrite("International")
-from Components.International import international
-
-config.misc.locale = ConfigText(default="en_US")
-config.misc.locale.addNotifier(localeNotifier)
-config.misc.language = ConfigText(default=international.getLanguage("en_US"))
-config.misc.country = ConfigText(default=international.getCountry("en_US"))
-
-def localeNotifier(configElement):
-	international.activateLocale(configElement.value)
 
 enigma.eProfileWrite("ParentalControl")
 import Components.ParentalControl
