@@ -10,7 +10,6 @@ from Components.Label import Label
 from Components.Sources.List import List
 from Components.Sources.Boolean import Boolean
 from Components.SystemInfo import BoxInfo
-from Components.VolumeControl import VolumeControl
 from Components.PluginComponent import plugins
 from Plugins.Plugin import PluginDescriptor
 from Components.Converter.VAudioInfo import StdAudioDesc
@@ -75,9 +74,6 @@ class AudioSelection(ConfigListScreen, Screen):
 			"cancel": self.cancel,
 			"up": self.keyUp,
 			"down": self.keyDown,
-			"volumeUp": self.volumeUp,
-			"volumeDown": self.volumeDown,
-			"volumeMute": self.volumeMute,
 			"menu": self.openAutoLanguageSetup,
 			"1": self.keyNumberGlobal,
 			"2": self.keyNumberGlobal,
@@ -700,15 +696,6 @@ class AudioSelection(ConfigListScreen, Screen):
 				self.focus = FOCUS_STREAMS
 		elif self.focus == FOCUS_STREAMS:
 			self["streams"].selectNext()
-
-	def volumeUp(self):
-		VolumeControl.instance and VolumeControl.instance.volUp()
-
-	def volumeDown(self):
-		VolumeControl.instance and VolumeControl.instance.volDown()
-
-	def volumeMute(self):
-		VolumeControl.instance and VolumeControl.instance.volMute()
 
 	def keyNumberGlobal(self, number):
 		if number <= len(self["streams"].list):
