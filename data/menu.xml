@@ -61,7 +61,7 @@
 					<!-- Menu / Setup / Time -->
 					<item key="time_setup" level="0" text="Time" weight="50"><screen module="Time" screen="Time" /></item>
 					<item key="user_interface" level="0" text="User Interface Setup" ><setup id="UserInterface"/></item>
-					<item key="channelselection_setup" level="0" text="Channel Selection Setup" weight="10"><setup id="channelselection" /></item>
+					<item key="channelselection_setup" level="0" text="Channel Selection Setup" weight="10"><setup id="ChannelSelection" /></item>
 					<item key="usage_setup" level="0" text="Customize"><setup id="Usage"/></item>
 					<item key="skin_setup" level="0" text="Skin Settings" weight="25"><screen module="SkinSelection" screen="SkinSelection" /></item>
 					<menu key="lcd" level="0" text="Front Panel Display">

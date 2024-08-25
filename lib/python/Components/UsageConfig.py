@@ -3,7 +3,7 @@ from locale import AM_STR, PM_STR, nl_langinfo
 from os import mkdir, makedirs, remove
 from os.path import exists, isfile, join as pathjoin, normpath
 from time import mktime
-from skin import parameters
+from skin import getcomponentTemplateNames, parameters, domScreens
 from Components.Harddisk import harddiskmanager
 from Components.International import international
 from Components.Console import Console
@@ -179,6 +179,7 @@ def InitUsageConfig():
 
 	config.usage.multiepg_ask_bouquet = ConfigYesNo(default=False)
 	config.usage.showpicon = ConfigYesNo(default=True)
+	config.usage.maxchannelnumlen = ConfigSelection(default="4", choices=[(str(x), ngettext("%d Digit", "%d Digits", x) % x) for x in range(1, 6)])
 
 	# New ServiceList
 	config.channelSelection = ConfigSubsection()
@@ -200,8 +201,22 @@ def InitUsageConfig():
 	config.channelSelection.showTimers = ConfigYesNo(default=False)
 
 	screenChoiceList = [("", _("Legacy mode"))]
+	widgetChoiceList = []
+	styles = getcomponentTemplateNames("serviceList")
+	default = ""
+	if styles:
+		for screen in domScreens:
+			element, path = domScreens.get(screen, (None, None))
+			if element.get("base") == "ChannelSelection":
+				label = element.get("label", screen)
+				screenChoiceList.append((screen, label))
+
+		default = styles[0]
+		for style in styles:
+			widgetChoiceList.append((style, style))
+
 	config.channelSelection.screenStyle = ConfigSelection(default="", choices=screenChoiceList)
-	config.channelSelection.widgetStyle = ConfigSelection(default="", choices=screenChoiceList)
+	config.channelSelection.widgetStyle = ConfigSelection(default=default, choices=widgetChoiceList)
 
 	# ########  Workaround for VTI Skins   ##############
 	config.usage.picon_dir = ConfigDirectory(default="/usr/share/enigma2/picon")
