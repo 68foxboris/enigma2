@@ -372,6 +372,7 @@ def runScreenTest():
 	config.misc.prev_wakeup_time.save()
 	session.nav.stopService()
 	session.nav.shutdown()
+	VolumeControl.instance.saveVolumeState()
 	configfile.save()
 	from Screens.InfoBarGenerics import saveResumePoints
 	saveResumePoints()
