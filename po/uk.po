@@ -1416,9 +1416,6 @@ msgstr "Звукова доріжка (%s) формат"
 msgid "Audio track (%s) language"
 msgstr "Звукова доріжка (%s) мова"
 
-msgid "Audio volume step size"
-msgstr "Розмір величини кроку звуку"
-
 msgid "Australia"
 msgstr "Австралія"
 
@@ -2684,9 +2681,6 @@ msgstr ""
 
 msgid "Configure the general audio delay of stereo sound tracks."
 msgstr "Налаштування загальної затримки звукових доріжок із стереозвуком."
-
-msgid "Configure the general audio volume step size (limit 1-10)."
-msgstr "Налаштуйте загальний розмір кроку величини аудіо (обмеження 1-10)."
 
 msgid ""
 "Configure the hard disk drive to go to standby after the specified idle time."
@@ -6485,6 +6479,9 @@ msgstr "Довгі імена файлів"
 msgid "Long key press"
 msgstr "Довге натиснення"
 
+msgid "Long press volume steps"
+msgstr "Довге натискання кнопок гучності"
+
 msgid "Longitude"
 msgstr "Довгота"
 
@@ -9721,6 +9718,9 @@ msgstr "Виберіть жорсткий диск"
 msgid "Select horizontal resolution:"
 msgstr "Виберіть горизонтальну роздільну здатність:"
 
+msgid "Select how long, in seconds, that the volume and mute displays are shown before they automatically hide."
+msgstr "Виберіть час у секундах, протягом якого відображатимуться іконки гучності та вимкнення звуку, перш ніж вони автоматично приховаються."
+
 msgid "Select how quickly the dish should move between satellites."
 msgstr "Виберіть швидкість переміщення антени між супутниками."
 
@@ -9955,6 +9955,12 @@ msgstr "Виберіть набір символів клавіатури"
 
 msgid "Select the shifted character set for the next character only"
 msgstr "Виберіть shift лише для наступного символу"
+
+msgid "Select the size of the volume steps when the VOLUME buttons are held down."
+msgstr "Виберіть розмір кроків гучності, коли кнопки ГУЧНІСТЬ утримуються."
+
+msgid "Select the size of the volume step when the VOLUME buttons are pressed."
+msgstr "Виберіть розмір кроку гучності під час натискання кнопок ГУЧНІСТЬ."
 
 msgid "Select the sort order of the Extension Menu entries."
 msgstr "Виберіть порядок сортування записів у розширеному меню."
@@ -11740,7 +11746,7 @@ msgstr "ТЕКСТ"
 
 msgid "TRANSLATOR_INFO"
 msgstr ""
-"Переклад:  kvinto - 08.08.2024\n"
+"Переклад:  kvinto - 29.08.2024\n"
 "Пошта:  badsystem@ukr.net"
 
 msgid "TS file is too large for ISO9660 level 1!"
@@ -13436,11 +13442,17 @@ msgstr "Режим напруги"
 msgid "Volume"
 msgstr "Гучність"
 
+msgid "Volume/Mute display timer"
+msgstr "Час відображення Гучності/Вимкнення звуку"
+
 msgid "Volume down"
 msgstr "Гучність нижче"
 
 msgid "Volume keys on the receiver remote will control the TV volume."
 msgstr "Кнопки гучності на пульті приймача регулюватимуть гучність телевізора."
+
+msgid "Volume steps"
+msgstr "Розмір кроків звуку"
 
 msgid "Volume up"
 msgstr "Гучність вище"
