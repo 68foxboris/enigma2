@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # The following KEYID numbers are currently unused:
 #
 # 199, 204, 228-237, 239, 241-255, 258-303, 316-350,
@@ -333,7 +332,8 @@ KEYFLAGS = {
 	1: "Break",
 	2: "Repeat",
 	3: "Long",
-	4: "ASCII"
+	4: "ASCII",
+	5: "Stop"
 }
 
 # First entry in each tuple is the preferred name.
@@ -355,5 +355,6 @@ def invertKeyIds():
 			else:
 				print("[keyids] Error: Key code %d is mapped to both '%s' and '%s'!" % (value, invKeyIds[value], key))
 	return invKeyIds
+
 
 KEYIDNAMES = invertKeyIds()

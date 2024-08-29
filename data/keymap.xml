@@ -4,6 +4,7 @@
 	"b": Action active on key "Break".
 	"r": Action active on key repeats.
 	"l": Action on long keypress.
+	"s": Action active on key "Stop" event (when a long pressed button is released).
 -->
 
 <keymap>
