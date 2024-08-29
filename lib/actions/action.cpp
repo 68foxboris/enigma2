@@ -152,7 +152,7 @@ void eActionMap::bindTranslation(const std::string &domain, const std::string &d
 	// eDebug("[eActionMap] bind translation for %s from %d to %d toggle=%d in %s", device.c_str(), keyin, keyout, toggle, domain.c_str());
 	eTranslationBinding trans;
 
-	trans.m_keyin  = keyin;
+	trans.m_keyin = keyin;
 	trans.m_keyout = keyout;
 	trans.m_toggle = toggle;
 	trans.m_domain = domain;
@@ -246,6 +246,8 @@ void eActionMap::keyPressed(const std::string &device, int key, int flags)
 	// iterate active contexts
 	for (std::multimap<int64_t, eActionBinding>::iterator c(m_bindings.begin()); c != m_bindings.end(); ++c)
 	{
+		int finalFlag = flags;
+
 		if (flags == eRCKey::flagMake)
 		{
 			c->second.m_prev_seen_make_key = key;
@@ -256,7 +258,8 @@ void eActionMap::keyPressed(const std::string &device, int key, int flags)
 		if (flags == eRCKey::flagLong)
 			c->second.m_long_key_pressed = true;
 		else if (flags == eRCKey::flagBreak && c->second.m_long_key_pressed)
-			continue;
+			finalFlag = eRCKey::flagStop;
+
 		// is this a native context?
 		if (c->second.m_widget)
 		{
@@ -271,16 +274,16 @@ void eActionMap::keyPressed(const std::string &device, int key, int flags)
 				for (; k != e; ++k)
 				{
 					if (k->second.m_key == key &&
-						k->second.m_flags & (1<<flags) &&
-						(k->second.m_device == device || k->second.m_device == "generic") )
-						call_list.push_back(call_entry(c->second.m_widget, reinterpret_cast<void *>(c->second.m_id), reinterpret_cast<void*>(k->second.m_action)));
+						k->second.m_flags & (1 << finalFlag) &&
+						(k->second.m_device == device || k->second.m_device == "generic"))
+						call_list.push_back(call_entry(c->second.m_widget, reinterpret_cast<void *>(c->second.m_id), reinterpret_cast<void *>(k->second.m_action)));
 				}
 			}
 			else
 			{
 				// wildcard - get any keys.
 				// eDebug("[eActionMap]    native wildcard");
-				if (c->second.m_widget->event(eWidget::evtKey, reinterpret_cast<void*>(key), reinterpret_cast<void*>(flags)))
+				if (c->second.m_widget->event(eWidget::evtKey, reinterpret_cast<void *>(key), reinterpret_cast<void *>(finalFlag)))
 					return;
 			}
 		}
@@ -288,16 +291,16 @@ void eActionMap::keyPressed(const std::string &device, int key, int flags)
 		{
 			if (c->second.m_context.size())
 			{
-				// eDebug("[eActionMap]   python context %s", c->second.m_context.c_str());
-				std::multimap<std::string,ePythonKeyBinding>::const_iterator
+				// eDebug("[eActionMap] python context=%s / key=%d / flags=%d", c->second.m_context.c_str(),key, finalFlag);
+				std::multimap<std::string, ePythonKeyBinding>::const_iterator
 					k = m_python_keys.lower_bound(c->second.m_context),
 					e = m_python_keys.upper_bound(c->second.m_context);
 
 				for (; k != e; ++k)
 				{
 					if (k->second.m_key == key &&
-						k->second.m_flags & (1<<flags) &&
-						(k->second.m_device == device || k->second.m_device == "generic") )
+						k->second.m_flags & (1 << finalFlag) &&
+						(k->second.m_device == device || k->second.m_device == "generic"))
 					{
 						ePyObject pArgs = PyTuple_New(2);
 						PyTuple_SET_ITEM(pArgs, 0, PyUnicode_FromString(k->first.c_str()));
@@ -312,7 +315,7 @@ void eActionMap::keyPressed(const std::string &device, int key, int flags)
 				// eDebug("[eActionMap]   python wildcard.");
 				ePyObject pArgs = PyTuple_New(2);
 				PyTuple_SET_ITEM(pArgs, 0, PyLong_FromLong(key));
-				PyTuple_SET_ITEM(pArgs, 1, PyLong_FromLong(flags));
+				PyTuple_SET_ITEM(pArgs, 1, PyLong_FromLong(finalFlag));
 				Py_INCREF(c->second.m_fnc);
 				call_list.push_back(call_entry(c->second.m_fnc, pArgs));
 			}
