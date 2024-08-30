@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2024-08-09 09:56+0300\n"
+"PO-Revision-Date: 2024-08-30 19:49+0300\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -2928,12 +2928,6 @@ msgstr "Для телевизора выбран автоматический в
 msgid "Auto video mode selected"
 msgstr "Выбран автоматический режим видео"
 
-msgid "Audio volume step size"
-msgstr "Размер шага громкости звука"
-
-msgid "Audio volume step size fast mode"
-msgstr "Размер шага громкости звука в быстром режиме"
-
 msgid "Australia"
 msgstr "Австралия"
 
@@ -3051,6 +3045,9 @@ msgstr "Автоматическое включение внешних субт�
 
 msgid "Automatically update Client/Server View"
 msgstr "Автообновление просмотра Клиент/Сервер"
+
+msgid "AutoRefresh"
+msgstr "Автоматическое обновление"
 
 msgid "Autostart"
 msgstr "Автозапуск"
@@ -4264,6 +4261,12 @@ msgstr "Каналы только"
 msgid "Channelselection:"
 msgstr "Выбор канала:"
 
+msgid "Channel Selection Screen"
+msgstr "Экран выбора канала"
+
+msgid "Channel Selection List"
+msgstr "Список выбора каналов"
+
 msgid "Chap."
 msgstr "Глава."
 
@@ -4709,7 +4712,7 @@ msgid "Commit Information Actions"
 msgstr "Выполнение информационных действий"
 
 msgid "Commit Logs"
-msgstr "Информация в журналах"
+msgstr "Журнал записей"
 
 msgid "Commit info"
 msgstr "Информация об изменениях"
@@ -4725,6 +4728,9 @@ msgstr "Общие настройки интерфейса"
 
 msgid "Common Interface assignment"
 msgstr "Права доступа CI модулей"
+
+msgid "Comodo Secure DNS"
+msgstr "Безопасный DNS Comodo"
 
 msgid "Communication"
 msgstr "Коммуникация"
@@ -4743,6 +4749,9 @@ msgstr "Собрано: "
 
 msgid "Complete"
 msgstr "Полное"
+
+msgid "Complete Backup"
+msgstr "Полное копирование"
 
 msgid "Complex (allows mixing audio tracks and aspects)"
 msgstr "Комплекс (микширование звуковых дорожек и разрешение видео)"
@@ -4990,9 +4999,6 @@ msgstr "Настройка общей задержки звуковых доро
 
 msgid "Configure the general audio delay of stereo sound tracks."
 msgstr "Настройка общей задержки звуковых дорожек со стереозвуком."
-
-msgid "Configure the general audio volume step size (limit 1-10)."
-msgstr "Настройка общего размера шага громкости звука (лимит 1-10), по умолчанию - 5."
 
 msgid "Configure the hard disk drive to go to standby after the specified idle time."
 msgstr "Настройка жесткого диска, для перевода его в режим ожидания, после определенного времени простоя."
@@ -5921,9 +5927,6 @@ msgstr "Дефолтный сервисный сканер"
 msgid "Defaults"
 msgstr "По умолчанию"
 
-msgid "Default: '%s'."
-msgstr "По умолчанию: '%s'."
-
 msgid "Default duration: %d mins"
 msgstr "Продолжительность по умолчанию: %d минут"
 
@@ -5948,6 +5951,10 @@ msgstr "Режим видео по умолчанию, выбранный для
 
 msgid "Default video mode selected"
 msgstr "Выбран режим видео по умолчанию"
+
+#, python-format
+msgid "Default: '%s'."
+msgstr "По умолчанию: '%s'."
 
 msgid "Default+Picon"
 msgstr "Дефолт+пикон"
@@ -7138,6 +7145,9 @@ msgstr "Включить автосканирование"
 msgid "Enable auto fastscan for %s"
 msgstr "Вкл. автосканирование для %s"
 
+msgid "Enable autorefresh templates."
+msgstr "Включить автоматическое обновление шаблонов."
+
 msgid "Enable blinking"
 msgstr "Включить мигание"
 
@@ -7197,9 +7207,6 @@ msgstr "Включить режим перемещения"
 
 msgid "Enable multiple bouquets"
 msgstr "Включить мульти-букеты"
-
-msgid "Enable new GStreamer playback"
-msgstr "Включить воспроизведение нового GStreamer"
 
 msgid "Enable or disable IPv6"
 msgstr "Включить или отключить IPv6"
@@ -8304,6 +8311,9 @@ msgstr "Полный сброс к заводским настройкам"
 msgid "Full screen"
 msgstr "Полноэкранный"
 
+msgid "Full Screen"
+msgstr "Полноэкранный"
+
 msgid "Full Restart"
 msgstr "Полный перезапуск"
 
@@ -8560,6 +8570,9 @@ msgstr "Греция"
 msgid "Grid mode"
 msgstr "Режим сетки"
 
+msgid "Grid"
+msgstr "Сетка"
+
 msgid "Greek"
 msgstr "Греческий"
 
@@ -8790,9 +8803,6 @@ msgstr "Скрыть список каналов в режиме радио"
 
 msgid "Hide known extensions"
 msgstr "Скрыть известные расширения"
-
-msgid "Hide mute notification"
-msgstr "Скрыть значок уведомления отключения звука"
 
 msgid "Hide number markers"
 msgstr "Скрыть номера маркеров"
@@ -9039,9 +9049,6 @@ msgstr "Если эта опция включена, при перемещени
 msgid "If enabled, display shows 12 chars instead 8, but in latin-1/translit only."
 msgstr "Если включено, на дисплее отображается 12 символов вместо 8, но только на латыни-1/переводе."
 
-msgid "If enabled, the new GStreamer playback engine will be used."
-msgstr "Если этот параметр включен, будет использоваться новый механизм воспроизведения GStreamer."
-
 msgid "If enabled, then there will be displayed icons for new/unseen items too."
 msgstr "Если включено то будут отображаться значки для новых/невидимых предметов."
 
@@ -9053,9 +9060,6 @@ msgstr "Если журналы занимают слишком много па�
 
 msgid "If set to 'no', only an debug message is written to the Debug log "
 msgstr "Если установлено значение «нет», в журнал отладки записывается только сообщение об отладке "
-
-msgid "If muted, hide mute icon or mute information after few seconds."
-msgstr "Если функция отключения звука отключена, через несколько секунд скрыть значок отключения звука или информацию о отключении звука."
 
 msgid "If 'never', will write crash log despite that for the first crash."
 msgstr "Если «никогда», несмотря на это, будет записываться журнал сбоев при первом сбое."
@@ -9898,6 +9902,9 @@ msgstr "Левый"
 msgid "Left from servicename"
 msgstr "Слева от названия сервиса"
 
+msgid "Legacy mode"
+msgstr "Устаревший режим"
+
 msgid "Lesotho"
 msgstr "Lesotho"
 
@@ -10142,6 +10149,9 @@ msgstr "Длительное нажатие"
 
 msgid "Long press emulation with button"
 msgstr "Эмуляция длительного нажатия с помощью кнопки"
+
+msgid "Long press volume steps"
+msgstr "Длинное нажатие шага громкости"
 
 msgid "Longitude"
 msgstr "Долгота"
@@ -14398,6 +14408,9 @@ msgstr "Выбор функции"
 msgid "Select horizontal resolution:"
 msgstr "Выбор горизонтального разрешения:"
 
+msgid "Select how long, in seconds, that the volume and mute displays are shown before they automatically hide."
+msgstr "Выберите, как долго (в секундах) будут отображаться индикаторы громкости и отключения звука, прежде чем они автоматически исчезнут."
+
 msgid "Select how quickly the dish should move between satellites."
 msgstr "Выбор скорости перемещения мотоподвеса между спутниками."
 
@@ -14548,6 +14561,15 @@ msgstr "Выберите спутник, который Вы хотите нас
 msgid "Select the satellite your dish receives from. If you are unsure select 'automatic' and the receiver will attempt to determine this for you."
 msgstr "Выберите спутник к которому подключена Ваша тарелка.Если вы не уверены,выберите 'автоматически',и ресивер попытается определить это для Вас."
 
+msgid "Select the screen layout, from the options provided by the skin, to be used for the ChannelSelection screen."
+msgstr "Выберите макет информации в списке услуг из вариантов, предоставляемых скином, отображаемым на экране выбора канала."
+
+msgid "Select the size of the volume step when the VOLUME buttons are pressed."
+msgstr "Выберите размер шага громкости при нажатии кнопок VOLUME."
+
+msgid "Select the size of the volume steps when the VOLUME buttons are held down."
+msgstr "Выберите размер шага регулировки громкости при удерживании кнопок VOLUME."
+
 msgid "Select the shifted character set"
 msgstr "Выберите набор символов с виртуальной клавиатурой"
 
@@ -14675,6 +14697,15 @@ msgstr ""
 
 msgid "Select 'Yes' to enable use of the LEFT/RIGHT buttons to move PageUp/PageDown when the LEFT/RIGHT buttons are otherwise undefined. This provides legacy navigation for users who prefer it."
 msgstr "Выберите «Да», чтобы включить использование кнопок ВЛЕВО/ВПРАВО для перемещения PageUp/PageDown, когда кнопки ВЛЕВО/ВПРАВО в противном случае не определены. Это обеспечивает устаревшую навигацию для пользователей, которые предпочитают ее."
+
+msgid "Select 'Yes' if you want to wake the TV for a 'Wakeup' power timer is starting."
+msgstr "Выберите «Да», если вы хотите вывести телевизор из спящего режима, так как таймер «Пробуждения» уже запущен."
+
+msgid "Select 'Yes' if you want to wake the TV for a 'Zap and Record' recording timer is starting."
+msgstr "Выберите «Да», если вы хотите вывести телевизор из спящего режима для запуска таймера записи «Zap and Record»."
+
+msgid "Select 'Yes' if you want to wake the TV for a 'Zap' recording timer is starting."
+msgstr "Выберите «Да», если вы хотите вывести телевизор из спящего режима для запуска таймера записи «Zap»."
 
 msgid "Selects video source displayed on the LCD."
 msgstr "Выбор источника видео для показа на LCD дисплее."
@@ -18935,6 +18966,9 @@ msgstr "Различный"
 msgid "Venezuela (Bolivarian Republic of)"
 msgstr "Venezuela (Bolivarian Republic of)"
 
+msgid "Verbose"
+msgstr "Многословный"
+
 msgid "Vertical"
 msgstr "Вертикальная"
 
@@ -19208,6 +19242,9 @@ msgstr "Регулировка громкости"
 msgid "Volume Config"
 msgstr "Настройки громкости"
 
+msgid "Volume steps"
+msgstr "Шаги громкости"
+
 msgid "Volume down"
 msgstr "Снижение громкости"
 
@@ -19216,6 +19253,9 @@ msgstr "Кнопки громкости на пульте дистанционн
 
 msgid "Volume up"
 msgstr "Увеличение громкости"
+
+msgid "Volume/Mute display timer"
+msgstr "Таймер отображения громкости/отключения звука"
 
 msgid "Vu+ MultiBoot"
 msgstr "Мультизагрузка Vu+"
