@@ -61,6 +61,7 @@ def InitUsageConfig():
 
 	config.usage.hide_number_markers = ConfigYesNo(default=True)
 	config.usage.hide_number_markers.addNotifier(refreshServiceList)
+	config.usage.use_pig = ConfigYesNo(default=False)
 
 	config.usage.servicetype_icon_mode = ConfigSelection(default="0", choices=[
 		("0", _("None")),
@@ -106,6 +107,12 @@ def InitUsageConfig():
 	config.usage.subnetwork_terrestrial = ConfigYesNo(default=True)
 	config.usage.showdish = ConfigYesNo(default=True)
 	config.usage.multibouquet = ConfigYesNo(default=True)
+	config.usage.show_servicelist = ConfigYesNo(default=True)
+	config.usage.servicelist_mode = ConfigSelection(default="standard", choices=[
+		("standard", _("Standard")),
+		("simple", _("Simple"))
+	])
+	config.usage.servicelistpreview_mode = ConfigYesNo(default=False)
 
 	# Just merge note, config.usage.servicelist_column was already there.
 	config.usage.servicelist_column = ConfigSelection(default="-1", choices=[
