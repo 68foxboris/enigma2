@@ -2738,6 +2738,8 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 
 	def __init__(self, session, infobar):
 		ChannelSelectionBase.__init__(self, session)
+		self["list"] = ServiceListLegacy(self)  # Force legacy list
+		self.servicelist = self["list"]
 		ChannelSelectionEdit.__init__(self)
 		ChannelSelectionEPG.__init__(self)
 		InfoBarBase.__init__(self)
@@ -2898,6 +2900,8 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 class SimpleChannelSelection(ChannelSelectionBase, SelectionEventInfo):
 	def __init__(self, session, title, currentBouquet=False, returnBouquet=False, setService=None, setBouquet=None):
 		ChannelSelectionBase.__init__(self, session)
+		self["list"] = ServiceListLegacy(self)  # Force legacy list
+		self.servicelist = self["list"]
 		SelectionEventInfo.__init__(self)
 		self["actions"] = ActionMap(["OkCancelActions", "TvRadioActions"],
 			{
