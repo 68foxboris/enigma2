@@ -2211,17 +2211,17 @@ msgstr "Добавить маркер"
 msgid "Add provider"
 msgstr "Добавить провайдера"
 
-msgid "Add recording (enter recording duration)"
-msgstr "Добавить запись (введите длительность записи)"
+msgid "Add recording (Enter recording duration)"
+msgstr "Начать запись (Введите длительность записи)"
 
-msgid "Add recording (enter recording endtime)"
-msgstr "Добавить запись (введите время окончания)"
+msgid "Add recording (Enter recording end time)"
+msgstr "Начать запись (Введите время окончания)"
 
-msgid "Add recording (indefinitely)"
-msgstr "Добавить запись (окончание неопределено)"
+msgid "Add recording (Indefinitely - 24 hours)"
+msgstr "Начать запись (Конец не определён)"
 
-msgid "Add recording (stop after current event)"
-msgstr "Добавить запись (стоп после текущего события)"
+msgid "Add recording (Stop after current event)"
+msgstr "Начать запись (Стоп после текущего события)"
 
 msgid "Add service"
 msgstr "Добавить сервис"
