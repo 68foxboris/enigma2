@@ -46,6 +46,7 @@ from Plugins.Plugin import PluginDescriptor
 from Components.PluginComponent import plugins
 from Screens.ChoiceBox import ChoiceBox
 from Screens.EventView import EventViewEPGSelect
+from Screens.Setup import Setup
 import os
 from time import time, localtime, strftime
 from Components.Sources.List import List
@@ -177,7 +178,7 @@ def removed_userbouquets_available():
 class ChannelContextMenu(Screen):
 	def __init__(self, session, csel):
 
-		Screen.__init__(self, session)
+		Screen.__init__(self, session, enableHelp=True)
 		self.setTitle(_("Channel context menu"))
 		self.csel = csel
 		self.bsel = None
@@ -525,7 +526,6 @@ class ChannelContextMenu(Screen):
 		self["menu"].getCurrent()[0][1]()
 
 	def openSetup(self):
-		from Screens.Setup import Setup
 		self.session.openWithCallback(self.cancelClick, ChannelSelectionSetup)
 
 	def cancelClick(self, dummy=False):
@@ -1060,7 +1060,7 @@ class ChannelSelectionEdit:
 		self["ChannelSelectEditActions"] = ChannelSelectionEditActionMap(self, ["ChannelSelectEditActions", "OkCancelActions"],
 			{
 				"contextMenu": self.doContext,
-		})
+			})
 
 	def getMutableList(self, root=eServiceReference()):
 		if not self.mutableList is None:
