@@ -335,6 +335,12 @@ RESULT eStaticServiceMP3Info::getName(const eServiceReference &ref, std::string 
 		else
 			name = ref.path;
 	}
+
+	std::string res_name = "";
+	std::string res_provider = "";
+	eServiceReference::parseNameAndProviderFromName(name, res_name, res_provider);
+	name = res_name;
+
 	return 0;
 }
 
@@ -1516,6 +1522,9 @@ RESULT eServiceMP3::getName(std::string &name)
 	}
 	else
 		name = title;
+
+	m_prov = m_ref.prov;
+
 	return 0;
 }
 
@@ -1639,19 +1648,23 @@ int eServiceMP3::getInfo(int w)
 
 std::string eServiceMP3::getInfoString(int w)
 {
-	if ( m_sourceinfo.is_streaming )
+	switch (w)
 	{
-		switch (w)
-		{
-		case sProvider:
-			return "IPTV";
-		case sServiceref:
-		{
-			return m_ref.toString();
+	case sProvider:
+	{
+		if (m_sourceinfo.is_streaming) {
+			if (m_prov.empty()) {
+				return "IPTV";
+			} else {
+				return m_prov;
+			}
 		}
-		default:
-			break;
-		}
+		return "FILE";
+	}
+	case sServiceref:
+		return m_ref.toString();
+	default:
+		break;
 	}
 
 	if (w == sVideoInfo)
