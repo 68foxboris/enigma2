@@ -335,12 +335,6 @@ RESULT eStaticServiceMP3Info::getName(const eServiceReference &ref, std::string 
 		else
 			name = ref.path;
 	}
-
-	std::string res_name = "";
-	std::string res_provider = "";
-	eServiceReference::parseNameAndProviderFromName(name, res_name, res_provider);
-	name = res_name;
-
 	return 0;
 }
 

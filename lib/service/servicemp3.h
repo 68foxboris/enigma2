@@ -302,7 +302,6 @@ private:
 	gdouble m_currentTrickRatio;
 	friend class eServiceFactoryMP3;
 	eServiceReference m_ref;
-	std::string m_prov;
 	int m_buffer_size;
 	int m_ignore_buffering_messages;
 	bool m_is_live;
