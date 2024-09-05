@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # shamelessly copied from pliExpertInfo (Vali, Mirakels, Littlesat)
 
-from enigma import eAVControl, iServiceInformation, iPlayableService, eDVBCI_UI
+from enigma import iServiceInformation, iPlayableService, eDVBCI_UI
 from Components.Converter.Converter import Converter
 from Components.Element import cached
 from Components.config import config
@@ -210,14 +210,18 @@ class PliExtraInfo(Poll, Converter):
 		return ""
 
 	def createResolution(self, info):
-		avControl = eAVControl.getInstance()
-		video_rate = avControl.getFrameRate(0)
-		video_pol = "p" if avControl.getProgressive() else "i"
-		video_width = avControl.getResolutionX(0)
-		video_height = avControl.getResolutionY(0)
-		fps = str((video_rate + 500) / 1000)
-		gamma = ("SDR", "HDR", "HDR10", "HLG", "")[info.getInfo(iServiceInformation.sGamma)]
-		return str(video_width) + "x" + str(video_height) + video_pol + fps + addspace(gamma)
+		xres = info.getInfo(iServiceInformation.sVideoWidth)
+		if xres == -1:
+			return ""
+		yres = info.getInfo(iServiceInformation.sVideoHeight)
+		mode = ("i", "p", " ")[info.getInfo(iServiceInformation.sProgressive)]
+		fps = (info.getInfo(iServiceInformation.sFrameRate) + 500) // 1000
+		if not fps or fps == -1:
+			try:
+				fps = (int(open("/proc/stb/vmpeg/0/framerate", "r").read()) + 500) // 1000
+			except:
+				pass
+		return "%sx%s%s%s" % (xres, yres, mode, fps)
 
 	def createGamma(self, info):
 		return ("SDR", "HDR", "HDR10", "HLG", "")[info.getInfo(iServiceInformation.sGamma)]
