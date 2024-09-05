@@ -1516,9 +1516,6 @@ RESULT eServiceMP3::getName(std::string &name)
 	}
 	else
 		name = title;
-
-	m_prov = m_ref.prov;
-
 	return 0;
 }
 
@@ -1642,23 +1639,19 @@ int eServiceMP3::getInfo(int w)
 
 std::string eServiceMP3::getInfoString(int w)
 {
-	switch (w)
+	if ( m_sourceinfo.is_streaming )
 	{
-	case sProvider:
-	{
-		if (m_sourceinfo.is_streaming) {
-			if (m_prov.empty()) {
-				return "IPTV";
-			} else {
-				return m_prov;
-			}
+		switch (w)
+		{
+		case sProvider:
+			return "IPTV";
+		case sServiceref:
+		{
+			return m_ref.toString();
 		}
-		return "FILE";
-	}
-	case sServiceref:
-		return m_ref.toString();
-	default:
-		break;
+		default:
+			break;
+		}
 	}
 
 	if (w == sVideoInfo)
