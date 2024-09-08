@@ -3054,6 +3054,9 @@ msgstr "Запис неможливий - конфлікт таймерів %s"
 msgid "Could not record due to invalid service %s"
 msgstr "Запис неможливий, канал %s невірний"
 
+msgid "Could not retrieve basic bouquets files"
+msgstr "Не вдалося отримати файли основних фаворитів"
+
 msgid "Country"
 msgstr "Країна"
 
@@ -11746,7 +11749,7 @@ msgstr "ТЕКСТ"
 
 msgid "TRANSLATOR_INFO"
 msgstr ""
-"Переклад:  kvinto - 29.08.2024\n"
+"Переклад:  kvinto - 08.09.2024\n"
 "Пошта:  badsystem@ukr.net"
 
 msgid "TS file is too large for ISO9660 level 1!"
