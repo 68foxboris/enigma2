@@ -355,13 +355,13 @@ int eServiceHDMIRecord::doRecord()
 
 RESULT eServiceHDMIRecord::stream(ePtr<iStreamableService> &ptr)
 {
-	ptr = NULL;
+	ptr = nullptr;
 	return -1;
 }
 
 RESULT eServiceHDMIRecord::subServices(ePtr<iSubserviceList> &ptr)
 {
-	ptr = NULL;
+	ptr = nullptr;
 	return -1;
 }
 
