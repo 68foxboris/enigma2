@@ -762,7 +762,7 @@ def sanitizeFilename(filename, maxlen=255):  # 255 is max length in bytes in ext
 	# ignoring errors along the way, the result will be valid unicode.
 	# Prioritise maintaining the complete extension if possible.
 	# Any truncation of "root" or "ext" will be done at the end of the string
-	root, ext = os.path.splitext(filename.encode(encoding='utf-8', errors='ignore'))
+	root, ext = splitext(filename.encode(encoding='utf-8', errors='ignore'))
 	if len(ext) > maxlen - (1 if root else 0):  # leave at least one char for root if root
 		ext = ext[:maxlen - (1 if root else 0)]
 	# convert back to unicode, ignoring any incomplete utf8 multibyte chars
