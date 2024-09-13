@@ -2037,6 +2037,9 @@ msgstr "Прервать редактирование букета"
 msgid "Abort favourites edit"
 msgstr "Прервать редактирование фаворитов"
 
+msgid "Above 200 Mbps"
+msgstr "Более 200 Мбит/с"
+
 msgid "About"
 msgstr "Информация"
 
@@ -2364,16 +2367,19 @@ msgstr "После записи"
 msgid "After zap"
 msgstr "После zap"
 
-msgid "AI-Powered translation color"
+msgid "AI-Powered Translation color"
 msgstr "Цвет перевода на базе искусственного интеллекта"
 
-msgid "AI-Powered translation enabled"
+msgid "AI-Powered Translation enabled"
 msgstr "Перевод с использованием искусственного интеллекта включён"
 
-msgid "AI-Powered translation language"
+msgid "AI-Powered Translation language"
 msgstr "Язык перевода на основе искусственного интеллекта"
 
-msgid "AI-Powered translation subscription code"
+msgid "AI-Powered Translation optimization"
+msgstr "Оптимизация перевода с использованием искусственного интеллекта"
+
+msgid "AI-Powered Translation subscription code"
 msgstr "Код подписки на перевод на основе искусственного интеллекта"
 
 msgid "Akan"
@@ -2657,6 +2663,18 @@ msgstr "Любая активность"
 
 msgid "Arabic"
 msgstr "Арабский"
+
+msgid "Arabic (Egyptian)"
+msgstr "Арабский (Египетский)"
+
+msgid "Arabic (Moroccan)"
+msgstr "Арабский (Марокканский)"
+
+msgid "Arabic (Syro-Lebanese)"
+msgstr "Арабский (Сиро-Ливанский)"
+
+msgid "Arabic (Tunisian)"
+msgstr "Арабский (Тунисский)"
 
 msgid "Are you ready to install \"%s\" ?"
 msgstr "Вы готовы установить \"% s\" ?"
@@ -4892,11 +4910,11 @@ msgstr "Укажите тип пульта управления"
 msgid "Configure separator type used in full description for separate short and extended descriptions."
 msgstr "Настройте тип разделителя, используемый в полном описании, для отдельных кратких и расширенных описаний."
 
-msgid "Configure the AI-Powered translation language."
+msgid "Configure the AI-Powered Translation target language."
 msgstr "Настройте язык перевода на основе искусственного интеллекта."
 
-msgid "Configure the color of the AI-Powered translations."
-msgstr "Настройте цвет переводов с помощью искусственного интеллекта."
+msgid "Select the color to be used for the AI-Powered Translation text."
+msgstr "Выберите цвет, который будет использоваться для текста перевода с помощью искусственного интеллекта."
 
 msgid "Configure the DiSEqC mode for this LNB."
 msgstr "Настройка режима DiSEqC для этого LNB."
@@ -6685,6 +6703,12 @@ msgstr "Доминика"
 msgid "Dominican Republic"
 msgstr "Dominican Republic"
 
+msgid "Don't Center DVB Subs On This Service"
+msgstr "Не размещайте DVB-подписки на этом сервисе"
+
+msgid "Don't Translate Subs On This Service"
+msgstr "Не переводите субтитры на этом сервисе"
+
 msgid "Don't restart"
 msgstr "Не перезагружать"
 
@@ -7061,8 +7085,8 @@ msgstr "Пустая корзина"
 msgid "Enable"
 msgstr "Включить"
 
-msgid "Enable AI-Powered translation for all teletext and DVB subtitles."
-msgstr "Включите перевод с помощью искусственного интеллекта для всех телетекстов и субтитров DVB."
+msgid "Select 'Yes' to enable AI-Powered Translation for all teletext and DVB subtitles."
+msgstr "Выберите «Да», чтобы включить функцию перевода на базе искусственного интеллекта для всех телетекстов и субтитров DVB."
 
 msgid "Enable %s pro:"
 msgstr "Включить %s pro:"
@@ -7434,8 +7458,8 @@ msgstr "Введите высокую частоту гетеродина низ
 msgid "Enter your low band local oscillator frequency. For more information consult the spec sheet of your LNB."
 msgstr "Введите низкую частоту гетеродина низкочастотного генератора. Для получения дополнительной информации смотрите спецификацию вашего LNB."
 
-msgid "Enter your subscription code, the unified code for trial is 15."
-msgstr "Введите код подписки, единый код для трейла 15."
+msgid "Enter the subscription code to fully enable the AI-Powered Translation plugin, the unified code for trial is 15."
+msgstr "Введите код подписки, чтобы полностью включить плагин AI-Powered Translation; единый код для пробной версии — 15."
 
 msgid "Entitlements"
 msgstr "Права"
@@ -18188,6 +18212,9 @@ msgstr "Транскодировать"
 msgid "Transcoding: "
 msgstr "Транскодирование: "
 
+msgid "Translate Subs On This Service"
+msgstr "Перевод субтитров на этом сервисе"
+
 msgid "Translation"
 msgstr "Перевод"
 
@@ -18543,6 +18570,9 @@ msgstr "Распаковка имиджа"
 
 msgid "Up / Active"
 msgstr "Вверх / Активно"
+
+msgid "Up to 50 Mbps"
+msgstr "До 50 Мбит/с"
 
 msgid "Update"
 msgstr "Обновление"
