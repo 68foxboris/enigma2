@@ -244,7 +244,8 @@ class ParentalControl:
 		return []
 
 	def save(self):
-		self.saveListToFile(LIST_BLACKLIST, self.blacklist)
+		if self.filesOpened:
+			self.saveListToFile(LIST_BLACKLIST, self.blacklist)
 
 	def open(self, save=False):
 		if save:
