@@ -574,6 +574,7 @@ if test "$BOXTYPE" == "pulse4k" -o "$BOXTYPE" == "pulse4kmini" -o "$BOXTYPE" == 
 	AC_DEFINE(HAVE_HISILICON, 1,[define add HISILICON chip])
 	AC_DEFINE(FORCE_NO_BLENDING_ACCELERATION, 1,[define when the framebuffer acceleration has alphablending support, but detection slow down all])
 	AC_DEFINE(USE_ALTERNATE_CA_HANDLING, 1,[define it so to use additional ca device freeing])
+fi
 
 AS_IF([test "$BOXTYPE" == "classm" -o "$BOXTYPE" == "axodin" -o "$BOXTYPE" == "axodinc" -o "$BOXTYPE" == "starsatlx" -o "$BOXTYPE" == "evo" -o "$BOXTYPE" == "genius" -o "$BOXTYPE" == "galaxym6"],[AC_DEFINE(PROFILE1, 1,[profile1])])
 AS_IF([test "$BOXTYPE" == "gb800solo" -o "$BOXTYPE" == "gb800se" -o "$BOXTYPE" == "gb800seplus" -o "$BOXTYPE" == "gbultrase"],[AC_DEFINE(PROFILE2, 1,[profile2])])
