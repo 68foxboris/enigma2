@@ -571,7 +571,7 @@ if test "$BOXTYPE" == "sf4008" -o "$BOXTYPE" == "beyonwizu4"; then
 fi
 
 if test "$BOXTYPE" == "pulse4k" -o "$BOXTYPE" == "pulse4kmini" -o "$BOXTYPE" == "hd61"; then
-	AC_DEFINE(HAVE_HISILICON, 1,[define add HISILICON chip]
+	AC_DEFINE(HAVE_HISILICON, 1,[define add HISILICON chip])
 	AC_DEFINE(FORCE_NO_BLENDING_ACCELERATION, 1,[define when the framebuffer acceleration has alphablending support, but detection slow down all])
 	AC_DEFINE(USE_ALTERNATE_CA_HANDLING, 1,[define it so to use additional ca device freeing])
 
