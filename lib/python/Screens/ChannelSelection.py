@@ -2234,6 +2234,9 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		self.lastChannelRootTimer.start(100, True)
 		self.pipzaptimer = eTimer()
 
+	def onShutdown(self):
+		self.close()
+
 	def asciiOn(self):
 		rcinput = eRCInput.getInstance()
 		rcinput.setKeyboardMode(rcinput.kmAscii)
