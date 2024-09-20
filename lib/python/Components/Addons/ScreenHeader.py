@@ -9,7 +9,6 @@ from Components.Sources.StaticText import StaticText
 from Components.Pixmap import Pixmap
 
 
-
 class ScreenHeader(GUIAddon):
 	def __init__(self):
 		GUIAddon.__init__(self)
@@ -59,7 +58,7 @@ class ScreenHeader(GUIAddon):
 		itemHeight = self.instance.size().height()
 
 		for idx, x in enumerate(sequence):
-			if not isinstance(x, StaticText): # assume it is Pixmap
+			if not isinstance(x, StaticText):  # assume it is Pixmap
 				if x.pixmap:
 					itemHeight = self.instance.size().height()
 					pix_size = x.pixmap.size()
@@ -114,11 +113,11 @@ class ScreenHeader(GUIAddon):
 		attribs = []
 		for (attrib, value) in self.skinAttributes[:]:
 			if attrib == "titleFont":
-				self.titleFont = parseFont(value, ((1, 1), (1, 1)))
+				self.titleFont = parseFont(value, parent.scale)
 			if attrib == "titleSingleFont":
-				self.titleSingleFont = parseFont(value, ((1, 1), (1, 1)))
+				self.titleSingleFont = parseFont(value, parent.scale)
 			elif attrib == "pathFont":
-				self.pathFont = parseFont(value, ((1, 1), (1, 1)))
+				self.pathFont = parseFont(value, parent.scale)
 			elif attrib == "titleForegroundColor":
 				self.titleForeground = parseColor(value).argb()
 			elif attrib == "pathForegroundColor":
