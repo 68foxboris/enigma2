@@ -78,6 +78,14 @@ def getBoxProcTypeName():
 	return f"{procType}  -  {boxProcTypes.get(procType, _('Unknown'))}"
 
 
+welcome = [
+	_("Welcome to %s") % BoxInfo.getItem("displaydistro", "Enigma2")
+]
+BoxInfo.setItem("InformationDistributionWelcome", welcome)
+#
+# End of marked code.
+
+
 class InformationBase(Screen):
 	skin = """
 	<screen name="Information" title="Information" position="center,center" size="1020,600" resolution="1280,720">
@@ -183,6 +191,32 @@ def formatLine(style, left, right=None):
 		colon = "" if styleLen > 0 and style[0] in ("M", "P", "V") else ":"
 		return f"{leftIndent}{leftStartColor}{left}{colon}{leftEndColor}"
 	return f"{leftIndent}{leftStartColor}{left}:{leftEndColor}|{rightIndent}{rightStartColor}{right}{rightEndColor}"
+
+
+class BuildInformation(InformationBase):
+	def __init__(self, session):
+		InformationBase.__init__(self, session)
+		self.setTitle(_("Build Information"))
+		self.skinName.insert(0, "BuildInformation")
+
+	def displayInformation(self):
+		info = []
+		info.append(formatLine("H", _("Build information for %s %s") % getBoxDisplayName()))
+		info.append("")
+		checksum = BoxInfo.getItem("checksumerror", False)
+		if checksum:
+			info.append(formatLine("M1", _("Error: Checksum is invalid!")))
+		override = BoxInfo.getItem("overrideactive", False)
+		if override:
+			info.append(formatLine("M1", _("Warning: Overrides are currently active!")))
+		if checksum or override:
+			info.append("")
+		for item in BoxInfo.getEnigmaInfoList():
+			info.append(formatLine("P1", item, BoxInfo.getItem(item)))
+		self["information"].setText("\n".join(info))
+
+	def getSummaryInformation(self):
+		return "Build Information"
 
 
 class CommitInformation(InformationBase):
@@ -463,17 +497,20 @@ class DebugInformation(InformationBase):
 		return "Debug Log Information"
 
 
-class ImageInformation(InformationBase):
+class DistributionInformation(InformationBase):
 	def __init__(self, session):
 		InformationBase.__init__(self, session)
-		self.setTitle(_("OpenPli Information"))
-		self.skinName.insert(0, "ImageInformation")
+		self.displayDistro = BoxInfo.getItem("displaydistro", "Enigma2")
+		self.setTitle(_("%s Information") % self.displayDistro)
+		self.skinName.insert(0, "DistributionInformation")
+		self["key_info"] = StaticText(_("INFO"))
 		self["key_yellow"] = StaticText(_("Commit Logs"))
 		self["key_blue"] = StaticText(_("Translation"))
-		self["receiverActions"] = HelpableActionMap(self, ["ColorActions"], {
-			"yellow": (self.showCommitLogs, _("Show latest commit log information")),
+		self["receiverActions"] = HelpableActionMap(self, ["InfoActions", "ColorActions"], {
+			"info": (self.showBuild, _("Show build information")),
+			"yellow": (self.showCommitLogs, _("Show commit log information")),
 			"blue": (self.showTranslation, _("Show translation information"))
-		}, prio=0, description=_("OpenPli Information Actions"))
+		}, prio=0, description=_("%s Information Actions") % self.displayDistro)
 		self.resolutions = {
 			480: "NTSC",
 			576: "PAL",
@@ -483,7 +520,10 @@ class ImageInformation(InformationBase):
 			4320: "8K",
 			8640: "16K"
 		}
-		self.imageMessage = BoxInfo.getItem("InformationImageWelcome", "")
+		self.imageMessage = BoxInfo.getItem("InformationDistributionWelcome", "")
+
+	def showBuild(self):
+		self.session.openWithCallback(self.informationWindowClosed, BuildInformation)
 
 	def showCommitLogs(self):
 		self.session.openWithCallback(self.informationWindowClosed, CommitInformation)
@@ -493,7 +533,7 @@ class ImageInformation(InformationBase):
 
 	def displayInformation(self):
 		info = []
-		info.append(formatLine("H", _("Image information for %s %s") % (DISPLAY_BRAND, DISPLAY_MODEL)))
+		info.append(formatLine("H", _("Distribution '%s' information for %s %s") % (self.displayDistro, DISPLAY_BRAND, DISPLAY_MODEL)))
 		info.append("")
 		if self.imageMessage:
 			for line in self.imageMessage:
@@ -635,7 +675,7 @@ class ImageInformation(InformationBase):
 		return revision
 
 	def getSummaryInformation(self):
-		return "OpenPli Information"
+		return f"{self.displayDistro} Information"
 
 
 class GeolocationInformation(InformationBase):

@@ -29,7 +29,7 @@
 
 		<menu key="information" level="0" text="Information">
 			<item key="service_info_screen" level="1" text="Service"><screen module="About" screen="ServiceInformation"/></item>
-			<item key="distribution_info_screen" text="OpenPli Information" weight="5"><screen module="About" screen="ImageInformation"/></item>
+			<item key="distribution_info_screen" text="OpenPli Information" weight="5"><screen module="About" screen="DistributionInformation"/></item>
 			<item key="receiver_info_screen" text="Receiver Information" weight="10"><screen module="About" screen="ReceiverInformation"/></item>
 			<item key="device_screen" text="Tuner Information" weight="15"><screen module="About" screen="TunerInformation"/></item>
 			<item key="device_info_screen" text="Storage" weight="25"><screen module="About" screen="StorageInformation"/></item>
