@@ -148,11 +148,11 @@ class FileList(MenuList):
 		return self.l.getCurrentSelection()[0]
 
 	def getCurrentEvent(self):
-		event = self.l.getCurrentSelection()
-		if not event or event[0][1]:
+		l = self.l.getCurrentSelection()
+		if not l or l[0][1]:
 			return None
 		else:
-			return self.serviceHandler.info(event[0][0]).getEvent(event[0][0])
+			return self.serviceHandler.info(l[0][0]).getEvent(l[0][0])
 
 	def getFileList(self):
 		return self.list

@@ -2,6 +2,7 @@ from os.path import isfile
 
 from enigma import eRCInput, eTimer, eWindow , getDesktop
 
+from skin import GUI_SKIN_ID, applyAllAttributes
 from skin import GUI_SKIN_ID, applyAllAttributes, menus, screens, setups
 from Components.ActionMap import ActionMap
 from Components.config import config

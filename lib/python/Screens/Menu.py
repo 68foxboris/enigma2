@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from xml.etree.ElementTree import parse
 
-from skin import findSkinScreen, menus, parameters, menuicons
+from skin import findSkinScreen, parameters, menuicons
 from Components.config import ConfigDictionarySet, NoSave, config, configfile
 from Components.Pixmap import Pixmap
 from Components.PluginComponent import plugins
