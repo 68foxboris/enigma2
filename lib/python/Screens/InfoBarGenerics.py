@@ -156,8 +156,10 @@ class whitelist:
 	FILENAME_BOUQUETS = "/etc/enigma2/whitelist_bouquets"
 	bouquets = []
 
+
 def reload_whitelist_vbi():
 	whitelist.vbi = [line.strip() for line in open(whitelist.FILENAME_VBI, 'r').readlines()] if os.path.isfile(whitelist.FILENAME_VBI) else []
+
 
 def reload_whitelist_bouquets():
 	whitelist.bouquets = [line.strip() for line in open(whitelist.FILENAME_BOUQUETS, 'r').readlines()] if os.path.isfile(whitelist.FILENAME_BOUQUETS) else []
@@ -177,7 +179,7 @@ def reload_subservice_groupslist(force=False):
 			groupedservices = "/etc/enigma2/groupedservices"
 			if not isfile(groupedservices):
 				groupedservices = "/usr/share/enigma2/groupedservices"
-			subservice.groupslist = [list(g) for k, g in itertools.groupby([line.split('#')[0].strip() for line in open(groupedservices).readlines()], lambda x: not x) if not k]
+			subservice.groupslist = [list(g) for k, g in itertools.groupby([line.split('#')[0].strip() for line in open(groupedservices).readlines()], lambda x:not x) if not k]
 		except:
 			subservice.groupslist = []
 
@@ -3171,8 +3173,9 @@ class InfoBarSubserviceSelection:
 		self.session.nav.event.remove(self.checkSubservicesAvail)
 
 	def checkSubservicesAvail(self):
-		refstr = self.session.nav.getCurrentlyPlayingServiceReference() and self.session.nav.getCurrentlyPlayingServiceReference().toString()
-		if not refstr or not hasActiveSubservicesForCurrentChannel(refstr):
+		serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
+		service = self.session.nav.getCurrentService()
+		if not serviceRef or not hasActiveSubservicesForCurrentChannel(service):
 			self["SubserviceQuickzapAction"].setEnabled(False)
 			self.bouquets = self.bsel = self.selectedSubservice = None
 
@@ -3188,13 +3191,12 @@ class InfoBarSubserviceSelection:
 		self.session.nav.playService(ref, checkParentalControl=False, adjust=False)
 
 	def changeSubservice(self, direction):
-		refstr = self.session.nav.getCurrentlyPlayingServiceReference() and self.session.nav.getCurrentlyPlayingServiceReference().toCompareString()
-		if refstr:
-			if "%3a" in refstr:
-				refstr = self.session.nav.getCurrentlyPlayingServiceReference().toString()
-			subservices = getActiveSubservicesForCurrentChannel(refstr)
-			if subservices and len(subservices) > 1 and refstr in [x[1] for x in subservices]:
-				selection = [x[1] for x in subservices].index(refstr)
+		serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
+		if serviceRef:
+			service = self.session.nav.getCurrentService()
+			subservices = getActiveSubservicesForCurrentChannel(service)
+			if subservices and len(subservices) >= 2 and serviceRef.toString() in [x[1] for x in subservices]:
+				selection = [x[1] for x in subservices].index(serviceRef.toString())
 				selection += direction % len(subservices)
 				try:
 					newservice = eServiceReference(subservices[selection][0])
@@ -3204,13 +3206,15 @@ class InfoBarSubserviceSelection:
 					self.playSubservice(newservice)
 
 	def subserviceSelection(self):
-		refstr = self.session.nav.getCurrentlyPlayingServiceReference() and self.session.nav.getCurrentlyPlayingServiceReference().toCompareString()
-		if refstr:
-			if "%3a" in refstr:
-				refstr = self.session.nav.getCurrentlyPlayingServiceReference().toString()
-			subservices = getActiveSubservicesForCurrentChannel(refstr)
-			if subservices and len(subservices) > 1 and refstr in [x[1] for x in subservices]:
-				selection = [x[1] for x in subservices].index(refstr)
+		serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
+		if serviceRef:
+			service = self.session.nav.getCurrentService()
+			subservices = getActiveSubservicesForCurrentChannel(service)
+			if subservices and len(subservices) >= 2 and (serviceRef.toString() in [x[1] for x in subservices] or service.subServices()):
+				try:
+					selection = [x[1] for x in subservices].index(serviceRef.toString())
+				except:
+					selection = 0
 				self.bouquets = self.servicelist and self.servicelist.getBouquetList()
 				tlist = None
 				if self.bouquets and len(self.bouquets):
