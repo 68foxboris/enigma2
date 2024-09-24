@@ -66,7 +66,7 @@ eDVBDemux::eDVBDemux(int adapter, int demux):
 	m_dvr_source_offset(DMX_SOURCE_DVR0)
 {
 	if (CFile::parseInt(&m_dvr_source_offset, "/proc/stb/frontend/dvr_source_offset") == 0)
-		eTrace("[eDVBDemux] using %d for PVR DMX_SET_SOURCE", m_dvr_source_offset);
+		eDebug("[eDVBDemux] using %d for PVR DMX_SET_SOURCE", m_dvr_source_offset);
 
 }
 
@@ -89,7 +89,7 @@ int eDVBDemux::openDVR(int flags)
 {
 	char filename[32];
 	snprintf(filename, sizeof(filename), "/dev/dvb/adapter%d/dvr%d", adapter, demux);
-	eTrace("[eDVBDemux] open dvr %s", filename);
+	eDebug("[eDVBDemux] open dvr %s", filename);
 	return ::open(filename, flags);
 }
 
@@ -333,7 +333,7 @@ void eDVBPESReader::data(int)
 
 eDVBPESReader::eDVBPESReader(eDVBDemux *demux, eMainloop *context, RESULT &res): m_demux(demux), m_active(0)
 {
-	eTrace("[eDVBPESReader] Created. Opening demux");
+	eWarning("[eDVBPESReader] Created. Opening demux");
 	m_fd = m_demux->openDemux();
 	if (m_fd >= 0)
 	{
@@ -484,7 +484,7 @@ int eDVBRecordFileThread::AsyncIO::wait()
 			int r = aio_suspend(&paio, 1, NULL);
 			if (r < 0)
 			{
-				eWarning("[eDVBRecordFileThread] aio_suspend failed: %m");
+				eDebug("[eDVBRecordFileThread] aio_suspend failed: %m");
 				return -1;
 			}
 		}
@@ -492,7 +492,7 @@ int eDVBRecordFileThread::AsyncIO::wait()
 		aio.aio_buf = NULL;
 		if (r < 0)
 		{
-			eWarning("[eDVBRecordFileThread] wait: aio_return returned failure: %m");
+			eDebug("[eDVBRecordFileThread] wait: aio_return returned failure: %m");
 			return -1;
 		}
 	}
@@ -520,7 +520,7 @@ int eDVBRecordFileThread::AsyncIO::poll()
 	aio.aio_buf = NULL;
 	if (r < 0)
 	{
-		eWarning("[eDVBRecordFileThread] poll: aio_return returned failure: %d %m", r);
+		eDebug("[eDVBRecordFileThread] poll: aio_return returned failure: %m");
 		return -1;
 	}
 	return 0;
@@ -557,7 +557,7 @@ int eDVBRecordFileThread::asyncWrite(int len)
 	int r = m_current_buffer->start(m_fd_dest, m_current_offset, len, m_buffer);
 	if (r < 0)
 	{
-		eWarning("[eDVBRecordFileThread] aio_write failed: %m");
+		eDebug("[eDVBRecordFileThread] aio_write failed: %m");
 		return r;
 	}
 	m_current_offset += len;
@@ -650,7 +650,7 @@ void eDVBRecordFileThread::flush()
 		it->wait();
 	}
 	int bufferCount = m_aio.size();
-	eDebug("[eDVBRecordFileThread] buffer usage histogram (%d buffers of %zd kB)", bufferCount, m_buffersize>>10);
+	eDebug("[eDVBRecordFileThread] buffer usage histogram (%d buffers of %lu kB)", bufferCount, m_buffersize>>10);
 	for (int i=0; i <= bufferCount; ++i)
 	{
 		if (m_buffer_use_histogram[i] != 0)
