@@ -225,7 +225,9 @@ def reloadSkins():
 		"ChoiceList": ("Regular", 20, 24, 18)
 	}
 	menus.clear()
+	menuicons.clear()
 	parameters.clear()
+	screens.clear()
 	setups.clear()
 	switchPixmap.clear()
 	InitSkins()
@@ -606,12 +608,12 @@ def parseParameter(value):
 		return parseScale2(value)
 
 
-def parsePixmap(path, desktop, width=0, height=0):
+def parsePixmap(path, desktop):
 	option = path.find("#")
 	if option != -1:
 		path = path[:option]
 	if isfile(path):
-		pixmap = LoadPixmap(path, desktop, None, width, height)
+		pixmap = LoadPixmap(path, desktop=desktop)
 		if pixmap is None:
 			skinError(f"Pixmap file '{path}' could not be loaded")
 	else:
@@ -1060,7 +1062,7 @@ class AttributeParser:
 	def horizontalAlignment(self, value):
 		self.guiObject.setHAlign(parseHorizontalAlignment(value))
 
-	def ignoreWidgets(self, value):  # This is only used for Screens to ignore optional widgets.
+	def handledWidgets(self, value):  # This is only used for Screens to ignore optional widgets.
 		pass
 
 	def includes(self, value):  # Same as conditional.  Created to partner new "excludes" attribute.
@@ -1360,7 +1362,7 @@ def applyAllAttributes(guiObject, desktop, attributes, scale=((1, 1), (1, 1))):
 def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN):
 	"""Loads skin data like colors, windowstyle etc."""
 	assert domSkin.tag == "skin", "root element in skin must be 'skin'!"
-	global colors, fonts, menus, parameters, setups, switchPixmap, resolutions, scrollLabelStyle
+	global colors, fonts, menus, parameters, setups, screens, switchPixmap, resolutions, scrollLabelStyle
 	for tag in domSkin.findall("output"):
 		scrnID = parseInteger(tag.attrib.get("id", GUI_SKIN_ID), GUI_SKIN_ID)
 		if scrnID == GUI_SKIN_ID:
@@ -2485,21 +2487,6 @@ def readSkin(screen, skin, names, desktop):
 	usedComponents = None
 
 
-# Search the domScreens dictionary to see if any of the screen names provided
-# have a skin based screen.  This will allow coders to know if the named
-# screen will be skinned by the skin code.  A return of None implies that the
-# code must provide its own skin for the screen to be displayed to the user.
-#
-def findSkinScreen(names):
-	if not isinstance(names, list):
-		names = [names]
-	for name in names:  # Try all names given, the first one found is the one that will be used by the skin engine.
-		screen, path = domScreens.get(name, (None, None))
-		if screen:  # is not None:
-			return name
-	return None
-
-
 # Return a set of all the widgets found in a screen. Panels will be expanded
 # recursively until all referenced widgets are captured. This code only performs
 # a simple scan of the XML and no skin processing is performed.
@@ -2511,21 +2498,21 @@ def findWidgets(name):
 		widgets = element.findall("widget")
 		if widgets is not None:
 			for widget in widgets:
-				name = widget.get("name")
+				name = widget.get("name", None)
 				if name is not None:
 					widgetSet.add(name)
-				source = widget.get("source")
+				source = widget.get("source", None)
 				if source is not None:
 					widgetSet.add(source)
-				addonConnection = widget.get("connection")
+				addonConnection = widget.get("connection", None)
 				if addonConnection is not None:
 					for x in addonConnection.split(","):
 						widgetSet.add(x)
 		panels = element.findall("panel")
 		if panels is not None:
 			for panel in panels:
-				name = panel.get("name")
-				if name is not None:
+				name = panel.get("name", None)
+				if name:
 					widgetSet.update(findWidgets(name))
 	return widgetSet
 
@@ -2561,3 +2548,25 @@ def getSkinFactor(screen=GUI_SKIN_ID):
 	# if skinfactor not in [0.8, 1, 1.5, 3, 6]:
 	# 	print(f"[Skin] Warning: Unexpected result for getSkinFactor '{skinfactor:.4f}'!")
 	return skinfactor
+
+
+# Search the domScreens dictionary to see if any of the screen names provided
+# have a skin based screen.  This will allow coders to know if the named
+# screen will be skinned by the skin code.  A return of None implies that the
+# code must provide its own skin for the screen to be displayed to the user.
+#
+def findSkinScreen(names):
+	if not isinstance(names, list):
+		names = [names]
+	for name in names:  # Try all names given, the first one found is the one that will be used by the skin engine.
+		screen, path = domScreens.get(name, (None, None))
+		if screen is not None:
+			return name
+	return None
+def dump(x, i=0):
+	print(" " * i + str(x))
+	try:
+		for node in x.childNodes:
+			dump(node, i + 1)
+	except Exception:
+		pass

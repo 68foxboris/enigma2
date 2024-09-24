@@ -32,11 +32,10 @@ class Screen(dict):
 		self.session = session
 		self.parent = parent
 		self.mandatoryWidgets = mandatoryWidgets
-		self.ignoreWidgets = []
+		self.onClose = []
 		self.onFirstExecBegin = []
 		self.onExecBegin = []
 		self.onExecEnd = []
-		self.onClose = []
 		self.onLayoutFinish = []
 		self.onContentChanged = []
 		self.onShown = []
@@ -61,6 +60,7 @@ class Screen(dict):
 		self["ScreenPath"] = StaticText()
 		self.screenPath = ""  # This is the current screen path without the title.
 		self.screenTitle = ""  # This is the current screen title without the path.
+		self.handledWidgets = []
 		self.setImage(className)
 		if enableHelp:
 			self["helpActions"] = ActionMap(["HelpActions"], {
@@ -231,14 +231,14 @@ class Screen(dict):
 		rcinput = eRCInput.getInstance()
 		rcinput.setKeyboardMode(rcinput.kmAscii)
 
-	def saveKeyboardMode(self):
-		rcinput = eRCInput.getInstance()
-		self.keyboardMode = rcinput.getKeyboardMode()
-
 	def restoreKeyboardMode(self):
 		rcinput = eRCInput.getInstance()
 		if self.keyboardMode is not None:
 			rcinput.setKeyboardMode(self.keyboardMode)
+
+	def saveKeyboardMode(self):
+		rcinput = eRCInput.getInstance()
+		self.keyboardMode = rcinput.getKeyboardMode()
 
 	def setDesktop(self, desktop):
 		self.desktop = desktop
@@ -272,13 +272,12 @@ class Screen(dict):
 		resolution = bounds
 		zPosition = 0
 		for (key, value) in self.skinAttributes:
-			match key:
-				case "ignoreWidgets":
-					self.ignoreWidgets = [x.strip() for x in value.split(",")]
-				case "resolution" | "baseResolution":
-					resolution = tuple([int(x.strip()) for x in value.split(",")])
-				case "zPosition":
-					zPosition = int(value)
+			if key == "handledWidgets":
+				self.handledWidgets = [x.strip() for x in value.split(",")]
+			elif key == "resolution":
+				resolution = tuple([int(x.strip()) for x in value.split(",")])
+			elif key == "zPosition":
+				zPosition = int(value)
 		if not self.instance:
 			self.instance = eWindow(self.desktop, zPosition)
 		if "title" not in self.skinAttributes and self.screenTitle:
@@ -308,7 +307,7 @@ class Screen(dict):
 					if deprecated:
 						print(f"[Screen] WARNING: OBSOLETE COMPONENT '{key}' USED IN SKIN. USE '{deprecated[0]}' INSTEAD!")
 						print(f"[Screen] OBSOLETE COMPONENT WILL BE REMOVED {deprecated[1]}, PLEASE UPDATE!")
-				elif not deprecated and key not in self.ignoreWidgets:
+				elif not deprecated and key not in self.handledWidgets:
 					try:
 						print(f"[Screen] Warning: Skin is missing element '{key}' in {str(self)} item {str(self[key])}.")
 					except Exception:
@@ -346,26 +345,22 @@ class Screen(dict):
 
 class ScreenSummary(Screen):
 	skin = """
-	<screen name="ScreenSummary" position="fill" flags="wfNoBorder">
-		<widget source="global.CurrentTime" render="Label" position="0,0" size="e,20" font="Regular;16" halign="center" valign="center">
+	<screen position="fill" flags="wfNoBorder">
+		<widget source="global.CurrentTime" render="Label" position="0,0" size="e,20" font="Regular;16" horizontalAlignment="center" verticalAlignment="center">
 			<convert type="ClockToText">WithSeconds</convert>
 		</widget>
-		<widget source="Title" render="Label" position="0,25" size="e,45" font="Regular;18" halign="center" valign="center" />
+		<widget source="Title" render="Label" position="0,25" size="e,45" font="Regular;18" horizontalAlignment="center" verticalAlignment="center" />
 	</screen>"""
 
 	def __init__(self, session, parent):
 		Screen.__init__(self, session, parent=parent)
 		self["Title"] = StaticText(parent.getTitle())
-		skinName = parent.skinName
-		if not isinstance(skinName, list):
-			skinName = [skinName]
-		self.skinName = [f"{x}Summary" for x in skinName]
+		names = parent.skinName
+		if not isinstance(names, list):
+			names = [names]
+		self.skinName = ["%sSummary" % x for x in names]
 		className = self.__class__.__name__
-		if className != "ScreenSummary" and className not in self.skinName:  # When a summary screen does not have the same name as the parent then add it to the list.
+		if className != "ScreenSummary" and className not in self.skinName:  # e.g. if a module uses Screens.Setup.SetupSummary the skin needs to be available directly
 			self.skinName.append(className)
-		self.skinName += [f"{x}_summary" for x in skinName]  # DEBUG: Old summary screens currently kept for compatibility.
 		self.skinName.append("ScreenSummary")
 		self.skin = parent.__dict__.get("skinSummary", self.skin)  # If parent has a "skinSummary" defined, use that as default.
-		# skins = "', '".join(self.skinName)
-		# print(f"[Screen] DEBUG: Skin names: '{skins}'.")
-		# print(f"[Screen] DEBUG: Skin:\n{self.skin}")
