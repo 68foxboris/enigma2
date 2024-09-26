@@ -533,6 +533,7 @@ config.crash.debugSkin = ConfigYesNo(default=False)
 config.crash.debugDVBScan = ConfigYesNo(default=False)
 config.crash.debugDVBTime = ConfigYesNo(default=False)
 config.crash.debugDVB = ConfigYesNo(default=False)
+config.crash.debugTeletext = ConfigYesNo(default=False)
 
 
 # config.plugins needs to be defined before InputDevice < HelpMenu < MessageBox < InfoBar
