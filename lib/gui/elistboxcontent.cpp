@@ -206,7 +206,7 @@ void eListboxPythonStringContent::paint(gPainter &painter, eWindowStyle &style, 
 	eRect itemRect(offset, m_itemsize);
 	int radius = 0;
 	uint8_t edges = 0;
-	bool alphablendtext = false;
+	bool alphablendtext = true;
 
 	/* get local listbox style, if present */
 	if (m_listbox)
@@ -531,7 +531,7 @@ void eListboxPythonConfigContent::paint(gPainter &painter, eWindowStyle &style, 
 	int border_size = 0;
 	int radius = 0;
 	int edges = 0;
-	bool alphablendtext = false;
+	bool alphablendtext = true;
 
 	painter.clip(itemRect);
 	style.setStyle(painter, selected ? eWindowStyle::styleListboxSelected : eWindowStyle::styleListboxNormal);
@@ -631,6 +631,7 @@ void eListboxPythonConfigContent::paint(gPainter &painter, eWindowStyle &style, 
 		style.drawFrame(painter, eRect(offset, m_itemsize), eWindowStyle::frameListboxEntry);
 	if (m_list && cursorValid)
 	{
+		int alphablendflag = (alphablendtext) ? gPainter::RT_BLEND : 0;
 		/* get current list item */
 		ePyObject item = PyList_GET_ITEM(m_list, cursorGet()); // borrowed reference!
 		ePyObject text, value;
