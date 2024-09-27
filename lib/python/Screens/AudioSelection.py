@@ -405,7 +405,7 @@ class AudioSelection(ConfigListScreen, Screen):
 						self.fnc(*self.args)
 
 				for item in [(p.name, PluginCaller(self.infobar.runPlugin, p)) for p in plugins.getPlugins(where=PluginDescriptor.WHERE_AUDIOMENU) if p.key != "AudioEffect"]:  # Ignore AudioEffect because it's always Blue button.
-					conflist.append(getConfigListEntry(item[0], ConfigNothing(), item[1]))
+					conflist.append((item[0], ConfigNothing(), item[1]))
 
 		elif self.settings.menupage.value == PAGE_SUBTITLES:
 			self.setTitle(_("Subtitle selection"))
