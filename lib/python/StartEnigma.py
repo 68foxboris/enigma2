@@ -51,10 +51,10 @@ class Session:
 		self.current_dialog = None
 		self.dialog_stack = []
 		self.summary_stack = []
+		self.onShutdown = []
 		self.summary = None
 		self.in_exec = False
 		self.screen = SessionGlobals(self)
-		self.allDialogs = []
 
 		for plugin in plugins.getPlugins(PluginDescriptor.WHERE_SESSIONSTART):
 			try:
@@ -108,12 +108,8 @@ class Session:
 	def deleteDialog(self, screen):
 		screen.hide()
 		screen.doClose()
-		if screen in self.allDialogs:
-			self.allDialogs.remove(screen)
 
 	def deleteDialogWithCallback(self, callback, screen, *retVal):
-		if screen in self.allDialogs:
-			self.allDialogs.remove(screen)
 		screen.hide()
 		screen.doClose()
 		if callback is not None:
@@ -135,7 +131,6 @@ class Session:
 		readSkin(dialog, None, dialog.skinName, desktop)  # Read skin data.
 		dialog.setDesktop(desktop)  # Create GUI view of this dialog.
 		dialog.applySkin()
-		self.allDialogs.append(dialog)
 		return dialog
 
 	def pushCurrent(self):
@@ -214,10 +209,10 @@ class Session:
 		if self.summary is not None:
 			self.summary.show()
 
-	def onShutdown(self):
-		for dialog in self.allDialogs:
-			if hasattr(dialog, "onShutdown"):
-				dialog.onShutdown()
+	def doShutdown(self):
+		for function in self.onShutdown:
+			if callable(function):
+				function()
 
 
 class PowerKey:
@@ -383,7 +378,7 @@ def runScreenTest():
 	config.misc.prev_wakeup_time.save()
 	session.nav.stopService()
 	session.nav.shutdown()
-	session.onShutdown()
+	session.doShutdown()
 	VolumeControl.instance.saveVolumeState()
 	configfile.save()
 	from Screens.InfoBarGenerics import saveResumePoints
