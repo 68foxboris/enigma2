@@ -1,6 +1,7 @@
 from enigma import eListboxPythonMultiContent, gFont
 
 from Components.Converter.StringList import StringList
+from Components.Renderer.Listbox import Listbox
 
 
 class TemplatedMultiContent(StringList):
