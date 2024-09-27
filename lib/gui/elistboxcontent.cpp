@@ -631,7 +631,6 @@ void eListboxPythonConfigContent::paint(gPainter &painter, eWindowStyle &style, 
 		style.drawFrame(painter, eRect(offset, m_itemsize), eWindowStyle::frameListboxEntry);
 	if (m_list && cursorValid)
 	{
-		int alphablendflag = (alphablendtext) ? gPainter::RT_BLEND : 0;
 		/* get current list item */
 		ePyObject item = PyList_GET_ITEM(m_list, cursorGet()); // borrowed reference!
 		ePyObject text, value;
