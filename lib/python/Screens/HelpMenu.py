@@ -57,7 +57,7 @@ class ShowRemoteControl:
 			result = time
 			if self.pixmaps:
 				dist = ((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2) ** 0.5
-				slide = int(round(dist / self.pixmaps[-1].activeYPos * time))
+				slide = int(round(dist / self.pixmaps[-1].activeYPos * float(time)))
 				result = slide if slide > 0 else 1
 			return result
 
