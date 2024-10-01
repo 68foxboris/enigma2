@@ -786,7 +786,6 @@ void eDVBScan::channelDone()
 						unsigned long hash=0;
 						feparm->getHash(hash);
 						ns = buildNamespace(onid, tsid, hash);
-						SCAN_eDebug("[eDVBScan] terrestrial delivery system descriptor found %d", d.getCentreFrequency() * 10);
 						addChannelToScan(feparm);
 						break;
 					}
@@ -803,53 +802,8 @@ void eDVBScan::channelDone()
 						unsigned long hash=0;
 						feparm->getHash(hash);
 						ns = buildNamespace(onid, tsid, hash);
-						SCAN_eDebug("[eDVBScan] terrestrial delivery system descriptor found %d", d.getCentreFrequency() * 10);
+
 						addChannelToScan(feparm);
-						break;
-					}
-					case FREQUENCY_LIST_DESCRIPTOR:
-					{
-						if (system != iDVBFrontend::feTerrestrial)
-							break; // when current locked transponder is no terrestrial transponder ignore this descriptor
-
-						FrequencyListDescriptor &d = (FrequencyListDescriptor&)**desc;
-						if (d.getCodingType() != 0x03)
-							break;
-
-						if (T2)
-						{
-							for (CentreFrequencyConstIterator it = d.getCentreFrequencies()->begin();
-									it != d.getCentreFrequencies()->end(); ++it)
-							{
-								SCAN_eDebug("[eDVBScan] T2 frequency list descriptor found %d", (*it) * 10);
-								t2transponder.frequency = (*it) * 10;
-								ePtr<eDVBFrontendParameters> feparm = new eDVBFrontendParameters;
-								feparm->setDVBT(t2transponder);
-								addChannelToScan(feparm);
-							}
-						}
-						else
-						{
-							for (CentreFrequencyConstIterator it = d.getCentreFrequencies()->begin();
-									it != d.getCentreFrequencies()->end(); ++it)
-							{
-								SCAN_eDebug("[eDVBScan] T1 frequency list descriptor found %d", (*it) * 10);
-								eDVBFrontendParametersTerrestrial terr;
-								m_ch_current->getDVBT(terr);
-								terr.frequency = (*it) * 10;
-								// Alternate frequencies don't have to use the same coding params - prefer auto
-								terr.code_rate_HP = terr.FEC_Auto;
-								terr.code_rate_LP = terr.FEC_Auto;
-								terr.modulation = terr.Modulation_Auto;
-								terr.transmission_mode = terr.TransmissionMode_Auto;
-								terr.guard_interval = terr.GuardInterval_Auto;
-								terr.hierarchy = terr.Hierarchy_Auto;
-								terr.inversion = terr.Inversion_Unknown;
-								ePtr<eDVBFrontendParameters> feparm = new eDVBFrontendParameters();
-								feparm->setDVBT(terr);
-								addChannelToScan(feparm);
-							}
-						}
 						break;
 					}
 					case LOGICAL_CHANNEL_DESCRIPTOR:
@@ -941,6 +895,49 @@ void eDVBScan::channelDone()
 						}
 						break;
 					}
+					case FREQUENCY_LIST_DESCRIPTOR:
+					{
+						if (system != iDVBFrontend::feTerrestrial)
+							break; // when current locked transponder is no terrestrial transponder ignore this descriptor
+
+						FrequencyListDescriptor &d = (FrequencyListDescriptor&)**desc;
+						if (d.getCodingType() != 0x03)
+							break;
+
+						if (T2)
+						{
+							for (CentreFrequencyConstIterator it = d.getCentreFrequencies()->begin();
+									it != d.getCentreFrequencies()->end(); ++it)
+							{
+								SCAN_eDebug("[eDVBScan] T2 frequency list descriptor found %d", (*it) * 10);
+								t2transponder.frequency = (*it) * 10;
+								ePtr<eDVBFrontendParameters> feparm = new eDVBFrontendParameters;
+								feparm->setDVBT(t2transponder);
+								addChannelToScan(feparm);
+							}
+						}
+						else
+						{
+							for (CentreFrequencyConstIterator it = d.getCentreFrequencies()->begin();
+									it != d.getCentreFrequencies()->end(); ++it)
+							{
+								SCAN_eDebug("[eDVBScan] T1 frequency list descriptor found %d", (*it) * 10);
+								eDVBFrontendParametersTerrestrial terr;
+								m_ch_current->getDVBT(terr);
+								terr.frequency = (*it) * 10;
+								// Alternate frequencies don't have to use the same coding params - prefer auto
+								terr.code_rate_HP = terr.FEC_Auto;
+								terr.code_rate_LP = terr.FEC_Auto;
+								terr.modulation = terr.Modulation_Auto;
+								terr.transmission_mode = terr.TransmissionMode_Auto;
+								terr.guard_interval = terr.GuardInterval_Auto;
+								terr.hierarchy = terr.Hierarchy_Auto;
+								terr.inversion = terr.Inversion_Unknown;
+								ePtr<eDVBFrontendParameters> feparm = new eDVBFrontendParameters();
+								feparm->setDVBT(terr);
+								addChannelToScan(feparm);
+							}
+						}
 						break;
 					}
 					default:
