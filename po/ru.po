@@ -36,10 +36,10 @@ msgstr ""
 
 msgid ""
 "\n"
-"Recording in progress."
+"Recording in progress!"
 msgstr ""
 "\n"
-"Запись в процессе."
+"Запись в процессе!"
 
 msgid ""
 "\n"
@@ -11491,6 +11491,9 @@ msgstr " <Нет канала>"
 msgid "No channel"
 msgstr "Нет канала"
 
+msgid "No channel list"
+msgstr "Нет списка каналов"
+
 msgid "No config to start, please check /etc/openvpn/ and try again."
 msgstr "Нет конфигурации для запуска, пожалуйста, проверьте / etc / openvpn / и попробуйте снова."
 
@@ -11570,6 +11573,9 @@ msgstr "Нет ключей для эму"
 
 msgid "No priority"
 msgstr "Приоритета нет"
+
+msgid "No resource manager"
+msgstr "Нет менеджера ресурсов"
 
 msgid "No satellite frontend found!"
 msgstr "Не найден спутниковый интрефейс!"
@@ -13248,6 +13254,12 @@ msgstr "Прайм-тайм: Минута"
 
 msgid "Priority"
 msgstr "Очерёдность"
+
+msgid "Problem starting scan"
+msgstr "Проблема с запуском сканирования"
+
+msgid "Problem while scanning"
+msgstr "Проблема при сканировании"
 
 msgid "Process"
 msgstr "Процесс"
@@ -21323,12 +21335,6 @@ msgstr "также как"
 msgid "equestrian"
 msgstr "конный спорт"
 
-msgid "error starting scanning"
-msgstr "ошибка при старте сканирования"
-
-msgid "error while scanning"
-msgstr "ошибка при сканировании"
-
 msgid "ese"
 msgstr "сброс"
 
@@ -21704,9 +21710,6 @@ msgstr "неактивен CAM 2"
 msgid "no CI slots found"
 msgstr "слоты CI не найдены"
 
-msgid "no channel list"
-msgstr "установить список каналов"
-
 msgid "no delay"
 msgstr "без задержки"
 
@@ -21718,9 +21721,6 @@ msgstr "не найден модуль"
 
 msgid "no or unknown card inserted"
 msgstr "нет или вставлена неизвестная карта"
-
-msgid "no resource manager"
-msgstr "показать пакеты с исходным кодом"
 
 msgid "no storage devices found"
 msgstr "не найдено устройств хранения"

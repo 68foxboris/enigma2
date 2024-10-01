@@ -1967,7 +1967,7 @@ class MovieSelection(Screen, SelectionEventInfo, InfoBarBase, ProtectedScreen):
 							(_("Cancel"), None),
 							(_("Stop recording"), ("s", timer)),
 							(_("Stop recording and delete"), ("sd", timer))]
-						self.session.openWithCallback(self.onTimerChoice, ChoiceBox, title=_("Recording in progress") + ":\n%s" % name, list=choices)
+						self.session.openWithCallback(self.onTimerChoice, ChoiceBox, title=_("Recording in progress!") + "%s\n%s" % name, list=choices)
 						return
 				if time.time() - st.st_mtime < 5:
 					if not args:
