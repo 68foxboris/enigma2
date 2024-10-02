@@ -1,7 +1,7 @@
 from glob import glob
 from locale import AM_STR, PM_STR, nl_langinfo
 from os import mkdir, makedirs, remove
-from os.path import exists, isfile, join as pathjoin, normpath
+from os.path import exists, isfile, join as pathjoin, normpath, splitext
 from time import mktime
 from skin import getcomponentTemplateNames, parameters, domScreens
 from Components.Harddisk import harddiskmanager
@@ -29,6 +29,16 @@ DISPLAYTYPE = BoxInfo.getItem("displaytype")
 
 def InitUsageConfig():
 	config.usage = ConfigSubsection()
+	AvailRemotes = [splitext(x)[0] for x in glob("/usr/share/enigma2/hardware/*.xml")]
+	RemoteChoices = []
+	DefaultRemote = BoxInfo.getItem("rcname")
+
+	remoteSelectable = False
+	if AvailRemotes is not None:
+		for remote in AvailRemotes:
+			pngfile = "%s.png" % remote
+			if isfile(pngfile):
+				RemoteChoices.append(remote.split("/")[-1])
 
 	showrotorpositionChoicesUpdate()
 
