@@ -1093,6 +1093,12 @@ msgid "%d sec"
 msgstr "%d сек"
 
 #, python-format
+msgid "%d service found."
+msgid_plural "%d services found."
+msgstr[0] "Найден %d канал."
+msgstr[1] "Найдено %d каналов."
+
+#, python-format
 msgid "%d times"
 msgstr "%d раз"
 
@@ -4070,6 +4076,12 @@ msgstr "Отменить выполнение?"
 
 msgid "Cancel the selection"
 msgstr "Отмена выбора"
+
+msgid "Cancel the scan and exit the scanner"
+msgstr "Отменить сканирование и выйти из сканера"
+
+msgid "Cancel the scan and exit all menus"
+msgstr "Отменить сканирование и выйти из всех меню"
 
 msgid "Cancel the service history zap"
 msgstr "Отменить запись истории обслуживания"
@@ -7482,6 +7494,9 @@ msgstr "Включите эту опцию, чтобы добавить допо
 msgid "Enable this option to add extra EPG data to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить дополнительные данные EPG в файл лога отладки."
 
+msgid "Enable this option to add extra teletext details to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить дополнительные сведения телетекста в файл журнала отладки."
+
 msgid "Enable this option to add international language and country load information detected during system boot to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить в файл журнала отладки информацию о загрузке на международном языке и стране, обнаруженную во время загрузки системы."
 
@@ -7499,6 +7514,9 @@ msgstr "Включите этот параметр, чтобы добавить 
 
 msgid "Enable this setting if your aerial system needs power"
 msgstr "Включите эту настройку, если Вашей системе необходимо питание"
+
+msgid "Enable timer"
+msgstr "Включить таймер"
 
 msgid "Enable timer conflict detection"
 msgstr "Включить обнаружение конфликтов таймера"
@@ -7704,6 +7722,10 @@ msgstr "Ошибка"
 
 msgid "ERROR downloading file %s/%s"
 msgstr "ОШИБКА при загрузке файла %s/%s"
+
+#, python-format
+msgid "Error: Failed to run service scan!  (%s)"
+msgstr "Ошибка: Не удалось запустить сканирование каналов! (%s)"
 
 msgid "Error %d: Log file '%s' wasn't deleted!  (%s)"
 msgstr "Ошибка% d: файл журнала '%s' не был удален!  (%s)"
@@ -9538,6 +9560,9 @@ msgstr "Включить данные о скине"
 
 msgid "Include screen load data"
 msgstr "Включить данные о загрузке экрана"
+
+msgid "Include teletext details"
+msgstr "Включить данные телетекста"
 
 msgid "Incorrect service type for Picture in Picture!"
 msgstr "Некорректный тип канала для PiP!"
@@ -12344,6 +12369,9 @@ msgstr "Раздел"
 msgid "Partitions"
 msgstr "Разделы"
 
+msgid "Pass"
+msgstr ""
+
 msgid "Passthrough"
 msgstr "Прямой звук"
 
@@ -14547,14 +14575,30 @@ msgstr "Поиск в диапазоне %s"
 msgid "Scan additional SR"
 msgstr "Поиск дополнительных SR"
 
+msgid "Scanning can't be performed while recordings are in progress."
+msgstr "Сканирование невозможно во время записи."
+
 msgid "Scan completed, %d channel found."
 msgid_plural "Scan completed, %d channels found."
 msgstr[0] "Сканирование завершено, %d канал найден."
 msgstr[1] "Сканирование завершено, %d канала найдено."
 msgstr[2] "Сканирование завершено, %d каналов найдено."
 
+#, python-format
+msgid "Scanning completed, %d service found."
+msgid_plural "Scanning completed, %d services found."
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Scan failed!"
 msgstr "Ошибка сканирования!"
+
+#. TRANSLATORS: The receiver is performing a service scan, progress percentage is printed in '%d' (and '%%' will show a single '%' symbol).
+#, python-format
+msgid "Scanning: %d%% complete"
+msgid_plural "Scanning: %d%% complete"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Scan files..."
 msgstr "Сканирование файлов..."
@@ -14972,6 +15016,9 @@ msgstr "Выберите текущую выделенную локаль/язы
 msgid "Select the currently highlighted service"
 msgstr "Выберите текущий выделенный канал"
 
+msgid "Select the currently highlighted service and exit"
+msgstr "Выберите выделенную в данный момент услугу и выйдите."
+
 msgid "Select the display sequence of previously visited services."
 msgstr "Выберите последовательность отображения ранее посещенных сервисов."
 
@@ -15025,6 +15072,12 @@ msgstr "Выберите номер модели вашего устройств
 
 msgid "Select the movie path"
 msgstr "Выбрать папку для фильмов"
+
+msgid "Select the previous service and close the scanner"
+msgstr "Выберите предыдущую услугу и закройте сканер"
+
+msgid "Select the previous service and close the scanner and exit all menus"
+msgstr "Выберите предыдущую услугу, закройте сканер и выйдите из всех меню"
 
 msgid "Select the protocol used by your SCR device. Choices are 'SCR Unicable' (Unicable), or 'SCR JESS' (JESS, also known as Unicable II)."
 msgstr "Выберите формат Вашего SCR устройства. Возможные варианты - 'SCR Unicable' (Unicable) или 'SCR JESS' (JESS/Unicable II)."
@@ -15351,6 +15404,9 @@ msgstr "Референс канала"
 
 msgid "Service scan"
 msgstr "Поиск каналов"
+
+msgid "Service Scan Actions"
+msgstr "Действия по сканированию сервиса"
 
 msgid "Service title mode"
 msgstr "Режим названия канала"
