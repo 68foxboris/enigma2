@@ -590,16 +590,9 @@ class DistributionInformation(InformationBase):
 		info.append(formatLine("P1", _("Last update"), formatDate(f"{compileDate[:4]}{compileDate[4:6]}{compileDate[6:]}")))
 		info.append(formatLine("P1", _("Enigma2 (re)starts"), config.misc.startCounter.value))
 		info.append(formatLine("P1", _("Enigma2 debug level"), eGetEnigmaDebugLvl()))
-		if isPluginInstalled("ServiceHisilicon") and not isPluginInstalled("ServiceMP3"):
-			mediaService = "ServiceHisilicon"
-		elif isPluginInstalled("ServiceMP3") and not isPluginInstalled("ServiceHisilicon"):
-			mediaService = "ServiceMP3"
-		else:
-			mediaService = _("Unknown")
-		info.append(formatLine("P1", _("Media service player"), "%s") % mediaService)
-		if isPluginInstalled("ServiceApp"):
-			extraService = "ServiceApp"
-			info.append(formatLine("P1", _("Extra service player"), "%s") % extraService)
+		mediaService = BoxInfo.getItem("mediaservice")
+		if mediaService:
+			info.append(formatLine("P1", _("Media service"), mediaService.replace("enigma2-plugin-systemplugins-", "")))
 		info.append("")
 		info.append(formatLine("S", _("Build information")))
 		if self.extraSpacing:
@@ -624,55 +617,8 @@ class DistributionInformation(InformationBase):
 		info.append(formatLine("P1", _("Python version"), about.getPythonVersionString()))
 		info.append(formatLine("P1", _("GStreamer version"), about.getGStreamerVersionString().replace("GStreamer ", "")))
 		info.append(formatLine("P1", _("FFmpeg version"), about.getFFmpegVersionString()))
-		if self.extraSpacing:
-			info.append("")
-		if BoxInfo.getItem("HiSilicon"):
-			info.append("")
-			info.append(formatLine("H", _("HiSilicon specific information")))
-			info.append("")
-			process = Popen(("/usr/bin/opkg", "list-installed"), stdout=PIPE, stderr=PIPE, universal_newlines=True)
-			stdout, stderr = process.communicate()
-			if process.returncode == 0:
-				missing = True
-				packageList = stdout.split("\n")
-				revision = self.findPackageRevision("grab", packageList)
-				if revision and revision != "r0":
-					info.append(formatLine("P1", _("Grab"), revision))
-					missing = False
-				revision = self.findPackageRevision("hihalt", packageList)
-				if revision:
-					info.append(formatLine("P1", _("Halt"), revision))
-					missing = False
-				revision = self.findPackageRevision("libs", packageList)
-				if revision:
-					info.append(formatLine("P1", _("Libs"), revision))
-					missing = False
-				revision = self.findPackageRevision("partitions", packageList)
-				if revision:
-					info.append(formatLine("P1", _("Partitions"), revision))
-					missing = False
-				revision = self.findPackageRevision("reader", packageList)
-				if revision:
-					info.append(formatLine("P1", _("Reader"), revision))
-					missing = False
-				revision = self.findPackageRevision("showiframe", packageList)
-				if revision:
-					info.append(formatLine("P1", _("Showiframe"), revision))
-					missing = False
-				if missing:
-					info.append(formatLine("P1", _("HiSilicon specific information not found.")))
-			else:
-				info.append(formatLine("P1", _("Package information currently not available!")))
-		self["information"].setText("\n".join(info))
 
-	def findPackageRevision(self, package, packageList):
-		revision = None
-		data = [x for x in packageList if "-%s" % package in x]
-		if data:
-			data = data[0].split("-")
-			if len(data) >= 4:
-				revision = data[3]
-		return revision
+		self["information"].setText("\n".join(info))
 
 	def getSummaryInformation(self):
 		return f"{self.displayDistro} Information"
@@ -1304,6 +1250,44 @@ class ReceiverInformation(InformationBase):
 		givenId = fileReadLine("/proc/device-tree/le-dt-id", source=MODULE_NAME)
 		if givenId:
 			info.append(formatLine("P1", _("Given device id"), givenId))
+		if BoxInfo.getItem("HiSilicon"):
+			info.append("")
+			info.append(formatLine("S", _("HiSilicon specific information")))
+			if self.extraSpacing:
+				info.append("")
+			process = Popen(("/usr/bin/opkg", "list-installed"), stdout=PIPE, stderr=PIPE, universal_newlines=True)
+			stdout, stderr = process.communicate()
+			if process.returncode == 0:
+				missing = True
+				packageList = stdout.split("\n")
+				revision = findPackageRevision("grab", packageList)
+				if revision and revision != "r0":
+					info.append(formatLine("P1", _("Grab"), revision))
+					missing = False
+				revision = findPackageRevision("hihalt", packageList)
+				if revision:
+					info.append(formatLine("P1", _("Halt"), revision))
+					missing = False
+				revision = findPackageRevision("libs", packageList)
+				if revision:
+					info.append(formatLine("P1", _("Libs"), revision))
+					missing = False
+				revision = findPackageRevision("partitions", packageList)
+				if revision:
+					info.append(formatLine("P1", _("Partitions"), revision))
+					missing = False
+				revision = findPackageRevision("reader", packageList)
+				if revision:
+					info.append(formatLine("P1", _("Reader"), revision))
+					missing = False
+				revision = findPackageRevision("showiframe", packageList)
+				if revision:
+					info.append(formatLine("P1", _("Showiframe"), revision))
+					missing = False
+				if missing:
+					info.append(formatLine("P1", _("HiSilicon specific information not found.")))
+			else:
+				info.append(formatLine("P1", _("Package information currently not available!")))
 		info.append("")
 		info.append(formatLine("S", _("Tuner information")))
 		if self.extraSpacing:
