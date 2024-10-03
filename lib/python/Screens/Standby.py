@@ -219,7 +219,7 @@ class StandbyScreen(Screen):
 				print("[Standby] Write to /proc/stb/hdmi/output failed.")
 
 	def setMute(self):
-		self.wasMuted = eDVBVolumecontrol.getInstance().isMuted()
+		self.wasMuted = eDVBVolumecontrol.getInstance().isMuted(True)
 		if not self.wasMuted:
 			eDVBVolumecontrol.getInstance().volumeMute()
 
