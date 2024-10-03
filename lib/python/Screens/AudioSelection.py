@@ -1,7 +1,4 @@
-from Screens.Screen import Screen
-from Screens.Setup import Setup, setupDom
-from Screens.InputBox import PinInput
-from Screens.MessageBox import MessageBox
+from enigma import iPlayableService, eTimer, eSize, eDVBDB, eServiceReference, eServiceCenter, iServiceInformation
 from Components.ServiceEventTracker import ServiceEventTracker
 from Components.ActionMap import NumberActionMap, HelpableActionMap
 from Components.ConfigList import ConfigListScreen
@@ -14,13 +11,17 @@ from Components.PluginComponent import plugins
 from Plugins.Plugin import PluginDescriptor
 from Components.Converter.VAudioInfo import StdAudioDesc
 from Components.UsageConfig import originalAudioTracks, visuallyImpairedCommentary
+
+from Screens.InputBox import PinInput
+from Screens.MessageBox import MessageBox
+from Screens.Screen import Screen
+from Screens.Setup import Setup, setupDom
+
 from Tools.ISO639 import LanguageCodes
 from Tools.Directories import resolveFilename, SCOPE_GUISKIN
 from Tools.LoadPixmap import LoadPixmap
 from Tools.BoundFunction import boundFunction
 from Tools.AVHelper import pChoice
-
-from enigma import iPlayableService, eTimer, eSize, eDVBDB, eServiceReference, eServiceCenter, iServiceInformation
 
 MODEL = BoxInfo.getItem("model")
 PLATFORM = BoxInfo.getItem("platform")

@@ -2931,9 +2931,6 @@ msgstr "Действия со звуком и субтитрами"
 msgid "Audio auto volume level"
 msgstr "Уровень авто громкости звука"
 
-msgid "Audio description for the visually impaired"
-msgstr "Аудиоописание для слабовидящих"
-
 msgid "Audio language selection 1"
 msgstr "Выбор языка аудио 1"
 
@@ -19809,7 +19806,7 @@ msgid "Virtual Keyboard Style"
 msgstr "Стиль виртуальной клавиатуры"
 
 msgid "Visually impaired commentary"
-msgstr "Комментарий для слабовидящих"
+msgstr "Комментарии для людей с нарушением зрения"
 
 msgid "Vol"
 msgstr "Громкость"
