@@ -14624,6 +14624,9 @@ msgstr "Поиск беспроводных точек доступа и под�
 msgid "Scanning"
 msgstr "Сканирование"
 
+msgid "Scanner"
+msgstr "Сканер"
+
 #, python-format
 msgid "Scanning %s..."
 msgstr "Сканирование %s ..."
