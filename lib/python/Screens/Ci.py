@@ -478,8 +478,8 @@ class CiSelection(Screen):
 		self.list.append((_("Enter persistent PIN code"), ConfigNothing(), 5, slot))
 		self.list.append((_("Reset persistent PIN code"), ConfigNothing(), 6, slot))
 		self.list.append((_("Show CI messages"), config.ci[slot].show_ci_messages, 3, slot))
-		items.append(getConfigListEntry(_("Disable operator profiles"), config.ci[slot].disable_operator_profile))
-		items.append(getConfigListEntry(_("Descrambling options") + " *", config.ci[slot].alternative_ca_handling))
+		self.list.append((_("Disable operator profiles"), config.ci[slot].disable_operator_profile))
+		self.list.append((_("Descrambling options") + " *", config.ci[slot].alternative_ca_handling))
 		self.list.append((_("Multiple service support"), config.ci[slot].canDescrambleMultipleServices, 3, slot))
 		if BoxInfo.getItem("CiAlternativeCaHandling"):
 			self.list.append((_("Exclude first CA device"), config.ci[slot].exclude_ca0_device, 3, slot))
