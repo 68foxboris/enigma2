@@ -49,7 +49,7 @@ def InitCiConfig():
 			config.ci[slot].static_pin = ConfigPIN(default=0)
 			config.ci[slot].show_ci_messages = ConfigYesNo(default=True)
 			config.ci[slot].disable_operator_profile = ConfigYesNo(default=False)
-			config.ci[slot].exclude_ca0_device = ConfigYesNo(default=False)
+			config.ci[slot].alternative_ca_handling = ConfigSelection(choices=[(0, _("off")), (1, _("Close CA device at programm end")), (2, _("Offset CA device index")), (3, _("Offset and close CA device"))], default=0)
 			if BoxInfo.getItem(f"CI{slot}SupportsHighBitrates"):
 				highBitrateChoices = [
 					("normal", _("Normal")),
@@ -478,7 +478,8 @@ class CiSelection(Screen):
 		self.list.append((_("Enter persistent PIN code"), ConfigNothing(), 5, slot))
 		self.list.append((_("Reset persistent PIN code"), ConfigNothing(), 6, slot))
 		self.list.append((_("Show CI messages"), config.ci[slot].show_ci_messages, 3, slot))
-		self.list.append((_("Disable operator profiles"), config.ci[slot].disable_operator_profile, 3, slot))
+		items.append(getConfigListEntry(_("Disable operator profiles"), config.ci[slot].disable_operator_profile))
+		items.append(getConfigListEntry(_("Descrambling options") + " *", config.ci[slot].alternative_ca_handling))
 		self.list.append((_("Multiple service support"), config.ci[slot].canDescrambleMultipleServices, 3, slot))
 		if BoxInfo.getItem("CiAlternativeCaHandling"):
 			self.list.append((_("Exclude first CA device"), config.ci[slot].exclude_ca0_device, 3, slot))
