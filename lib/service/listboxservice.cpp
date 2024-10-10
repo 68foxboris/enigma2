@@ -742,6 +742,13 @@ void eListboxServiceContent::paint(gPainter &painter, eWindowStyle &style, const
 
 	if (cursorValid())
 	{
+		if (selected && local_style && local_style->m_selection)
+			painter.blit(local_style->m_selection, offset, eRect(), gPainter::BT_ALPHABLEND);
+
+		// Draw the frame for selected item here so to be under the content
+		if (selected && (!local_style || !local_style->m_selection))
+			style.drawFrame(painter, eRect(offset, m_itemsize), eWindowStyle::frameListboxEntry);
+
 		/* get service information */
 		ePtr<iStaticServiceInformation> service_info;
 		m_service_center->info(*m_cursor, service_info);
@@ -801,9 +808,6 @@ void eListboxServiceContent::paint(gPainter &painter, eWindowStyle &style, const
 			else
 				painter.setForegroundColor(gRGB(0xb40431));
 		}
-
-		if (selected && local_style && local_style->m_selection)
-			painter.blit(local_style->m_selection, offset, eRect(), gPainter::BT_ALPHABLEND);
 
 		int xoffset=0;  // used as offset when painting the folder/marker symbol or the serviceevent progress
 		int nameLeft=0, nameWidth=0, nameYoffs=0, serviceTypeXoffs=0; // used as temporary values for 'show two lines' option
@@ -1151,8 +1155,6 @@ void eListboxServiceContent::paint(gPainter &painter, eWindowStyle &style, const
 				}
 			}
 		}
-		if (selected && (!local_style || !local_style->m_selection))
-			style.drawFrame(painter, eRect(offset, m_itemsize), eWindowStyle::frameListboxEntry);
 
 		eRect area = m_element_position[celServiceEventProgressbar];
 		if (area.width() > 0 && evt && (!m_element_font[celServiceEventProgressbar] || (m_show_two_lines && m_progress_view_mode%10)))

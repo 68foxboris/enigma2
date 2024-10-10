@@ -42,12 +42,12 @@ int bidirpipe(int pfd[], const char *cmd , const char * const argv[], const char
 			eDebug("[eConsoleAppContainer] failed to change directory to %s (%m)", cwd);
 
 		execvp(cmd, (char * const *)argv);
-				/* the vfork will actually suspend the parent thread until execvp is called. thus it's ok to use the shared arg/cmdline pointers here. */
+		/* the vfork will actually suspend the parent thread until execvp is called. thus it's ok to use the shared arg/cmdline pointers here. */
 		eDebug("[eConsoleAppContainer] Finished %s", cmd);
 		_exit(0);
 	}
 	if (close(pfdout[0]) == -1 || close(pfdin[1]) == -1 || close(pfderr[1]) == -1)
-			return(-1);
+		return(-1);
 
 	pfd[0] = pfdin[0];
 	pfd[1] = pfdout[1];

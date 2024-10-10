@@ -100,7 +100,7 @@ void eTimer::changeInterval(long msek)
 	else
 		bActive=true; // then activate Timer
 
-	interval = msek;   			 			// set new Interval
+	interval = msek;	 			// set new Interval
 	nextActivation += interval;		// calc nextActivation
 
 	context.addTimer(this);				// add Timer to context TimerList

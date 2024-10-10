@@ -159,7 +159,6 @@ std::string eServiceReference::toString() const
 		ret += ':';
 		ret += encode(name);
 	}
-
 	std::string fullName = ret;
 	std::string provPart = "•";
 	if (!prov.empty())
