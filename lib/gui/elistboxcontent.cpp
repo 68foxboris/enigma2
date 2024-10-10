@@ -715,7 +715,7 @@ void eListboxPythonConfigContent::paint(gPainter &painter, eWindowStyle &style, 
 			}
 
 			// Separator
-			if (!strcmp(string,"---") && PyTuple_Size(item) == 1 && local_style) 
+			if (!strcmp(string,"---") && PyTuple_Size(item) == 1 && local_style)
 			{
 
 				if (local_style->is_set.separator_color)

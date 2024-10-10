@@ -26,7 +26,7 @@ eWindow::eWindow(eWidgetDesktop *desktop, int z): eWidget(0)
 			eWindow::m_has_animation_mode=1;
 		}
 	}
-	
+
 	m_desktop = desktop;
 		/* ask style manager for current style */
 	ePtr<eWindowStyleManager> mgr;
@@ -147,7 +147,7 @@ void eWindow::hide()
 }
 
 void eWindow::setAnimationMode(int mode)
-{ 
+{
 	/*
 	 * 0x00 = animation off
 	 * 0x01 = show on
