@@ -156,17 +156,69 @@ class whitelist:
 	FILENAME_BOUQUETS = "/etc/enigma2/whitelist_bouquets"
 	bouquets = []
 
-
 def reload_whitelist_vbi():
 	whitelist.vbi = [line.strip() for line in open(whitelist.FILENAME_VBI, 'r').readlines()] if os.path.isfile(whitelist.FILENAME_VBI) else []
-
 
 def reload_whitelist_bouquets():
 	whitelist.bouquets = [line.strip() for line in open(whitelist.FILENAME_BOUQUETS, 'r').readlines()] if os.path.isfile(whitelist.FILENAME_BOUQUETS) else []
 
-
 reload_whitelist_vbi()
 reload_whitelist_bouquets()
+
+class InfoBarStreamRelay:
+
+	FILENAME = "/etc/enigma2/whitelist_streamrelay"
+
+	def __init__(self):
+		self.__srefs = self.__sanitizeData(open(self.FILENAME, 'r').readlines()) if os.path.isfile(self.FILENAME) else []
+
+	def __sanitizeData(self, data):
+		return list(set([line.strip() for line in data if line and isinstance(line, str) and match("^(?:[0-9A-F]+[:]){10}$", line.strip())])) if isinstance(data, list) else []
+
+	def __saveToFile(self):
+		self.__srefs.sort(key=lambda ref: (int((x := ref.split(":"))[6], 16), int(x[5], 16), int(x[4], 16), int(x[3], 16)))
+		open(self.FILENAME, 'w').write('\n'.join(self.__srefs))
+
+	def splitref(self, ref):
+		ref = ref.split(":")
+		return ":".join(ref[:11]), len(ref) > 11 and ref[-1]
+
+	def toggle(self, nav, service):
+		if (servicestring := (service and self.splitref(service.toString())[0])):
+			if servicestring in self.__srefs:
+				self.__srefs.remove(servicestring)
+			else:
+				self.__srefs.append(servicestring)
+			if nav.getCurrentlyPlayingServiceReference() == service:
+				nav.restartService()
+			self.__saveToFile()
+
+	def getData(self):
+		return self.__srefs
+
+	def setData(self, data):
+		self.__srefs = self.__sanitizeData(data)
+		self.__saveToFile()
+
+	data = property(getData, setData)
+
+	def streamrelayChecker(self, playref):
+		playrefstring, renamestring = self.splitref(playref.toString())
+		if '%3a//' not in playrefstring and playrefstring in self.__srefs:
+			url = "http://%s:%s/" % (config.misc.softcam_streamrelay_url.getHTML(), config.misc.softcam_streamrelay_port.value)
+			if "127.0.0.1" in url:
+				playrefmod = ":".join([("%x" % (int(x[1], 16) + 1)).upper() if x[0] == 6 else x[1] for x in enumerate(playrefstring.split(':'))])
+			else:
+				playrefmod = playrefstring
+			playref = eServiceReference("%s%s%s:%s" % (playrefmod, url.replace(":", "%3a"), playrefstring.replace(":", "%3a"), renamestring or ServiceReference(playref).getServiceName()))
+			print(f"[{self.__class__.__name__}] Play service {playref.toString()} via streamrelay")
+		return playref
+
+	def checkService(self, service):
+		return service and self.splitref(service.toString())[0] in self.__srefs
+
+
+streamrelay = InfoBarStreamRelay()
 
 
 class subservice:
@@ -225,78 +277,9 @@ def getActiveSubservicesForCurrentChannel(service):
 				activeSubservices.append((subservice.getName(), subservice.toString()))
 	return activeSubservices
 
-
 def hasActiveSubservicesForCurrentChannel(service):
 	activeSubservices = getActiveSubservicesForCurrentChannel(service)
 	return bool(activeSubservices and len(activeSubservices) > 1)
-
-
-class InfoBarStreamRelay:
-
-	FILENAME = "/etc/enigma2/whitelist_streamrelay"
-
-	def __init__(self):
-		self.reload()
-
-	def reload(self):
-		data = fileReadLines(self.FILENAME, default=[], source=self.__class__.__name__)
-		self.__services = self.__sanitizeData(data)
-
-	def __sanitizeData(self, data: list):
-		return list(set([match(r"([0-9A-F]+:){10}", line.strip()).group(0) for line in data if line and match(r"^(?:[0-9A-F]+:){10}", line.strip())]))
-
-	def check(self, nav, service):
-		return (service or nav.getCurrentlyPlayingServiceReference()) and service.toCompareString() in self.__services
-
-	def write(self):
-		fileWriteLines(self.FILENAME, self.__services, source=self.__class__.__name__)
-
-	def toggle(self, nav, service):
-		if isinstance(service, list):
-			serviceList = service
-			serviceList = [service.toCompareString() for service in serviceList]
-			self.__services = list(set(serviceList + self.__services))
-			self.write()
-		else:
-			service = service or nav.getCurrentlyPlayingServiceReference()
-			if service:
-				servicestring = service.toCompareString()
-				if servicestring in self.__services:
-					self.__services.remove(servicestring)
-				else:
-					self.__services.append(servicestring)
-					if nav.getCurrentlyPlayingServiceReference() and nav.getCurrentlyPlayingServiceReference() == service:
-						nav.restartService()
-				self.write()
-
-	def __getData(self):
-		return self.__services
-
-	def __setData(self, value):
-		self.__services = value
-		self.write()
-
-	data = property(__getData, __setData)
-
-	def streamrelayChecker(self, playref):
-		playrefstring = playref.toCompareString()
-		if "%3a//" not in playrefstring and playrefstring in self.__services:
-			url = f'http://{".".join("%d" % d for d in config.misc.softcam_streamrelay_url.value)}:{config.misc.softcam_streamrelay_port.value}/'
-			if "127.0.0.1" in url:
-				playrefmod = ":".join([("%x" % (int(x[1], 16) + 1)).upper() if x[0] == 6 else x[1] for x in enumerate(playrefstring.split(':'))])
-			else:
-				playrefmod = playrefstring
-			playref = eServiceReference("%s%s%s:%s" % (playrefmod, url.replace(":", "%3a"), playrefstring.replace(":", "%3a"), ServiceReference(playref).getServiceName()))
-			print(f"[{self.__class__.__name__}] Play service {playref.toCompareString()} via streamrelay")
-			playref.setAlternativeUrl(playrefstring)
-			return playref, True
-		return playref, False
-
-	def checkService(self, service):
-		return service and service.toCompareString() in self.__services
-
-
-streamrelay = InfoBarStreamRelay()
 
 
 class InfoBarDish:
@@ -665,7 +648,13 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		return service and service.toString() in whitelist.vbi
 
 	def checkBouquets(self, bouquet):
-		return bouquet in whitelist.bouquets
+		try:
+			return bouquet.toString().split('"')[1] in whitelist.bouquets
+		except:
+			return
+
+	def checkStreamrelay(self, service):
+		return streamrelay.checkService(service)
 
 	def showHideVBI(self):
 		if self.checkHideVBI():
@@ -690,12 +679,6 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		else:
 			whitelist.bouquets.append(bouquet)
 		open(whitelist.FILENAME_BOUQUETS, 'w').write('\n'.join(whitelist.bouquets))
-
-	def checkStreamrelay(self, service=None):
-		return streamrelay.check(self.session.nav, service)
-
-	def ToggleStreamrelay(self, service=None):
-		streamrelay.toggle(self.session.nav, service)
 
 
 class BufferIndicator(Screen):
