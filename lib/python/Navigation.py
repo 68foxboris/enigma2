@@ -41,7 +41,8 @@ class Navigation:
 		self.currentlyPlayingServiceReference = None
 		self.currentlyPlayingServiceOrGroup = None
 		self.currentlyPlayingService = None
-		self.isCurrentServiceStreamRelay = False
+		self.currentServiceIsStreamRelay = False
+		self.skipServiceReferenceReset = False
 		self.RecordTimer = RecordTimer.RecordTimer()
 		self.__wasTimerWakeup = getFPWasTimerWakeup()
 		self.__isRestartUI = config.misc.RestartUI.value
@@ -89,8 +90,9 @@ class Navigation:
 		for x in self.event:
 			x(i)
 		if i == iPlayableService.evEnd:
-			self.currentlyPlayingServiceReference = None
-			self.currentlyPlayingServiceOrGroup = None
+			if not self.skipServiceReferenceReset:
+				self.currentlyPlayingServiceReference = None
+				self.currentlyPlayingServiceOrGroup = None
 			self.currentlyPlayingService = None
 
 	def dispatchRecordEvent(self, rec_service, event):
@@ -98,7 +100,10 @@ class Navigation:
 		for x in self.record_event:
 			x(rec_service, event)
 
-	def playService(self, ref, checkParentalControl=True, forceRestart=False, adjust=True, ignoreStreamRelay=False):
+	def restartService(self):
+		self.playService(self.currentlyPlayingServiceOrGroup, forceRestart=True)
+
+	def playService(self, ref, checkParentalControl=True, forceRestart=False, adjust=True):
 		session = None
 		startPlayingServiceOrGroup = None
 		count = isinstance(adjust, list) and len(adjust) or 0
@@ -163,9 +168,7 @@ class Navigation:
 					return 0
 				self.pnav.stopService()
 				self.currentlyPlayingServiceReference = playref
-				if not ignoreStreamRelay:
-					playref, isStreamRelay = streamrelay.streamrelayChecker(playref)
-				print("[Navigation] playref", playref.toString())
+				playref = streamrelay.streamrelayChecker(playref)
 				self.currentlyPlayingServiceOrGroup = ref
 				if startPlayingServiceOrGroup and startPlayingServiceOrGroup.flags & eServiceReference.isGroup and not ref.flags & eServiceReference.isGroup:
 					self.currentlyPlayingServiceOrGroup = startPlayingServiceOrGroup
@@ -246,8 +249,7 @@ class Navigation:
 		if ref:
 			if ref.flags & eServiceReference.isGroup:
 				ref = getBestPlayableServiceReference(ref, eServiceReference(), simulate)
-			if type != (pNavigation.isPseudoRecording | pNavigation.isFromEPGrefresh):
-				ref, isStreamRelay = streamrelay.streamrelayChecker(ref)
+			ref = streamrelay.streamrelayChecker(ref)
 			service = ref and self.pnav and self.pnav.recordService(ref, simulate)
 			if service is None:
 				print("[Navigation] record returned non-zero")
