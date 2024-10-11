@@ -457,11 +457,12 @@ def InitUsageConfig():
 	# The following code temporarily maintains the deprecated timeshift_path so it is available for external plug ins.
 	config.usage.timeshift_path = NoSave(ConfigText(default=config.timeshift.path.value))
 
-	def updateOldTimeshiftPath(configElement):
+	def setTimeshiftPath(configElement):
 		config.usage.timeshift_path.value = configElement.value
+		eSettings.setTimeshiftPath(configElement.value)
 
-	config.timeshift.path.addNotifier(updateOldTimeshiftPath, immediate_feedback=False)
-	config.usage.timeshift_skipreturntolive = ConfigYesNo(default=False)
+	config.timeshift.path.addNotifier(setTimeshiftPath)
+	config.timeshift.skipreturntolive = ConfigYesNo(default=False)
 
 	config.usage.movielist_trashcan = ConfigYesNo(default=True)
 	config.usage.movielist_trashcan_days = ConfigNumber(default=8)
