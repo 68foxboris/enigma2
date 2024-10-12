@@ -1,6 +1,6 @@
 from os.path import isfile, join
 
-from enigma import ePixmap, iServiceInformation
+from enigma import ePixmap, iServiceInformation, eServiceReference
 
 from Components.Renderer.Renderer import Renderer
 from Tools.Directories import SCOPE_GUISKIN, resolveFilename, fileReadLines
@@ -82,7 +82,8 @@ class PicCript(Renderer):
 				sName = ""
 				service = self.source.service
 				if service:
-					info = service and service.info()
+					isRef = isinstance(service, eServiceReference)
+					info = service.info() if (service and not isRef) else None
 					if info:
 						caids = info.getInfoObject(iServiceInformation.sCAIDs)
 						if caids and len(caids) > 0:
