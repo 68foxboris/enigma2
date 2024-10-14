@@ -2030,6 +2030,8 @@ class ChannelSelectionBase(Screen):
 			self.keyNumberGlobal(number)
 		elif len(self.servicePath) > 1:
 			self.keyGoUp()
+		else:
+			return False
 
 	def keyNumberGlobal(self, number):
 		if self.isBasePathEqual(self.bouquet_root):
