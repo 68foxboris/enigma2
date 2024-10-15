@@ -694,9 +694,6 @@ IconCheck()
 
 enigma.eAVControl.getInstance().disableHDMIIn()
 
-enigma.eProfileWrite("RcModel")
-import Components.RcModel
-
 enigma.eProfileWrite("PowerOffTimer")
 from Components.PowerOffTimer import powerOffTimer
 
