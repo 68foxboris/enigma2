@@ -873,7 +873,7 @@ eServiceMP3::eServiceMP3(eServiceReference ref):
 		if (dvb_subsink)
 		{
 			m_subs_to_pull_handler_id = g_signal_connect (dvb_subsink, "new-buffer", G_CALLBACK (gstCBsubtitleAvail), this);
-			g_object_set (dvb_subsink, "caps", gst_caps_from_string("text/plain; text/x-plain; text/x-raw; text/x-pango-markup; subpicture/x-dvd; subpicture/x-pgs"), NULL);
+			g_object_set (dvb_subsink, "caps", gst_caps_from_string("text/plain; text/x-plain; text/x-raw; text/x-pango-markup; subpicture/x-dvd; subpicture/x-dvb; subpicture/x-pgs"), NULL);
 			g_object_set (m_gst_playbin, "text-sink", dvb_subsink, NULL);
 			g_object_set (m_gst_playbin, "current-text", m_currentSubtitleStream, NULL);
 		}
@@ -4096,7 +4096,8 @@ void eServiceMP3::pullSubtitle(GstBuffer *buffer)
 		gst_buffer_unmap(buffer, &map);
 	}
 }
-void eServiceMP3::pushDVBSubtitles(const eDVBSubtitlePage &p)
+
+void eServiceMP3::pushDVBSubtitles()
 {
 	m_dvb_subtitle_pages.push_back(p);
 
