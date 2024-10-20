@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPLi enigma2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-01 15:48+0200\n"
+"POT-Creation-Date: 2024-10-19 15:02+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: IMS <ims@openpli.org>\n"
 "Language-Team: PLi <ims@openpli.org>\n"
@@ -450,6 +450,10 @@ msgstr "/s"
 #
 msgid "0"
 msgstr "0"
+
+#, fuzzy
+msgid "0 minutes"
+msgstr "%d minut"
 
 #
 msgid "1"
@@ -1611,6 +1615,10 @@ msgstr "Bosna a Hercegovina"
 msgid "Botswana"
 msgstr "Botswana"
 
+#, fuzzy
+msgid "Bottom"
+msgstr "Dole"
+
 msgid "Bouvet Island"
 msgstr "Bouvetův ostrov"
 
@@ -2233,7 +2241,8 @@ msgstr "Nastavuje výchozí typ pro nové časovače."
 msgid "Configure for how long the infobar will remain visible after activation."
 msgstr "Nastavuje, jak dlouho po zobrazení bude viditelný infobar."
 
-msgid "Configure for how many minutes finished events should remain visible in the EPG. Useful when you need information about an event which has just finished, or has been delayed."
+#, fuzzy
+msgid "Configure how long finished events should remain visible in the EPG. Useful when you need information about an event which has just finished, or has been delayed (or for plugins that support catchup)."
 msgstr "Nastavuje, kolik minut může zůstat ukončená událost viditelná v EPG. Užitečné, když potřebujete informace o události, která právě skončila nebo byla zpožděná."
 
 #
@@ -2671,6 +2680,12 @@ msgstr "Nelze nahrávat z důvodu konfliktu časovače %s"
 #, python-format
 msgid "Could not record due to invalid service %s"
 msgstr "Nelze nahrávat z důvodu neplatného programu %s"
+
+msgid "Could not retrieve basic bouquets files"
+msgstr ""
+
+msgid "Could not retrieve the remote support files"
+msgstr ""
 
 msgid "Country"
 msgstr "Země"
@@ -4989,9 +5004,8 @@ msgstr "I"
 msgid "I do not want to perform any service scans"
 msgstr "Nechci provést žádné vyhledání programů"
 
-#, fuzzy
 msgid "I55SE/H7(new model)/H9(new model)/H9COMBO/H9TWIN/H9SE/H9COMBOSE/H10/H11/H17"
-msgstr "I55SE/H7(nový model)/H9(nový model)/H9COMBO/H9TWIN/H9SE/H9COMBOSE/H10/H11"
+msgstr "I55SE/H7(nový model)/H9(nový model)/H9COMBO/H9TWIN/H9SE/H9COMBOSE/H10/H11/H17"
 
 msgid "IDLE"
 msgstr ""
@@ -10586,7 +10600,7 @@ msgstr ""
 "Pro případné korekce můžete kontaktovat autora\n"
 "na výše uvedené adrese.\n"
 "\n"
-"®22.6.2024"
+"®2.8.2024"
 
 #
 msgid "TS file is too large for ISO9660 level 1!"
@@ -11363,6 +11377,11 @@ msgstr "Toneburst A/B"
 msgid "Tonga"
 msgstr "Tonga"
 
+#
+#, fuzzy
+msgid "Top"
+msgstr "Dva"
+
 msgid "Top and bottom"
 msgstr "Nahoru a dolů"
 
@@ -11643,9 +11662,8 @@ msgstr "Univerzální LNB"
 msgid "Unknown"
 msgstr "Neznámý"
 
-#, fuzzy
 msgid "Unknown image"
-msgstr "Neznámý"
+msgstr "Neznámý obraz"
 
 msgid "Unmark service as dedicated 3D service"
 msgstr "Zrušit označení 3D program"
@@ -12512,9 +12530,8 @@ msgstr "Při probuzení nebo přechodu z hlubokého spánku bude přijímač pos
 msgid "When selected this allows video modes to be selected even if they are not reported as supported."
 msgstr "Umožňuje zvolit módy videa i přesto, že nejsou označeny jako podporované."
 
-#, fuzzy
 msgid "When set to 'Yes', all locations where SNR is displayed in dB's will show an SNR percentage, and vice versa."
-msgstr "Pokud je nastaveno na Ano, na všech místech, kde je zobrazen SNR v dB, se zobrazí procento SNR a naopak."
+msgstr "Pokud je nastaveno na 'Ano', na všech místech, kde je zobrazen SNR v dB, se zobrazí SNR v procentech a naopak."
 
 msgid "When the content has an aspect ratio of 16:9, choose whether to scale/stretch the picture."
 msgstr "Pro obsah s poměrem stran 16:9 zvolte, zda chcete změnit velikost/roztáhnout obraz."
@@ -13164,6 +13181,9 @@ msgstr "Denně"
 msgid "day"
 msgstr "den"
 
+msgid "days"
+msgstr ""
+
 #
 msgid "default"
 msgstr "Výchozí"
@@ -13399,6 +13419,14 @@ msgstr "vysoký"
 msgid "horizontal"
 msgstr "Horizontální"
 
+#, fuzzy
+msgid "hour"
+msgstr "%d hodina"
+
+#, fuzzy
+msgid "hours"
+msgstr "%d hodina"
+
 msgid "in menu and plugins"
 msgstr "V menu a pluginech"
 
@@ -13524,6 +13552,14 @@ msgstr " min"
 #
 msgid "mins"
 msgstr "minut"
+
+#, fuzzy
+msgid "minute"
+msgstr "%d minuta"
+
+#, fuzzy
+msgid "minutes"
+msgstr "%d minut"
 
 #
 msgid "module disabled"
@@ -14098,7 +14134,17 @@ msgid "water sport"
 msgstr "vodní sporty"
 
 #
+#, fuzzy
+msgid "week"
+msgstr "Týdně"
+
+#
 msgid "weekly"
+msgstr "Týdně"
+
+#
+#, fuzzy
+msgid "weeks"
 msgstr "Týdně"
 
 msgid "west"

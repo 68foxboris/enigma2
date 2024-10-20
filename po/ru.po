@@ -4967,8 +4967,8 @@ msgstr "Настройте тип по умолчанию для новых та
 msgid "Configure for how long the infobar will remain visible after activation."
 msgstr "Настройка для показа инфобара после его активации в секундах."
 
-msgid "Configure for how many minutes finished events should remain visible in the EPG. Useful when you need information about an event which has just finished, or has been delayed."
-msgstr "Позволяет показать данные ТВ-гида о прошедших событиях. Удобно, когда хотите знать что-то о передаче, которая вот-вот закончится, либо только что закончилась (в минутах)."
+msgid "Configure how long finished events should remain visible in the EPG. Useful when you need information about an event which has just finished, or has been delayed (or for plugins that support catchup)."
+msgstr "Позволяет показать(сохранить) данные EPG о прошедших событиях. Удобно, когда хотите знать что-то о передаче, которая закончилась раньше или для плагинов, которые поддерживают архив."
 
 msgid "Configure front LED color during normal operations (this needs an enigma2 restart)."
 msgstr "Настройте цвет светодиода спереди во время нормальной работы (для этого необходимо перезапустить Enigma2)."
