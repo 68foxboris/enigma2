@@ -113,11 +113,11 @@ class EPGList(GUIComponent):
 	def moveDown(self):
 		self.instance.moveSelection(self.instance.moveDown)
 
-	def connectSelectionChanged(self, func):
+	def connectSelectionChanged(func):
 		if not self.onSelChanged.count(func):
 			self.onSelChanged.append(func)
 
-	def disconnectSelectionChanged(self, func):
+	def disconnectSelectionChanged(func):
 		self.onSelChanged.remove(func)
 
 	def selectionChanged(self):
@@ -283,7 +283,7 @@ class EPGList(GUIComponent):
 					prefix = ""
 				res.extend((
 					(eListboxPythonMultiContent.TYPE_PROGRESS, r2.x, r2.y, self.tw, r2.h, percent),
-					(eListboxPythonMultiContent.TYPE_TEXT, r3.x, r3.y, self.gap(self.tw), r3.h, 1, RT_HALIGN_CENTER, prefix + _("%d min") % remaining),
+					(eListboxPythonMultiContent.TYPE_TEXT, r3.x, r3.y, self.gap(self.tw), r3.h, 1, RT_HALIGN_CENTER, prefix + _("%d min") % (prefix, remaining)),
 					(eListboxPythonMultiContent.TYPE_TEXT, r3.x + self.tw, r3.y, r3.w, r3.h, 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, EventName)
 				))
 		return res
@@ -356,6 +356,7 @@ class EPGList(GUIComponent):
 		if not serviceref:
 			return
 		index = 0
+		refstr = serviceref.toString()
 		for x in self.list:
 			if CompareWithAlternatives(x[1], serviceref):
 				self.instance.moveSelectionTo(index)

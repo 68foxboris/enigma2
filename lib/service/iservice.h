@@ -117,6 +117,7 @@ public:
 		memset(data, 0, sizeof(data));
 		number = 0;
 	}
+#ifndef SWIG
 	eServiceReference(int type, int flags)
 		: type(type), flags(flags)
 	{
@@ -168,26 +169,22 @@ public:
 		data[4]=data4;
 		number = 0;
 	}
+	operator bool() const
+	{
+		return valid();
+	}
+#endif
 	eServiceReference(int type, int flags, const std::string &path)
 		: type(type), flags(flags), path(path)
 	{
 		memset(data, 0, sizeof(data));
 		number = 0;
 	}
-#ifdef SWIG
-	eServiceReference(const eServiceReference &ref);
-#endif
 	eServiceReference(const std::string &string);
 	std::string toString() const;
 	std::string toCompareString() const;
 	std::string toReferenceString() const;
 	std::string toLCNReferenceString(bool trailing=true) const;
-#ifndef SWIG
-	operator bool() const
-	{
-		return valid();
-	}
-#endif
 	bool operator==(const eServiceReference &c) const
 	{
 		if (!c || type != c.type)

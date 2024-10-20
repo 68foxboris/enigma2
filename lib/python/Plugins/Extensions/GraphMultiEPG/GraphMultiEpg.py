@@ -7,7 +7,7 @@ from Components.ActionMap import HelpableActionMap
 from Components.GUIComponent import GUIComponent
 from Components.EpgList import Rect
 from Components.Sources.Event import Event
-from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaBlend, MultiContentEntryPixmap
+from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaBlend
 from Components.TimerList import TimerList
 from Components.Renderer.Picon import getPiconName
 from Components.Sources.ServiceEvent import ServiceEvent
@@ -175,7 +175,7 @@ class EPGList(GUIComponent):
 
 	def applySkin(self, desktop, screen):
 		def EntryFont(value):
-			font = parseFont(value, parent.scale)
+			font = parseFont(value, screen.scale)
 			self.entryFontName = font.family
 			self.entryFontSize = font.pointSize
 
@@ -216,7 +216,7 @@ class EPGList(GUIComponent):
 			self.eventNamePadding = int(value)
 
 		def ServiceFont(value):
-			self.serviceFont = parseFont(value, parent.scale)
+			self.serviceFont = parseFont(value, screen.scale)
 
 		def ServiceForegroundColor(value):
 			self.foreColorService = parseColor(value).argb()
@@ -350,11 +350,11 @@ class EPGList(GUIComponent):
 		event = self.getEventFromId(service, eventid)  # get full event info
 		return (event, service)
 
-	def connectSelectionChanged(self, func):
+	def connectSelectionChanged(func):
 		if not self.onSelChanged.count(func):
 			self.onSelChanged.append(func)
 
-	def disconnectSelectionChanged(self, func):
+	def disconnectSelectionChanged(func):
 		self.onSelChanged.remove(func)
 
 	def serviceChanged(self):
@@ -544,7 +544,7 @@ class EPGList(GUIComponent):
 						flags=BT_SCALE))
 
 		if bgpng is not None:    # bacground for service rect
-			res.append(MultiContentEntryPixmap(
+			res.append(MultiContentEntryPixmapAlphaBlend(
 					pos=(r1.x + self.serviceBorderVerWidth, r1.y + self.serviceBorderHorWidth),
 					size=(r1.w - 2 * self.serviceBorderVerWidth, r1.h - 2 * self.serviceBorderHorWidth),
 					png=bgpng,
@@ -656,7 +656,7 @@ class EPGList(GUIComponent):
 					bgpng = self.othEvPix
 
 				if bgpng is not None:
-					res.append(MultiContentEntryPixmap(
+					res.append(MultiContentEntryPixmapAlphaBlend(
 						pos=(left + xpos, top + self.eventBorderHorWidth),
 						size=(ewidth, height - self.eventBorderHorWidth),
 						png=bgpng,
@@ -876,7 +876,7 @@ class TimelineText(GUIComponent):
 			self.backColor = parseColor(value).argb()
 
 		def font(value):
-			self.font = parseFont(value, parent.scale)
+			self.font = parseFont(value, screen.scale)
 		for (attrib, value) in list(self.skinAttributes):
 			try:
 				locals().get(attrib)(value)
