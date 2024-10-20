@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2024-09-28 20:28+0300\n"
+"PO-Revision-Date: 2024-10-20 05:39+0300\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -2211,7 +2211,6 @@ msgstr "Добавить таймер переключения для данно
 msgid "Add a zap timer for next event"
 msgstr "Добавить таймер переключения на следующую передачу"
 
-
 msgid "Add bookmark"
 msgstr "Добавить закладку"
 
@@ -4109,17 +4108,8 @@ msgstr "Отменить выбор образа и выйти"
 msgid "Cancel the image selection and exit all menus"
 msgstr "Отменить выбор образа и выйти из всех меню"
 
-msgid "Cancel the scan and exit the scanner"
-msgstr "Прервать поиск и выйти из режима поиска"
-
-msgid "Cancel the scan and exit all menus"
-msgstr "Прервать поиск и закрыть все меню"
-
 msgid "Cancel the selection and exit"
 msgstr "Отменить выбор и выйти"
-
-msgid "Cancel the service history zap"
-msgstr "Отменить историю включений канала"
 
 msgid "Cancel the service selection"
 msgstr "Отменить выбор канала"
@@ -6229,7 +6219,7 @@ msgid "Delay after voltage change before motor command"
 msgstr "Задержка после изменения напряжения мотора"
 
 msgid "Delay before key repeat starts:"
-msgstr "Задержка перед повторным нажатием кнопки"
+msgstr "Задержка перед повторным нажатием кнопки:"
 
 msgid "Delay before sequence repeat"
 msgstr "Задержка перед последним повтором"
@@ -14662,6 +14652,7 @@ msgid "Scanning completed, %d service found."
 msgid_plural "Scanning completed, %d services found."
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 msgid "Scan failed!"
 msgstr "Ошибка сканирования!"
@@ -14672,6 +14663,7 @@ msgid "Scanning: %d%% complete"
 msgid_plural "Scanning: %d%% complete"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
 
 msgid "Scan files..."
 msgstr "Сканирование файлов..."
@@ -15093,7 +15085,7 @@ msgid "Select the currently highlighted service"
 msgstr "Выберите текущий выделенный канал"
 
 msgid "Select the currently highlighted service and exit"
-msgstr "Выберите выделенную в данный момент услугу и выйдите."
+msgstr "Выберите выделенную в данный момент услугу и выйдите"
 
 msgid "Select the display sequence of previously visited services."
 msgstr "Выберите последовательность отображения ранее посещенных сервисов."
