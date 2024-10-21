@@ -1484,7 +1484,7 @@ RESULT eServiceMP3::getPlayPosition(pts_t &pts)
 	}
 // todo :Check if amlogic stb's are always using gstreamer < 1
 // if not this procedure needs to be altered.
-	if ((dvb_audiosink || dvb_videosink) && !m_paused && !m_seeking_or_paused && !m_sourceinfo.is_hls)
+	if ((dvb_audiosink || dvb_videosink) && !m_paused && !m_seeking_or_paused)
 	{
 		if (m_sourceinfo.is_audio)
 		{
@@ -1570,6 +1570,9 @@ RESULT eServiceMP3::getName(std::string &name)
 	}
 	else
 		name = title;
+
+	m_prov = m_ref.prov;
+
 	return 0;
 }
 
@@ -1693,19 +1696,23 @@ int eServiceMP3::getInfo(int w)
 
 std::string eServiceMP3::getInfoString(int w)
 {
-	if ( m_sourceinfo.is_streaming )
+	switch (w)
 	{
-		switch (w)
-		{
-		case sProvider:
-			return "IPTV";
-		case sServiceref:
-		{
-			return m_ref.toString();
+	case sProvider:
+	{
+		if (m_sourceinfo.is_streaming) {
+			if (m_prov.empty()) {
+				return "IPTV";
+			} else {
+				return m_prov;
+			}
 		}
-		default:
-			break;
-		}
+		return "FILE";
+	}
+	case sServiceref:
+		return m_ref.toString();
+	default:
+		break;
 	}
 
 	if (w == sVideoInfo)
@@ -2082,6 +2089,8 @@ subtype_t getSubtitleType(GstPad* pad, gchar *g_codec=NULL)
 			{
 				if ( !strcmp(g_type, "subpicture/x-dvd") )
 					type = stVOB;
+				else if ( !strcmp(g_type, "subpicture/x-dvb") )
+					type = stDVB;
 				else if ( !strcmp(g_type, "text/x-pango-markup") )
 					type = stSRT;
 				else if ( !strcmp(g_type, "text/plain") || !strcmp(g_type, "text/x-plain") || !strcmp(g_type, "text/x-raw") )
@@ -2915,6 +2924,8 @@ audiotype_t eServiceMP3::gstCheckAudioPad(GstStructure* structure)
 
 	else if ( gst_structure_has_name (structure, "audio/x-ac3") || gst_structure_has_name (structure, "audio/ac3") )
 		return atAC3;
+	else if ( gst_structure_has_name (structure, "truehd") || gst_structure_has_name (structure, "audio/ac3") )
+		return atAC3;
 	else if ( gst_structure_has_name (structure, "audio/x-dts") || gst_structure_has_name (structure, "audio/dts") )
 		return atDTS;
 	else if ( gst_structure_has_name (structure, "audio/x-raw") )
@@ -3087,7 +3098,6 @@ void eServiceMP3::subtitle_reset()
 
 void eServiceMP3::subtitle_redraw(int page_id)
 {
-	eDebug("REDRAWINGGGGGGGGGGG!!!!! %d", page_id);
 	subtitle_page *page = m_pages;
 
 	while (page)
@@ -3097,7 +3107,6 @@ void eServiceMP3::subtitle_redraw(int page_id)
 		page = page->next;
 	}
 	if (!page){
-		eDebug("NOT PAGE!!!!!");
 		return;
 	}
 
@@ -3105,17 +3114,16 @@ void eServiceMP3::subtitle_redraw(int page_id)
 	subtitle_page_region *region = page->page_regions;
 
 	eDVBSubtitlePage Page;
-	Page.m_show_time = m_show_time;
+	Page.m_show_time = m_show_time / 1000000ULL;
 	for (; region; region=region->next)
 	{
 		/* find corresponding region */
 		subtitle_region *reg = page->regions;
 		while (reg)
 		{
-			eDebug("LOOP REGIONS!!!!!");
-			eDebug("REGION reg->region_id/region->region_id = %d/%d", reg->region_id, region->region_id);
+			eTrace("[eServiceMP3] DVB subtitles reg->region_id/region->region_id = %d/%d", reg->region_id, region->region_id);
 			if (reg->region_id == region->region_id){
-				eDebug("REGION FFFFFFOUND   reg->region_id == region->region_id");
+				eTrace("[eServiceMP3] DVB subtitles found correct region");
 				break;
 			}
 
@@ -3123,7 +3131,6 @@ void eServiceMP3::subtitle_redraw(int page_id)
 		}
 		if (reg)
 		{
-			eDebug("FOUND REGION!!!!!");
 			int x0 = region->region_horizontal_address;
 			int y0 = region->region_vertical_address;
 
@@ -4106,8 +4113,7 @@ void eServiceMP3::pullSubtitle(GstBuffer *buffer)
 
 void eServiceMP3::pushDVBSubtitles()
 {
-	pts_t running_pts = 0;
-	int32_t next_timer = 0, decoder_ms;
+	pts_t running_pts = 0, decoder_ms;
 
 	if (getPlayPosition(running_pts) < 0)
 		eTrace("[eServiceMP3] Cant get current decoder time.");
@@ -4119,20 +4125,20 @@ void eServiceMP3::pushDVBSubtitles()
 		if (!m_dvb_subtitle_pages.empty())
 		{
 			dvb_page = m_dvb_subtitle_pages.front();
-			show_time = dvb_page.m_show_time / 1000000ULL;
+			show_time = dvb_page.m_show_time;
 		}
 		else
 			return;
 
-		decoder_ms = running_pts / 90LL;
+		decoder_ms = running_pts / 90;
 
 		// If subtitle is overdue or within 20ms the video timing then display it.
 		// If cant get decoder PTS then display the subtitles.
 		// If not, pause subtitle processing until the subtitle should be shown
 		pts_t diff = show_time - decoder_ms;
-		if (diff < 20 || decoder_ms == 0LL)
+		if (diff < 20 || decoder_ms == 0)
 		{
-			eTrace("[eServiceMP3] Showing subtitles at %u . Current decoder time: %lld", show_time, decoder_ms);
+			eTrace("[eServiceMP3] Showing subtitles at %lld. Current decoder time: %lld. Difference: %lld", show_time, decoder_ms, diff);
 			m_subtitle_widget->setPage(dvb_page);
 			m_dvb_subtitle_pages.pop_front();
 		}
