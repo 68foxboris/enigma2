@@ -117,7 +117,6 @@ public:
 		memset(data, 0, sizeof(data));
 		number = 0;
 	}
-#ifndef SWIG
 	eServiceReference(int type, int flags)
 		: type(type), flags(flags)
 	{
@@ -169,22 +168,26 @@ public:
 		data[4]=data4;
 		number = 0;
 	}
-	operator bool() const
-	{
-		return valid();
-	}
-#endif
 	eServiceReference(int type, int flags, const std::string &path)
 		: type(type), flags(flags), path(path)
 	{
 		memset(data, 0, sizeof(data));
 		number = 0;
 	}
+#ifdef SWIG
+	eServiceReference(const eServiceReference &ref);
+#endif
 	eServiceReference(const std::string &string);
 	std::string toString() const;
 	std::string toCompareString() const;
 	std::string toReferenceString() const;
 	std::string toLCNReferenceString(bool trailing=true) const;
+#ifndef SWIG
+	operator bool() const
+	{
+		return valid();
+	}
+#endif
 	bool operator==(const eServiceReference &c) const
 	{
 		if (!c || type != c.type)
@@ -333,7 +336,7 @@ public:
 
 		sDescription,
 		sServiceref,
-		sTimeCreate,
+		sTimeCreate, 		/* unix time or string */
 		sFileSize,
 
 		sCAIDs,
@@ -451,7 +454,7 @@ public:
 	virtual ePtr<iServiceInfoContainer> getInfoObject(int w);
 	virtual ePtr<iDVBTransponderData> getTransponderData();
 	virtual void getAITApplications(std::map<int, std::string> &aitlist) {};
-	virtual PyObject *getHbbTVApplications() { return 0; };
+	virtual PyObject *getHbbTVApplications() {return getHbbTVApplications();};  // NOSONAR
 	virtual void getCaIds(std::vector<int> &caids, std::vector<int> &ecmpids, std::vector<std::string> &ecmdatabytes);
 	virtual long long getFileSize();
 
@@ -723,6 +726,7 @@ class PyList;
 struct eDVBTeletextSubtitlePage;
 struct eDVBSubtitlePage;
 struct ePangoSubtitlePage;
+struct eVobSubtitlePage;
 class eRect;
 class gRegion;
 class gPixmap;
@@ -734,6 +738,7 @@ public:
 	virtual void setPage(const eDVBTeletextSubtitlePage &p) = 0;
 	virtual void setPage(const eDVBSubtitlePage &p) = 0;
 	virtual void setPage(const ePangoSubtitlePage &p) = 0;
+	virtual void setPage(const eVobSubtitlePage &p) = 0;
 	virtual void setPixmap(ePtr<gPixmap> &pixmap, gRegion changed, eRect dest) = 0;
 	virtual void destroy() = 0;
 };
