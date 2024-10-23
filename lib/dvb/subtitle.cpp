@@ -288,7 +288,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment, bool isBuffer
 
 	switch (segment_type)
 	{
-	case DVB_SUB_SEGMENT_PAGE_COMPOSITION
+	case DVB_SUB_SEGMENT_PAGE_COMPOSITION:
 	{
 		int page_time_out = *segment++; processed_length++;
 		int page_version_number = *segment >> 4;
@@ -380,7 +380,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment, bool isBuffer
 
 		break;
 	}
-	case DVB_SUB_SEGMENT_REGION_COMPOSITION
+	case DVB_SUB_SEGMENT_REGION_COMPOSITION:
 	{
 		int region_id = *segment++; processed_length++;
 		int version_number = *segment >> 4;
@@ -518,7 +518,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment, bool isBuffer
 
 		break;
 	}
-	case DVB_SUB_SEGMENT_CLUT_DEFINITION
+	case DVB_SUB_SEGMENT_CLUT_DEFINITION:
 	{
 		int CLUT_id, CLUT_version_number;
 		subtitle_clut *clut, **pclut;
@@ -620,7 +620,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment, bool isBuffer
 		}
 		break;
 	}
-	case DVB_SUB_SEGMENT_OBJECT_DATA
+	case DVB_SUB_SEGMENT_OBJECT_DATA:
 	{
 		int object_id;
 		int object_coding_method;
@@ -717,7 +717,7 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment, bool isBuffer
 		}
 		break;
 	}
-	case DVB_SUB_SEGMENT_DISPLAY_DEFINITION
+	case DVB_SUB_SEGMENT_DISPLAY_DEFINITION:
 	{
 		if (segment_length > 4)
 		{
@@ -749,12 +749,12 @@ int eDVBSubtitleParser::subtitle_process_segment(uint8_t *segment, bool isBuffer
 			eDebug("[eDVBSubtitleParser] display definition segment to short %d!", segment_length);
 		break;
 	}
-	case DVB_SUB_SEGMENT_END_OF_DISPLAY_SET
+	case DVB_SUB_SEGMENT_END_OF_DISPLAY_SET:
 	{
 		subtitle_redraw_all();
 		m_seen_eod = true;
 	}
-	case DVB_SUB_SEGMENT_STUFFING
+	case DVB_SUB_SEGMENT_STUFFING:
 		break;
 	default:
 		eDebug("[eDVBSubtitleParser] unhandled segment type %02x", segment_type);
