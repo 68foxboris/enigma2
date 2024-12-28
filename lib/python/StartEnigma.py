@@ -55,6 +55,8 @@ class Session:
 		self.summary = None
 		self.in_exec = False
 		self.screen = SessionGlobals(self)
+		from Components.FrontPanelLed import frontPanelLed
+		frontPanelLed.init(self)
 		self.allDialogs = []
 
 		for plugin in plugins.getPlugins(PluginDescriptor.WHERE_SESSIONSTART):
@@ -323,6 +325,8 @@ def runScreenTest():
 	nav = Navigation()
 	session = Session(desktop=enigma.getDesktop(0), summaryDesktop=enigma.getDesktop(1), navigation=nav)
 	CiHandler.setSession(session)
+	from Screens.SwapManager import SwapAutostart
+	SwapAutostart()
 	powerOffTimer.setSession(session)
 	screensToRun = [p.fnc for p in plugins.getPlugins(PluginDescriptor.WHERE_WIZARD)]
 	enigma.eProfileWrite("Wizards")
@@ -359,7 +363,11 @@ def runScreenTest():
 	Tools.Trashcan.init(session)
 	enigma.eProfileWrite("RunReactor")
 	enigma.eProfileDone()
+	from Components.FrontPanelLed import FrontPanelLed
 	runReactor()
+	session.shutdown = True
+	FrontPanelLed.shutdown()
+	print("[StartEnigma] Normal shutdown.")
 	from Screens.SleepTimerEdit import isNextWakeupTime
 	# get currentTime
 	nowTime = time()
