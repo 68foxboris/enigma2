@@ -91,10 +91,12 @@ class SessionGlobals(Screen):
 		if config.usage.frontledrecstdby_color.value == "4":
 			RecstdbyLed1 = PATTERN_BLINK
 
+		have_display = BoxInfo.getItem("FrontpanelDisplay", False)
+		have_touch_sensor = BoxInfo.getItem("HaveTouchSensor", False)
 		nr_leds = BoxInfo.getItem("NumFrontpanelLEDs", 0)
 
 		if nr_leds == 1:
-			FrontpanelLed(which=0, boolean=False, patterns=[PATTERN_OFF, PATTERN_BLINK, PATTERN_OFF, PATTERN_BLINK]).connect(combine)
+			FrontpanelLed(which=0, boolean=False, patterns=[PATTERN_OFF if have_display else PATTERN_ON, PATTERN_BLINK, PATTERN_OFF, PATTERN_BLINK]).connect(combine)
 		elif nr_leds == 2:
 			if MODEL in ("dm520"):
 				FrontpanelLed(which=0, boolean=False, patterns=[PATTERN_ON, PATTERN_BLINK, PATTERN_OFF, PATTERN_BLINK]).connect(combine)

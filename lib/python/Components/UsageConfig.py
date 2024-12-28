@@ -1180,8 +1180,57 @@ def InitUsageConfig():
 		config.usage.fanspeed = ConfigSlider(default=127, increment=8, limits=(0, 255))
 		config.usage.fanspeed.addNotifier(fanSpeedChanged)
 
+	if BoxInfo.getItem("PowerLED"):
+		def powerLEDChanged(configElement):
+			if "fp" in BoxInfo.getItem("PowerLED"):
+				with open(BoxInfo.getItem("PowerLED"), "w") as fd:
+					fd.write(configElement.value and "1" or "0")
+				patterns = [PATTERN_ON, PATTERN_ON, PATTERN_OFF, PATTERN_ON] if configElement.value else [PATTERN_OFF, PATTERN_OFF, PATTERN_OFF, PATTERN_OFF]
+				ledPatterns.setLedPatterns(1, patterns)
+			else:
+				with open(BoxInfo.getItem("PowerLED"), "w") as fd:
+					fd.write(configElement.value and "on" or "off")
+		config.usage.powerLED = ConfigYesNo(default=True)
+		config.usage.powerLED.addNotifier(powerLEDChanged)
+
+	if BoxInfo.getItem("StandbyLED"):
+		def standbyLEDChanged(configElement):
+			if "fp" in BoxInfo.getItem("StandbyLED"):
+				patterns = [PATTERN_OFF, PATTERN_BLINK, PATTERN_ON, PATTERN_BLINK] if configElement.value else [PATTERN_OFF, PATTERN_OFF, PATTERN_OFF, PATTERN_OFF]
+				ledPatterns.setLedPatterns(0, patterns)
+			else:
+				with open(BoxInfo.getItem("StandbyLED"), "w") as fd:
+					fd.write(configElement.value and "on" or "off")
+		config.usage.standbyLED = ConfigYesNo(default=True)
+		config.usage.standbyLED.addNotifier(standbyLEDChanged)
+
+	if BoxInfo.getItem("SuspendLED"):
+		def suspendLEDChanged(configElement):
+			if "fp" in BoxInfo.getItem("SuspendLED"):
+				with open(BoxInfo.getItem("SuspendLED"), "w") as fd:
+					fd.write(configElement.value and "1" or "0")
+			else:
+				with open(BoxInfo.getItem("SuspendLED"), "w") as fd:
+					fd.write(configElement.value and "on" or "off")
+		config.usage.suspendLED = ConfigYesNo(default=True)
+		config.usage.suspendLED.addNotifier(suspendLEDChanged)
+
+	if BoxInfo.getItem("PowerOffDisplay"):
+		def powerOffDisplayChanged(configElement):
+			with open(BoxInfo.getItem("PowerOffDisplay"), "w") as fd:
+				fd.write(configElement.value and "1" or "0")
+		config.usage.powerOffDisplay = ConfigYesNo(default=True)
+		config.usage.powerOffDisplay.addNotifier(powerOffDisplayChanged)
+
+	if BoxInfo.getItem("LCDshow_symbols"):
+		def lcdShowSymbols(configElement):
+			with open(BoxInfo.getItem("LCDshow_symbols"), "w") as fd:
+				fd.write(configElement.value and "1" or "0")
+		config.usage.lcd_show_symbols = ConfigYesNo(default=True)
+		config.usage.lcd_show_symbols.addNotifier(lcdShowSymbols)
+
 	if BoxInfo.getItem("WakeOnLAN"):
-		f = open(BoxInfo.getItem("WakeOnLAN"))
+		f = open(BoxInfo.getItem("WakeOnLAN"), "r")
 		status = f.read().strip()
 		f.close()
 
