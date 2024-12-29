@@ -969,6 +969,13 @@ msgid "%d min"
 msgstr "%d минут"
 
 #, python-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d минута"
+msgstr[1] "%d минуты"
+msgstr[2] "%d минут"
+
+#, python-format
 msgid "%d minutes"
 msgstr "%d минут"
 
@@ -3399,8 +3406,11 @@ msgstr "Основные журналы отладки"
 msgid "Basque"
 msgstr "Баскский"
 
+msgid "Before sending the command to switch the TV to standby, the receiver can test if a device connected to the TV responds to a network 'ping'. If it does, instead of the 'standby' command the 'sourceinactive' command will be sent to the TV."
+msgstr "Перед отправкой команды на переключение ТВ в режим ожидания, ресивер проверяет пингом, включен ли подключенный к ТВ ПК(персональный компьютер). Если ПК пингуется, то вместо команды 'standby' на ТВ будет отправлена ​​команда 'sourceinactive'."
+
 msgid "Before sending the command to switch the TV to standby, the receiver tests if all the other devices plugged to TV are in standby. If they are not, the 'sourceinactive' command will be sent to the TV instead of the 'standby' command."
-msgstr "Перед отправкой команды на переключение ТВ в режим ожидания ресивер проверяет, все ли другие устройства, подключенные к ТВ, находятся в режиме ожидания. В противном случае на ТВ будет отправлена команда 'sourceinactive' вместо команды 'standby'."
+msgstr "Перед отправкой команды на переключение ТВ в режим ожидания, ресивер проверяет, все ли устройства, подключенные к этому же ТВ, находятся в режиме ожидания. В противном случае на ТВ будет отправлена команда 'sourceinactive' вместо команды 'standby'."
 
 msgid "Before changing these settings try to disable any overscan settings on th TV / display screen. To calibrate the On-Screen-Display (OSD) adjust the position and size values until the red box is *just* visible and touches the edges of the screen."
 msgstr "Прежде чем изменять эти настройки, попробуйте отключить любые настройки развертки на экране телевизора/дисплея. Для калибровки экранного меню (OSD) отрегулируйте значения положения и размера так, чтобы красная рамка была *еле* видна и касалась краёв экрана."
@@ -4570,8 +4580,8 @@ msgstr "Выберите стиль форматирования отображ�
 msgid "Choose the front panel display formatting style for times. 'H' / 'HH' is the hour for a 24 hour clock, 'h' / 'hh' is the hour for a 12 hour clock, 'mm' is the minutes.  ('HH' and 'hh' have leading zeros for single digit values.) The front panel display will be based on your choice but can be influenced any applicable skin."
 msgstr "Выберите стиль форматирования дисплея передней панели для времени. 'Ч' / 'ЧЧ' - это час для 24-часовых часов, 'ч' / 'чч' - час для 12-часовых часов, 'мм' - это минуты.  ('ЧЧ' и 'чч' имеют начальные нули для однозначных значений.) Дисплей передней панели будет основан на вашем выборе, но может быть подвержен влиянию любого применяемого скина."
 
-msgid "Choose the location for crash and debuglogs."
-msgstr "Выберите расположение для журналов сбоя и отладки."
+msgid "Choose the location for crash and debug logs."
+msgstr "Выберите расположение для логов сбоя и отладки."
 
 msgid "Choose the location where the EPG data will be stored when your device is shut down. The location must be available at boot time."
 msgstr "Выберите место, где будут храниться данные EPG, когда ваше устройство будет выключено. Расположение должно быть доступно во время загрузки."
@@ -4758,6 +4768,9 @@ msgstr "Клон ТВ экрана на LCD режим"
 
 msgid "Close"
 msgstr "Закрыть"
+
+msgid "Close CA device at programm end"
+msgstr "Закройте устройство CA по завершении программы"
 
 msgid "Close PiP on exit"
 msgstr "Закрывать окно PiP кнопкой 'EXIT'"
@@ -5935,6 +5948,9 @@ msgstr "Источник данных DNS"
 msgid "DNS mode"
 msgstr "Режим DNS"
 
+msgid "DNS name or IP address"
+msgstr "DNS-имя или IP-адрес"
+
 msgid "DNS suffix"
 msgstr "DNS-суффикс"
 
@@ -5977,6 +5993,9 @@ msgstr "Версия DVB драйверов: "
 
 msgid "DVB subtitle black transparency"
 msgstr "Прозрачность чёрного фона DVB субтитров"
+
+msgid "DVB subtitles color"
+msgstr "Цвет субтитров DVB"
 
 msgid "DVB subtitles color filter"
 msgstr "Цветовой фильтр субтитров DVB"
@@ -6486,6 +6505,9 @@ msgstr "Дания"
 msgid "Depth"
 msgstr "Глубина"
 
+msgid "Descrambling options"
+msgstr "Варианты дескремблирования"
+
 msgid "Descramble & record ECM' gives the option to descramble afterwards if descrambling on recording failed. 'Don't descramble, record ECM' save a scramble recording that can be descrambled on playback. 'Normal' means descramble the recording and don't record ECM."
 msgstr "'Раскодировать и записать ECM' - позволяет записать и раскодировать при воспроизведении, когда при записи не удаётся раскодировать. 'Не раскодировать ЕСМ и записать' хранит зашифрованные записи, которые могут быть раскодированы во время воспроизведения. 'Обычный' расшифровывает записи без записи ЕСМ."
 
@@ -6526,6 +6548,9 @@ msgid "Detail of GStreamer log"
 msgstr "Детальный журнал GStreamer"
 
 msgid "Detect next boxes before standby"
+msgstr "Обнаружение следующих ресиверов перед режимом ожидания"
+
+msgid "Detect other boxes before standby"
 msgstr "Обнаружение следующих ресиверов перед режимом ожидания"
 
 msgid "Detected storage devices:"
@@ -6658,6 +6683,9 @@ msgstr "Отключить текущее событие,но не отключ�
 
 msgid "Disable move mode"
 msgstr "Выключить режим перемещения"
+
+msgid "Disable operator profiles"
+msgstr "Отключить профили операторов"
 
 msgid "Disable the HDD Process on VFD"
 msgstr "Отключить показ состояния HDD на дисплее"
@@ -7582,11 +7610,17 @@ msgstr "Включить скриншот LCD в / tmp"
 msgid "Enable teletext caching"
 msgstr "Включить кэширование телетекста"
 
+msgid "Enable this option to add MultiBoot information detected during system boot to the debug log file."
+msgstr "Включите этот параметр, чтобы добавить информацию о мультизагрузке, обнаруженную во время загрузки системы, в файл лога отладки."
+
 msgid "Enable this option to add action map / remote control mapping data to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить данные сопоставления карты действий / удалённого управления в файл лога отладки."
 
 msgid "Enable this option to add extra DVB details to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить дополнительные сведения о DVB в файл журнала отладки."
+
+msgid "Enable this option to add extra DVB scan data to the debug log file."
+msgstr "Включите этот параметр, чтобы добавить дополнительные данные сканирования DVB в файл лога отладки."
 
 msgid "Enable this option to add extra DVB time sync data to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить дополнительные данные синхронизации времени DVB в файл журнала отладки."
@@ -8665,6 +8699,9 @@ msgstr "Образ успешно прошит"
 msgid "Flashing image '%s' was not successful!"
 msgstr "Прошивка образа '%s' не удалась!"
 
+msgid "Flash type"
+msgstr "Тип флеш-памяти"
+
 msgid "Flat alphabetical"
 msgstr "Единый алфавит"
 
@@ -9074,6 +9111,9 @@ msgstr "Калибровка позиции Х"
 msgid "GraphMultiEpg Settings"
 msgstr "Настройки графического Мульти-ТВ-гида"
 
+msgid "Graphical DVB subtitles will be displayed in the selected color, instead of the original colors."
+msgstr "Графические субтитры DVB будут отображаться в выбранном цвете вместо исходных цветов."
+
 msgid "Graphical EPG"
 msgstr "Графический ТВ-гид"
 
@@ -9398,6 +9438,9 @@ msgstr "Горизонтальное меню"
 msgid "Horizontal turning speed"
 msgstr "Поляризация (H) - скорость поворота"
 
+msgid "Host"
+msgstr "Host"
+
 msgid "Host domain"
 msgstr "Хост-домен"
 
@@ -9406,6 +9449,12 @@ msgstr "Имя хоста"
 
 msgid "Host name"
 msgstr "Сетевое имя"
+
+msgid "Hostname cannot be resolved to IP address!"
+msgstr "Имя хоста не может быть преобразовано в IP-адрес!"
+
+msgid "Hostname or IP address"
+msgstr "Имя хоста или IP-адрес"
 
 msgid "Host receiver FTP password"
 msgstr "FTP-пароль хост-приемника"
@@ -9519,6 +9568,9 @@ msgstr "IP"
 
 msgid "IP address"
 msgstr "IP-адрес"
+
+msgid "IP address is invalid!"
+msgstr "IP-адрес недействителен!"
 
 msgid "IP address of the Stream Relay server used to descramble services that can only be decrypted via Stream Relay."
 msgstr "IP-адрес сервера Stream Relay, используемого для дешифрации каналов, которые можно расшифровать только через Stream Relay."
@@ -10925,6 +10977,10 @@ msgstr "Максимальное количество дней"
 msgid "Maximum number of days in EPG"
 msgstr "Максимальное количество дней в ТВ-гиде"
 
+msgid "Maximum space used (MB)"
+msgstr "Максимальное использование пространства диска (Mб)"
+
+
 msgid "Maybe the reason that recording is currently running. Please stop the recording before trying to configure the positioner."
 msgstr "Может быть причина этого, что сейчас идет запись. Остановите пожалуйста запись,перед настройкой позиционера."
 
@@ -10945,6 +11001,9 @@ msgstr "Медиаплеер"
 
 msgid "Media scanner"
 msgstr "Медиа сканнер"
+
+msgid "Media service"
+msgstr "Медиасервис"
 
 msgid "Medium is not a writeable DVD!"
 msgstr "Носитель не записываемый DVD!"
@@ -11625,6 +11684,9 @@ msgstr "Тест сети:"
 msgid "Network Wizard"
 msgstr "Мастер настройки сети"
 
+msgid "Network address"
+msgstr "Сетевой адрес"
+
 msgid "Network configuration"
 msgstr "Конфигурация сети"
 
@@ -11827,6 +11889,9 @@ msgstr "Нет свободного номера"
 
 msgid "No free tuner!"
 msgstr "Нет свободного тюнера!"
+
+msgid "No hard disks detected."
+msgstr "Жёсткие диски не обнаружены."
 
 msgid "No images found"
 msgstr "Образы не найдены"
@@ -12120,8 +12185,8 @@ msgstr "Изменения OE"
 msgid "OE Log"
 msgstr "Журнал OE"
 
-msgid "OEM Model:\t\t%s\n"
-msgstr "Модель OEM\t\t%s\n"
+msgid "OEM model"
+msgstr "OEM-модель"
 
 msgid "OK"
 msgstr "ОК"
@@ -12228,6 +12293,12 @@ msgstr "Выкл"
 
 msgid "Offline decode delay (ms)"
 msgstr "Задержка оффлайн декодирования (Мс)"
+
+msgid "Offset CA device index"
+msgstr "Индекс устройства смещения CA"
+
+msgid "Offset and close CA device"
+msgstr "Смещение и закрытие устройства CA"
 
 msgid "Old"
 msgstr "Старый"
@@ -12736,6 +12807,9 @@ msgstr "Пилот"
 
 msgid "Pin Userbouquet"
 msgstr ""
+
+msgid "Ping device before standby"
+msgstr "Отправьте 'пинг' на устройство перед переходом в режим ожидания"
 
 msgid "Pitcairn"
 msgstr "Питкэрн"
@@ -13872,6 +13946,9 @@ msgstr "Действительно перезагрузить сейчас?"
 msgid "Really shutdown now?"
 msgstr "Действительно выключить сейчас?"
 
+msgid "Really start Kodi and stop user interface now?"
+msgstr "Действительно запустить Kodi и остановить пользовательский интерфейс сейчас?"
+
 msgid "Really store at index %2d for current position?"
 msgstr "Действительно сохранить номер %2d для текущей позиции?"
 
@@ -14905,6 +14982,14 @@ msgstr "Ошибка поиска!"
 msgid "Scanning..."
 msgstr "Сканирование..."
 
+#. TRANSLATORS: The receiver is performing a service scan, progress percentage is printed in '%d' (and '%%' will show a single '%' symbol).
+#, python-format
+msgid "Scanning: %d%% complete"
+msgid_plural "Scanning: %d%% complete"
+msgstr[0] "Сканирование: %d%% завершено"
+msgstr[1] "Сканирование: %d%% завершено"
+msgstr[2] "Сканирование: %d%% завершено"
+
 msgid "Scans default lamedbs sorted by satellite with a connected dish positioner"
 msgstr "Сканирование записей lamedb с сортировкой по спутникам при использовании позиционера"
 
@@ -15030,6 +15115,9 @@ msgstr "Выберите 'A' или 'B', если Ваша система тре
 
 msgid "Select 'FBC SCR' if this tuner will connect to a SCR (Unicable/JESS) device. For all other setups select 'FBC automatic'."
 msgstr "Выберите 'FBC SCR' ,если Ваш тюнер испрользует устройство SCR (Unicable/JESS).В остальных случаях используйте 'FBC автоматически'."
+
+msgid "Select 'No' to only write a log message to the debug log file."
+msgstr "Если выключено, то в лог попадёт только сообщение об ошибке."
 
 msgid "Select 'Yes' to enable AI-Powered Translation for all teletext and DVB subtitles."
 msgstr "Выберите «Да», чтобы включить функцию перевода на базе искусственного интеллекта для всех телетекстов и субтитров DVB."
@@ -16751,6 +16839,9 @@ msgstr "Уровень сигнала:"
 msgid "Signal: "
 msgstr "Сигнал: "
 
+msgid "Signed by"
+msgstr "Подписано"
+
 msgid "Similar"
 msgstr "Аналогичный"
 
@@ -16798,6 +16889,9 @@ msgstr "Широта по сайту"
 
 msgid "Site longitude"
 msgstr "Долгота по сайту"
+
+msgid "Size"
+msgstr "Размер"
 
 msgid "Size: "
 msgstr "Размер: "
@@ -17274,6 +17368,9 @@ msgstr "Режим ожидания - вентилятор %d PWM"
 
 msgid "Standby fan %d voltage"
 msgstr "Режим ожидания - напряжение вентилятора %d"
+
+msgid "Standby in "
+msgstr "Режим ожидания через "
 
 msgid "Standby in %s"
 msgstr "Режим ожидания через %s"
@@ -17787,6 +17884,15 @@ msgstr "Перейти на предыдущий суб сервис"
 msgid "Switch to radio mode"
 msgstr "Перейти к режиму радио"
 
+msgid "Switch to the left column"
+msgstr "Перейти к левой колонке"
+
+msgid "Switch to the other column"
+msgstr "Переключиться на другую колонку"
+
+msgid "Switch to the right column"
+msgstr "Перейти к правой колонке"
+
 msgid "Switzerland"
 msgstr "Швейцария"
 
@@ -18245,6 +18351,10 @@ msgid ""
 msgstr ""
 "Интерфейс вашего %s %s будет перезапущен\n"
 "по причине ошибки в StartEnigma.py"
+
+#, python-format
+msgid "The user interface of your %s %s will be stopped to run Kodi"
+msgstr "Пользовательский интерфейс вашего %s %s будет остановлен для запуска Kodi"
 
 msgid "The user interface of your receiver is restarting in debug mode"
 msgstr "Рестарт GUI Вашего ресивера выполнен для режима отладки"
@@ -19836,6 +19946,9 @@ msgstr "Venezuela (Bolivarian Republic of)"
 msgid "Verbose"
 msgstr "Подробный"
 
+msgid "Verify WebIf SSL certificate"
+msgstr "Проверить SSL-сертификат WebIf"
+
 msgid "Vertical"
 msgstr "Вертикальная"
 
@@ -20507,9 +20620,6 @@ msgstr "Если это включено,то при переключении в
 msgid "When enabled, graphical DVB subtitles will be displayed at their original position."
 msgstr "Если включено,графические DVB субтитры будут показаны в их исходном положении."
 
-msgid "When enabled, graphical DVB subtitles will be displayed in yellow, instead of the original color."
-msgstr "Если включено,графические DVB субтитры будут отображаться желтым, а не исходным цветом."
-
 msgid "When enabled, http streams are descrambled on the server side. The (remote) client receiver does not have to do descrambling. Default on."
 msgstr "Если это включено, то http стрим потоки декодируются на стороне сервера. (Дистанционный) клиент получатель стрим потока не должен делать декодирование. По дефолту включено."
 
@@ -20755,9 +20865,6 @@ msgstr "Год"
 
 msgid "Yellow"
 msgstr "Жёлтый"
-
-msgid "Yellow DVB subtitles"
-msgstr "Жёлтый цвет DVB субтитров"
 
 msgid "Yellow long"
 msgstr "Жёлтый долгое"
@@ -21952,6 +22059,9 @@ msgstr "посередине"
 
 msgid "min"
 msgstr "мин"
+
+msgid "minutes"
+msgstr "минут"
 
 msgid "module disabled"
 msgstr "модуль отключён"
