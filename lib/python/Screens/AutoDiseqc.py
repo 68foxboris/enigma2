@@ -306,7 +306,7 @@ class AutoDiseqc(ConfigListScreen, Screen):
 	SAT_TABLE_ONID = 16
 	SAT_TABLE_NAME = 17
 
-	def __init__(self, session, feid, nr_of_ports, simple_tone, simple_sat_change, order="all"):
+	def __init__(self, session, feid, nr_of_ports, order="all"):
 		self.skin = AutoDiseqc.skin
 		Screen.__init__(self, session)
 
@@ -321,8 +321,6 @@ class AutoDiseqc(ConfigListScreen, Screen):
 		self.port_index = 0
 		self.feid = feid
 		self.nr_of_ports = nr_of_ports
-		self.simple_tone = simple_tone
-		self.simple_sat_change = simple_sat_change
 		self.found_sats = []
 		self.circular_setup = 0
 		if order == "all":
@@ -426,22 +424,13 @@ class AutoDiseqc(ConfigListScreen, Screen):
 				self.clearNimEntries()
 				config.Nims[self.feid].diseqcD.value = "%d" % (self.sat_frequencies[self.index][self.SAT_TABLE_ORBPOS])
 
-			if self.nr_of_ports == 4:
-				config.Nims[self.feid].diseqcMode.value = "diseqc_a_b_c_d"
-			elif self.nr_of_ports == 2:
-				config.Nims[self.feid].diseqcMode.value = "diseqc_a_b"
-			else:
-				config.Nims[self.feid].diseqcMode.value = "single"
+			if config.Nims[self.feid].diseqcMode.value == "single":
 				if self.sat_frequencies[self.index][self.SAT_TABLE_ORBPOS] == 360 and not self.found_sats:
 					config.Nims[self.feid].simpleDiSEqCSetCircularLNB.value = True
 					self.circular_setup = 1
 				if self.sat_frequencies[self.index][self.SAT_TABLE_ORBPOS] == 560 and not self.found_sats:
 					config.Nims[self.feid].simpleDiSEqCSetCircularLNB.value = True
 					self.circular_setup = 2
-
-			config.Nims[self.feid].configMode.value = "simple"
-			config.Nims[self.feid].simpleDiSEqCSetVoltageTone = self.simple_tone
-			config.Nims[self.feid].simpleDiSEqCOnlyOnSatChange = self.simple_sat_change
 
 			self.saveAndReloadNimConfig()
 			self.state += 1

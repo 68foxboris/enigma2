@@ -375,7 +375,7 @@ class NimSetup(Setup, ServiceStopScreen):
 	def autoDiseqcRun(self):
 		self.stopService()
 		order = self.nimConfig.autoDiSEqC_order_single.value if self.nimConfig.diseqcMode.value == "single" else self.nimConfig.autoDiSEqC_order.value
-		self.session.openWithCallback(self.autoDiseqcCallback, AutoDiseqc, self.slotid, self.autodiseqc_ports, self.nimConfig.simpleDiSEqCSetVoltageTone, self.nimConfig.simpleDiSEqCOnlyOnSatChange, order)
+		self.session.openWithCallback(self.autoDiseqcCallback, AutoDiseqc, self.slotid, self.autodiseqc_ports, order)
 
 	def autoDiseqcCallback(self, result):
 		from Screens.Wizard import Wizard
