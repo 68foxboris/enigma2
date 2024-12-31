@@ -99,7 +99,7 @@ class NetworkWizard(Wizard, ShowRemoteControl):
 		self.InstalledInterfaceCount = len(self.Adapterlist)
 		if self.Adapterlist is not None:
 			if self.InstalledInterfaceCount == 1 and self.selectedInterface is None:
-				self.selectedInterface = self.Adapterlist[0]
+					self.selectedInterface = self.Adapterlist[0]
 		for interface in iNetwork.getAdapterList():
 			self.originalInterfaceState[interface] = {}
 			self.originalInterfaceState[interface]["up"] = iNetwork.getAdapterAttribute(interface, 'up')
@@ -203,7 +203,8 @@ class NetworkWizard(Wizard, ShowRemoteControl):
 			iNetwork.checkNetworkState(self.AdapterSetupEndFinished)
 			self.AdapterRef = self.session.openWithCallback(self.AdapterSetupEndCB, MessageBox, _("Please wait while we test your network..."), type=MessageBox.TYPE_INFO, enable_input=False)
 		else:
-			self.checkNetwork()
+			self.currStep = self.getStepWithID("confdns")
+			self.afterAsyncCode()
 
 	def AdapterSetupEndCB(self, data):
 		if data:
@@ -373,3 +374,12 @@ class NetworkWizard(Wizard, ShowRemoteControl):
 
 	def ChoicesSelectionMoved(self):
 		pass
+
+	def showIP(self):
+		try:
+			from netifaces import ifaddresses, AF_INET
+			ip = ifaddresses('eth0')[AF_INET][0]['addr']
+			old = self["text"].getText()
+			self["text"].setText(f"{_("IP address")} : {ip}\n{old}")
+		except Exception:
+			pass
