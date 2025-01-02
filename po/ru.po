@@ -128,6 +128,9 @@ msgstr " обновлено"
 msgid "!! Boot loader Upgrade !!"
 msgstr "!! Обновление загрузчика !!"
 
+msgid "# = Reboot Required"
+msgstr "# = Требуется перезагрузка"
+
 msgid "%-H:%M"
 msgstr "%-H:%M"
 
@@ -13963,6 +13966,10 @@ msgstr "Действительно обновить Ваш %s %s и выполн
 
 msgid "Reboot"
 msgstr "Перезагрузить"
+
+#, python-format
+msgid "Reboot %s %s now?"
+msgstr "Перезагрузить %s %s сейчас?"
 
 msgid "Rec"
 msgstr "Запись"
