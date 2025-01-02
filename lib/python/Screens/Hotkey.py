@@ -246,7 +246,7 @@ def getHotkeyFunctions():
 	hotkey.functions.append((_("User interface"), "Setup/userinterface", "Setup"))
 	hotkey.functions.append((_("Recording Setup"), "Setup/recording", "Setup"))
 	hotkey.functions.append((_("Harddisk Setup"), "Setup/harddisk", "Setup"))
-	hotkey.functions.append((_("Mount Manager"), "Module/Screens.MountManager/HddMount", "Setup"))
+	hotkey.functions.append((_("Device Manager"), "Module/Screens.DeviceManager/DeviceManager", "Setup"))
 	hotkey.functions.append((_("Subtitles Settings"), "Setup/subtitlesetup", "Setup"))
 	hotkey.functions.append((_("Language"), "Module/Screens.LocaleSelection/LocaleSelection", "Setup"))
 	hotkey.functions.append((_("OScam Information"), "Module/Screens.OScamInfo/OSCamInfo", "Plugins"))
