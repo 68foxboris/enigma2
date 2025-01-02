@@ -5,7 +5,7 @@ from Components.Label import Label
 from Components.Pixmap import Pixmap
 from Components.Sources.StaticText import StaticText
 from Components.MenuList import MenuList
-from enigma import eTimer
+from enigma import eTimer, eSize
 
 
 class MessageBox(Screen):
@@ -78,21 +78,7 @@ class MessageBox(Screen):
 			self["list"].hide()
 
 		if enable_input:
-			self["actions"] = ActionMap(["MsgBoxActions", "DirectionActions"],
-				{
-					"cancel": self.cancel,
-					"ok": self.ok,
-					"alwaysOK": self.alwaysOK,
-					"up": self.up,
-					"down": self.down,
-					"left": self.left,
-					"right": self.right,
-					"upRepeated": self.up,
-					"downRepeated": self.down,
-					"leftRepeated": self.left,
-					"rightRepeated": self.right
-				}, -1)
-		self.setTitle(self.title, showPath=False)
+			self.createActionMap(0)
 
 	def initTimeout(self, timeout):
 		self.timeout = timeout
@@ -172,8 +158,88 @@ class MessageBox(Screen):
 			self["selectedChoice"].setText(self["list"].getCurrent()[0])
 		self.stopTimer()
 
+	def createActionMap(self, prio):
+		if self.list:
+			self["actions"] = HelpableActionMap(self, ["MsgBoxActions", "NavigationActions"], {
+				"cancel": (self.cancel, _("Select the No / False response")),
+				"select": (self.select, _("Return the current selection response")),
+				"selectOk": (self.selectOk, _("Select the Yes / True response")),
+				"top": (self.top, _("Move to first line")),
+				"pageUp": (self.pageUp, _("Move up a page")),
+				"up": (self.up, _("Move up a line")),
+				# "first": (self.top, _("Move to first line")),
+				# "last": (self.bottom, _("Move to last line")),
+				"down": (self.down, _("Move down a line")),
+				"pageDown": (self.pageDown, _("Move down a page")),
+				"bottom": (self.bottom, _("Move to last line"))
+			}, prio=prio, description=_("Message Box Actions"))
+		else:
+			self["actions"] = HelpableActionMap(self, ["OkCancelActions"], {
+				"cancel": (self.cancel, _("Close the window")),
+				"ok": (self.select, _("Close the window"))
+			}, prio=prio, description=_("Message Box Actions"))
+
 	def __repr__(self):
 		return "%s(%s)" % (str(type(self)), self.text if hasattr(self, "text") else "<title>")
 
 	def getListWidth(self):
 		return self["list"].instance.getMaxItemTextWidth()
+
+	def reloadLayout(self):
+		for method in self.onLayoutFinish:
+			if not isinstance(method, type(self.close)):
+				exec(method, globals(), locals())
+			else:
+				method()
+		self.layoutFinished()
+
+
+class ModalMessageBox:
+	instance = None
+	def __init__(self, session):
+		if ModalMessageBox.instance:
+			print("[ModalMessageBox] Error: Only one ModalMessageBox instance is allowed!")
+		else:
+			ModalMessageBox.instance = self
+			self.dialog = session.instantiateDialog(MessageBox, "", enableInput=False, skinName="MessageBoxModal")
+			self.dialog.setAnimationMode(0)
+	def showMessageBox(self, text=None, timeout=-1, list=None, default=True, closeOnAnyKey=False, timeoutDefault=None, windowTitle=None, msgBoxID=None, typeIcon=MessageBox.TYPE_YESNO, enableInput=True, callback=None):
+		self.dialog.text = text
+		self.dialog["text"].setText(text)
+		self.dialog.typeIcon = typeIcon
+		self.dialog.type = typeIcon
+		self.dialog.picon = (typeIcon != MessageBox.TYPE_NOICON)  # Legacy picon argument to support old skins.
+		if typeIcon == MessageBox.TYPE_YESNO:
+			self.dialog.list = [(_("Yes"), True), (_("No"), False)] if list is None else list
+			self.dialog["list"].setList(self.dialog.list)
+			if isinstance(default, bool):
+				self.dialog.startIndex = 0 if default else 1
+			elif isinstance(default, int):
+				self.dialog.startIndex = default
+			else:
+				print(f"[MessageBox] Error: The context of the default ({default}) can't be determined!")
+			self.dialog["list"].show()
+		else:
+			self.dialog["list"].hide()
+			self.dialog.list = None
+		self.callback = callback
+		self.dialog.timeout = timeout
+		self.dialog.msgBoxID = msgBoxID
+		self.dialog.enableInput = enableInput
+		if enableInput:
+			self.dialog.createActionMap(-20)
+			self.dialog["actions"].execBegin()
+		self.dialog.closeOnAnyKey = closeOnAnyKey
+		self.dialog.timeoutDefault = timeoutDefault
+		self.dialog.windowTitle = windowTitle or self.dialog.TYPE_PREFIX.get(type, _("Message"))
+		self.dialog.baseTitle = self.dialog.windowTitle
+		self.dialog.activeTitle = self.dialog.windowTitle
+		self.dialog.reloadLayout()
+		self.dialog.close = self.close
+		self.dialog.show()
+	def close(self, *retVal):
+		if self.callback and callable(self.callback):
+			self.callback(*retVal)
+		if self.dialog.enableInput:
+			self.dialog["actions"].execEnd()
+		self.dialog.hide()
