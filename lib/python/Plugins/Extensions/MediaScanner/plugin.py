@@ -1,44 +1,58 @@
-# -*- coding: utf-8 -*-
-from Screens.InfoBar import InfoBar
-from Screens.ChoiceBox import ChoiceBox
-from Screens.MessageBox import MessageBox
+from os import access, F_OK, R_OK
 from Plugins.Plugin import PluginDescriptor
-from Tools.BoundFunction import boundFunction
 from Components.Scanner import scanDevice
 from Components.Harddisk import harddiskmanager
-import os
+from Screens.ChoiceBox import ChoiceBox
+from Screens.InfoBar import InfoBar
+from Screens.MessageBox import MessageBox
+from Tools.BoundFunction import boundFunction
 
-
-global_session = None
+parentScreen = None
 
 
 def execute(option):
-	print("[MediaScanner] execute", option)
+	#print "execute", option
 	if option is None:
+		if parentScreen:
+			parentScreen.close()
 		return
+
 	(_, scanner, files, session) = option
 	scanner.open(files, session)
+	if parentScreen:
+		parentScreen.close()
 
 
 def mountpoint_choosen(option):
 	if option is None:
+		if parentScreen:
+			parentScreen.close()
 		return
+
+	#print "scanning", option
 	(description, mountpoint, session) = option
 	res = scanDevice(mountpoint)
-	files = [(r.description, r, res[r], session) for r in res]
-	if not files:
-		if os.access(mountpoint, os.F_OK | os.R_OK):
-			session.open(MessageBox, (_("%s connected successfully.") % description) + _("No displayable files on this medium found!"), MessageBox.TYPE_INFO, simple=True, timeout=5)
-		else:
-			session.open(MessageBox, _("Storage device not available or not initialized."), MessageBox.TYPE_ERROR, simple=True, timeout=10)
+
+	list = [(r.description, r, res[r], session) for r in res]
+
+	if not list:
+		if access(mountpoint, F_OK | R_OK):
+			session.open(MessageBox, _("No displayable files on this medium found!"), MessageBox.TYPE_INFO, simple=True, timeout=5)
+		#else:
+		#	print "ignore", mountpoint, "because its not accessible"
+		if parentScreen:
+			parentScreen.close()
 		return
-	session.openWithCallback(execute, ChoiceBox, title=(_("%s connected successfully.") % description) + "\n" + _("The following files were found..."), list=files)
+
+	session.openWithCallback(execute, ChoiceBox, title=_("The following files were found..."), list=list)
 
 
-def scan(session):
-	parts = [(r.tabbedDescription(), r.mountpoint, session) for r in harddiskmanager.getMountedPartitions(onlyhotplug=False) if os.access(r.mountpoint, os.F_OK | os.R_OK)]
-	parts.append((_("Memory") + "\t/tmp", "/tmp", session))
-	session.openWithCallback(mountpoint_choosen, ChoiceBox, title=_("Please select medium to be scanned") + ":", list=parts)
+def scan(session, parent=None):
+	global parentScreen
+	parentScreen = parent
+	parts = [(r.tabbedDescription(), r.mountpoint, session) for r in harddiskmanager.getMountedPartitions(onlyhotplug=False) if access(r.mountpoint, F_OK | R_OK)]
+	parts.append((_("Temporary directory") + "\t/tmp", "/tmp", session))
+	session.openWithCallback(mountpoint_choosen, ChoiceBox, title=_("Please select medium to be scanned"), list=parts)
 
 
 def main(session, **kwargs):
@@ -52,22 +66,24 @@ def menuEntry(*args):
 def menuHook(menuid):
 	if menuid != "mainmenu":
 		return []
-	return [(_("%s (files)") % r.description, boundFunction(menuEntry, r.description, r.mountpoint), "hotplug_%s" % r.mountpoint, None) for r in harddiskmanager.getMountedPartitions(onlyhotplug=True)]
+	return [(("%s (files)") % r.description, boundFunction(menuEntry, r.description, r.mountpoint), "hotplug_%s" % r.mountpoint, None) for r in harddiskmanager.getMountedPartitions(onlyhotplug=True)]
+
+
+global_session = None
 
 
 def partitionListChanged(action, device):
 	if InfoBar.instance:
 		if InfoBar.instance.execing:
 			if action == 'add' and device.is_hotplug:
-				print("[MediaScanner] mountpoint", device.mountpoint)
-				print("[MediaScanner] description", device.description)
-				print("[MediaScanner] force_mounted", device.force_mounted)
-				print("[MediaScanner] scanning", device.description, device.mountpoint)
+				#print "mountpoint", device.mountpoint
+				#print "description", device.description
+				#print "force_mounted", device.force_mounted
 				mountpoint_choosen((device.description, device.mountpoint, global_session))
-		else:
-			print("[MediaScanner] main infobar is not execing... so we ignore hotplug event!")
-	else:
-			print("[MediaScanner] hotplug event.. but no infobar")
+		#else:
+			#print "main infobar is not execing... so we ignore hotplug event!"
+	#else:
+			#print "hotplug event.. but no infobar"
 
 
 def sessionstart(reason, session):
@@ -87,6 +103,7 @@ def autostart(reason, **kwargs):
 def Plugins(**kwargs):
 	return [
 		PluginDescriptor(name=_("Media scanner"), description=_("Scan files..."), where=PluginDescriptor.WHERE_PLUGINMENU, icon="MediaScanner.png", needsRestart=True, fnc=main),
+#		PluginDescriptor(where = PluginDescriptor.WHERE_MENU, fnc=menuHook),
 		PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, needsRestart=True, fnc=sessionstart),
 		PluginDescriptor(where=PluginDescriptor.WHERE_AUTOSTART, needsRestart=True, fnc=autostart)
 		]
