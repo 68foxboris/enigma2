@@ -1,3 +1,34 @@
+#Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+#
+#Copyright (c) 2024-2025 jbleyel
+
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
+#1. Non-Commercial Use: You may not use the Software or any derivative works
+#   for commercial purposes without obtaining explicit permission from the
+#   copyright holder.
+#2. Share Alike: If you distribute or publicly perform the Software or any
+#   derivative works, you must do so under the same license terms, and you
+#   must make the source code of any derivative works available to the
+#   public.
+#3. Attribution: You must give appropriate credit to the original author(s)
+#   of the Software by including a prominent notice in your derivative works.
+#THE SOFTWARE IS PROVIDED "AS IS," WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL
+#THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR
+#OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE,
+#ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+#OTHER DEALINGS IN THE SOFTWARE.
+#
+#For more details about the CC BY-NC-SA 4.0 License, please visit:
+#https://creativecommons.org/licenses/by-nc-sa/4.0/
+
+
 from glob import glob
 from os import mkdir, rmdir, unlink
 from os.path import exists, isfile, join, realpath
@@ -35,25 +66,42 @@ class UUIDTask(ConditionTask):
 
 	def check(self):
 		fstab = fileReadLines("/etc/fstab", default=[], source=MODULE_NAME)
-		save = False
+		knownDevices = fileReadLines("/etc/udev/known_devices", default=[], source=MODULE_NAME)
+		saveFstab = False
+		saveknownDevices = False
 		for device, olduuid in self.uuids.items():
 			newuuid = fileReadLine(f"/dev/uuid/{device}", default=None, source=MODULE_NAME)
 			if newuuid and newuuid != olduuid:
 				for i, line in enumerate(fstab):
 					if line.find(f"UUID={olduuid}") != -1:
 						fstab[i] = line.replace(f"UUID={olduuid}", f"UUID={newuuid}")
-						print(f"[UUIDTask] UUID changed from {olduuid} to {newuuid}")
-						save = True
+						print(f"[UUIDTask] fstab UUID changed from {olduuid} to {newuuid}")
+						saveFstab = True
+						break
+				for i, line in enumerate(knownDevices):
+					if line.startswith(olduuid):
+						fstab[i] = line.replace(f"{olduuid}", f"{newuuid}")
+						print(f"[UUIDTask] known_devices UUID changed from {olduuid} to {newuuid}")
+						saveknownDevices = True
 						break
 			if not newuuid:
 				for i, line in enumerate(fstab):
 					if line.find(f"UUID={olduuid}") != -1:
 						fstab[i] = f"#{line}"
-						print(f"[UUIDTask] UUID {olduuid} removed")
-						save = True
+						print(f"[UUIDTask] fstab UUID {olduuid} removed")
+						saveFstab = True
 						break
-		if save:
+				for i, line in enumerate(knownDevices):
+					if line.startswith(olduuid):
+						fstab[i] = ""
+						print(f"[UUIDTask] known_devices UUID {olduuid} removed")
+						saveknownDevices = True
+						break
+		if saveFstab:
 			fileWriteLines("/etc/fstab", fstab, source=MODULE_NAME)
+		if saveknownDevices:
+			knownDevices = [x for x in knownDevices if x]
+			fileWriteLines("/etc/udev/known_devices", knownDevices, source=MODULE_NAME)
 		return True
 
 
@@ -1334,6 +1382,18 @@ class DeviceManagerMountPoints(Setup):
 					mkdir(mountPoint, 0o755)
 
 		if newFstab != oldFstab:
+			knownDevices = fileReadLines("/etc/udev/known_devices", default=[], source=MODULE_NAME)
+			knownDevicesUUIDs = [x.split(":")[0] for x in knownDevices if ":" in x]
+			saveKnownDevices = False
+			for line in newFstab:
+				if line.startswith("UUID=") and EXPANDER_MOUNT not in line:
+					UUID = line.split()[0].replace("UUID=", "")
+					if UUID not in knownDevicesUUIDs:
+						mountPoint = line.split()[1]
+						knownDevices.append(f"{UUID}:{mountPoint}")
+						saveKnownDevices = True
+			if saveKnownDevices:
+				fileWriteLines("/etc/udev/known_devices", knownDevices, source=MODULE_NAME)
 			fileWriteLines("/etc/fstab", newFstab, source=MODULE_NAME)
 			Console().ePopen([self.MOUNT, self.MOUNT, "-a"], keySaveCallback)
 		else:
