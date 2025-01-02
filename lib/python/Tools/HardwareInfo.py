@@ -1,60 +1,61 @@
-# -*- coding: utf-8 -*-
 from Components.SystemInfo import BoxInfo
-from Tools.Directories import fileReadLine
-
-MODULE_NAME = __name__.split(".")[-1]
-hw_info = None
-MODEL = BoxInfo.getItem("model")
 
 
 class HardwareInfo:
-	device_name = _("Unavailable")
-	device_version = ""
-	device_revision = ""
-	device_model = None
-	device_brandname = None
-	device_hdmi = True
+	device_name = None
+	device_version = None
 
 	def __init__(self):
-		global hw_info
-		if hw_info:
+		if HardwareInfo.device_name is not None:
+#			print "using cached result"
 			return
-		hw_info = self
-		self.device_version = fileReadLine("/proc/stb/info/version", "", source=MODULE_NAME).strip()
-		self.device_revision = fileReadLine("/proc/stb/info/board_revision", "", source=MODULE_NAME).strip()
-		self.device_name = MODEL
-		self.device_brandname = BoxInfo.getItem("brand")
-		self.device_model = MODEL
-		self.device_model = self.device_model or self.device_name
-		self.device_hw = self.device_model
-		self.machine_name = self.device_model
-		if self.device_revision:
-			self.device_string = "%s (%s-%s)" % (self.device_hw, self.device_revision, self.device_version)
-		elif self.device_version:
-			self.device_string = "%s (%s)" % (self.device_hw, self.device_version)
-		else:
-			self.device_string = self.device_hw
-		if BoxInfo.getItem("DreamBoxDVI"):
-			self.device_hdmi = False  # Only dm800 and dm8000 do not have HDMI hardware.
-		print("[HardwareInfo] Detected: '%s'." % self.get_device_string())
+
+		HardwareInfo.device_name = "unknown"
+		try:
+			file = open("/proc/stb/info/model")
+			HardwareInfo.device_name = file.readline().strip()
+			file.close()
+			if BoxInfo.getItem("brand") == "dags":
+				HardwareInfo.device_name = "dm800se"
+			try:
+				file = open("/proc/stb/info/version")
+				HardwareInfo.device_version = file.readline().strip()
+				file.close()
+			except:
+				pass
+		except:
+			print("----------------")
+			print("you should upgrade to new drivers for the hardware detection to work properly")
+			print("----------------")
+			print("fallback to detect hardware via /proc/cpuinfo!!")
+			try:
+				rd = open("/proc/cpuinfo").read()
+				if "Brcm4380 V4.2" in rd:
+					HardwareInfo.device_name = "dm8000"
+					print("dm8000 detected!")
+				elif "Brcm7401 V0.0" in rd:
+					HardwareInfo.device_name = "dm800"
+					print("dm800 detected!")
+			except:
+				pass
 
 	def get_device_name(self):
-		return hw_info.device_name
-
-	def get_device_model(self):
-		return hw_info.device_model
+		return HardwareInfo.device_name
 
 	def get_device_version(self):
-		return hw_info.device_version
+		return HardwareInfo.device_version
 
-	def get_device_revision(self):
-		return hw_info.device_revision
+	def get_device_model(self):
+		return BoxInfo.getItem("machinebuild")
 
-	def get_device_string(self):
-		return hw_info.device_string
+	def get_vu_device_name(self):
+		return BoxInfo.getItem("machinebuild")
 
-	def get_machine_name(self):
-		return hw_info.machine_name
+	def get_friendly_name(self):
+		return BoxInfo.getItem("displaymodel")
 
-	def has_hdmi(self):
-		return hw_info.device_hdmi
+	def linux_kernel(self):
+		try:
+			return open("/proc/version").read().split(' ', 4)[2].split('-', 2)[0]
+		except:
+			return "unknown"
