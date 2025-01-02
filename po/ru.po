@@ -6292,6 +6292,12 @@ msgstr "Определите дополнительную задержку в м
 msgid "Define the DNS suffix."
 msgstr "Задайте DNS-суффикс."
 
+msgid "Define the custom mountpoint for the device."
+msgstr "Определите пользовательскую точку монтирования для устройства."
+
+msgid "Define the file system mount options."
+msgstr "Определите параметры монтирования файловой системы."
+
 msgid "Define the location of the EPG Cache file."
 msgstr "Выбор расположения кеша ТВ-гида файла."
 
@@ -8606,6 +8612,9 @@ msgstr ""
 
 msgid "Filename"
 msgstr "Название файла"
+
+msgid "File system"
+msgstr "Файловая система"
 
 msgid "File System Check"
 msgstr "Проверка файловой системы"
@@ -15388,6 +15397,9 @@ msgstr "Задайте время задержки требуемой для о�
 msgid "Select the character or action under the keyboard cursor"
 msgstr "Выберите символ или действие под курсором виртуальной клавиатуры"
 
+msgid "Select the file system for the device."
+msgstr "Выберите файловую систему для устройства."
+
 msgid "Select the highlighted image and proceed to the slot selection"
 msgstr "Выберите выделенный образ и переходите к выбору слота"
 
@@ -17166,6 +17178,9 @@ msgstr "Извините, %s не установлен!"
 
 msgid "Sorry, deleting directories can (for now) only be done through the trash can."
 msgstr "Извините, удаление директорий может (пока) быть сделано только через корзину."
+
+msgid "Sorry, no physical devices that supports SWAP attached. Can't create swap file on network or FAT32 file systems"
+msgstr "Извините, не найдено ни одно устройство для размещения файла подкачки. Файл подкачки не может быть создан"
 
 msgid "Sorry, no backups found!"
 msgstr "Извините, не найдено ни одной копии!"
