@@ -126,7 +126,7 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 						<item key="timeshift_setup" level="0" text="Timeshift Setup" weight="15"><screen module="Timeshift" screen="TimeshiftSettings" /></item>
 						<item key="hdmirecord_setup" level="0" text="HDMI Recording Setup" weight="15" requires="HDMIin"><setup id="HDMIRecord"/></item>
 					</menu>
-					<menu key="harddisk" level="0" text="Harddisk" requires="Harddisk">
+						<menu key="harddisk" level="0" text="Storage Devices" weight="45" requires="Harddisk">
 						<item key="device_manager" level="0" text="Device Manager" weight="20"><screen module="DeviceManager" screen="DeviceManager" /></item>
 						<item key="swap_manager" level="2" text="Swap Manager" weight="30"><screen module="SwapManager" screen="Swap" /></item>
 						<item key="flash_expander" level="2" text="Flash Expander" weight="40"><screen module="FlashExpander" screen="FlashExpander" /></item>
