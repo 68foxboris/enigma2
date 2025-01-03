@@ -78,11 +78,11 @@ def getFlashDateString():
 		return _("Unknown")
 
 
+def returndate(date):
+    return "%s-%s-%s" % (date[:4], date[4:6], date[6:8])
+
 def getBuildDateString():
-	version = fileReadLine("/etc/version", source=MODULE_NAME)
-	if version is None:
-		return _("Unknown")
-	return "%s-%s-%s" % (version[:4], version[4:6], version[6:8])
+	return returndate(BoxInfo.getItem("compiledate"))
 
 
 def getUpdateDateString():

@@ -589,7 +589,7 @@ class DistributionInformation(InformationBase):
 		info.append(formatLine("P1", _("Enigma2 version"), enigmaVersion))
 		compileDate = str(BoxInfo.getItem("compiledate"))
 		info.append(formatLine("P1", _("Last update"), formatDate(about.getUpdateDateString())))
-		info.append(formatLine("P1", _("Last flash"), formatDate(about.getFlashDateString())))
+		info.append(formatLine("P1", _("Build date"), formatDate(about.getBuildDateString())))
 		info.append(formatLine("P1", _("Enigma2 (re)starts"), config.misc.startCounter.value))
 		info.append(formatLine("P1", _("Enigma2 debug level"), eGetEnigmaDebugLvl()))
 		mediaService = BoxInfo.getItem("mediaservice")
