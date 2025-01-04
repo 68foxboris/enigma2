@@ -161,6 +161,7 @@ dist_install_DATA =     ask.png \
     slow.png \
     stop_large.png \
     stop.png \
+    SwapManager.png \
     timer_autotimer.png \
     timer_done.png \
     timer_failed.png \
