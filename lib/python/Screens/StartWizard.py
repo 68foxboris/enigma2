@@ -19,14 +19,17 @@ from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 from Components.SystemInfo import BoxInfo
 from Components.config import config, ConfigBoolean, configfile
+from Tools.Directories import fileReadLines
 # from Screens.LocaleSelection import LocaleSelection
 from enigma import eConsoleAppContainer, eTimer, eActionMap
-
+from re import search
 import os
 
 config.misc.firstrun = ConfigBoolean(default=True)
 config.misc.wizardLanguageEnabled = ConfigBoolean(default=True)
 config.misc.do_overscanwizard = ConfigBoolean(default=OverscanWizard and config.skin.primary_skin.value == "PLi-FullHD/skin.xml")
+
+MODULE_NAME = __name__.split(".")[-1]
 
 
 class StartWizard(Wizard, ShowRemoteControl):
@@ -40,6 +43,19 @@ class StartWizard(Wizard, ShowRemoteControl):
 		config.misc.firstrun.value = 0
 		config.misc.firstrun.save()
 		configfile.save()
+
+
+	def hasPartitions(self):
+		partitions = fileReadLines("/proc/partitions", source=MODULE_NAME)
+		count = 0
+		black = BoxInfo.getItem("mtdblack")
+		for line in partitions:
+			parts = line.strip().split()
+			if parts:
+				device = parts[3]
+				if not device.startswith(black) and (search(r"^sd[a-z][1-9][\d]*$", device) or search(r"^mmcblk[\d]p[\d]*$", device)):
+					count += 1
+		return count > 0
 
 
 def setLanguageFromBackup(backupfile):
@@ -111,8 +127,7 @@ class AutoInstallWizard(Screen):
 		self.package = None
 
 		import glob
-		print("[StartWizard] Read /sys/class/net/eth0/address")
-		mac_address = open('/sys/class/net/eth0/address').readline().strip().replace(":", "")
+		mac_address = open('/sys/class/net/eth0/address', 'r').readline().strip().replace(":", "")
 		autoinstallfiles = glob.glob('/media/*/backup/autoinstall%s' % mac_address) + glob.glob('/media/net/*/backup/autoinstall%s' % mac_address)
 		if not autoinstallfiles:
 			autoinstallfiles = glob.glob('/media/*/backup/autoinstall') + glob.glob('/media/net/*/backup/autoinstall')
@@ -142,7 +157,7 @@ class AutoInstallWizard(Screen):
 			if self.container.execute('opkg install "%s"' % self.package):
 				raise Exception(_("failed to execute command!"))
 				self.appClosed(True)
-		except Exception:
+		except Exception as e:
 			self.appClosed(True)
 
 	def dataAvail(self, data):
@@ -182,6 +197,14 @@ class AutoInstallWizard(Screen):
 		self.close(44)
 
 
+class IncorrectBoxInfoWizard(MessageBox):
+	def __init__(self, session):
+		MessageBox.__init__(self, session, _("The enigma.info file for the boxinformation is not available or the content is invalid.\nPress any key to continue?"), type=MessageBox.TYPE_WARNING, timeout=20, simple=True)
+
+	def close(self, value):
+		MessageBox.close(self)
+
+
 class WizardLanguage(Wizard, ShowRemoteControl):
 	def __init__(self, session, silent=True, showSteps=False, neededTag=None):
 		self.xmlfile = ["wizardlanguage.xml"]
@@ -204,10 +227,13 @@ class WizardLanguage(Wizard, ShowRemoteControl):
 
 
 if not os.path.isfile("/etc/installed"):
-	eConsoleAppContainer().execute("opkg list_installed | cut -d ' ' -f 1 > /etc/installed;chmod 444 /etc/installed")
+	from Components.Console import Console
+	Console().ePopen("opkg list_installed | cut -d ' ' -f 1 > /etc/installed;chmod 444 /etc/installed")
+
 # StartEnigma.py#L528ff - RestoreSettings
 if config.misc.firstrun.value:
 	wizardManager.registerWizard(WizardLanguage, config.misc.wizardLanguageEnabled.value, priority=0)
+wizardManager.registerWizard(IncorrectBoxInfoWizard, not BoxInfo.getItem("checksum"), priority=0)
 wizardManager.registerWizard(AutoInstallWizard, os.path.isfile("/etc/.doAutoinstall"), priority=0)
 wizardManager.registerWizard(AutoRestoreWizard, config.misc.wizardLanguageEnabled.value and config.misc.firstrun.value and checkForAvailableAutoBackup(), priority=0)
 #wizardManager.registerWizard(LocaleSelection, config.misc.wizardLanguageEnabled.value, priority=10)
