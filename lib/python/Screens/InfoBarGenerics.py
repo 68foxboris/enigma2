@@ -74,18 +74,22 @@ class ResumePoints():
 		self.cacheCleanTimer = eTimer()
 		self.cacheCleanTimer.callback.append(self.cleanCache)
 		self.cleanCache()  # get rid of stale entries on reboot
+
 	def loadResumePoints(self):
 		self.resumePointCache.clear()
 		if fileExists(self.resumePointFile):
 			with open(self.resumePointFile, "rb") as f:
 				self.resumePointCache.update(pickle_load(f, fix_imports=True, encoding="utf8"))
+
 	def saveResumePoints(self):
 		with open(self.resumePointFile, "wb") as f:
 			pickle_dump(self.resumePointCache, f, pickle_HIGHEST_PROTOCOL)
+
 	def delResumePoint(self, ref):
 		if (sref := ref.toString()) in self.resumePointCache:
 			del self.resumePointCache[sref]
 			self.saveResumePoints()
+
 	def cleanCache(self):
 		changed = False
 		now = int(time())
@@ -104,6 +108,7 @@ class ResumePoints():
 		if changed:
 			self.saveResumePoints()
 		self.cacheCleanTimer.startLongTimer(24 * 60 * 60)  # clean up daily
+
 	def setResumePoint(self, session):
 		service = session.nav.getCurrentService()
 		ref = session.nav.getCurrentlyPlayingServiceOrGroup()
@@ -117,6 +122,7 @@ class ResumePoints():
 					sl = x[1] if (x := seek.getLength()) else None
 					self.resumePointCache[sref] = [int(time()), pos[1], sl]
 					self.saveResumePoints()
+
 	def getResumePoint(self, session):
 		ref = session.nav.getCurrentlyPlayingServiceOrGroup()
 		if (ref is not None) and (ref.type != 1) and (sref := ref.toString()) in self.resumePointCache:
@@ -348,8 +354,8 @@ class InfoBarShowHide(InfoBarScreenSaver):
 
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-			iPlayableService.evStart: self.serviceStarted,
-		})
+				iPlayableService.evStart: self.serviceStarted,
+			})
 
 		InfoBarScreenSaver.__init__(self)
 		self.__state = self.STATE_SHOWN
@@ -667,10 +673,10 @@ class BufferIndicator(Screen):
 		self.mayShowTimer = eTimer()
 		self.mayShowTimer.callback.append(self.mayShowEndTimer)
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-			iPlayableService.evBuffering: self.bufferChanged,
-			iPlayableService.evStart: self.__evStart,
-			iPlayableService.evGstreamerPlayStarted: self.__evGstreamerPlayStarted,
-		})
+				iPlayableService.evBuffering: self.bufferChanged,
+				iPlayableService.evStart: self.__evStart,
+				iPlayableService.evGstreamerPlayStarted: self.__evGstreamerPlayStarted,
+			})
 
 	def bufferChanged(self):
 		if self.mayShow:
@@ -1416,7 +1422,7 @@ class InfoBarEPG:
 	def showEventInfoPlugins(self):
 		pluginlist = self.getEPGPluginList()
 		if pluginlist:
-			self.session.openWithCallback(self.EventInfoPluginChosen, ChoiceBox, title=_("Please choose an extension..."), list=pluginlist, skin_name="EPGExtensionsList", reorderConfig="eventinfo_order", windowTitle=_("Events info menu"))
+			self.session.openWithCallback(self.EventInfoPluginChosen, ChoiceBox, title=_("Please choose an extension..."), list=pluginlist, skin_name="EPGExtensionsList", reorderConfig="eventinfoOrder", windowTitle=_("Events info menu"))
 		else:
 			self.openSingleServiceEPG()
 
@@ -2440,11 +2446,8 @@ class ExtensionsList(ChoiceBox):
 			extensionKeys.append(key or "")
 			extensionList.append((extension[0], extension[1]))
 
-		reorderConfig = "extension_order" if config.usage.sortExtensionslist.value == "user" else ""
+		reorderConfig = "extensionOrder" if config.usage.sortExtensionslist.value == "user" else ""
 		ChoiceBox.__init__(self, session, title=_("Please choose an extension..."), list=extensionList, keys=extensionKeys, reorderConfig=reorderConfig, skin_name="ExtensionsList")
-
-
-from Screens.PiPSetup import PiPSetup
 
 
 class InfoBarExtensions:
@@ -2462,7 +2465,7 @@ class InfoBarExtensions:
 		self.addExtension(extension=self.getLogManager, type=InfoBarExtensions.EXTENSION_LIST)
 
 	def getOSname(self):
-		return _("OSCam Info")
+		return _("OScam/Ncam Info")
 
 	def getOScamInfo(self):
 		import process
@@ -2550,7 +2553,7 @@ class InfoBarPlugins:
 	def getPluginList(self):
 		l = []
 		for p in plugins.getPlugins(where=PluginDescriptor.WHERE_EXTENSIONSMENU):
-			args = inspect.getfullargspec(p.fnc)[0]
+			args = inspect.getfullargspec(p.__call__)[0]
 			if len(args) == 1 or len(args) == 2 and isinstance(self, InfoBarChannelSelection):
 				l.append(((boundFunction(self.getPluginName, p.name), boundFunction(self.runPlugin, p), lambda: True), None, p.name))
 		l.sort(key=lambda e: e[2])  # sort by name
@@ -2589,6 +2592,8 @@ class InfoBarJobman:
 	def JobViewCB(self, in_background):
 		job_manager.in_background = in_background
 
+
+from Screens.PiPSetup import PiPSetup
 
 # depends on InfoBarExtensions
 
@@ -3039,7 +3044,7 @@ class InfoBarInstantRecord:
 		if not findSafeRecordPath(pirr) and not findSafeRecordPath(defaultMoviePath()):
 			if not pirr:
 				pirr = ""
-			self.session.open(MessageBox, "%s\n\n%s" % (_("Path '%s' missing!") % pirr, _("No HDD found or HDD not initialized!")), MessageBox.TYPE_ERROR)
+			self.session.open(MessageBox, _("Missing ") + "\n" + pirr + "\n" + _("No HDD found or HDD not initialized!"), MessageBox.TYPE_ERROR)
 			return
 
 		if isStandardInfoBar(self):
@@ -3089,11 +3094,15 @@ class InfoBarInstantRecord:
 
 class InfoBarAudioSelection:
 	def __init__(self):
-		self["AudioSelectionAction"] = HelpableActionMap(self, "InfobarAudioSelectionActions",
-			{
-				"audioSelection": (self.audioSelection, _("Audio options")),
-				"audioSelectionLong": (self.audioSelectionLong, _("Toggle Digital downmix")),
-			}, description=_("Audio track selection, downmix and other audio options"))
+		self["AudioSelectionAction"] = HelpableActionMap(self, "InfobarAudioSelectionActions", {
+			"audioSelection": (self.audioSelection, _("Audio options...")),
+			"yellow_key": (self.yellow_key, _("Audio options...")),
+			"audioSelectionLong": (self.audioDownmixToggle, _("Toggle Digital downmix...")),
+		}, prio=0, description=_("Audio Actions"))
+
+	def yellow_key(self):
+		from Screens.AudioSelection import AudioSelection
+		self.session.openWithCallback(self.audioSelected, AudioSelection, infobar=self)
 
 	def audioSelection(self):
 		from Screens.AudioSelection import AudioSelection
@@ -3102,13 +3111,26 @@ class InfoBarAudioSelection:
 	def audioSelected(self, ret=None):
 		print("[InfoBarGenerics][audioSelected] %s" % ret)
 
-	def audioSelectionLong(self):
+	def audioDownmixToggle(self, popup=True):
 		if BoxInfo.getItem("CanDownmixAC3"):
-			config.av.downmix_ac3.handleKey(ACTIONKEY_RIGHT)
-			config.av.downmix_ac3.save()
-			message = _("Dolby digital downmix is now %s") % config.av.downmix_ac3.getText()
-			print("[InfoBarGenerics] Audio dolby digital downmix is now %s" % config.av.downmix_ac3.value)
-			AddPopup(text=message, type=MessageBox.TYPE_INFO, timeout=5, id="DDdownmixToggle")
+			if config.av.downmix_ac3.value:
+				message = _("Dolby Digital downmix is now") + " " + _("disabled")
+				print('[InfoBarGenerics] [Audio] Dolby Digital downmix is now disabled')
+				config.av.downmix_ac3.setValue(False)
+			else:
+				config.av.downmix_ac3.setValue(True)
+				message = _("Dolby Digital downmix is now") + " " + _("enabled")
+				print('[InfoBarGenerics] [Audio] Dolby Digital downmix is now enabled')
+			if popup:
+				Notifications.AddPopup(text=message, type=MessageBox.TYPE_INFO, timeout=5, id="DDdownmixToggle")
+
+	def audioDownmixOn(self):
+		if not config.av.downmix_ac3.value:
+			self.audioDownmixToggle(False)
+
+	def audioDownmixOff(self):
+		if config.av.downmix_ac3.value:
+			self.audioDownmixToggle(False)
 
 
 class InfoBarSubserviceSelection:
@@ -3124,8 +3146,8 @@ class InfoBarSubserviceSelection:
 		self["SubserviceQuickzapAction"].setEnabled(False)
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-			iPlayableService.evUpdatedEventInfo: self.checkSubservicesAvail
-		})
+				iPlayableService.evUpdatedEventInfo: self.checkSubservicesAvail
+			})
 		self.onClose.append(self.__removeNotifications)
 
 		self.bouquets = self.bsel = self.selectedSubservice = None
@@ -3397,20 +3419,20 @@ class InfoBarResolutionSelection:
 		xRes = avControl.getResolutionX(0)
 		resList = []
 		resList.append((_("Exit"), "exit"))
-		resList.append((_("Auto (not available)"), "auto"))
-		resList.append((_("Video: %dx%d@%gHz") % (xRes, yRes, fps), ""))
+		resList.append((_("Auto(not available)"), "auto"))
+		resList.append((_("Video: ") + "%dx%d@%gHz" % (xRes, yRes, fps), ""))
 		resList.append(("--", ""))
 		# Do we need a new sorting with this way here or should we disable some choices?
-		modes = eAVControl.getInstance().getAvailableModes()
-		videoModes = modes.split()
+		videoModes = avSwitch.readPreferredModes(readOnly=True)
+		videoModes = [x.replace("pal ", "").replace("ntsc ", "") for x in videoModes]  # Do we need this?
 		for videoMode in videoModes:
 			video = videoMode
-			if video not in ("pal", "ntsc"):
-				if videoMode.endswith("23"):
-					video = "%s.976" % videoMode
-				if videoMode[-1].isdigit():
-					video = "%sHz" % videoMode
-				resList.append((video, videoMode))
+			if videoMode.endswith("23"):
+				video = "%s.976" % videoMode
+			if videoMode[-1].isdigit():
+				video = "%sHz" % videoMode
+			resList.append((video, videoMode))
+
 		videoMode = avControl.getVideoMode("Unknown")
 		keys = ["green", "yellow", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 		selection = 0
@@ -3427,12 +3449,7 @@ class InfoBarResolutionSelection:
 				if videoMode[1] == "exit" or videoMode[1] == "" or videoMode[1] == "auto":
 					self.ExGreen_toggleGreen()
 				if videoMode[1] != "auto":
-					if fileWriteLine("/proc/stb/video/videomode", videoMode[1], source=MODULE_NAME):
-						print("[InfoBarGenerics] New video mode is %s." % videoMode[1])
-					else:
-						print("[InfoBarGenerics] Error: Unable to set new video mode of %s!" % videoMode[1])
-					# from enigma import gMainDC
-					# gMainDC.getInstance().setResolution(-1, -1)
+					avSwitch.setVideoModeDirect(videoMode[1])
 					self.ExGreen_doHide()
 		else:
 			self.ExGreen_doHide()
@@ -3569,8 +3586,8 @@ class InfoBarNotifications:
 class InfoBarServiceNotifications:
 	def __init__(self):
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-			iPlayableService.evEnd: self.serviceHasEnded
-		})
+				iPlayableService.evEnd: self.serviceHasEnded
+			})
 
 	def serviceHasEnded(self):
 		print("[InfoBarGenerics] service end!")
@@ -3600,9 +3617,9 @@ class InfoBarCueSheetSupport:
 		self.cut_list = []
 		self.is_closing = False
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-			iPlayableService.evStart: self.__serviceStarted,
-			iPlayableService.evCuesheetChanged: self.downloadCuesheet,
-		})
+				iPlayableService.evStart: self.__serviceStarted,
+				iPlayableService.evCuesheetChanged: self.downloadCuesheet,
+			})
 
 	def __serviceStarted(self):
 		if self.is_closing:
@@ -3629,7 +3646,7 @@ class InfoBarCueSheetSupport:
 			print("[InfoBarGenerics] seekable.getLength() returns:", length)
 			if (last > 900000) and (not length[1] or last < length[1] - 900000):
 				self.resume_point = last
-				l = last / 90000
+				l = last // 90000
 				if "ask" in config.usage.on_movie_start.value:
 					AddNotificationWithCallback(self.playLastCB, MessageBox, _("Do you want to resume this playback?") + "\n" + (_("Resume position at %s") % ("%d:%02d:%02d" % (l / 3600, l % 3600 / 60, l % 60))), timeout=10, default="yes" in config.usage.on_movie_start.value)
 				elif config.usage.on_movie_start.value == "resume":
@@ -3824,7 +3841,7 @@ class InfoBarSummarySupport:
 class InfoBarMoviePlayerSummary(Screen):
 	skin = """
 	<screen position="0,0" size="132,64">
-		<widget source="global.CurrentTime" render="Label" position="62,46" size="64,18" font="Regular;16" horizontalAlignment="right" >
+		<widget source="global.CurrentTime" render="Label" position="62,46" size="64,18" font="Regular;16" halign="right" >
 			<convert type="ClockToText">WithSeconds</convert>
 		</widget>
 		<widget source="session.RecordState" render="FixedLabel" text=" " position="62,46" size="64,18" zPosition="1" >
@@ -3885,10 +3902,10 @@ class InfoBarSubtitleSupport:
 
 		self.subtitle_window.hide()
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-			iPlayableService.evStart: self.__serviceChanged,
-			iPlayableService.evEnd: self.__serviceChanged,
-			iPlayableService.evUpdatedInfo: self.__updatedInfo
-		})
+				iPlayableService.evStart: self.__serviceChanged,
+				iPlayableService.evEnd: self.__serviceChanged,
+				iPlayableService.evUpdatedInfo: self.__updatedInfo
+			})
 
 	def getCurrentServiceSubtitle(self):
 		service = self.session.nav.getCurrentService()
@@ -3915,6 +3932,16 @@ class InfoBarSubtitleSupport:
 		service = self.session.nav.getCurrentService()
 		info = service and service.info()
 		config.subtitles.dvb_subtitles_centered.value = info and info.getInfo(iServiceInformation.sCenterDVBSubs) and True
+
+	def subtitleQuickMenu(self):
+		service = self.session.nav.getCurrentService()
+		subtitle = service and service.subtitle()
+		subtitlelist = subtitle and subtitle.getSubtitleList()
+		if self.selected_subtitle and self.selected_subtitle != (0, 0, 0, 0):
+			from Screens.AudioSelection import QuickSubtitlesConfigMenu
+			self.session.open(QuickSubtitlesConfigMenu, self)
+		else:
+			self.subtitleSelection()
 
 	def __serviceChanged(self):
 		if self.selected_subtitle:
@@ -3960,10 +3987,10 @@ class InfoBarSubtitleSupport:
 class InfoBarServiceErrorPopupSupport:
 	def __init__(self):
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-			iPlayableService.evTuneFailed: self.__tuneFailed,
-			iPlayableService.evTunedIn: self.__serviceStarted,
-			iPlayableService.evStart: self.__serviceStarted
-		})
+				iPlayableService.evTuneFailed: self.__tuneFailed,
+				iPlayableService.evTunedIn: self.__serviceStarted,
+				iPlayableService.evStart: self.__serviceStarted
+			})
 		self.__serviceStarted()
 
 	def __serviceStarted(self):
@@ -4147,7 +4174,7 @@ class InfoBarHdmi2:
 
 	def HDMIInLong(self):
 		if self.LongButtonPressed:
-			if not hasattr(self.session, 'pip') and not self.session.pipshown:
+			if not hasattr(self.session, "pip") and not self.session.pipshown:
 				self.session.pip = self.session.instantiateDialog(PictureInPicture)
 				self.session.pip.playService(hdmiInServiceRef())
 				self.session.pip.show()
@@ -4184,7 +4211,7 @@ class InfoBarHdmi2:
 			return _("Turn off HDMI-IN PiP mode")
 
 	def HDMIInPiP(self):
-		if not hasattr(self.session, 'pip') and not self.session.pipshown:
+		if not hasattr(self.session, "pip") and not self.session.pipshown:
 			self.hdmi_enabled_pip = True
 			self.session.pip = self.session.instantiateDialog(PictureInPicture)
 			self.session.pip.playService(hdmiInServiceRef())
@@ -4256,7 +4283,7 @@ class InfoBarHandleBsod:
 				txt += _("Should the crash counter be reset to prevent a restart?")
 				self.lastestBsodWarning = True
 			try:
-				self.session.openWithCallback(self.infoBsodCallback, MessageBox, txt, type=MessageBox.TYPE_YESNO if self.lastestBsodWarning else MessageBox.TYPE_ERROR, default=False, close_on_any_key=not self.lastestBsodWarning, showYESNO=self.lastestBsodWarning)
+				self.session.openWithCallback(self.infoBsodCallback, MessageBox, txt, type=MessageBox.TYPE_YESNO if self.lastestBsodWarning else MessageBox.TYPE_ERROR, default=False, close_on_any_key=not self.lastestBsodWarning, typeIcon=MessageBox.TYPE_ERROR)
 				self.infoBsodIsShown = True
 			except Exception as e:
 				# print("[InfoBarHandleBsod] Exception:", e)
