@@ -19,11 +19,11 @@ self.selectKey("UP")
 self.selectKey("DOWN")
 			</code>
 		</step>
-		<step id="devices">
+		<step id="devices" nextstep="network">
 			<condition>
 self.condition = self.hasPartitions()
 			</condition>
-			<config screen="DeviceManagerMountPoints" module="DeviceManager" type="standalone" step="nima"/>
+			<config screen="DeviceManagerMountPoints" module="DeviceManager" type="standalone" />
 		</step>
 from Components.SystemInfo import BoxInfo
 		<step id="network" >
