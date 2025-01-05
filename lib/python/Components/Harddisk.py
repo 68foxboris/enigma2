@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 from glob import glob
-from os import listdir, lstat, mkdir, popen, remove, statvfs, system, walk
+from os import listdir, lstat, mkdir, popen, remove, statvfs, system, walk, access
 from os.path import abspath, dirname, exists, isfile, islink, ismount, join, realpath
 from re import search, sub
 from time import sleep, time
@@ -91,10 +92,25 @@ def Freespace(dev):
 	return space
 
 
+DEVTYPE_UDEV = 0
+DEVTYPE_DEVFS = 1
+
+
 class Harddisk:
 	def __init__(self, device, removable=False, model=None):
 		self.device = device
-		self.type = 0  # TODO maybe no longer needed / DEVTYPE_UDEV
+
+		if access("/dev/.udev", 0):
+			self.type = DEVTYPE_UDEV
+		elif access("/dev/udev_network_queue", 0):
+			self.type = DEVTYPE_UDEV
+		elif access("/dev/.devfsd", 0):
+			self.type = DEVTYPE_DEVFS
+		else:
+			print("[Harddisk] Unable to determine structure of /dev")
+			self.type = -1
+			self.card = False
+
 		self.max_idle_time = 0
 		self.idle_running = False
 		self.last_access = time()
@@ -109,8 +125,38 @@ class Harddisk:
 		self.dev_path = join("/dev", self.device)
 		self.disk_path = self.dev_path
 		self.modelName = model
-		print(f"[Harddisk] New Harddisk '{self.device}' -> '{self.dev_path}'.")
-		if not removable:
+
+		self.internal = "pci" in self.phys_path or "ahci" in self.phys_path or "sata" in self.phys_path
+		try:
+			data = open("/sys/block/%s/queue/rotational" % device, "r").read().strip()
+			self.rotational = int(data)
+		except:
+			self.rotational = True
+
+		if self.type == DEVTYPE_UDEV:
+			self.dev_path = '/dev/' + self.device
+			self.disk_path = self.dev_path
+			self.card = "sdhci" in self.phys_path or "mmc" in self.device
+
+		elif self.type == DEVTYPE_DEVFS:
+			tmp = readFile(self.sysfsPath('dev')).split(':')
+			s_major = int(tmp[0])
+			s_minor = int(tmp[1])
+			for disc in os.listdir("/dev/discs"):
+				dev_path = os.path.realpath('/dev/discs/' + disc)
+				disk_path = dev_path + '/disc'
+				try:
+					rdev = os.stat(disk_path).st_rdev
+				except OSError:
+					continue
+				if s_major == os.major(rdev) and s_minor == os.minor(rdev):
+					self.dev_path = dev_path
+					self.disk_path = disk_path
+					break
+			self.card = self.device[:2] == "hd" and "host0" not in self.dev_path
+
+		print("[Harddisk] new device=%s dev_path=%s disk_path=%s removable=%s internal=%s rotational=%s card=%s" % (self.device, self.dev_path, self.disk_path, removable, self.internal, self.rotational, self.card))
+		if (self.internal or not removable) and not self.card:
 			self.startIdle()
 
 	def __lt__(self, ob):
@@ -129,14 +175,21 @@ class Harddisk:
 
 	def bus(self):
 		ret = _("External")
-		internal = False
-		if "sdhci" in self.phys_path:
-			ret += " (SD/MMC)"
-		elif MODEL == "sf8008":
-			internal = ("usb1/1-1/1-1.1/1-1.1:1.0" in self.phys_path) or ("usb1/1-1/1-1.4/1-1.4:1.0" in self.phys_path)
+		# SD/MMC(F1 specific)
+		if self.type == DEVTYPE_UDEV:
+			type_name = " (SD/MMC)"
+		# CF(7025 specific)
+		elif self.type == DEVTYPE_DEVFS:
+			type_name = " (CF)"
+
+		if self.card:
+			ret += type_name
 		else:
-			internal = ("pci" in self.phys_path or "ahci" in self.phys_path)
-		return _("Internal") if internal else ret
+			if self.internal:
+				ret = _("Internal")
+			if not self.rotational:
+				ret += " (SSD)"
+		return ret
 
 	def diskSize(self):
 		cap = 0
