@@ -179,6 +179,7 @@ keyDescriptions = [{  # id=0 - dmm0 remote directory, DM8000.
 	KEYIDS["KEY_MEDIA"]: ("MEDIA",),
 	KEYIDS["KEY_MENU"]: ("MENU",),
 	KEYIDS["KEY_MODE"]: ("VKEY",),
+	KEYIDS["KEY_MP3"]: ("MP3",),
 	KEYIDS["KEY_MUTE"]: ("MUTE",),
 	KEYIDS["KEY_NEXT"]: ("ARROWRIGHT",),
 	KEYIDS["KEY_NEXTSONG"]: ("NEXTSONG",),
@@ -191,6 +192,7 @@ keyDescriptions = [{  # id=0 - dmm0 remote directory, DM8000.
 	KEYIDS["KEY_PLAY"]: ("PLAY",),
 	KEYIDS["KEY_PLAYPAUSE"]: ("PLAYPAUSE",),
 	KEYIDS["KEY_POWER"]: ("POWER",),
+	KEYIDS["KEY_POWER2"]: ("POWER2",),
 	KEYIDS["KEY_PREVIOUS"]: ("ARROWLEFT",),
 	KEYIDS["KEY_PREVIOUSSONG"]: ("PREVIOUSSONG",),
 	KEYIDS["KEY_PROGRAM"]: ("TIMER",),
@@ -209,21 +211,22 @@ keyDescriptions = [{  # id=0 - dmm0 remote directory, DM8000.
 	KEYIDS["KEY_SLOW"]: ("SLOW",),
 	KEYIDS["KEY_STOP"]: ("STOP",),
 	KEYIDS["KEY_SUBTITLE"]: ("SUBTITLE",),
+	KEYIDS["KEY_SUSPEND"]: ("SUSPEND",),
 	KEYIDS["KEY_SWITCHVIDEOMODE"]: ("VMODE",),
 	KEYIDS["KEY_TEXT"]: ("TEXT",),
 	KEYIDS["KEY_TIME"]: ("TIMESHIFT",),
+	KEYIDS["KEY_TOUCHPAD_TOGGLE"]: ("TOUCHPAD_TOGGLE",),
 	KEYIDS["KEY_TV"]: ("TV",),
+	KEYIDS["KEY_TV2"]: ("TV2",),
 	KEYIDS["KEY_UP"]: ("UP",),
 	KEYIDS["KEY_VIDEO"]: ("VIDEO",),
 	# KEYIDS["KEY_VMODE"]: ("VMODE",),  # This value is deprecated use KEY_SWITCHVIDEOMODE instead.
+	KEYIDS["KEY_VOD"]: ("VOD",),
 	KEYIDS["KEY_VOLUMEDOWN"]: ("VOL-",),
 	KEYIDS["KEY_VOLUMEUP"]: ("VOL+",),
+	KEYIDS["KEY_WAKEUP"]: ("WAKEUP",),
 	KEYIDS["KEY_YELLOW"]: ("YELLOW",),
-	KEYIDS["KEY_ZOOM"]: ("ZOOM",),
-	# Discrete power codes
-	KEYIDS["KEY_POWER2"]: ("POWER2",),
-	KEYIDS["KEY_SUSPEND"]: ("SUSPEND",),
-	KEYIDS["KEY_WAKEUP"]: ("WAKEUP",)
+	KEYIDS["KEY_ZOOM"]: ("ZOOM",)
 }, {  # id=3 - XP1000.
 	# The xp1000/rcpositions file defines PLAY and PAUSE
 	# at the same location where it should just define
