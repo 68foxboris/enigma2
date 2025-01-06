@@ -106,11 +106,12 @@ class Setup(ConfigListScreen, Screen):
 				including = True
 
 	def addItem(self, element):
+		indent = element.get("indent", "")
 		if self.pluginLanguageDomain:
-			itemText = dgettext(self.pluginLanguageDomain, x) if (x := element.get("text")) else "* fix me *"
+			itemText = indent + (dgettext(self.pluginLanguageDomain, x) if (x := element.get("text")) else "* fix me *")
 			itemDescription = dgettext(self.pluginLanguageDomain, x) if (x := element.get("description")) else ""
 		else:
-			itemText = _(x) if (x := element.get("text")) else "* fix me *"
+			itemText = indent + (_(x) if (x := element.get("text")) else "* fix me *")
 			itemDescription = _(x) if (x := element.get("description")) else ""
 		restart = element.get("restart", "").lower()
 		if restart == "gui" and not itemText.endswith("*"):  # Add "*" as restart indicator based on the restart attribute
