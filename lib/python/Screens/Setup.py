@@ -106,7 +106,7 @@ class Setup(ConfigListScreen, Screen):
 				including = True
 
 	def addItem(self, element):
-		indent = element.get("indent", "")
+		indent = parameters.get("SetupIndent", "  ") * int(element.get("indents", 0))
 		if self.pluginLanguageDomain:
 			itemText = indent + (dgettext(self.pluginLanguageDomain, x) if (x := element.get("text")) else "* fix me *")
 			itemDescription = dgettext(self.pluginLanguageDomain, x) if (x := element.get("description")) else ""
