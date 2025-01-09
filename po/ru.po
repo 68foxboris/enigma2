@@ -5172,8 +5172,8 @@ msgstr "Настройте разрешение экрана и шрифт, ис
 msgid "Configure the duration in hours the receiver should go to standby when the receiver is not controlled."
 msgstr "Настройка продолжительности времени в часах, до перехода в режим ожидания, если ресивер находится без управления (использования пульта)."
 
-msgid "Configure the duration in minutes for the screensaver."
-msgstr "Настройка продолжительности в минутах для показа заставки (хранитель экрана)."
+msgid "Select the duration of inactivity before the screen saver will be displayed."
+msgstr "Выберите продолжительность бездействия, по истечении которой будет отображаться заставка."
 
 msgid "Configure the duration in minutes for the sleeptimer. Select this entry and press blue to start/restart the sleeptimer or use yellow for stop active sleeptimer."
 msgstr "Настройте продолжительность таймера сна в минутах. Выберите эту запись и нажмите синюю кнопку, чтобы запустить/перезапустить таймер сна, или используйте желтую кнопку, чтобы остановить активный таймер сна."
@@ -16660,7 +16660,7 @@ msgstr "Показать индикатор записи"
 msgid "Show recording symbol"
 msgstr "Показать индикатор записи"
 
-msgid "Show screensaver"
+msgid "Show screen saver"
 msgstr "Запустить хранитель экрана через"
 
 msgid "Show screen path"
