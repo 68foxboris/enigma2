@@ -1749,8 +1749,8 @@ class InfoBarSeek:
 
 		self.checkSkipShowHideLock()
 
-		if hasattr(self, "ScreenSaverTimerStart"):
-			self.ScreenSaverTimerStart()
+		if hasattr(self, "screenSaverTimerStart"):
+			self.screenSaverTimerStart()
 
 		return True
 
@@ -2675,8 +2675,8 @@ class InfoBarPiP:
 					print('[InfoBarGenerics] LCDMiniTV disable PIP')
 					eDBoxLCD.getInstance().setLCDMode(config.lcd.modeminitv.value)
 				self.session.pipshown = False
-			if hasattr(self, "ScreenSaverTimerStart"):
-				self.ScreenSaverTimerStart()
+			if hasattr(self, "screenSaverTimerStart"):
+				self.screenSaverTimerStart()
 		else:
 			self.session.pip = self.session.instantiateDialog(PictureInPicture)
 			self.session.pip.setAnimationMode(0)
