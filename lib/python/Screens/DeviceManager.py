@@ -96,7 +96,7 @@ class StorageDeviceAction(Setup):
 		if defaultFs not in fileSystems:
 			defaultFs = "ext4"
 
-		for i in range(4):
+		for i in range(20):
 			self.formatFileSystems.append(ConfigSelection(default=defaultFs, choices=[(x, x) for x in fileSystems]))
 			self.formatLabels.append(ConfigText(default=f"DISK_{i + 1}", fixed_size=False))
 			self.formatsizes.append(ConfigSelection(default=100 if i == 0 else 0, choices=[(x, f"{x}%") for x in range(0, 101)]))
@@ -176,32 +176,37 @@ class StorageDeviceAction(Setup):
 
 	def changedEntry(self):
 		current = self["config"].getCurrent()[1]
-		if self.formatMode.value and current in (self.formatsizes[0], self.formatsizes[1], self.formatsizes[2], self.formatsizes[3]):
-			size = 0
-			if current == self.formatsizes[0]:
-				size = self.formatsizes[0].value
-				if size > 99:
-					self.numOfPartitions = 1
-				else:
-					self.numOfPartitions = 2
-					self.formatsizes[1].value = 100 - size
-					self.formatsizes[2].value = 0
-					self.formatsizes[3].value = 0
-			elif current == self.formatsizes[1]:
-				size = self.formatsizes[0].value + self.formatsizes[1].value
-				if size > 99:
-					self.numOfPartitions = 2
-				else:
-					self.numOfPartitions = 3
-					self.formatsizes[2].value = 100 - size
-					self.formatsizes[3].value = 0
-			elif current == self.formatsizes[2]:
-				size = self.formatsizes[0].value + self.formatsizes[1].value + self.formatsizes[2].value
-				if size > 99:
-					self.numOfPartitions = 3
-				else:
-					self.numOfPartitions = 4
-					self.formatsizes[3].value = 100 - size
+		if current:
+			if current == self.formatPartion:
+				for pos in range(20):
+					self.formatsizes[pos].value = 0
+				self.formatsizes[0].value = 100
+				self.numOfPartitions = 1
+			else:
+				currentPos = -1
+				maxParts = 4 if self.formatPartion.value == "msdos" else 20
+				for pos in range(maxParts):
+					if current == self.formatsizes[pos]:
+						currentPos = pos
+						break
+				if self.formatMode.value and currentPos != -1:
+					fullSize = 0
+					for pos in range(maxParts):
+						if pos > currentPos:
+							self.formatsizes[pos].value = 0
+					for pos in range(maxParts):
+						size = self.formatsizes[pos].value
+						fullSize += size
+						if fullSize > 99:
+							self.numOfPartitions = pos + 1
+							for morePos in range(pos + 1, maxParts):
+								self.formatsizes[morePos].value = 0
+							break
+						if size == 0 and fullSize < 100:
+							self.numOfPartitions = pos + 1
+							self.formatsizes[pos].value = 100 - fullSize
+							break
+
 			# print(f"[StorageDeviceAction] DEBUG numOfPartitions: {self.numOfPartitions}")
 		Setup.changedEntry(self)
 
@@ -706,8 +711,8 @@ class DeviceManager(Screen):
 					else:
 						title = _("Select the new mount point for: '%s'") % storageDevice.get("model")
 						fstab = fileReadLines("/etc/fstab", default=[], source=MODULE_NAME)
-						list = [(f"/media/{x}", f"/media/{x}") for x in self.storageDevices.getMountPoints(storageDevice.get("deviceType"), fstab, onlyPossible=True)]
-						self.session.openWithCallback(keyBlueCallback, ChoiceBox, list=list, keys=[], windowTitle=title)
+						choiceList = [(f"/media/{x}", f"/media/{x}") for x in self.storageDevices.getMountPoints(storageDevice.get("deviceType"), fstab, onlyPossible=True)]
+						self.session.openWithCallback(keyBlueCallback, ChoiceBox, choiceList=choiceList, buttonList=[], windowTitle=title)
 				self.updateDevices()
 
 	def updateDevices(self):
@@ -1057,9 +1062,8 @@ class DevicesPanelSummary(Screen):
 	def __init__(self, session, parent):
 		Screen.__init__(self, session, parent=parent)
 		self.skinName = "SetupSummary"
-		self["SetupTitle"] = StaticText("")
-		self["SetupEntry"] = StaticText("")
-		self["SetupValue"] = StaticText("")
+		self["entry"] = StaticText("")
+		self["value"] = StaticText("")
 		self.onShow.append(self.addWatcher)
 		self.onHide.append(self.removeWatcher)
 
@@ -1071,6 +1075,5 @@ class DevicesPanelSummary(Screen):
 		self.parent.onChangedEntry.remove(self.selectionChanged)
 
 	def selectionChanged(self, name, desc):
-		self["SetupTitle"].text = name
-		self["SetupEntry"].text = name
-		self["SetupValue"].text = desc
+		self["entry"].text = name
+		self["value"].text = desc
