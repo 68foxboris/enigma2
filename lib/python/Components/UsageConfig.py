@@ -1,6 +1,6 @@
 from glob import glob
 from locale import AM_STR, PM_STR, nl_langinfo
-from os import mkdir, makedirs, remove
+from os import mkdir, makedirs, remove, unlink
 from os.path import exists, isfile, join as pathjoin, normpath, splitext
 from time import mktime
 from skin import getcomponentTemplateNames, parameters, domScreens
@@ -1382,6 +1382,16 @@ def InitUsageConfig():
 	def debugEPGhanged(configElement):
 		from enigma import eEPGCache
 		eEPGCache.getInstance().setDebug(configElement.value)
+
+	def debugStorageChanged(configElement):
+		udevDebugFile = "/etc/udev/udev.debug"
+		if configElement.value:
+			fileWriteLine(udevDebugFile, "", source=MODULE_NAME)
+		elif exists(udevDebugFile):
+			unlink(udevDebugFile)
+		harddiskmanager.debug = configElement.value
+	config.crash.debugStorage.addNotifier(debugStorageChanged)
+
 	hddChoices = [("/etc/enigma2/", _("Internal Flash"))]
 	for partition in harddiskmanager.getMountedPartitions():
 		if exists(partition.mountpoint):
