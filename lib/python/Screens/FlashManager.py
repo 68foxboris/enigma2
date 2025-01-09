@@ -61,7 +61,7 @@ class FlashManager(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session, enableHelp=True)
 		self.skinName = ["FlashManager", "FlashOnline"]
-		self.imageFeed = "openATV"
+		self.imageFeed = "OpenATV"
 		self.setTitle(_("Flash Manager - %s Images") % self.imageFeed)
 		self.imagesList = {}
 		self.expanded = []
@@ -96,7 +96,7 @@ class FlashManager(Screen):
 		self["description"] = StaticText()
 		self["list"] = ChoiceList(list=[ChoiceEntryComponent("", ((_("Retrieving image list, please wait...")), "Loading"))])
 		self.feedUrls = [
-			("openATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName"))
+			("OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName"))
 		]
 		self.callLater(self.getImagesList)
 
@@ -125,8 +125,8 @@ class FlashManager(Screen):
 					print("[FlashManager] getImagesList Error: Unable to extract file list from Zip file '%s'!" % file)
 
 		def getImagesListCallback(retVal=None):  # The retVal argument absorbs the unwanted return value from MessageBox.
-			if self.imageFeed != "openATV":
-				self.keyDistributionCallback("openATV")  # No images can be found for the selected distribution so go back to the openATV default.
+			if self.imageFeed != "OpenATV":
+				self.keyDistributionCallback("OpenATV")  # No images can be found for the selected distribution so go back to the OpenATV default.
 
 		machinebuild = BoxInfo.getItem("machinebuild")
 		model = BoxInfo.getItem("model")
@@ -146,7 +146,7 @@ class FlashManager(Screen):
 				print("[FlashManager] getImagesList Error: Unable to load json data from URL '%s'!" % feedURL)
 				self.imagesList = {}
 			searchFolders = []
-			# Get all folders of /media/ and /media/net/ and only if openATV
+			# Get all folders of /media/ and /media/net/ and only if OpenATV
 			if not index:
 				for media in ["/media/%s" % x for x in listdir("/media")] + (["/media/net/%s" % x for x in listdir("/media/net")] if isdir("/media/net") else []):
 					# print("[FlashManager] getImagesList DEBUG: media='%s'." % media)
@@ -234,7 +234,7 @@ class FlashManager(Screen):
 		self.selectionChanged()
 
 	def keyDistribution(self):
-		self.feedUrls = [["openATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName")]]
+		self.feedUrls = [["OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName")]]
 		distributionList = []
 		default = 0
 		machine = BoxInfo.getItem("machinebuild")
@@ -253,7 +253,7 @@ class FlashManager(Screen):
 	def keyDistributionCallback(self, distribution):
 		if distribution:
 			self.imageFeed = distribution
-			# TRANSLATORS: The variable is the name of a distribution.  E.g. "openATV".
+			# TRANSLATORS: The variable is the name of a distribution.  E.g. "OpenATV".
 			self.setTitle(_("Flash Manager - %s Images") % self.imageFeed)
 			self.imagesList = {}
 			self.expanded = []
@@ -393,7 +393,7 @@ class FlashImage(Screen):
 		if choice:
 			def findMedia(paths):
 				def availableSpace(path):
-					if "/mmc" not in path and isdir(path) and access(path, W_OK):
+					if isdir(path) and access(path, W_OK):
 						try:
 							fs = statvfs(path)
 							return (fs.f_bavail * fs.f_frsize) / (1 << 20)
@@ -405,7 +405,7 @@ class FlashImage(Screen):
 					deviceID = stat(path).st_dev
 					return (major(deviceID), minor(deviceID)) in diskStats
 
-				diskStats = [(int(x[0]), int(x[1])) for x in [x.split()[0:3] for x in open("/proc/diskstats").readlines()] if x[2].startswith("sd")]
+				diskStats = [(int(x[0]), int(x[1])) for x in [x.split()[0:3] for x in open("/proc/diskstats").readlines()] if x[2].startswith("sd") or x[2].startswith("mmc")]
 				for path in paths:
 					if isdir(path) and checkIfDevice(path, diskStats) and availableSpace(path) > 500:
 						return (path, True)
