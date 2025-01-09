@@ -161,17 +161,17 @@ class ConfigListScreen:
 			if "key_yellow" not in self and yellow_button:
 				self["key_yellow"] = StaticText(yellow_button.get('text', ''))
 				self["key_yellowActions"] = HelpableActionMap(self, ["ColorActions"], {
-					"yellow": (yellow_button['function'], yellow_button.get('helptext', _("Yellow button function"))),
+					"yellow": (yellow_button['function'], yellow_button.get('helptext', yellow_button.get('text', _("Yellow button function")))),
 				}, prio=1)
 			if "key_blue" not in self and blue_button:
 				self["key_blue"] = StaticText(blue_button.get('text', ''))
 				self["key_blueActions"] = HelpableActionMap(self, ["ColorActions"], {
-					"blue": (blue_button['function'], blue_button.get('helptext', _("Blue button function"))),
+					"blue": (blue_button['function'], blue_button.get('helptext', blue_button.get('text', _("Blue button function")))),
 				}, prio=1)
 			if "key_menu" not in self and menu_button:
 				self["key_menu"] = StaticText(menu_button.get('text', ''))
 				self["menuConfigActions"] = HelpableActionMap(self, "ConfigListActions", {
-					"menu": (menu_button['function'], menu_button.get('helptext', _("Menu button function"))),
+					"menu": (menu_button['function'], menu_button.get('helptext', menu_button.get('text', _("Menu button function")))),
 				}, prio=1)
 			self["fullUIActions"] = HelpableActionMap(self, ["ConfigListActions"], {
 				"cancel": (self.keyCancel, _("Cancel any changed settings and exit")),
