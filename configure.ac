@@ -728,7 +728,6 @@ lib/python/Plugins/SystemPlugins/DiseqcTester/meta/Makefile
 lib/python/Plugins/SystemPlugins/FastChannelChange/Makefile
 lib/python/Plugins/SystemPlugins/FastChannelChange/meta/Makefile
 lib/python/Plugins/SystemPlugins/Hotplug/Makefile
-lib/python/Plugins/SystemPlugins/Hotplug/meta/Makefile
 lib/python/Plugins/SystemPlugins/Makefile
 lib/python/Plugins/SystemPlugins/TempFanControl/Makefile
 lib/python/Plugins/SystemPlugins/TempFanControl/meta/Makefile
