@@ -730,8 +730,8 @@ class DeviceManager(Screen):
 						fstab = fileReadLines("/etc/fstab", default=[], source=MODULE_NAME)
 						label = storageDevice.get("label")
 						device = storageDevice.get("device")
-						choiceList = [(f"/media/{x}", f"/media/{x}") for x in self.storageDevices.getMountPoints(storageDevice.get("deviceType"), fstab, onlyPossible=True) + [device, label]]
-						self.session.openWithCallback(keyBlueCallback, ChoiceBox, choiceList=choiceList, buttonList=[], windowTitle=title)
+						list = [(f"/media/{x}", f"/media/{x}") for x in self.storageDevices.getMountPoints(storageDevice.get("deviceType"), fstab, onlyPossible=True) + [device, label]]
+						self.session.openWithCallback(keyBlueCallback, ChoiceBox, list=list, keys=[], windowTitle=title)
 				self.updateDevices()
 
 	def updateDevices(self):
@@ -1132,8 +1132,9 @@ class DevicesPanelSummary(Screen):
 	def __init__(self, session, parent):
 		Screen.__init__(self, session, parent=parent)
 		self.skinName = "SetupSummary"
-		self["entry"] = StaticText("")
-		self["value"] = StaticText("")
+		self["SetupTitle"] = StaticText("")
+		self["SetupEntry"] = StaticText("")
+		self["SetupValue"] = StaticText("")
 		self.onShow.append(self.addWatcher)
 		self.onHide.append(self.removeWatcher)
 
@@ -1145,5 +1146,6 @@ class DevicesPanelSummary(Screen):
 		self.parent.onChangedEntry.remove(self.selectionChanged)
 
 	def selectionChanged(self, name, desc):
-		self["entry"].text = name
-		self["value"].text = desc
+		self["SetupTitle"].text = name
+		self["SetupEntry"].text = name
+		self["SetupValue"].text = desc
