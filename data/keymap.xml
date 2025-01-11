@@ -531,18 +531,6 @@
 		<key id="KEY_TV" mapto="exit" flags="b" />
 	</map>
 
-	<map context="OkSaveActions">
-		<key id="KEY_OK" mapto="ok" flags="m" />
-		<key id="KEY_OK" mapto="OK" flags="b" />
-		<key id="KEY_OK" mapto="OKLong" flags="l" />
-		<key id="KEY_GREEN" mapto="save" flags="m" />
-		<!-- Keyboard specific buttons -->
-		<key id="KEY_ENTER" mapto="ok" flags="m" />
-		<key id="KEY_ENTER" mapto="OK" flags="b" />
-		<key id="KEY_ENTER" mapto="OKLong" flags="l" />
-		<key id="KEY_F6" mapto="save" flags="m" />
-	</map>
-
 	<map context="PowerKeyActions">
 		<key id="KEY_POWER" mapto="powerdown" flags="m" />
 		<key id="KEY_POWER" mapto="powerup" flags="b" />
@@ -860,6 +848,28 @@
 		<key id="KEY_MUTE" mapto="volumeMute" flags="m" />
 	</map>
 
+	<map context="CancelActions">
+		<key id="KEY_RED" mapto="cancel" flags="m" />
+		<key id="KEY_EXIT" mapto="cancel" flags="b" />
+		<key id="KEY_EXIT" mapto="close" flags="l" />
+		<!-- Keyboard specific buttons -->
+		<key id="KEY_F5" mapto="cancel" flags="m" />
+		<key id="KEY_ESC" mapto="cancel" flags="b" />
+		<key id="KEY_ESC" mapto="close" flags="l" />
+	</map>
+
+	<map context="OkSaveActions">
+		<key id="KEY_OK" mapto="ok" flags="m" />
+		<key id="KEY_OK" mapto="OK" flags="b" />
+		<key id="KEY_OK" mapto="OKLong" flags="l" />
+		<key id="KEY_GREEN" mapto="save" flags="m" />
+		<!-- Keyboard specific buttons -->
+		<key id="KEY_ENTER" mapto="ok" flags="m" />
+		<key id="KEY_ENTER" mapto="OK" flags="b" />
+		<key id="KEY_ENTER" mapto="OKLong" flags="l" />
+		<key id="KEY_F6" mapto="save" flags="m" />
+	</map>
+
 	<map context="CancelSaveActions">
 		<key id="KEY_RED" mapto="cancel" flags="m" />
 		<key id="KEY_GREEN" mapto="save" flags="m" />
@@ -873,23 +883,10 @@
 	</map>
 
 	<map context="ColorActions">
-		<key id="KEY_RED" mapto="red" flags="b" />
-		<key id="KEY_RED" mapto="redlong" flags="l" />
-		<key id="KEY_GREEN" mapto="green" flags="b" />
-		<key id="KEY_GREEN" mapto="greenlong" flags="l" />
-		<key id="KEY_YELLOW" mapto="yellow" flags="b" />
-		<key id="KEY_YELLOW" mapto="yellowlong" flags="l" />
-		<key id="KEY_BLUE" mapto="blue" flags="b" />
-		<key id="KEY_BLUE" mapto="bluelong" flags="l" />
-		<!-- Keyboard specific buttons -->
-		<key id="KEY_F5" mapto="red" flags="b" />
-		<key id="KEY_F5" mapto="redlong" flags="l" />
-		<key id="KEY_F6" mapto="green" flags="b" />
-		<key id="KEY_F6" mapto="greenlong" flags="l" />
-		<key id="KEY_F7" mapto="yellow" flags="b" />
-		<key id="KEY_F7" mapto="yellowlong" flags="l" />
-		<key id="KEY_F8" mapto="blue" flags="b" />
-		<key id="KEY_F8" mapto="bluelong" flags="l" />
+		<key id="KEY_RED" mapto="red" flags="m" />
+		<key id="KEY_GREEN" mapto="green" flags="m" />
+		<key id="KEY_YELLOW" mapto="yellow" flags="m" />
+		<key id="KEY_BLUE" mapto="blue" flags="m" />
 	</map>
 
 	<map context="FunctionKeyActions">
