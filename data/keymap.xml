@@ -39,16 +39,6 @@
 		undesirable side effects.
 	-->
 
-	<map context="CancelActions">
-		<key id="KEY_RED" mapto="cancel" flags="m" />
-		<key id="KEY_EXIT" mapto="cancel" flags="b" />
-		<key id="KEY_EXIT" mapto="close" flags="l" />
-		<!-- Keyboard specific buttons -->
-		<key id="KEY_F5" mapto="cancel" flags="m" />
-		<key id="KEY_ESC" mapto="cancel" flags="b" />
-		<key id="KEY_ESC" mapto="close" flags="l" />
-	</map>
-
 	<map context="HelpActions">
 		<key id="KEY_EXIT" mapto="cancel" flags="m" />
 		<key id="KEY_OK" mapto="select" flags="m" />
