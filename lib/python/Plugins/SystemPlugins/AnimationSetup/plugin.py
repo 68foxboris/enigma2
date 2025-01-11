@@ -5,18 +5,27 @@ from Components.ConfigList import ConfigListScreen
 from Components.MenuList import MenuList
 from Components.Sources.StaticText import StaticText
 from Components.config import config, ConfigNumber, ConfigSelection, ConfigSelectionNumber
+from Components.SystemInfo import BoxInfo
 from Plugins.Plugin import PluginDescriptor
 
 from enigma import setAnimation_current, setAnimation_speed, setAnimation_current_listbox
 
+g_default = {
+	"current": 0,
+	"speed": 20,
+	"listbox": "0",
+}
+
+g_max_speed = 30
 
 g_animation_paused = False
 g_orig_show = None
 g_orig_doClose = None
 
-config.misc.window_animation_default = ConfigNumber(default=0)
-config.misc.window_animation_speed = ConfigSelectionNumber(1, 30, 1, default=20)
+config.misc.window_animation_default = ConfigNumber(default=g_default["current"])
+config.misc.window_animation_speed = ConfigSelectionNumber(15, g_max_speed, 1, default=g_default["speed"])
 config.misc.listbox_animation_default = ConfigSelection(default="0", choices=[("0", _("Disable")), ("1", _("Enable")), ("2", _("Same behavior as current animation"))])
+
 
 class AnimationSetupConfig(ConfigListScreen, Screen):
 	skin = """
@@ -40,12 +49,14 @@ class AnimationSetupConfig(ConfigListScreen, Screen):
 		Screen.__init__(self, session)
 		ConfigListScreen.__init__(self, self.entrylist)
 
-		self["actions"] = ActionMap(["OkCancelActions", "ColorActions",], {
+		self["actions"] = ActionMap(["OkCancelActions", "ColorActions", ], {
 			"ok"     : self.keyGreen,
 			"green"  : self.keyGreen,
 			"yellow" : self.keyYellow,
 			"red"    : self.keyRed,
 			"cancel" : self.keyRed,
+			"left": self.keyLeft,
+			"right": self.keyRight
 		}, -2)
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("Save"))
@@ -55,7 +66,7 @@ class AnimationSetupConfig(ConfigListScreen, Screen):
 		self.onLayoutFinish.append(self.layoutFinished)
 
 	def layoutFinished(self):
-		self.setTitle(_('Animation Setup'))
+		self.setTitle(_("Animation Setup"))
 
 	def keyGreen(self):
 		config.misc.window_animation_speed.save()
@@ -70,8 +81,9 @@ class AnimationSetupConfig(ConfigListScreen, Screen):
 		self.close()
 
 	def keyYellow(self):
-		config.misc.window_animation_speed.value = 20
-		config.misc.listbox_animation_default.value = "0"
+		global g_default
+		config.misc.window_animation_speed.value = g_default["speed"]
+		config.misc.listbox_animation_default.value = g_default["listbox"]
 		self.makeConfigList()
 
 	def keyLeft(self):
@@ -133,12 +145,12 @@ class AnimationSetupScreen(Screen):
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions"],
 			{
-			"cancel": self.keyclose,
-			"save": self.ok,
-			"ok": self.ok,
-			"yellow": self.config,
-			"blue": self.preview
-		}, -3)
+				"cancel": self.keyclose,
+				"save": self.ok,
+				"ok": self.ok,
+				"yellow": self.config,
+				"blue": self.preview
+			}, -3)
 
 		self["list"] = MenuList(self.animationList)
 
@@ -186,13 +198,11 @@ class AnimationSetupScreen(Screen):
 			g_animation_paused = tmp
 
 def checkAttrib(self, paused):
-	if g_animation_paused is paused:
-		try:
-			for (attr, value) in self.skinAttributes:
-				if attr == "animationPaused" and value in ("1", "on"):
-					return True
-		except:
-			pass
+	global g_animation_paused
+	if g_animation_paused is paused and hasattr(self, "skinAttributes") and self.skinAttributes:
+		for (attr, value) in self.skinAttributes:
+			if attr == "animationPaused" and value in ("1", "on"):
+				return True
 	return False
 
 def screen_show(self):

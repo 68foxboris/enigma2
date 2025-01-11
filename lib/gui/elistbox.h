@@ -362,16 +362,16 @@ public:
 	void setSelectionZoom(float zoom, int zoomContentMode = 0);
 	void setSelectionZoomSize(int width, int height, int zoomContentMode = 0);
 
-	void setSeparatorColor(const gRGB &col) { 
+	void setSeparatorColor(const gRGB &col) {
 		m_style.m_separator_color = col;
 		m_style.is_set.separator_color = 1;
 	}
 
-	void setSeparatorSize(const eRect &size) { 
+	void setSeparatorSize(const eRect &size) {
 		m_style.m_separator_size = size;
 	}
 
-	void setHeaderColor(const gRGB &col) { 
+	void setHeaderColor(const gRGB &col) {
 		m_style.m_header_color = col;
 		m_style.is_set.header_color = 1;
 	}
