@@ -11,9 +11,10 @@ from Screens.Screen import Screen, ScreenSummary
 class MessageBox(Screen):
 	skin = """
 	<screen name="MessageBox" position="center,center" size="520,225" resolution="1280,720">
-		<widget name="icon" pixmaps="icons/input_question.png,icons/input_info.png,icons/input_warning.png,icons/input_error.png,icons/input_message.png" position="10,10" size="53,53" alphatest="blend" conditional="icon" scale="1" transparent="1" />
-		<widget name="text" position="75,10" size="435,120" font="Regular;22" transparent="1" />
-		<widget name="list" position="10,e-80" size="500,70" conditional="list" enableWrapAround="1" font="Regular;25" itemHeight="35" scrollbarMode="showOnDemand" transparent="1" />
+		<widget name="icon" pixmaps="icons/input_question.png,icons/input_info.png,icons/input_warning.png,icons/input_error.png,icons/input_message.png" position="10,10" size="53,53" alphaTest="blend" conditional="icon" scale="1" transparent="1" />
+		<widget name="text" position="75,10" size="435,160" font="Regular;20" transparent="1" />
+		<widget name="list" position="10,173" size="500,50" conditional="list" enableWrapAround="1" font="Regular;20" itemHeight="23" scrollbarMode="showOnDemand" transparent="1" />
+		<widget name="autoresize" conditional="autoresize" position="75,10" size="435,160" font="Regular;20" transparent="1"/>
 	</screen>"""
 
 	TYPE_NOICON = 0
@@ -32,6 +33,7 @@ class MessageBox(Screen):
 
 	def __init__(self, session, text, type=TYPE_YESNO, timeout=-1, list=None, default=True, closeOnAnyKey=False, enableInput=True, msgBoxID=None, typeIcon=None, timeoutDefault=None, windowTitle=None, skinName=None, close_on_any_key=False, enable_input=True, timeout_default=None, title=None, picon=None, skin_name=None, simple=None):
 		Screen.__init__(self, session, mandatoryWidgets=["icon", "list", "text"], enableHelp=True)
+		self["autoresize"] = Label("")
 		self.text = text
 		self["text"] = Label(text)
 		self.type = type
@@ -184,6 +186,9 @@ class MessageBox(Screen):
 	def pageDown(self):
 		self.move(self["list"].instance.pageDown)
 
+	def doNothing(self):
+		pass
+
 	def bottom(self):
 		self.move(self["list"].instance.moveEnd)
 
@@ -196,6 +201,12 @@ class MessageBox(Screen):
 
 	def autoResize(self):  # Dummy method place holder for some legacy skins.
 		pass
+
+	def getListWidth(self):  # keep text autoresize compatible for others skins MessageBoxSimple.
+		def getListLineTextWidth(text):
+			self["autoresize"].setText(text)
+			return self["autoresize"].getSize()[0]
+		return max([getListLineTextWidth(line[0]) for line in self.list]) if self.list else 0
 
 	def createSummary(self):
 		return MessageBoxSummary
