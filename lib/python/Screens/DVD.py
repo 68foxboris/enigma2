@@ -35,6 +35,8 @@ class DVDSummary(Screen):
 
 
 class DVDOverlay(Screen):
+	noSkinReload = True
+
 	def __init__(self, session, args=None, height=None):
 		desktop_size = getDesktop(0).size()
 		w = desktop_size.width()
@@ -168,6 +170,8 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 		self.currentChapter = 0
 		self.totalTitles = 0
 		self.currentTitle = 0
+		self.firstRun = True
+		self.firstRunTimer = eTimer()
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
 				iPlayableService.evEnd: self.__serviceStopped,
@@ -377,6 +381,11 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 		print("[DVD] timeUpdated")
 
 	def __statePlay(self):
+		if self.firstRun:
+			self.firstRun = False
+			self.firstRunTimer.callback.append(self.enterDVDMenu)
+			self.firstRunTimer.start(2000, True)
+			print("[DVD] force MENU after 2 sec")
 		print("[DVD] statePlay")
 
 	def __statePause(self):
@@ -611,7 +620,7 @@ class DVDPlayer(Screen, InfoBarBase, InfoBarNotifications, InfoBarSeek, InfoBarP
 		ifofile = None
 		try:
 #			Try to read the IFO header to determine PAL/NTSC format and the resolution
-			ifofile = open(isofilename)
+			ifofile = open(isofilename, "r")
 			ifofile.seek(offset)
 			video_attr_high = ord(ifofile.read(1))
 			if video_attr_high != 0:
