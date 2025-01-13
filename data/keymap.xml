@@ -225,17 +225,6 @@
 		<key id="KEY_TAB" mapto="select" flags="m" />
 	</map>
 
-	<map context="MsgBoxActions">
-		<!-- Also uses NavigationActions -->
-		<key id="KEY_EXIT" mapto="cancel" flags="m" />
-		<key id="KEY_OK" mapto="select" flags="m" />
-		<key id="KEY_RED" mapto="cancel" flags="m" />
-		<key id="KEY_GREEN" mapto="selectOk" flags="m" />
-		<!-- Keyboard specific buttons -->
-		<key id="KEY_ESC" mapto="cancel" flags="m" />
-		<key id="KEY_ENTER" mapto="select" flags="m" />
-	</map>
-
 	<map context="VirtualKeyBoardActions">
 		<!-- Also uses NumberActions -->
 		<!-- Also uses TextEditActions -->
