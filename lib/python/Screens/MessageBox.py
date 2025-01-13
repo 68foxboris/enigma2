@@ -82,7 +82,6 @@ class MessageBox(Screen):
 		if title is not None:  # Process legacy title argument.
 			windowTitle = title
 		self.windowTitle = windowTitle or self.TYPE_PREFIX.get(type, _("Message"))
-		self.title = title or self.type < self.TYPE_MESSAGE and [_("Question"), _("Information"), _("Warning"), _("Error")][self.type] or _("Message")
 		if type == self.TYPE_YESNO or showYESNO:
 			if list:
 				self.list = list
