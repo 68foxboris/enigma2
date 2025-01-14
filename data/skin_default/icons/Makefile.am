@@ -11,6 +11,9 @@ dist_install_DATA =     ask.png \
     dmm_logo.png \
     dish_scan.png \
     dish.png \
+    dev_usbstick.png \
+    dev_mmc.png \
+    dev_hdd.png \
     DVI.png \
     epgclock_add.png \
     epgclock_autotimer.png \
@@ -161,7 +164,6 @@ dist_install_DATA =     ask.png \
     slow.png \
     stop_large.png \
     stop.png \
-    SwapManager.png \
     timer_autotimer.png \
     timer_done.png \
     timer_failed.png \
@@ -238,6 +240,7 @@ dist_install_DATA =     ask.png \
     repzaprecclock_post.svg \
     repzaprecclock_pre.svg \
     repzaprecclock_prepost.svg \
+    SwapManager.png \
     timer_autotimer.svg \
     timer_done.svg \
     timer_off.svg \
