@@ -23,7 +23,7 @@ class MessageBox(Screen):
 		TYPE_MESSAGE: _("Message")
 	}
 
-	def __init__(self, session, text, type=TYPE_YESNO, timeout=-1, close_on_any_key=False, default=True, enable_input=True, msgBoxID=None, picon=None, simple=False, list=[], timeout_default=None, windowTitle=None, skinName=None, skin_name=None, title=None, showYESNO=False, closeOnAnyKey=False, typeIcon=None, timeoutDefault=None):
+	def __init__(self, session, text, type=TYPE_YESNO, timeout=-1, close_on_any_key=False, default=True, enable_input=True, enableInput=True, msgBoxID=None, picon=None, simple=False, list=[], timeout_default=None, windowTitle=None, skinName=None, skin_name=None, title=None, showYESNO=False, closeOnAnyKey=False, typeIcon=None, timeoutDefault=None):
 		self.type = type
 		Screen.__init__(self, session)
 
@@ -46,6 +46,10 @@ class MessageBox(Screen):
 		self.timerRunning = False
 		self.initTimeout(timeout)
 
+		if enable_input is False:  # Process legacy enable_input argument.
+			enableInput = False
+		if enableInput:
+			self.createActionMap(0)
 		picon = picon or type
 		if picon != self.TYPE_ERROR:
 			self["ErrorPixmap"].hide()
@@ -82,6 +86,8 @@ class MessageBox(Screen):
 		if title is not None:  # Process legacy title argument.
 			windowTitle = title
 		self.windowTitle = windowTitle or self.TYPE_PREFIX.get(type, _("Message"))
+		self.baseTitle = self.windowTitle
+		self.activeTitle = self.windowTitle
 		if type == self.TYPE_YESNO or showYESNO:
 			if list:
 				self.list = list
@@ -97,10 +103,29 @@ class MessageBox(Screen):
 			self["selectedChoice"].setText(self.list[0][0])
 		else:
 			self["list"].hide()
+		self.onLayoutFinish.append(self.layoutFinished)
 
-		if enable_input:
-			self.createActionMap(0)
-		self.setTitle(self.title, showPath=False)
+	def __repr__(self):
+		return f"{str(type(self))}({self.text})"
+
+	def layoutFinished(self):
+		if self.list:
+			self["list"].enableAutoNavigation(False)  # Override listbox navigation.
+		if self.typeIcon:
+			self["icon"].setPixmapNum(self.typeIcon - 1)
+		prefix = self.TYPE_PREFIX.get(self.type, _("Unknown"))
+		if self.baseTitle is None:
+			title = self.getTitle()
+			if title:
+				self.baseTitle = title % prefix if "%s" in title else title
+			else:
+				self.baseTitle = prefix
+		elif "%s" in self.baseTitle:
+			self.baseTitle = self.baseTitle % prefix
+		self.setTitle(self.baseTitle, showPath=False)
+		if self.timeout > 0:
+			print(f"[MessageBox] Timeout set to {self.timeout} seconds.")
+			self.timer.start(25)
 
 	def createActionMap(self, prio):
 		self["actions"] = ActionMap(["MsgBoxActions", "DirectionActions"],
@@ -219,10 +244,10 @@ class ModalMessageBox:
 			print("[ModalMessageBox] Error: Only one ModalMessageBox instance is allowed!")
 		else:
 			ModalMessageBox.instance = self
-			self.dialog = session.instantiateDialog(MessageBox, "", enable_input=False, skinName="MessageBoxModal")
+			self.dialog = session.instantiateDialog(MessageBox, "", enableInput=False, skinName="MessageBoxModal")
 			self.dialog.setAnimationMode(0)
 
-	def showMessageBox(self, text=None, timeout=-1, list=None, default=True, closeOnAnyKey=False, timeoutDefault=None, windowTitle=None, msgBoxID=None, typeIcon=MessageBox.TYPE_YESNO, enable_input=True, callback=None):
+	def showMessageBox(self, text=None, timeout=-1, list=None, default=True, closeOnAnyKey=False, timeoutDefault=None, windowTitle=None, msgBoxID=None, typeIcon=MessageBox.TYPE_YESNO, enableInput=True, callback=None):
 		self.dialog.text = text
 		self.dialog["text"].setText(text)
 		self.dialog.typeIcon = typeIcon
@@ -244,8 +269,8 @@ class ModalMessageBox:
 		self.callback = callback
 		self.dialog.timeout = timeout
 		self.dialog.msgBoxID = msgBoxID
-		self.dialog.enable_input = enable_input
-		if enable_input:
+		self.dialog.enableInput = enableInput
+		if enableInput:
 			self.dialog.createActionMap(-20)
 			self.dialog["actions"].execBegin()
 		self.dialog.closeOnAnyKey = closeOnAnyKey
@@ -260,6 +285,6 @@ class ModalMessageBox:
 	def close(self, *retVal):
 		if self.callback and callable(self.callback):
 			self.callback(*retVal)
-		if self.dialog.enable_input:
+		if self.dialog.enableInput:
 			self.dialog["actions"].execEnd()
 		self.dialog.hide()
