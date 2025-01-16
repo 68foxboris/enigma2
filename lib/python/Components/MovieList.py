@@ -9,7 +9,7 @@ from Tools.Directories import SCOPE_CURRENT_SKIN, resolveFilename
 from Screens.LocationBox import defaultInhibitDirs
 import NavigationInstance
 
-from enigma import BT_KEEP_ASPECT_RATIO, BT_SCALE, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, eListbox, eListboxPythonMultiContent, eServiceCenter, eServiceReference, eSize, eTimer, gFont, iServiceInformation
+from enigma import BT_KEEP_ASPECT_RATIO, BT_SCALE, BT_ALIGN_CENTER, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, eListbox, eListboxPythonMultiContent, eServiceCenter, eServiceReference, eSize, eTimer, gFont, iServiceInformation
 
 from Components.GUIComponent import GUIComponent
 from Tools.FuzzyDate import FuzzyTime
@@ -266,7 +266,7 @@ class MovieList(GUIComponent):
 
 	def applySkin(self, desktop, parent):
 		def warningWrongSkinParameter(string):
-			print(f"[MovieList] wrong "{string}" skin parameters")
+			print(f"[MovieList] wrong '{string}' skin parameters")
 
 		def fontName(value):
 			self.fontName = value
