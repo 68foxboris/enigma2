@@ -2947,6 +2947,9 @@ msgstr "Аудио/Видео"
 msgid "Audio & Video"
 msgstr "Аудио и Видео"
 
+msgid "Audio Channel"
+msgstr "Аудио канал"
+
 msgid "Audio PID"
 msgstr "Аудио PID"
 
@@ -5771,16 +5774,16 @@ msgid "Croatian"
 msgstr "Хорватский"
 
 msgid "Cron Manager"
-msgstr "Планировщик"
+msgstr "Cron-менеджер"
 
 msgid "Cron Timers"
-msgstr "Таймеры планировщика"
+msgstr "Таймеры Cron"
 
 msgid "CronTimers"
-msgstr "Таймеры планировщика"
+msgstr "Таймеры Cron"
 
 msgid "Cron timers"
-msgstr "Таймеры планировщика"
+msgstr "Таймеры Cron"
 
 msgid "Cronie is being installed. Time settings are being established. Save your settings with GREEN button after a few seconds."
 msgstr "Cronie устанавливается. Устанавливаются настройки времени. Сохраните настройки ЗЕЛЕНОЙ кнопкой через несколько секунд."
@@ -6586,6 +6589,12 @@ msgstr "Обнаруженные тюнеры"
 msgid "Device"
 msgstr "Устройство"
 
+msgid "Device Manager"
+msgstr "Диспетчер устройств"
+
+msgid "Device Manager Actions"
+msgstr "Действия диспетчера устройств"
+
 msgid "Device is enabled."
 msgstr "Устройство включено."
 
@@ -6594,6 +6603,9 @@ msgstr "Информация об устройстве"
 
 msgid "Device mounts"
 msgstr "Подключение устройства"
+
+msgid "Device name:"
+msgstr "Имя устройства"
 
 msgid "Devicename:"
 msgstr "Имя устройства:"
@@ -7657,6 +7669,9 @@ msgstr "Включите этот параметр, чтобы добавить 
 
 msgid "Enable this option to add screen names and resolution data to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить имена экранов и данные о разрешении в файл лога отладки."
+
+msgid "Enable this option to add storage device information detected during system boot and hot plug events to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить в файл журнала отладки информацию об устройствах хранения, обнаруженных во время загрузки системы и событий горячего подключения."
 
 msgid "Enable this setting if your aerial system needs power"
 msgstr "Включите эту настройку, если Вашей системе необходимо питание"
@@ -9873,6 +9888,9 @@ msgstr "Включить выходные данные opkg"
 msgid "Include remote control data"
 msgstr "Указать тип пульта управления"
 
+msgid "Include storage device data"
+msgstr "Включить данные устройства хранения"
+
 msgid "Include skin data"
 msgstr "Включить данные о скине"
 
@@ -11221,6 +11239,9 @@ msgid "Mount: "
 msgstr "Смонтирован "
 
 msgid "Mount point"
+msgstr "Точка монтирования"
+
+msgid "Mount Point"
 msgstr "Точка монтирования"
 
 msgid "Mount Manager"
@@ -17764,8 +17785,11 @@ msgstr "Субтитры отключены"
 msgid "Subtitle enabled"
 msgstr "Субтитры включены"
 
-msgid "Subtitle settings"
-msgstr "Настройки субтитров"
+msgid "Subtitles"
+msgstr "Субтитры"
+
+msgid "Subtitles Settings"
+msgstr "Настройка субтитров"
 
 msgid "Subtitle Setup"
 msgstr "Настройки субтитров"
