@@ -173,6 +173,9 @@ def removed_userbouquets_available():
 
 class ChannelContextMenu(Screen):
 	def __init__(self, session, csel):
+		def appendWhenValid(current, menu, args, level=0, key="bullet"):
+			if current and current.valid() and level <= config.usage.setup_level.index:
+				menu.append(ChoiceEntryComponent(key, args))
 
 		Screen.__init__(self, session)
 		self.setTitle(_("Channel context menu"))
