@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2024-11-24 21:14+0200\n"
+"PO-Revision-Date: 2025-01-18 20:42+0200\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -2180,6 +2180,9 @@ msgstr "Добавить альтернативы"
 
 msgid "Add AutoTimer"
 msgstr "Добавить автотаймер"
+
+msgid "Add Current"
+msgstr "Добавить текущий"
 
 msgid "Add File Commander to Extensions Menu"
 msgstr "Добавить File Commander в меню расширений"
@@ -6251,6 +6254,9 @@ msgstr "Глубокий режим ожидания"
 msgid "Default"
 msgstr "По умолчанию"
 
+msgid "Default Dolby Digital / Dolby AC-3 offset"
+msgstr "Стандартная компенсация громкости Dolby Digital / Dolby AC-3"
+
 msgid "Default:"
 msgstr "По умолчанию:"
 
@@ -6284,6 +6290,9 @@ msgstr "Режим видео по умолчанию, выбранный для
 
 msgid "Default video mode selected"
 msgstr "Выбран режим видео по умолчанию"
+
+msgid "Default volume offset"
+msgstr "Стандартная компенсация громкости"
 
 #, python-format
 msgid "Default: '%s'."
@@ -6605,7 +6614,7 @@ msgid "Device mounts"
 msgstr "Подключение устройства"
 
 msgid "Device name:"
-msgstr "Имя устройства"
+msgstr "Имя устройства:"
 
 msgid "Devicename:"
 msgstr "Имя устройства:"
@@ -7482,6 +7491,9 @@ msgstr "Включить 5V для антенны"
 
 msgid "Enable debug logs *"
 msgstr "Включить журналы отладки *"
+
+msgid "Enable Dolby Digital / Dolby AC-3 offsets"
+msgstr "Изменять громкость Dolby Digital / Dolby AC-3"
 
 msgid "Enable EIT EPG"
 msgstr "Включить EIT ТВ-гид"
@@ -11012,7 +11024,6 @@ msgstr "Максимальное количество дней в ТВ-гиде"
 
 msgid "Maximum space used (MB)"
 msgstr "Максимальное использование пространства диска (Mб)"
-
 
 msgid "Maybe the reason that recording is currently running. Please stop the recording before trying to configure the positioner."
 msgstr "Может быть причина этого, что сейчас идет запись. Остановите пожалуйста запись,перед настройкой позиционера."
@@ -15159,6 +15170,9 @@ msgstr "Выберите 'FBC SCR' ,если Ваш тюнер испрольз�
 msgid "Select 'No' to only write a log message to the debug log file."
 msgstr "Если выключено, то в лог попадёт только сообщение об ошибке."
 
+msgid "Select 'Yes' if volume adjustments should be applied to Dolby sound tracks."
+msgstr "Выберите 'Да', если регулировки громкости следует применить к звуковым дорожкам Dolby."
+
 msgid "Select 'Yes' to enable AI-Powered Translation for all teletext and DVB subtitles."
 msgstr "Выберите «Да», чтобы включить функцию перевода на базе искусственного интеллекта для всех телетекстов и субтитров DVB."
 
@@ -15979,6 +15993,10 @@ msgstr "Выберите тип отображения прогресса в м�
 
 msgid "Set the vertical position of subtitles, measured from the bottom of the screen."
 msgstr "Установите вертикальное положение субтитров, измеренное от нижней части экрана."
+
+#, python-format
+msgid "Set the volume offset for the '%s' service."
+msgstr "Отключить громкость для канала '%s'."
 
 msgid "Set the time to wait for execute the default action in shutdown, standby or restart messages. (e.g. used in Timer, PowerTimer, Sleeptimer, ...)"
 msgstr "Установите время ожидания выполнения действия по умолчанию в сообщениях о выключении, режиме ожидания или перезапуске. (например, используется в Timer, PowerTimer, Sleeptimer, ...)"
@@ -17737,6 +17755,9 @@ msgstr "Субтитры"
 msgid "Subtitle Quickmenu"
 msgstr "Настройки субтитров"
 
+msgid "Subtitle Settings"
+msgstr "Настройки субтитров"
+
 msgid "Subtitle alignment"
 msgstr "Положение субтитров"
 
@@ -18496,6 +18517,9 @@ msgstr "Это текущий выбранный язык.  [%s]"
 msgid "This is the currently selected locale.  [%s]"
 msgstr "Это текущая выбранная локаль.  [%s]"
 
+msgid "This is the initial / default volume offset applied to any services added the the volume adjust list."
+msgstr "Это начальный/стандартный уровень компенсации громкости, который применяется ко всем каналам добавленным в список регулировки громкости."
+
 msgid ""
 "This info is for developers only.\n"
 "For normal users it is not relevant.\n"
@@ -18516,6 +18540,9 @@ msgstr "Это префикс каждой записи в журнале отл
 
 msgid "This not valid ONID/TSID"
 msgstr "Недействительные ONID/TSID"
+
+msgid "This offset will only be used if the channel does not have its own volume offset."
+msgstr "Это значение будет использовано только в том случае, если канал не имеет индивидуальной настройки громкости."
 
 msgid "This option allows to reduce the block-noise in the picture. Obviously this is at the cost of the picture's sharpness."
 msgstr "Эта опция позволяет уменьшить блок-шум изображения. Очевидно ценой резкости картинки."

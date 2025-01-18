@@ -51,6 +51,7 @@
 			<menu key="system" weight="5" level="0" text="System">
 				<menu key="video" level="0" text="Audio &amp; Video">
 					<item key="av_setup" level="0"><setup id="avsetup"/></item>
+					<item key="volume_adjust" level="1" text="Volume Adjust" weight="5"><screen module="VolumeAdjust" screen="VolumeAdjust" /></item>
 					<item key="subtitle_setup" level="2" text="Subtitle Settings" weight="20"><setup id="Subtitle"/></item>
 					<item key="autolanguage_setup" level="0" text="Auto Language Settings"><setup id="AutoLanguage"/></item>
 					<item key="osdsetup" level="1" text="OSD Calibration" weight="50" requires="OSDCalibration"><screen module="OSDCalibration" screen="OSDCalibration" /></item>

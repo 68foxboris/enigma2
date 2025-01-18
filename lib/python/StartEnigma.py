@@ -363,6 +363,9 @@ def runScreenTest():
 	enigma.eProfileWrite("Trashcan")
 	import Tools.Trashcan
 	Tools.Trashcan.init(session)
+	enigma.eProfileWrite("VolumeAdjustAutoStart")
+	from Screens.VolumeAdjust import autostart
+	autostart(session)
 	enigma.eProfileWrite("RunReactor")
 	enigma.eProfileDone()
 	from Components.FrontPanelLed import FrontPanelLed
