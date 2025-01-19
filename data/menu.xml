@@ -51,6 +51,7 @@
 			<menu key="system" weight="5" level="0" text="System">
 				<menu key="video" level="0" text="Audio &amp; Video">
 					<item key="av_setup" level="0"><setup id="avsetup"/></item>
+					<item key="audio_setup" level="1" text="Audio Settings" weight="0"><setup id="Audio" /></item>
 					<item key="volume_adjust" level="1" text="Volume Adjust" weight="5"><screen module="VolumeAdjust" screen="VolumeAdjust" /></item>
 					<item key="subtitle_setup" level="2" text="Subtitle Settings" weight="20"><setup id="Subtitle"/></item>
 					<item key="autolanguage_setup" level="0" text="Auto Language Settings"><setup id="AutoLanguage"/></item>
@@ -71,7 +72,7 @@
 					</menu>
 				</menu>
 				<menu key="logs_menu" level="0" text="Log Manager" weight="2">
-					<item key="logs_setup" level="2" text="Settings"><setup id="Logs" /></item>
+					<item key="logs_setup" level="2" text="Logs Setup"><setup id="Logs" /></item>
 					<item key="logs_man" level="2" text="View Log Manager"><screen module="LogManager" screen="LogManager" /></item>
 				</menu>
 				<!-- Menu / Setup / EPG -->
@@ -148,8 +149,8 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 
 			<item key="parental_setup" weight="15" level="0" text="Parental control"><screen module="ParentalControlSetup" screen="ParentalControlSetup"/></item>
 			<item key="factory_reset" weight="15" level="0" text="Factory reset"><screen module="FactoryReset" screen="FactoryReset"/></item>
-			<item key="flash_online" level="0" text="Flash image Online" description="Download and flash images on your device." weight="13"><screen module="FlashManager" screen="FlashManager" /></item>
-			<!--<item key="software_update" weight="15" level="0" text="Software update"><screen module="SoftwareUpdate" screen="UpdatePlugin"/></item>-->
+			<item key="flash_online" level="0" text="Flash image Online" description="Download and flash images on your %s %s." weight="13"><screen module="FlashManager" screen="FlashManager" /></item>
+			<item key="software_update" level="0" text="Software Update" description="Online update of your %s %s software." weight="11"><screen module="SoftwareUpdate" screen="SoftwareUpdate" /></item>
 			<item key="backup_image" level="0" text="Image Backup" description="Backup your running %s %s image to HDD or USB." weight="19"><screen module="ImageBackup" screen="ImageBackup" /></item>
 		</menu>
 
