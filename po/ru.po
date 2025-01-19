@@ -2969,6 +2969,9 @@ msgstr "Выбор аудио"
 msgid "Audio Settings"
 msgstr "Настройки аудио"
 
+msgid "Audio Setup"
+msgstr "Настройка звука"
+
 msgid "Audio Source"
 msgstr "Источник аудио"
 
@@ -20045,6 +20048,9 @@ msgstr "Видео PID"
 
 msgid "Video Settings"
 msgstr "Настройки видео"
+
+msgid "Video Setup"
+msgstr "Настройка видео"
 
 msgid "Video clipping"
 msgstr "Монтаж видео"

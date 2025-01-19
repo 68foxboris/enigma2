@@ -243,7 +243,7 @@ def startSetup(menuid):
 	if menuid != "video":
 		return []
 
-	return [(_("A/V settings"), videoSetupMain, "av_setup", 40)]
+	return [(_("Video Setup"), videoSetupMain, "av_setup", 40)]
 
 
 def VideoWizard(*args, **kwargs):

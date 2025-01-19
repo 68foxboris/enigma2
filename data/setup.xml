@@ -2,14 +2,13 @@
 	<setup key="AccessLevel" title="User Mode Setup">
 		<item level="0" text="Setup mode" description="Configure which access level to use for the configuration menu. Expert level gives access to all items.">config.usage.setup_level</item>
 	</setup>
-	<setup key="AudioVideo" title="Audio/Video Setup">
-		<!-- This is just a placeholder, the Videomode plugin implements this menu. -->
+	<setup key="video_setup" title="Video Settings">
+		<!-- this is just a placeholder, the Videomode plugin implements this submenu -->
 	</setup>
-	<setup key="Audio" title="Audio Settings" level="1" showOpenWebif="1">
+	<setup key="audio_setup" title="Audio Settings" level="1" showOpenWebif="1">
 		<item level="1" text="Volume steps" description="Select the size of the volume step when the VOLUME buttons are pressed.">config.volumeControl.pressStep</item>
 		<item level="1" text="Long press volume steps" description="Select the size of the volume steps when the VOLUME buttons are held down.">config.volumeControl.longStep</item>
 		<item level="1" text="Volume/Mute display timer" description="Select how long, in seconds, that the volume and mute displays are shown before they automatically hide.">config.volumeControl.hideTimer</item>
-		<item level="1" text="PCM Multichannel" description="Choose whether multi channel sound tracks should be output as PCM." requires="CanPcmMultichannel">config.av.pcm_multichannel</item>
 		<item level="1" text="AC3 downmix" description="Choose whether AC3 sound tracks should be downmixed to stereo." requires="CanDownmixAC3">config.av.downmix_ac3</item>
 		<item level="1" text="AC3 plus transcoding" description="Choose whether AC3 Plus sound tracks should be transcoded to AC3." requires="CanAC3plusTranscode">config.av.transcodeac3plus</item>
 		<item level="1" text="DTS downmix" description="Choose whether DTS channel sound tracks should be downmixed to stereo." requires="CanDownmixDTS">config.av.downmix_dts</item>
@@ -17,14 +16,19 @@
 		<item level="1" text="WMA Pro" description="Choose whether WMA Pro channel sound tracks should be downmixed or transcoded." requires="CanWMAPRO">config.av.wmapro</item>
 		<item level="1" text="AAC downmix" description="Choose whether multi channel sound tracks should be downmixed to stereo." requires="CanDownmixAAC">config.av.downmix_aac</item>
 		<item level="1" text="AAC plus downmix" description="Configure whether multi channel sound tracks should be downmixed to stereo." requires="CanDownmixAACPlus">config.av.downmix_aacplus</item>
+		<item level="1" text="Audio Source" description="Choose whether multi channel sound tracks should be convert to PCM, SPDIF or Bluetooth." requires="HDMIAudioSource">config.av.hdmi_audio_source</item>
 		<item level="1" text="AAC transcoding" description="Choose whether AAC sound tracks should be transcoded." requires="CanAACTranscode">config.av.transcodeaac</item>
-		<item level="1" text="Audio Source" description="Choose whether multi channel sound tracks should be convert to PCM or SPDIF." requires="Canaudiosource">config.av.audio_source</item>
 		<item level="1" text="General AC3 delay" description="This option configures the general audio delay of Dolby Digital sound tracks.">config.av.generalAC3delay</item>
 		<item level="1" text="General PCM delay" description="This option configures the general audio delay of stereo sound tracks.">config.av.generalPCMdelay</item>
-		<item level="1" text="3D Surround" description="This option allows you to enable 3D Surround Sound." requires="Can3DSurround">config.av.surround_3d</item>
-		<item level="1" text="3D Surround Speaker Position" description="This option allows you to change the virtual loudspeaker position." requires="Can3DSpeaker" conditional="config.av.surround_3d.value != 'none'">config.av.surround_3d_speaker</item>
-		<item level="1" text="Audio Auto Volume Level" description="This option configures you can set Auto Volume Level." requires="CanAutoVolume">config.av.autovolume</item>
-		<item level="1" text="Enable BT Audio" description="This Option allows you to switch Audio to BT Speakers." requires="CanBTAudio">config.av.btaudio</item>
+		<item level="1" text="Multichannel PCM" description="Configure whether multi channel PCM sound should be enabled." requires="CanPcmMultichannel">config.av.multichannel_pcm</item>
+		<item level="1" text="Audio Auto Volume Level" description="This option configures you can set Auto Volume Level." requires="HasAutoVolume">config.av.autovolume</item>
+		<item level="1" text="Audio Auto Volume Level" description="This option configures you can set Auto Volume Level." requires="HasAutoVolumeLevel">config.av.autovolumelevel</item>
+		<item level="1" text="3D Surround" description="This option allows you to enable 3D Surround Sound." requires="Has3DSurround">config.av.surround_3d</item>
+		<item level="1" text="3D Surround Speaker Position" description="This option allows you to change the virtual loudspeaker position." requires="Has3DSpeaker" conditional="config.av.surround_3d.value != 'none'">config.av.speaker_3d</item>
+		<item level="1" text="3D surround speaker position" description="This option allows you to change the virtual loudspeaker position." requires="Has3DSurroundSpeaker" conditional="config.av.surround_3d.value != 'none'">config.av.surround_3d_speaker</item>
+		<item level="1" text="3D surround softlimiter" description="This option allows you to enable 3D surround softlimiter." requires="Has3DSurroundSoftLimiter" conditional="config.av.surround_3d_speaker.value != 'none'">config.av.surround_softlimiter_3d</item>
+		<item level="1" text="General audio delay" description="This option configures the general audio delay." requires="CanAudioDelay">config.av.audiodelay</item>
+		<item level="1" text="Enable BT audio" description="This option allows you to switch audio to BT speakers." requires="CanBTAudio">config.av.btaudio</item>
 		<item level="1" text="General BT Audio delay" description="This option configures the general audio delay for BT Speakers." requires="CanBTAudioDelay">config.av.btaudiodelay</item>
 	</setup>
 	<setup key="AutoLanguage" title="Auto Language Settings">
