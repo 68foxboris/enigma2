@@ -334,11 +334,8 @@ class AudioSelection(ConfigListScreen, Screen):
 							description = types[x[2]]
 						except:
 							description = _("unknown") + ": %s" % x[2]
-						number = str(int(number) + 1)
-
 					streams.append((x, "", number, description, language, selected))
 					idx += 1
-
 			if self.infobar.selected_subtitle and self.infobar.selected_subtitle != (0, 0, 0, 0) and ".DVDPlayer'>" not in repr(self.infobar):
 				conflist.append(getConfigListEntry(_("Subtitle Quickmenu"), ConfigNothing(), None))
 
