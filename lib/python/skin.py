@@ -9,7 +9,7 @@ from enigma import BT_ALPHABLEND, BT_ALPHATEST, BT_HALIGN_CENTER, BT_HALIGN_LEFT
 from Components.config import ConfigEnableDisable, ConfigSelection, ConfigSubsection, ConfigText, config
 from Components.SystemInfo import BoxInfo
 from Components.Sources.Source import ObsoleteSource
-from Tools.Directories import SCOPE_CONFIG, SCOPE_LCDSKIN, SCOPE_GUISKIN, SCOPE_FONTS, SCOPE_SKINS, pathExists, resolveFilename, fileReadLines, fileReadXML
+from Tools.Directories import SCOPE_CONFIG, SCOPE_LCDSKIN, SCOPE_GUISKIN, SCOPE_FONTS, SCOPE_SKINS, pathExists, resolveFilename, fileReadLines, fileReadXML, scopeConfig
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
 
@@ -163,7 +163,10 @@ def InitSkins():
 #
 def loadSkin(filename, scope=SCOPE_SKINS, desktop=getDesktop(GUI_SKIN_ID), screenID=GUI_SKIN_ID):
 	global windowStyles, resolutions
-	filename = resolveFilename(scope, filename)
+	if "skin_user" in filename and isfile(pathjoin(scopeConfig, filename)):  # Check user skin files in /etc/enigma2 first and use it if exists
+		filename = pathjoin(scope, filename)
+	else:
+		filename = resolveFilename(scope, filename)
 	lines = []
 	lines = fileReadLines(resolveFilename(SCOPE_CONFIG, "settings"), default=lines, source=MODULE_NAME)
 	debugMode = "config.crash.debugSkin=True" in lines
@@ -781,6 +784,7 @@ def parseSeparator(attribute, value):
 		left, top, width, height
 		top, height
 		height
+
 		width=-1 -> full width - margin ( default )
 		top=-1 -> center ( default )
 	"""
