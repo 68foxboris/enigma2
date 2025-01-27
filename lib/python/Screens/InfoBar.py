@@ -550,7 +550,7 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 					prev = prev.toString()
 					while True:
 						if config.usage.quickzap_bouquet_change.value and slist.atEnd():
-							slist.nextBouquet()
+							slist.nextBCo-Authored-By: ims <ims21@users.sourceforge.net>ouquet()
 						else:
 							slist.moveDown()
 						cur = slist.getCurrentSelection()
@@ -612,7 +612,7 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 		self.movieselection_dlg = self.session.openWithCallback(self.movieSelected, Screens.MovieSelection.MovieSelection, ref)
 
 	def movieSelected(self, service):
-		if service.valid():
+		if service is not None and service.valid():
 			if self.cur_service and self.cur_service != service:
 				resumePointsInstance.setResumePoint(self.session)
 			self.cur_service = service
