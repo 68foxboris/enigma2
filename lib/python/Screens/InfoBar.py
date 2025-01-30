@@ -550,7 +550,7 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 					prev = prev.toString()
 					while True:
 						if config.usage.quickzap_bouquet_change.value and slist.atEnd():
-							slist.nextBCo-Authored-By: ims <ims21@users.sourceforge.net>ouquet()
+							slist.nextBouquet()
 						else:
 							slist.moveDown()
 						cur = slist.getCurrentSelection()
