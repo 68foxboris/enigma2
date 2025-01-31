@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-01-19 15:36+0200\n"
+"PO-Revision-Date: 2025-01-26 03:17+0200\n"
 "Last-Translator: kvinto\n"
 "Language-Team: kvinto\n"
 "Language: uk_UA\n"
@@ -874,6 +874,9 @@ msgstr "Налаштування адаптера"
 msgid "Add"
 msgstr "Додати"
 
+msgid "Add Current"
+msgstr "Додати поточний"
+
 msgid "Add a mark"
 msgstr "Додати маркер"
 
@@ -937,11 +940,17 @@ msgstr "Додати канал до фаворитів"
 msgid "Add a DNS entry"
 msgstr "Добавити запис DNS"
 
+msgid "Add a service to the Volume Offsets list"
+msgstr "Додайте службу до списку зміщення гучності"
+
 msgid "Add services to this bouquet?"
 msgstr "Додати канал в цей фаворит?"
 
 msgid "Add timer"
 msgstr "Додати таймер"
+
+msgid "Add the current service to the Volume Offsets list"
+msgstr "Додайте поточну службу до списку зміщення гучності"
 
 msgid "Add title"
 msgstr "Додати назву"
@@ -1352,6 +1361,12 @@ msgstr "Аудіо PID"
 msgid "Audio PID%s, Codec & Language"
 msgstr "Aудіо PID%s, кодек і мова"
 
+msgid "Audio Settings"
+msgstr "Аудіо Налаштування"
+
+msgid "Audio Setup"
+msgstr "Налаштування Аудіо"
+
 msgid "Audio auto volume level"
 msgstr "Рівень для автоматичної гучності звуку"
 
@@ -1433,8 +1448,8 @@ msgstr "Автофокусування почалося..."
 msgid "Auto language selection"
 msgstr "Автоматичний вибір мови"
 
-msgid "Auto play blu-ray file"
-msgstr "Автоматичне відтворення файлів Blu-Ray"
+msgid "Auto Language Settings"
+msgstr "Автовибір мови"
 
 msgid "Auto play last service in radio mode"
 msgstr "Автоматичне відтворення останнього каналу в Радіо режимі"
@@ -2147,9 +2162,6 @@ msgstr "Розділ:"
 msgid "Check"
 msgstr "Перевірити"
 
-msgid "Check the internet connection"
-msgstr "Перевірка інтернет-з'єднання"
-
 msgid "Check the internet connection again"
 msgstr "Перевірити підключення до Інтернету ще раз"
 
@@ -2159,8 +2171,8 @@ msgstr "Перевірка ONID/TSID"
 msgid "Checking filesystem..."
 msgstr "Перевірка Файлової системи..."
 
-msgid "Checking the internet connection"
-msgstr "Перевірка інтернет з'єднання"
+msgid "Checking the internet connection."
+msgstr "Перевірка інтернет з'єднання."
 
 msgid ""
 "Checking tuner %s\n"
@@ -2232,11 +2244,20 @@ msgstr "Виберіть точку монтування для пристрою
 msgid "Choose whether AAC sound tracks should be transcoded."
 msgstr "Вкажіть, чи потрібно перекодувати звук AAC."
 
-msgid "Choose whether AC3 sound tracks should be transcoded."
-msgstr "Виберіть, чи слід перекодувати звукові доріжки AC3."
+msgid "Choose whether AC3 Plus sound tracks should be transcoded to AC3."
+msgstr "Виберіть, чи звукові доріжки AC3 Plus повинні бути транскодувані в AC3."
 
-msgid "Choose whether WMA Pro sound tracks should be downmixed."
-msgstr "Виберіть, чи слід перекодувати звукові доріжки WMA Pro."
+msgid "Choose whether AC3 sound tracks should be downmixed to stereo."
+msgstr "Виберіть, чи звукові доріжки AC3 повинні відтворюватися в режимі стерео."
+
+msgid "Choose whether DTS channel sound tracks should be downmixed or transcoded."
+msgstr "Виберіть, чи будуть відтворюватися звукові доріжки каналу DTS чи перекодувати їх."
+
+msgid "Choose whether DTS channel sound tracks should be downmixed to stereo."
+msgstr "Виберіть, чи будуть відтворюватися звукові доріжки каналу DTS в режимі стерео."
+
+msgid "Choose whether WMA Pro channel sound tracks should be downmixed or transcoded."
+msgstr "Виберіть, чи будуть відтворюватися звукові доріжки каналу WMA Pro чи перекодувати їх."
 
 msgid "Choose whether multi channel DTS-HD(HR/MA) sound tracks should be downmixed or transcoded."
 msgstr "Виберіть, чи слід мікшувати або транскодувати багатоканальні звукові доріжки DTS-HD(HR/MA)."
@@ -2508,7 +2529,7 @@ msgstr "Налаштуйте, чи відображатимуться іконк
 msgid "Configure if and how long the latest service in Picture in Picture mode will be remembered."
 msgstr "Налаштуйте, чи запам’ятовувати і як довго останній канал в режимі Картинка в картинці."
 
-msgid "Configure if and how service type icons will be shown in the channel selection list."
+msgid "Configure if and how service type icons will be shown."
 msgstr "Налаштування показу іконок типів каналу і місце їх розташування у списку каналів."
 
 msgid "Configure if and how the record indicator will be shown in the channel selection list."
@@ -2634,11 +2655,8 @@ msgstr "Налаштування четвертої мови субтитрів.
 msgid "Configure the function of the '0' button when Picture in Picture is active."
 msgstr "Налаштування функції кнопки '0 'коли вікно PiP активне."
 
-msgid "Configure the function of the <> buttons."
-msgstr "Налаштуйте функцію кнопок < >."
-
-msgid "Configure the function of the < > buttons."
-msgstr "Налаштування функцій кнопок < >."
+msgid "Configure the function of the &lt;  &gt; buttons."
+msgstr "Налаштуйте функцію для кнопок < >."
 
 msgid "Configure the gateway."
 msgstr "Налаштування шлюза."
@@ -3256,6 +3274,9 @@ msgstr "Вимкнути приймач"
 msgid "Default"
 msgstr "За замовчуванням"
 
+msgid "Default Dolby Digital / Dolby AC-3 offset"
+msgstr "Зміщення Dolby Digital / Dolby AC-3 за замовчуванням"
+
 msgid "Default Services Scanner"
 msgstr "Сканування Каналів за замовчуванням"
 
@@ -3279,6 +3300,9 @@ msgstr "Задайте додаткову затримку в мс-дах пер
 
 msgid "Define the location of the EPG Cache file."
 msgstr "Вкажіть розташування для файлу кешу EPG."
+
+msgid "Default volume offset"
+msgstr "Зміщення гучності за замовчуванням"
 
 msgid "Default: '%s'."
 msgstr "За замовчуванням: '%s'."
@@ -4045,6 +4069,9 @@ msgstr "Включити стиль перемикань 'нейтріно'"
 msgid "Enable 5V for active antenna"
 msgstr "Подати 5В для зовнішньої антени"
 
+msgid "Enable Dolby Digital / Dolby AC-3 offsets"
+msgstr "Увімкнути зміщення Dolby Digital / Dolby AC-3"
+
 msgid "Enable EIT EPG"
 msgstr "Включити EIT EPG"
 
@@ -4473,12 +4500,8 @@ msgstr "Процес виконання:"
 msgid "Exif"
 msgstr "Exif"
 
-msgid ""
-"Exist are debug or crash files.\n"
-"Space used:"
-msgstr ""
-"Наявні файли налагодження або збою.\n"
-"Використано:"
+msgid "Exist are debug files. Space used:"
+msgstr "Наявні файли налагодження. Використано:"
 
 msgid "Exist are no debug files or crash."
 msgstr "Немає файлів налагодження або збою."
@@ -5809,6 +5832,9 @@ msgstr "Контрольна сума файлу"
 
 msgid "Info file override"
 msgstr "Перевизначення інформації про файл"
+
+msgid "InfoBar"
+msgstr "Інфобар"
 
 msgid "Info bar timeout"
 msgstr "Час показу Інфобару"
@@ -7607,6 +7633,12 @@ msgstr "Параметри вимкнення таймера"
 msgid "Option"
 msgstr "Вибір"
 
+msgid "Option to disable picons on the Infobar."
+msgstr "Можливість вимкнення піконів в Інфобарі."
+
+msgid "Options"
+msgstr "Опції"
+
 msgid "Orbital position"
 msgstr "Орбітальна позиція"
 
@@ -7964,8 +7996,8 @@ msgstr "Будь ласка, змініть час закінчення запи
 msgid "Please choose an extension..."
 msgstr "Будь ласка, виберіть розширення..."
 
-msgid "Please configure the fallback tuner setup"
-msgstr "Будь ласка, зробіть налаштування резервного тюнера"
+msgid "Please configure the fallback tuner setup."
+msgstr "Будь ласка, зробіть налаштування резервного тюнера."
 
 msgid ""
 "Please configure your internet connection by filling out the required values.\n"
@@ -8273,6 +8305,9 @@ msgstr "Налаштування Логу позиціонера"
 
 msgid "Power LED"
 msgstr "Яскравість LED"
+
+msgid "Power"
+msgstr "Живлення"
 
 msgid "Power management. Consult your receiver's manual for more information."
 msgstr "Управління живленням. Для отримання додаткової інформації зверніться до керівництва вашого приймача."
@@ -9403,6 +9438,9 @@ msgstr "Пошук Wі-Fі мереж"
 msgid "Scan your network for wireless access points and connect to them using your selected wireless device.\n"
 msgstr "Сканувати мережу на наявність безпровідних точок доступу і підключитись до них використовуючи вибраний Wi-Fi адаптер\n"
 
+msgid "Scanning"
+msgstr "Сканування"
+
 msgid "Scanning %s..."
 msgstr "Сканування %s..."
 
@@ -9522,6 +9560,9 @@ msgstr "Виберіть 'провайдер' для сканування з п�
 
 msgid "Select 'yes' if this tuner is connected to the SCR device through another tuner, otherwise select 'no'."
 msgstr "Виберіть 'так', якщо цей тюнер підключено до пристрою SCR через інший тюнер, інакше виберіть 'ні'."
+
+msgid "Select 'Yes' if volume adjustments should be applied to Dolby sound tracks."
+msgstr "Виберіть 'Так', якщо налаштування гучності потрібно застосувати до звукових доріжок Dolby."
 
 msgid "Select 'yes' to choose what bands or step sizes will be scanned."
 msgstr "Виберіть 'так', щоб вибрати, які діапазони, або розміри кроків будуть скановані."
@@ -10404,7 +10445,7 @@ msgstr "Показати пакети розширень"
 msgid "Show HDD progress"
 msgstr "Показати прогрес HDD"
 
-msgid "Show HDMI Output Resolution"
+msgid "Show HDMI Output Resulution"
 msgstr "Показати роздільність виходу HDMI"
 
 msgid "Show HDMI-Output Res"
@@ -10418,6 +10459,9 @@ msgstr "Показати Менеджер логів в списку розши�
 
 msgid "Show Main Menu as"
 msgstr "Показати Головне Меню як"
+
+msgid "Show InfoBar picons"
+msgstr "Показати пікони в Інфобарі"
 
 msgid "Show Kernel packages"
 msgstr "Показати пакети ядра"
@@ -10664,6 +10708,9 @@ msgstr "Показати пакети, які будуть оновлені"
 
 msgid "Show picon background color"
 msgstr "Показати фоновий колір для піконів"
+
+msgid "Show picons in channel selection list"
+msgstr "Показати пікони в списку вибору каналів"
 
 msgid "Show picons in service list"
 msgstr "Показати пікони в списку каналів"
@@ -11518,7 +11565,7 @@ msgstr "Підканали"
 msgid "Subtitle Quickmenu"
 msgstr "Швидке меню субтитрів"
 
-msgid "Subtitle Setup"
+msgid "Subtitle Settings"
 msgstr "Налаштування субтитрів"
 
 msgid "Subtitle alignment"
@@ -11758,7 +11805,7 @@ msgstr "ТЕКСТ"
 
 msgid "TRANSLATOR_INFO"
 msgstr ""
-"Переклад:  kvinto - 19.01.2025\n"
+"Переклад:  kvinto - 31.01.2025\n"
 "Пошта:  badsystem@ukr.net"
 
 msgid "TS file is too large for ISO9660 level 1!"
@@ -12082,11 +12129,17 @@ msgstr ""
 msgid "This is a multitype tuner. Available options depend on the hardware."
 msgstr "Це є різнотиповий тюнер. Доступні опції залежать від обладнання."
 
+msgid "This is the initial / default volume offset applied to any services added the the volume adjust list."
+msgstr "Це початкове/за замовчуванням зміщення гучності, застосоване до будь-яких каналів, доданих до списку налаштування гучності."
+
 msgid "This is the order in which DiSEqC commands are sent to the aerial system. The order must correspond exactly with the order the physical devices are arranged along the signal cable (starting from the receiver end)."
 msgstr "Це порядок передачі команд DiSEqC в систему. Порядок повинен точно відповідати порядку, коли фізичні пристрої розташовані вздовж сигнального кабелю (починаючи з кінця приймача)."
 
 msgid "This not valid ONID/TSID"
 msgstr "Це не дійсний ONID/TSID"
+
+msgid "This offset will only be used if the channel does not have its own volume offset."
+msgstr "Це зміщення буде використовуватися, лише якщо канал не має власного зміщення гучності."
 
 msgid "This option allows to reduce the block-noise in the picture. Obviously this is at the cost of the picture's sharpness."
 msgstr "Опція служить для зниження шумів на зображенні. Це відбувається за рахунок різкості зображення."
@@ -12219,6 +12272,12 @@ msgstr "Ця опція дозволяє перемикати звук на ди
 
 msgid "This option allows you to view the old and new settings side by side."
 msgstr "Цей параметр дозволяє Вам показати старі і нові настройки у двох розділених вікнах вертикально."
+
+msgid "This option configures the general audio delay of Dolby Digital sound tracks."
+msgstr "Цей параметр дозволяє Вам налаштування загальної затримки звукових доріжок зі звуком Dolby Digital."
+
+msgid "This option configures the general audio delay of stereo sound tracks."
+msgstr "Налаштування загальної затримки звукових доріжок зі стереозвуком."
 
 msgid "This option configures the general audio delay."
 msgstr "Ця опція налаштовує загальну затримку звуку."
@@ -12479,6 +12538,9 @@ msgstr "Режим встановлення заголовку"
 
 msgid "To apply the selected '%s' skin the GUI needs to restart. Would you like to restart the GUI now?"
 msgstr "Щоб застосувати вибраний скін '%s', графічний інтерфейс потрібно перезапустити. Хочете перезапустити GUI зараз?"
+
+msgid "To complete the setup the %s %s must connect to the Internet.  Connect the %s %s to the Internet now."
+msgstr "Щоб завершити налаштування, %s %s має підключитися до Інтернету. Підключіть %s %s до Інтернету зараз."
 
 msgid "To audio selection"
 msgstr "Вибір звуку"
@@ -13254,6 +13316,12 @@ msgstr ""
 "\n"
 "Наступний відео вихід буде автоматично змінений через 20 секунд."
 
+msgid "Video Settings"
+msgstr "Відео Налаштування"
+
+msgid "Video Setup"
+msgstr "Налаштування Відео"
+
 msgid "Video: %s fps"
 msgstr "Відео: %s fps"
 
@@ -13358,6 +13426,15 @@ msgstr "Режим напруги"
 
 msgid "Volume"
 msgstr "Гучність"
+
+msgid "Volume Adjust"
+msgstr "Регулювання гучності"
+
+msgid "Volume Adjust Actions"
+msgstr "Дії кнопок в Меню регулювання гучності"
+
+msgid "Volume Adjust Settings"
+msgstr "Налаштування гучності"
 
 msgid "Volume down"
 msgstr "Гучність нижче"
