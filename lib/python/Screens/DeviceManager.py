@@ -1232,8 +1232,9 @@ class DevicesPanelSummary(Screen):
 	def __init__(self, session, parent):
 		Screen.__init__(self, session, parent=parent)
 		self.skinName = "SetupSummary"
-		self["entry"] = StaticText("")
-		self["value"] = StaticText("")
+		self["SetupTitle"] = StaticText("")
+		self["SetupEntry"] = StaticText("")
+		self["SetupValue"] = StaticText("")
 		self.onShow.append(self.addWatcher)
 		self.onHide.append(self.removeWatcher)
 
@@ -1245,5 +1246,6 @@ class DevicesPanelSummary(Screen):
 		self.parent.onChangedEntry.remove(self.selectionChanged)
 
 	def selectionChanged(self, name, desc):
-		self["entry"].text = name
-		self["value"].text = desc
+		self["SetupTitle"].text = name
+		self["SetupEntry"].text = name
+		self["SetupValue"].text = desc
