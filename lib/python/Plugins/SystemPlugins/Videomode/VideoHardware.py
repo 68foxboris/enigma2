@@ -280,8 +280,8 @@ class VideoHardware:
 		if len(modes) < 2:
 			self.modes_preferred = self.readAvailableModes()
 			print(f"[AVSwitch] Used default modes: {self.modes_preferred}.")
-		else:
-			print(f"[AVSwitch] Used default available modes: {self.modes_preferred}.")
+		if len(self.modes_preferred) <= 2:
+			print(f"[AVSwitch] Preferend modes not okay, possible driver failer, length={len(self.modes_preferred)}.")
 			self.modes_preferred = self.readAvailableModes()
 		if readOnly:
 			return self.modes_preferred
@@ -421,6 +421,18 @@ class VideoHardware:
 				self.current_mode = mode
 			if self.axis[self.current_mode] != self.axis[mode]:
 				limits = [int(x) for x in self.axis[mode].split()]
+				config.osd.dst_left.setChoices(default=limits[0], first=limits[0] - 255, last=limits[0] + 255)
+				config.osd.dst_top.setChoices(default=limits[1], first=limits[1] - 255, last=limits[1] + 255)
+				config.osd.dst_width.setChoices(default=limits[2], first=limits[2] - 255, last=limits[2] + 255)
+				config.osd.dst_height.setChoices(default=limits[3], first=limits[3] - 255, last=limits[3] + 255)
+				config.osd.dst_left.setValue(limits[2])
+				config.osd.dst_top.setValue(limits[3])
+				config.osd.dst_width.setValue(limits[0])
+				config.osd.dst_height.setValue(limits[1])
+				config.osd.dst_left.save()
+				config.osd.dst_top.save()
+				config.osd.dst_width.save()
+				config.osd.dst_height.save()
 			print(f"[AVSwitch] Framebuffer mode '{getDesktop(0).size().width()}', stride {stride}, axis '{self.axis[mode]}'.")
 		else:
 			success = fileWriteLine("/proc/stb/video/videomode_50hz", mode50, source=MODULE_NAME)

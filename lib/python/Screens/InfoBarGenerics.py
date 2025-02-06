@@ -2,6 +2,7 @@
 from Screens.ChannelSelection import ChannelSelection, BouquetSelector, SilentBouquetSelector
 
 from Components.ActionMap import ActionMap, HelpableActionMap, HelpableNumberActionMap, NumberActionMap
+from Components.AVSwitch import avSwitch
 from Components.Harddisk import harddiskmanager, findMountPoint
 from Components.Input import Input
 from Components.Label import Label
@@ -53,8 +54,6 @@ from re import match
 from pickle import load as pickle_load, dump as pickle_dump, HIGHEST_PROTOCOL as pickle_HIGHEST_PROTOCOL
 
 from RecordTimer import RecordTimerEntry, RecordTimer, findSafeRecordPath
-
-from Components.AVSwitch import avSwitch
 
 # hack alert!
 from Screens.Menu import MainMenu, mdom
@@ -1349,7 +1348,7 @@ class InfoBarEPG:
 			self.bouquetSel = None
 		elif self.eventView and closedScreen == self.eventView:
 			self.eventView = None
-		if ret is True or ret == 'close':
+		if ret is True or ret == "close":
 			dlgs = len(self.dlg_stack)
 			if dlgs > 0:
 				self.dlg_stack[dlgs - 1].close(dlgs > 1)
@@ -1917,7 +1916,7 @@ class InfoBarSeek:
 				tmp = self.cueGetEndCutPosition()
 				if tmp:
 					len = (False, tmp)
-			except:
+			except Exception:
 				pass
 			pos = seekable.getPlayPosition()
 			speednom = self.seekstate[1] or 1
@@ -2602,7 +2601,7 @@ class InfoBarPiP:
 	def __init__(self):
 		try:
 			self.session.pipshown
-		except:
+		except Exception:
 			self.session.pipshown = False
 
 		self.lastPiPService = None
@@ -3109,18 +3108,18 @@ class InfoBarAudioSelection:
 		self.session.openWithCallback(self.audioSelected, AudioSelection, infobar=self)
 
 	def audioSelected(self, ret=None):
-		print("[InfoBarGenerics][audioSelected] %s" % ret)
+		print("[InfoBarGenerics] [infobar::audioSelected]", ret)
 
 	def audioDownmixToggle(self, popup=True):
 		if BoxInfo.getItem("CanDownmixAC3"):
 			if config.av.downmix_ac3.value:
 				message = _("Dolby Digital downmix is now") + " " + _("disabled")
-				print('[InfoBarGenerics] [Audio] Dolby Digital downmix is now disabled')
+				print("[InfoBarGenerics] [Audio] Dolby Digital downmix is now disabled")
 				config.av.downmix_ac3.setValue(False)
 			else:
 				config.av.downmix_ac3.setValue(True)
 				message = _("Dolby Digital downmix is now") + " " + _("enabled")
-				print('[InfoBarGenerics] [Audio] Dolby Digital downmix is now enabled')
+				print("[InfoBarGenerics] [Audio] Dolby Digital downmix is now enabled")
 			if popup:
 				Notifications.AddPopup(text=message, type=MessageBox.TYPE_INFO, timeout=5, id="DDdownmixToggle")
 
@@ -3321,52 +3320,76 @@ class InfoBarAspectSelection:
 
 	def __init__(self):
 		self["AspectSelectionAction"] = HelpableActionMap(self, ["InfobarAspectSelectionActions"], {
-			"aspectSelection": (self.ExGreen_toggleGreen, _("Aspect ratio list")),
+			"aspectSelection": (self.ExGreen_toggleGreen, _("Aspect list...")),
 			"exitLong": (self.switchTo720p, _("Switch to 720p video?")),
 		}, prio=0, description=_("Aspect Ratio Actions"))
 		self.__ExGreen_state = self.STATE_HIDDEN
 
 	def ExGreen_doAspect(self):
-		# print("[InfoBarGenerics] DEBUG: Do self.STATE_ASPECT.")
+		print("[InfoBarGenerics] do self.STATE_ASPECT")
 		self.__ExGreen_state = self.STATE_ASPECT
 		self.aspectSelection()
 
 	def ExGreen_doResolution(self):
-		# print("[InfoBarGenerics] DEBUG: Do self.STATE_RESOLUTION.")
+		print("[InfoBarGenerics] do self.STATE_RESOLUTION")
 		self.__ExGreen_state = self.STATE_RESOLUTION
 		self.resolutionSelection()
 
 	def ExGreen_doHide(self):
-		# print("[InfoBarGenerics] DEBUG: Do self.STATE_HIDDEN.")
+		print("[InfoBarGenerics] do self.STATE_HIDDEN")
 		self.__ExGreen_state = self.STATE_HIDDEN
 
 	def ExGreen_toggleGreen(self, arg=""):
-		# print("[InfoBarGenerics] DEBUG: Current state %s." % {
-		# 	self.STATE_HIDDEN: "HIDDEN",
-		# 	self.STATE_ASPECT: "ASPECT",
-		# 	self.STATE_RESOLUTION: "RESOLUTION"
-		# }.get(self.__ExGreen_state))
+		print("[InfoBarGenerics] toggleGreen:", self.__ExGreen_state)
 		if self.__ExGreen_state == self.STATE_HIDDEN:
+			print("[InfoBarGenerics] self.STATE_HIDDEN")
 			self.ExGreen_doAspect()
 		elif self.__ExGreen_state == self.STATE_ASPECT:
+			print("[InfoBarGenerics] self.STATE_ASPECT")
 			self.ExGreen_doResolution()
 		elif self.__ExGreen_state == self.STATE_RESOLUTION:
+			print("[InfoBarGenerics] self.STATE_RESOLUTION")
 			self.ExGreen_doHide()
 
 	def aspectSelection(self):
 		selection = 0
-		aspectList = [
-			(_("Resolution"), "resolution"),
-			("--", ""),
-			(_("4:3 Letterbox"), "0"),
-			(_("4:3 PanScan"), "1"),
-			(_("16:9"), "2"),
-			(_("16:9 Always"), "3"),
-			(_("16:10 Letterbox"), "4"),
-			(_("16:10 PanScan"), "5"),
-			(_("16:9 Letterbox"), "6")
-		]
-
+		if BoxInfo.getItem("AmlogicFamily"):
+			aspectList = [
+				(_("Resolution"), "resolution"),
+				("--", ""),
+				(_("Normal"), "0"),
+				(_("Full Stretch"), "1"),
+				("4:3", "2"),
+				("16:9", "3"),
+				(_("Non-Linear"), "4"),
+				(_("Normal No ScaleUp"), "5"),
+				(_("4:3 Ignore"), "6"),
+				(_("4:3 Letterbox"), "7"),
+				(_("4:3 PanScan"), "8"),
+				(_("4:3 Combined"), "9"),
+				(_("16:9 Ignore"), "10"),
+				(_("16:9 Letterbox"), "11"),
+				(_("16:9 PanScan"), "12"),
+				(_("16:9 Combined"), "13")
+			]
+		else:
+			aspectSwitchList = []
+			if config.av.aspectswitch.enabled.value:
+				for aspect in range(5):
+					aspectSwitchList.append((avSwitch.ASPECT_SWITCH_MSG[aspect], str(aspect + 100)))
+				aspectSwitchList.append(("--", ""))
+			aspectList = [
+				(_("Resolution"), "resolution"),
+				("--", "")
+			] + aspectSwitchList + [
+				(_("4:3 Letterbox"), "0"),
+				(_("4:3 PanScan"), "1"),
+				(_("16:9"), "2"),
+				(_("16:9 Always"), "3"),
+				(_("16:10 Letterbox"), "4"),
+				(_("16:10 PanScan"), "5"),
+				(_("16:9 Letterbox"), "6")
+			]
 		keys = ["green", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 		aspect = avSwitch.getAspectRatioSetting()
 		selection = 0
@@ -3394,7 +3417,7 @@ class InfoBarAspectSelection:
 		self.session.openWithCallback(self.changeVideoMode, MessageBox, _("This function recovers your video signal in case of loss. The video has been changed to 720p.\nIf this is your case, please keep the video at 720P and do the following:\nGo to Menu > Setup > Audio / Video > A/V settings and set the correct resolution.\nDo you want to keep the video at 720p?"), MessageBox.TYPE_YESNO, timeout=30, simple=True)
 
 	def aspectSelected(self, aspect):
-		if not aspect is None:
+		if aspect is not None:
 			if isinstance(aspect[1], str):
 				if aspect[1] == "":
 					self.ExGreen_doHide()
@@ -3423,16 +3446,16 @@ class InfoBarResolutionSelection:
 		resList.append((_("Video: ") + "%dx%d@%gHz" % (xRes, yRes, fps), ""))
 		resList.append(("--", ""))
 		# Do we need a new sorting with this way here or should we disable some choices?
-		videoModes = avSwitch.readPreferredModes(readOnly=True)
-		videoModes = [x.replace("pal ", "").replace("ntsc ", "") for x in videoModes]  # Do we need this?
+		modes = eAVControl.getInstance().getAvailableModes()
+		videoModes = modes.split()
 		for videoMode in videoModes:
 			video = videoMode
-			if videoMode.endswith("23"):
-				video = "%s.976" % videoMode
-			if videoMode[-1].isdigit():
-				video = "%sHz" % videoMode
-			resList.append((video, videoMode))
-
+			if video not in ("pal", "ntsc"):
+				if videoMode.endswith("23"):
+					video = "%s.976" % videoMode
+				if videoMode[-1].isdigit():
+					video = "%sHz" % videoMode
+				resList.append((video, videoMode))
 		videoMode = avControl.getVideoMode("Unknown")
 		keys = ["green", "yellow", "blue", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 		selection = 0
@@ -3449,7 +3472,12 @@ class InfoBarResolutionSelection:
 				if videoMode[1] == "exit" or videoMode[1] == "" or videoMode[1] == "auto":
 					self.ExGreen_toggleGreen()
 				if videoMode[1] != "auto":
-					avSwitch.setVideoModeDirect(videoMode[1])
+					if fileWriteLine("/proc/stb/video/videomode", videoMode[1], source=MODULE_NAME):
+						print("[InfoBarGenerics] New video mode is %s." % videoMode[1])
+					else:
+						print("[InfoBarGenerics] Error: Unable to set new video mode of %s!" % videoMode[1])
+					# from enigma import gMainDC
+					# gMainDC.getInstance().setResolution(-1, -1)
 					self.ExGreen_doHide()
 		else:
 			self.ExGreen_doHide()
@@ -3491,6 +3519,8 @@ class InfoBarVmodeButton:
 		policy = config.av.policy_169 if self.isWideScreen() else config.av.policy_43
 		policy.value = policy.choices[(policy.choices.index(policy.value) + 1) % len(policy.choices)]
 		self.VideoMode_window.setText(policy.value)
+		config.av.policy_169.save()
+		config.av.policy_43.save()
 
 	def isWideScreen(self):
 		from Components.Converter.ServiceInfo import WIDESCREEN
