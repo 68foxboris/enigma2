@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2025-01-18 20:42+0200\n"
+"PO-Revision-Date: 2025-02-06 11:50+0200\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>=14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.5\n"
 
 msgid ""
 "\n"
@@ -5238,6 +5238,9 @@ msgstr "Настройка общей задержки звуковых доро
 msgid "Configure the general audio delay of stereo sound tracks."
 msgstr "Настройка общей задержки звуковых дорожек со стереозвуком."
 
+msgid "Configure the hard disk drive to go to standby after the specified idle time when the box is in standby."
+msgstr "Укажите, через какое время нахождения ресивера в режиме ожидания или неиспользования, переводить жёсткий диск в режим ожидания."
+
 msgid "Configure the hard disk drive to go to standby after the specified idle time."
 msgstr "Настройка жёсткого диска для перехода в режим ожидания после простоя в течении определённого времени."
 
@@ -7688,6 +7691,9 @@ msgstr "Включите эту опцию, чтобы добавить имен
 msgid "Enable this option to add storage device information detected during system boot and hot plug events to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить в файл журнала отладки информацию об устройствах хранения, обнаруженных во время загрузки системы и событий горячего подключения."
 
+msgid "Enable this option to show unknown storage devices in device manager."
+msgstr "Включите эту опцию, чтобы отображать неизвестные устройства хранения данных в диспетчере устройств."
+
 msgid "Enable this setting if your aerial system needs power"
 msgstr "Включите эту настройку, если Вашей системе необходимо питание"
 
@@ -9332,6 +9338,9 @@ msgstr "Настройка диска"
 
 msgid "Hard disk standby after"
 msgstr "Отключить HDD через"
+
+msgid "Hard disk standby in box standby after"
+msgstr "Перевести HDD в режим ожидания одновременно с ресивером"
 
 msgid "Harddisk"
 msgstr "Жёсткий диск"
@@ -12503,6 +12512,9 @@ msgstr "Состояние LED в режиме работы"
 msgid "Opkg"
 msgstr "Opkg"
 
+msgid "Option to enable the Hardware Standby Timer."
+msgstr "Включить таймер режима ожидания HDD."
+
 msgid "Options disable timer"
 msgstr "Варианты отключения таймера"
 
@@ -14809,6 +14821,9 @@ msgstr "Журнал Samba"
 msgid "Samba setup"
 msgstr "Настройки Samba"
 
+msgid "Same as in active"
+msgstr "То же, что при активности"
+
 msgid "Same as stream"
 msgstr "Так же как в потоке"
 
@@ -16839,6 +16854,9 @@ msgstr "Использовать две строки в списке канал�
 
 msgid "Show underline characters in filenames"
 msgstr "Показывать символы подчеркивания в именах файлов"
+
+msgid "Show unknown devices"
+msgstr "Показать неизвестные устройства"
 
 msgid "Show vertical timelines"
 msgstr "Показать вертикальные сроки"
@@ -19733,6 +19751,9 @@ msgstr "Использовать информацию ТВ-гида EIT, ког�
 
 msgid "Use FreeSat EPG information when it is available."
 msgstr "Использовать информацию ТВ-гида FreeSat, когда она существует."
+
+msgid "Use Harddisk Hardware Standby Timer"
+msgstr "Использовать аппаратный таймер ожидания жёсткого диска"
 
 msgid "Use HDMI pre-emphasis"
 msgstr "Использовать HDMI предыскажение"
