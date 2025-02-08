@@ -863,8 +863,8 @@ def InitUsageConfig():
 	config.usage.time.wide = NoSave(ConfigBoolean(default=False))
 	config.usage.time.wide_display = NoSave(ConfigBoolean(default=False))
 
-	# TRANSLATORS: full date representation dayname daynum monthname year in strftime() format! See "man strftime"
-	config.usage.date.dayfull = ConfigSelection(default=_("%A %-d %B %Y"), choices=[
+	# TRANSLATORS: Full date representation dayname daynum monthname year in strftime() format! See 'man strftime'.
+	choicelist = [
 		(_("%A %d %B %Y"), _("Dayname DD Month Year")),
 		(_("%A %d. %B %Y"), _("Dayname DD. Month Year")),
 		(_("%A %-d %B %Y"), _("Dayname D Month Year")),
@@ -894,36 +894,37 @@ def InitUsageConfig():
 		(_("%A %Y/%m/%d"), _("Dayname Year/MM/DD")),
 		(_("%A %Y/%m/%-d"), _("Dayname Year/MM/D")),
 		(_("%A %Y/%-m/%d"), _("Dayname Year/M/DD")),
-		(_("%A %Y/%-m/%-d"), _("Dayname Year/M/D"))
-	])
+		(_("%A %Y/%-m/%-d"), _("Dayname Year/M/D"))]
 
-	# TRANSLATORS: long date representation short dayname daynum monthname year in strftime() format! See "man strftime"
+	config.usage.date.dayfull = ConfigSelection(default=_("%A %d.%m.%Y") if config.misc.locale.value == "de_DE" else _("%A %-d %B %Y"), choices=choicelist)
+
+	# TRANSLATORS: Long date representation short dayname daynum monthname year in strftime() format! See 'man strftime'.
 	config.usage.date.shortdayfull = ConfigText(default=_("%a %-d %B %Y"))
 
-	# TRANSLATORS: long date representation short dayname daynum short monthname year in strftime() format! See "man strftime"
+	# TRANSLATORS: Long date representation short dayname daynum short monthname year in strftime() format! See 'man strftime'.
 	config.usage.date.daylong = ConfigText(default=_("%a %-d %b %Y"))
 
-	# TRANSLATORS: short date representation dayname daynum short monthname in strftime() format! See "man strftime"
+	# TRANSLATORS: Short date representation dayname daynum short monthname in strftime() format! See 'man strftime'.
 	config.usage.date.dayshortfull = ConfigText(default=_("%A %-d %B"))
 
-	# TRANSLATORS: short date representation short dayname daynum short monthname in strftime() format! See "man strftime"
+	# TRANSLATORS: Short date representation short dayname daynum short monthname in strftime() format! See 'man strftime'.
 	config.usage.date.dayshort = ConfigText(default=_("%a %-d %b"))
 
-	# TRANSLATORS: small date representation short dayname daynum in strftime() format! See "man strftime"
+	# TRANSLATORS: Small date representation short dayname daynum in strftime() format! See 'man strftime'.
 	config.usage.date.daysmall = ConfigText(default=_("%a %-d"))
 
-	# TRANSLATORS: full date representation daynum monthname year in strftime() format! See "man strftime"
+	# TRANSLATORS: Full date representation daynum monthname year in strftime() format! See 'man strftime'.
 	config.usage.date.full = ConfigText(default=_("%-d %B %Y"))
 
-	# TRANSLATORS: long date representation daynum short monthname year in strftime() format! See "man strftime"
+	# TRANSLATORS: Long date representation daynum short monthname year in strftime() format! See 'man strftime'.
 	config.usage.date.long = ConfigText(default=_("%-d %b %Y"))
 
-	# TRANSLATORS: small date representation daynum short monthname in strftime() format! See "man strftime"
+	# TRANSLATORS: Small date representation daynum short monthname in strftime() format! See 'man strftime'.
 	config.usage.date.short = ConfigText(default=_("%-d %b"))
 
 	def setDateStyles(configElement):
 		dateStyles = {
-			# dayfull: (shortdayfull, daylong, dayshortfull, dayshort, daysmall, full, long, short)
+			# dayfull            shortdayfull      daylong           dayshortfull   dayshort       daysmall    full           long           short
 			_("%A %d %B %Y"): (_("%a %d %B %Y"), _("%a %d %b %Y"), _("%A %d %B"), _("%a %d %b"), _("%a %d"), _("%d %B %Y"), _("%d %b %Y"), _("%d %b")),
 			_("%A %d. %B %Y"): (_("%a %d. %B %Y"), _("%a %d. %b %Y"), _("%A %d. %B"), _("%a %d. %b"), _("%a %d"), _("%d. %B %Y"), _("%d. %b %Y"), _("%d. %b")),
 			_("%A %-d %B %Y"): (_("%a %-d %B %Y"), _("%a %-d %b %Y"), _("%A %-d %B"), _("%a %-d %b"), _("%a %-d"), _("%-d %B %Y"), _("%-d %b %Y"), _("%-d %b")),
@@ -975,7 +976,7 @@ def InitUsageConfig():
 
 	config.usage.date.dayfull.addNotifier(setDateStyles)
 
-	# TRANSLATORS: full time representation hour:minute:seconds
+	# TRANSLATORS: Full time representation hour:minute:seconds.
 	if nl_langinfo(AM_STR) and nl_langinfo(PM_STR):
 		config.usage.time.long = ConfigSelection(default=_("%T"), choices=[
 			(_("%T"), _("HH:mm:ss")),
@@ -995,15 +996,15 @@ def InitUsageConfig():
 			(_("%-I:%M:%S"), _("h:mm:ss"))
 		])
 
-	# TRANSLATORS: time representation hour:minute:seconds for 24 hour clock or 12 hour clock without AM/PM and hour:minute for 12 hour clocks with AM/PM
+	# TRANSLATORS: Time representation hour:minute:seconds for 24 hour clock or 12 hour clock without AM/PM and hour:minute for 12 hour clocks with AM/PM.
 	config.usage.time.mixed = ConfigText(default=_("%T"))
 
-	# TRANSLATORS: short time representation hour:minute (Same as "Default")
+	# TRANSLATORS: Short time representation hour:minute (Same as "Default").
 	config.usage.time.short = ConfigText(default=_("%R"))
 
 	def setTimeStyles(configElement):
 		timeStyles = {
-			# long: (mixed, short)
+			# long      mixed    short
 			_("%T"): (_("%T"), _("%R")),
 			_("%-H:%M:%S"): (_("%-H:%M:%S"), _("%-H:%M")),
 			_("%I:%M:%S%^p"): (_("%I:%M%^p"), _("%I:%M%^p")),
@@ -1040,7 +1041,7 @@ def InitUsageConfig():
 		config.usage.time.disabled.value = not config.usage.time.enabled.value
 		config.usage.time.long.value = config.usage.time.long.default
 
-	# TRANSLATORS: compact date representation (for VFD) daynum short monthname in strftime() format! See "man strftime"
+	# TRANSLATORS: Compact date representation (for VFD) daynum short monthname in strftime() format! See 'man strftime'.
 	config.usage.date.display = ConfigSelection(default=_("%-d %b"), choices=[
 		("", _("Hidden / Blank")),
 		(_("%d %b"), _("Day DD Mon")),
@@ -1088,7 +1089,7 @@ def InitUsageConfig():
 
 	def setDateDisplayStyles(configElement):
 		dateDisplayStyles = {
-			# display: (displayday, template)
+			# display      displayday     template
 			"": ("", ""),
 			_("%d %b"): (_("%a %d %b"), _("%d+%b_")),
 			_("%-d %b"): (_("%a %-d %b"), _("%-d+%b_")),
@@ -1116,7 +1117,7 @@ def InitUsageConfig():
 
 	config.usage.date.display.addNotifier(setDateDisplayStyles)
 
-	# TRANSLATORS: short time representation hour:minute (Same as "Default")
+	# TRANSLATORS: Short time representation hour:minute (Same as "Default").
 	if nl_langinfo(AM_STR) and nl_langinfo(PM_STR):
 		config.usage.time.display = ConfigSelection(default=_("%R"), choices=[
 			("", _("Hidden / Blank")),
@@ -1401,35 +1402,6 @@ def InitUsageConfig():
 	config.misc.epgcachefilename = ConfigText(default="epg", fixed_size=False)
 	epgCacheFilename = "%s.dat" % config.misc.epgcachefilename.value.replace(".dat", "")
 	config.misc.epgcache_filename = ConfigText(default=pathjoin(config.misc.epgcachepath.value, epgCacheFilename))
-
-	if BoxInfo.getItem("AmlogicFamily"):
-		from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
-		limits = [int(x) for x in video_hw.getWindowsAxis().split()]
-		config.osd.dst_left = ConfigSelectionNumber(default=limits[0], stepwidth=1, min=limits[0] - 255, max=limits[0] + 255, wraparound=False)
-		config.osd.dst_top = ConfigSelectionNumber(default=limits[1], stepwidth=1, min=limits[1] - 255, max=limits[1] + 255, wraparound=False)
-		config.osd.dst_width = ConfigSelectionNumber(default=limits[2], stepwidth=1, min=limits[2] - 255, max=limits[2] + 255, wraparound=False)
-		config.osd.dst_height = ConfigSelectionNumber(default=limits[3], stepwidth=1, min=limits[3] - 255, max=limits[3] + 255, wraparound=False)
-	else:
-		config.osd.dst_left = ConfigSelectionInteger(default=0, first=0, last=720, step=1, wrap=False)
-		config.osd.dst_top = ConfigSelectionInteger(default=0, first=0, last=576, step=1, wrap=False)
-		config.osd.dst_width = ConfigSelectionInteger(default=720, first=0, last=720, step=1, wrap=False)
-		config.osd.dst_height = ConfigSelectionInteger(default=576, first=0, last=576, step=1, wrap=False)
-
-	config.osd.alpha = ConfigSelectionInteger(default=255, first=0, last=255, step=1, wrap=False)
-	config.osd.alpha_teletext = ConfigSelectionInteger(default=255, first=0, last=255, step=1, wrap=False)
-	config.osd.alpha_webbrowser = ConfigSelectionInteger(default=255, first=0, last=255, step=1, wrap=False)
-	config.osd.threeDmode = ConfigSelection(default="auto", choices=[
-		("off", _("Off")),
-		("auto", _("Auto")),
-		("sidebyside", _("Side by Side")),
-		("topandbottom", _("Top and Bottom"))
-	])
-	config.osd.threeDznorm = ConfigSlider(default=50, increment=1, limits=(0, 100))
-	config.osd.show3dextensions = ConfigYesNo(default=False)
-	config.osd.threeDsetmode = ConfigSelection(default="mode1", choices=[
-		("mode1", _("Mode 1")),
-		("mode2", _("Mode 2"))
-	])
 
 	def EpgCacheChanged(configElement):
 		config.misc.epgcache_filename.setValue(pathjoin(config.misc.epgcachepath.value, epgCacheFilename))
@@ -1916,6 +1888,7 @@ def InitUsageConfig():
 		eSubtitleSettings.setSubtitleBacktrans(configElement.value)
 
 	choiceList = [
+        (-1, _("Original")),
 		(0, _("No transparency")),
 		(12, "5%"),
 		(25, "10%"),
@@ -1935,7 +1908,7 @@ def InitUsageConfig():
 	def setDVBSubtitleBacktrans(configElement):
 		eSubtitleSettings.setDVBSubtitleBacktrans(configElement.value)
 
-	config.subtitles.dvb_subtitles_backtrans = ConfigSelection(default=0, choices=choiceList)
+	config.subtitles.dvb_subtitles_backtrans = ConfigSelection(default=-1, choices=choiceList)
 	config.subtitles.dvb_subtitles_backtrans.addNotifier(setDVBSubtitleBacktrans)
 
 	choiceList = []

@@ -409,6 +409,14 @@ def runScreenTest():
 	return 0
 
 
+def localeNotifier(configElement):
+	international.activateLocale(configElement.value)
+
+
+def setLoadUnlinkedUserbouquets(configElement):
+	enigma.eDVBDB.getInstance().setLoadUnlinkedUserbouquets(int(configElement.value))
+
+
 def dump(dir, p=""):
 	had = dict()
 	if isinstance(dir, dict):
@@ -502,9 +510,6 @@ try:  # Configure the twisted logging.
 except ImportError:
 	print("[StartEnigma] Error: Twisted not available!")
 
-def localeNotifier(configElement):
-	international.activateLocale(configElement.value)
-
 # Initialize the country, language and locale data.
 #
 enigma.eProfileWrite("International")
@@ -580,9 +585,6 @@ enigma.eProfileWrite("LoadBouquets")
 config.misc.load_unlinked_userbouquets = ConfigSelection(default="1", choices=[("0", _("Off")), ("1", _("Top")), ("2", _("Bottom"))])
 if config.misc.load_unlinked_userbouquets.value.lower() in ("true", "false"):
 	config.misc.load_unlinked_userbouquets.value = "1" if config.misc.load_unlinked_userbouquets.value.lower() == "true" else "0"
-
-def setLoadUnlinkedUserbouquets(configElement):
-	enigma.eDVBDB.getInstance().setLoadUnlinkedUserbouquets(int(configElement.value))
 
 config.misc.load_unlinked_userbouquets.addNotifier(setLoadUnlinkedUserbouquets)
 enigma.eDVBDB.getInstance().reloadBouquets()
