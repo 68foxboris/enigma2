@@ -73,7 +73,7 @@ class International:
 		"ak": ("Akan", _("Akan"), "Akan", "", "", ("GH",)),
 		"am": ("Amharic", _("Amharic"), "አማርኛ", "", "", ("ET",)),
 		"an": ("Aragonese", _("Aragonese"), "Aragonés", "", "", ("ES",)),
-		"ar": ("Arabic", _("Arabic"), "العربية", "ISO-8859-15", "", ("AE", "BH", "DZ", "EG", "IN", "IQ", "JO", "KW", "LB", "LY", "MA", "OM", "QA", "SA", "SD", "SS", "SY", "TN", "YE")),
+		"ar": ("Arabic", _("Arabic"), "العربية", "ISO-8859-15", "", ("BH", "AE", "DZ", "EG", "IN", "IQ", "JO", "KW", "LB", "LY", "MA", "OM", "QA", "SA", "SD", "SS", "SY", "TN", "YE")),
 		"as": ("Assamese", _("Assamese"), "অসমীয়া", "", "", ("IN",)),
 		"av": ("Avaric", _("Avaric"), "Авар мацӀ / МагӀарул мацӀ", "", "", ()),
 		"ay": ("Aymara", _("Aymara"), "Aymar Aru", "", "", ("PE",)),
