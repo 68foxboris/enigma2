@@ -17,9 +17,9 @@ class Keyboard:
 				mapFile = None
 				mapName = None
 				try:
-					with open(resolveFilename(SCOPE_KEYMAPS, keymapFile)) as fd:
+					with open(resolveFilename(SCOPE_KEYMAPS, keymapFile), "r") as fd:
 						for line in fd.readlines():
-							key, val = (x.strip() for x in line.split("=", 1))
+							key, val = [x.strip() for x in line.split("=", 1)]
 							if key == "kmap":
 								mapFile = val
 							if key == "name":
@@ -45,7 +45,7 @@ class Keyboard:
 
 	def getDefaultKeyboardMap(self):
 		# This is a code proposal to make the default keymap respond
-		# to the currently defined locale.  OpenATV initialises the
+		# to the currently defined locale.  OpenPLI initialises the
 		# keymap based on hardware manufacturer.  Making the
 		# selection based on language locale makes more sense.  There
 		# are other code changes coming that will allow this to happen.
