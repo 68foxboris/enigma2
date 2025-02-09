@@ -292,6 +292,9 @@ class RemoteControl:
 							print("[InputDevice] Remote remap evdev='%s', name='%s': %s" % (evdev, evdevinfo["name"], resStr))
 		return rcButtons
 
+	def getRemoteControlPixmap(self):
+		return BoxInfo.getItem("RCImage")
+
 	def getRemoteControlKeyList(self):
 		return self.remote["keyIds"]
 
