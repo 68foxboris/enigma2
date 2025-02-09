@@ -2025,6 +2025,9 @@ msgstr "Автоматический ИИ-перевод включён"
 msgid "AI Translation language"
 msgstr "Язык для ИИ-перевода"
 
+msgid "AI Translation mode"
+msgstr "Режим перевода ИИ"
+
 msgid "AI Translation optimization"
 msgstr "Оптимизация перевода с помощью ИИ"
 
@@ -2723,6 +2726,9 @@ msgstr "Арабский"
 
 msgid "Arabic (Egyptian)"
 msgstr "Арабский (Египет)"
+
+msgid "Arabic (Iraq)"
+msgstr "Арабский (Ирак)"
 
 msgid "Arabic (Moroccan)"
 msgstr "Арабский (Морокко)"
@@ -18264,6 +18270,12 @@ msgstr "Ваш %s %s считывает сохраненные данные ТВ
 
 msgid "The %s %s stores the EPG data every (hours)."
 msgstr "Ваш %s %s сохраняет данные ТВ-гида каждые (часов)."
+
+msgid "The AI mode used for translating languages. You can choose the one that gives the most accurate translation for your target language."
+msgstr "Режим ИИ, используемый для перевода языков. Вы можете выбрать тот, который дает наиболее точный перевод для вашего целевого языка."
+
+msgid "The AI Translation service will be optimized to provide the best performance based on the the Internet connection upload speed selected."
+msgstr "Служба перевода на основе искусственного интеллекта будет оптимизирована для обеспечения наилучшей производительности в зависимости от выбранной скорости загрузки интернет-соединения."
 
 msgid "The DVD standard doesn't support H.264 (HDTV) video streams. Do you want to create a special format data DVD (which will not play in stand-alone DVD players) instead?"
 msgstr "DVD стандарт не поддерживает H.264 (HDTV) видео потоков. Вы хотите создать специальный формат DVD (который возможно не будет проигрываться в стационарных DVD проигрывателях)?"
