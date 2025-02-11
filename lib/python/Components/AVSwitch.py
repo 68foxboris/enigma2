@@ -210,8 +210,6 @@ def InitAVSwitch():
 	config.av.generalPCMdelay = ConfigSelectionNumber(-1000, 1000, 5, default=0)
 	config.av.vcrswitch = ConfigEnableDisable(default=False)
 	config.av.aspect.addNotifier(avSwitch.setAspect)
-	config.osd = ConfigSubsection()
-	config.osd.language = ConfigText(default=config.misc.locale.value)
 	if BoxInfo.getItem("AmlogicFamily"):
 		limits = [int(x) for x in avSwitch.getWindowsAxis().split()]
 		config.osd.dst_left = ConfigSelectionInteger(default=limits[0], first=limits[0] - 255, last=limits[0] + 255, step=1, wrap=False)
