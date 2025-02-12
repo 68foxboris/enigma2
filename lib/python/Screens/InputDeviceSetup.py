@@ -62,7 +62,7 @@ class InputDeviceSelection(Screen):
 		self["introduction"] = StaticText(self.edittext)
 
 		self.devices = [(inputDevices.getDeviceName(x), x) for x in inputDevices.getDeviceList()]
-		print("[InputDeviceSetup] found devices :->", len(self.devices), self.devices)
+		print(f"[InputDeviceSelection] found devices :-> {len(self.devices)} {str(self.devices)}")
 
 		self["OkCancelActions"] = HelpableActionMap(self, ["OkCancelActions"],
 			{
@@ -89,9 +89,9 @@ class InputDeviceSelection(Screen):
 		divpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_SKIN, "div-h.png"))
 		activepng = None
 		devicepng = None
-		enabled = inputDevices.getDeviceAttribute(device, 'enabled')
+		enabled = inputDevices.getDeviceAttribute(device, "enabled")
 
-		if type == 'remote':
+		if type == "remote":
 			if config.misc.rcused.value == 0:
 				if enabled:
 					devicepng = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "icons/input_rcnew-configured.png"))
@@ -107,7 +107,7 @@ class InputDeviceSelection(Screen):
 				devicepng = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "icons/input_keyboard-configured.png"))
 			else:
 				devicepng = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "icons/input_keyboard.png"))
-		elif type == 'mouse':
+		elif type == "mouse":
 			if enabled:
 				devicepng = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "icons/input_mouse-configured.png"))
 			else:
@@ -120,10 +120,10 @@ class InputDeviceSelection(Screen):
 		self.list = []
 
 		if iRcTypeControl.multipleRcSupported():
-			self.list.append(self.buildInterfaceList('rctype', _('Configure remote control type'), None, False))
+			self.list.append(self.buildInterfaceList("rctype", _("Configure remote control type"), None, False))
 
 		for x in self.devices:
-			dev_type = inputDevices.getDeviceAttribute(x[1], 'type')
+			dev_type = inputDevices.getDeviceAttribute(x[1], "type")
 			self.list.append(self.buildInterfaceList(x[1], _(x[0]), dev_type))
 
 		self["list"].setList(self.list)
@@ -133,7 +133,7 @@ class InputDeviceSelection(Screen):
 		selection = self["list"].getCurrent()
 		self.currentIndex = self["list"].getIndex()
 		if selection is not None:
-			if selection[0] == 'rctype':
+			if selection[0] == "rctype":
 				self.session.open(RemoteControlType)
 			else:
 				self.session.openWithCallback(self.DeviceSetupClosed, InputDeviceSetup, selection[0])
@@ -184,7 +184,7 @@ class InputDeviceSetup(ConfigListScreen, Screen):
 		self["config"].l.setSeperation(int(listWidth * .8))
 
 	def cleanup(self):
-		inputDevices.currentDevice = ""
+		inputDevices.currentDevice = None
 
 	def createSetup(self):
 		self.list = []
@@ -216,7 +216,7 @@ class InputDeviceSetup(ConfigListScreen, Screen):
 
 	def selectionChanged(self):
 		if self["config"].getCurrent() == self.enableEntry:
-			self["introduction"].setText(_("Current device: ") + str(inputDevices.getDeviceAttribute(self.inputDevice, 'name')))
+			self["introduction"].setText(_("Current device: ") + str(inputDevices.getDeviceAttribute(self.inputDevice, "name")))
 		else:
 			self["introduction"].setText(_("Current value: ") + self.getCurrentValue() + _(" ms"))
 
@@ -367,7 +367,7 @@ class RemoteControlType(ConfigListScreen, Screen):
 			self.session.openWithCallback(self.keySaveCallback, MessageBox, _("Is this setting ok?"), MessageBox.TYPE_YESNO, timeout=20, default=True, timeout_default=False)
 
 	def keySaveCallback(self, answer):
-		if not answer:
+		if answer is False:
 			self.restoreOldSetting()
 		else:
 			config.plugins.remotecontroltype.rctype.value = int(self.rctype.value)

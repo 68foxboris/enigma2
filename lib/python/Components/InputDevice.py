@@ -11,7 +11,7 @@ from Components.config import ConfigSubsection, ConfigInteger, ConfigSelection, 
 from Components.Console import Console
 from Components.International import international
 from Components.SystemInfo import BoxInfo
-from Tools.Directories import SCOPE_KEYMAPS, SCOPE_SKINS, fileReadLine, fileWriteLine, fileReadLines, fileReadXML, resolveFilename, pathExists
+from Tools.Directories import SCOPE_KEYMAPS, SCOPE_SKINS, fileReadLine, fileWriteLine, fileReadLines, fileReadXML, resolveFilename
 
 MODULE_NAME = __name__.split(".")[-1]
 
@@ -21,16 +21,18 @@ config.inputDevices = ConfigSubsection()
 class InputDevices:
 	def __init__(self):
 		self.devices = {}
-		self.currentDevice = ""
+		self.currentDevice = None
 		for device in sorted(listdir("/dev/input/")):
 
 			if isdir(join("/dev/input", device)):
 				continue
 			try:
-				buffer = b"\0" * 512
+				_buffer = "\0" * 512
 				self.fd = osopen(join("/dev/input", device), O_RDWR | O_NONBLOCK)
-				self.name = ioctl(self.fd, self.EVIOCGNAME(256), buffer)
+				self.name = ioctl(self.fd, self.EVIOCGNAME(256), _buffer)
 				self.name = self.name[:self.name.find(b"\0")].decode()
+				if str(self.name).find("Keyboard") != -1:
+					self.name = "keyboard"
 				osclose(self.fd)
 			except OSError as err:
 				print(f"[InputDevice] Error: device='{device}' getInputDevices <ERROR: ioctl(EVIOCGNAME): '{str(err)}'>")
@@ -71,8 +73,6 @@ class InputDevices:
 			return "keyboard"
 		elif "mouse" in name:
 			return "mouse"
-		elif "front panel" in name:
-			return "panel"
 		else:
 			print(f"[InputDevice] Warning: Unknown device type: '{name}'!")
 			return None
@@ -113,7 +113,7 @@ class InputDevices:
 		# print(f"[InputDevices] setDeviceName for device '{device}' to '{value}'.")
 		self.setDeviceAttribute(device, "configuredName", value)
 
-	def setDeviceDelay(self, device, value):  # REP_DELAY
+	def setDeviceDelay(self, device, value):  # REP_DELAY.
 		if self.getDeviceAttribute(device, "enabled"):
 			# print(f"[InputDevices] setDeviceDelay for device '{device}' to {value} ms.")
 			event = pack("LLHHi", 0, 0, 0x14, 0x00, int(value))
@@ -121,7 +121,7 @@ class InputDevices:
 			oswrite(fd, event)
 			osclose(fd)
 
-	def setDeviceRepeat(self, device, value):  # REP_PERIOD
+	def setDeviceRepeat(self, device, value):  # REP_PERIOD.
 		if self.getDeviceAttribute(device, "enabled"):
 			# print(f"[InputDevices] setDeviceRepeat for device '{device}' to {value} ms.")
 			event = pack("LLHHi", 0, 0, 0x14, 0x01, int(value))
@@ -155,7 +155,7 @@ class Keyboard:
 				keyboardMapFile = None
 				keyboardMapName = None
 				for line in lines:
-					key, val = (x.strip() for x in line.split("=", 1))
+					key, val = [x.strip() for x in line.split("=", 1)]
 					if key == "kmap":
 						keyboardMapFile = val
 					elif key == "name":
@@ -307,7 +307,7 @@ class RemoteControl:
 		if rcType > 0:
 			fileWriteLine("/proc/stb/ir/rc/type", rcType, source=MODULE_NAME)
 
-	def getOpenWebIfHTML(self):
+	def getOpenWebifHTML(self):
 		html = []
 		error = False
 		image = self.remote["image"]
@@ -342,12 +342,12 @@ class RemoteControl:
 
 class InitInputDevices:
 	def __init__(self):
-		self.currentDevice = ""
+		self.currentDevice = None
 		for device in sorted(list(inputDevices.devices.keys())):
 			print(f"[InputDevice] InitInputDevices DEBUG: Creating config entry for device: '{device}' -> '{inputDevices.devices[device]['name']}'.")
 			self.currentDevice = device
 			self.setupConfigEntries(self.currentDevice)
-			self.currentDevice = ""
+			self.currentDevice = None
 
 	def setupConfigEntries(self, device):
 		setattr(config.inputDevices, device, ConfigSubsection())
@@ -362,43 +362,43 @@ class InitInputDevices:
 		configItem.delay.addNotifier(self.inputDevicesDelayChanged)
 
 	def inputDevicesEnabledChanged(self, configElement):
-		if self.currentDevice != "" and inputDevices.currentDevice == "":
+		if self.currentDevice and inputDevices.currentDevice is None:
 			inputDevices.setDeviceEnabled(self.currentDevice, configElement.value)
-		elif iInputDevices.currentDevice != "":
+		elif inputDevices.currentDevice:
 			inputDevices.setDeviceEnabled(inputDevices.currentDevice, configElement.value)
 
 	def inputDevicesNameChanged(self, configElement):
-		if self.currentDevice != "" and inputDevices.currentDevice == "":
+		if self.currentDevice and inputDevices.currentDevice is None:
 			inputDevices.setDeviceName(self.currentDevice, configElement.value)
-			if configElement.value != "":
-				devname = inputDevices.getDeviceAttribute(self.currentDevice, 'name')
-				if devname != configElement.value:
+			if configElement.value:
+				devName = inputDevices.getDeviceAttribute(self.currentDevice, "name")
+				if devName != configElement.value:
 					configItem = getattr(config.inputDevices, f"{self.currentDevice}.enabled")
 					configItem.value = False
 					configItem.save()
-		elif inputDevices.currentDevice != "":
+		elif inputDevices.currentDevice:
 			inputDevices.setDeviceName(inputDevices.currentDevice, configElement.value)
 
 	def inputDevicesDelayChanged(self, configElement):
-		if self.currentDevice != "" and inputDevices.currentDevice == "":
+		if self.currentDevice and inputDevices.currentDevice is None:
 			inputDevices.setDeviceDelay(self.currentDevice, configElement.value)
-		elif inputDevices.currentDevice != "":
+		elif inputDevices.currentDevice:
 			inputDevices.setDeviceDelay(inputDevices.currentDevice, configElement.value)
 
 	def inputDevicesRepeatChanged(self, configElement):
-		if self.currentDevice != "" and inputDevices.currentDevice == "":
+		if self.currentDevice and inputDevices.currentDevice is None:
 			inputDevices.setDeviceRepeat(self.currentDevice, configElement.value)
-		elif inputDevices.currentDevice != "":
+		elif inputDevices.currentDevice:
 			inputDevices.setDeviceRepeat(inputDevices.currentDevice, configElement.value)
 
 
 inputDevices = InputDevices()
-iInputDevices = inputDevices  # Deprecated support old plugins
+iInputDevices = inputDevices  # Deprecated support old plugins.
 
 
 class RcTypeControl():
 	def __init__(self):
-		if pathExists("/proc/stb/ir/rc/type"):
+		if exists("/proc/stb/ir/rc/type"):
 			self.isSupported = True
 
 			if config.plugins.remotecontroltype.rctype.value != 0:
