@@ -643,7 +643,7 @@ void gPixmap::drawRectangle(const gRegion &region, const eRect &area, const gRGB
 							x--;
 						}
 					}
-				}// if blitAlphaBlend
+				} // if blitAlphaBlend
 			}	  // if center
 
 			if (top && !topRect.empty())
@@ -729,7 +729,7 @@ void gPixmap::drawRectangle(const gRegion &region, const eRect &area, const gRGB
 						uint32_t *gradientBuf2 = gradientBuf + mRect.left() - area.left();
 						std::memcpy(dst, gradientBuf2, linesize);
 					}
-				}// if blitAlphaBlend
+				} // if blitAlphaBlend
 			}	  // if center
 
 			if (top && !topRect.empty())
@@ -1948,11 +1948,20 @@ void gPixmap::blit(const gPixmap &src, const eRect &_pos, const gRegion &clip, i
 
 #ifdef FORCE_NO_ACCELERATION_SCALE
 	if (accel && (flag & blitScale))
-		accel = false;	
+	{
+		// Reset width in case of round issue
+		if (src.size().width() != srcarea.width())
+			srcarea.setWidth(src.size().width());
+
+		// Reset height in case of round issue
+		if (src.size().height() != srcarea.height())
+			srcarea.setHeight(src.size().height());
+	}
 #endif
 		if (accel)
 		{
 			flag &= 7; // remove all flags except the blit flags
+			// eDebug("[gPixmap] accel flag %d / area (%d,%d,%d,%d) / srcarea (%d,%d,%d,%d)", flag, area.left(), area.top(), area.width(), area.height(), srcarea.left(), srcarea.top(), srcarea.width(), srcarea.height());
 			if (!gAccel::getInstance()->blit(surface, src.surface, area, srcarea, flag))
 			{
 #ifdef GPIXMAP_DEBUG
