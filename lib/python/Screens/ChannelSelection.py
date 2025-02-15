@@ -69,7 +69,7 @@ class InsertService(Setup):
 
 	def createConfig(self):
 		choices = [("Select Service", _("Select Service"))]
-		if BoxInfo.getItem("HasHDMIin"):
+		if BoxInfo.getItem("HDMIin"):
 			choices.append(("HDMI-in", _("HDMI-In")))
 		choices.append(("IPTV stream", _("Enter URL")))
 		self.servicetype = ConfigSelection(choices=choices)
@@ -342,8 +342,8 @@ class ChannelContextMenu(Screen):
 				if not csel.entry_marked and not self.inBouquetRootList and current_root and not (current_root.flags & eServiceReference.isGroup):
 					if current.type != -1:
 						menu.append(ChoiceEntryComponent("dummy", (_("Add marker"), self.showMarkerInputBox)))
-					if BoxInfo.getItem("HasHDMIin"):
-						append_when_current_valid(current, menu, (_("Add HDMI IN to bouquet"), self.showHDMIInInputBox))
+					if BoxInfo.getItem("HDMIin"):
+						append_when_current_valid(current, menu, (_("Add HDMI-In to bouquet"), self.showHDMIInInputBox))
 					if not csel.movemode:
 						if haveBouquets:
 							append_when_current_valid(current, menu, (_("Enable bouquet edit"), self.bouquetMarkStart), level=0)
@@ -2407,16 +2407,16 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 	def togglePipzap(self):
 		assert (self.session.pip)
 		if self.dopipzap:
-			# Mark PiP as inactive and effectively deactivate pipzap
+			# Mark PiP as inactive and effectively deactivate pipzap.
 			self.hidePipzapMessage()
 			self.dopipzap = False
 
-			# Disable PiP if not playing a service
+			# Disable PiP if not playing a service.
 			if self.session.pip.pipservice is None:
 				self.session.pipshown = False
 				del self.session.pip
 			self.__evServiceStart()
-			# Move to playing service
+			# Move to playing service.
 			lastservice = eServiceReference(self.lastservice.value)
 			ref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
 			if ref and Components.ParentalControl.parentalControl.isProtected(ref):
@@ -2621,7 +2621,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			self.updateBouquetPath(path)
 
 	def restoreRoot(self):
-		tmp = [x for x in self.lastroot.value.split(';') if x != '']
+		tmp = [x for x in self.lastroot.value.split(";") if x != ""]
 		current = [x.toString() for x in self.servicePath]
 		if tmp != current or self.rootChanged:
 			self.clearPath()
@@ -2700,7 +2700,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		if self.revertMode is None:
 			self.restoreRoot()
 			if self.dopipzap:
-				# This unfortunately won't work with subservices
+				# This unfortunately won't work with subservices.
 				self.setCurrentSelection(self.session.pip.getCurrentService())
 			else:
 				lastservice = eServiceReference(self.lastservice.value)
@@ -2732,12 +2732,12 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		self.startServiceRef = None
 		self.startRoot = None
 		if self.dopipzap:
-			# This unfortunately won't work with subservices
+			# This unfortunately won't work with subservices.
 			self.setCurrentSelection(self.session.pip.getCurrentService())
 		else:
 			lastservice = eServiceReference(self.lastservice.value)
 			if lastservice.valid() and self.getCurrentSelection() == lastservice:
-				pass  # keep current selection
+				pass  # Keep current selection.
 			else:
 				self.setCurrentSelection(playingref)
 
@@ -2797,6 +2797,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 class RadioInfoBar(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
+		print(f"[ChannelSelection] RadioInfoBar DEBUG: Setting title='{self.getTitle()}'.")
 		self["RdsDecoder"] = RdsDecoder(self.session.nav)
 
 
@@ -2815,7 +2816,7 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		self.startServiceRef = None
 		self.onLayoutFinish.append(self.onCreate)
 
-		self.info = session.instantiateDialog(RadioInfoBar)  # our simple infobar
+		self.info = session.instantiateDialog(RadioInfoBar)  # Our simple InfoBar.
 		self.info.setAnimationMode(0)
 
 		self["key_menu"] = StaticText(_("MENU"))
@@ -2836,7 +2837,7 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 			})
 
 		# RDS Radiotext / Rass Support BEGIN
-		self.infobar = infobar  # reference to real infobar (the one and only)
+		self.infobar = infobar  # Reference to real InfoBar (the one and only).
 		self["RdsDecoder"] = self.info["RdsDecoder"]
 		self["rdsActions"] = HelpableActionMap(self, ["InfobarRdsActions"],
 		{
@@ -2889,17 +2890,17 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		self.servicelist.setPlayableIgnoreService(eServiceReference())
 
 	def saveRoot(self):
-		path = ''
+		path = ""
 		for i in self.servicePathRadio:
 			path += i.toString()
-			path += ';'
+			path += ";"
 		if path and path != config.radio.lastroot.value:
 			config.radio.lastroot.value = path
 			config.radio.lastroot.save()
 			self.updateBouquetPath(path)
 
 	def restoreRoot(self):
-		tmp = [x for x in config.radio.lastroot.value.split(';') if x != '']
+		tmp = [x for x in config.radio.lastroot.value.split(";") if x != ""]
 		current = [x.toString() for x in self.servicePath]
 		if tmp != current or self.rootChanged:
 			cnt = 0
@@ -2939,7 +2940,7 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 			self.session.nav.stopService()
 		self.info.show()
 
-	def channelSelected(self, doClose=False):  # just return selected service
+	def channelSelected(self, doClose=False):  # Just return selected service.
 		ref = self.getCurrentSelection()
 		if self.movemode:
 			self.toggleMoveMarked()
@@ -2949,7 +2950,7 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		elif self.bouquet_mark_edit != OFF:
 			if not (self.bouquet_mark_edit == EDIT_ALTERNATIVES and ref.flags & eServiceReference.isGroup):
 				self.doMark()
-		elif not (ref.flags & eServiceReference.isMarker):  # no marker
+		elif not (ref.flags & eServiceReference.isMarker):  # No marker.
 			cur_root = self.getRoot()
 			if not cur_root or not (cur_root.flags & eServiceReference.isGroup):
 				playingref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
@@ -3010,7 +3011,7 @@ class SimpleChannelSelection(ChannelSelectionBase, SelectionEventInfo):
 	def keyRecord(self):
 		return 0
 
-	def channelSelected(self):  # just return selected service
+	def channelSelected(self):  # Just return selected service.
 		ref = self.getCurrentSelection()
 		if (ref.flags & eServiceReference.flagDirectory) == eServiceReference.flagDirectory:
 			self.enterPath(ref)
