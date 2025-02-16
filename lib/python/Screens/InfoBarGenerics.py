@@ -1815,7 +1815,7 @@ class InfoBarSeek:
 				self.session.open(MessageBox, _("No fast winding possible yet... but you can use the number buttons to skip forward/backward!"), MessageBox.TYPE_INFO, timeout=10)
 				self.fast_winding_hint_message_showed = True
 				return
-			return 0  # trade as unhandled action
+			return 0  # Treat as unhandled action.
 		if self.seekstate == self.SEEK_STATE_PLAY:
 			self.setSeekState(self.makeStateForward(int(config.seek.enter_forward.value)))
 		elif self.seekstate == self.SEEK_STATE_PAUSE:
@@ -1851,7 +1851,7 @@ class InfoBarSeek:
 				self.session.open(MessageBox, _("No fast winding possible yet... but you can use the number buttons to skip forward/backward!"), MessageBox.TYPE_INFO, timeout=10)
 				self.fast_winding_hint_message_showed = True
 				return
-			return 0  # trade as unhandled action
+			return 0  # Treat as unhandled action.
 		seekstate = self.seekstate
 		if seekstate == self.SEEK_STATE_PLAY:
 			self.setSeekState(self.makeStateBackward(int(config.seek.enter_backward.value)))
@@ -1932,7 +1932,7 @@ class InfoBarSeek:
 		if self.seekstate == self.SEEK_STATE_EOF:
 			return
 
-		# if we are seeking forward, we try to end up ~1s before the end, and pause there.
+		# If we are seeking forward, we try to end up ~1s before the end, and pause there.
 		seekstate = self.seekstate
 		if self.seekstate != self.SEEK_STATE_PAUSE:
 			self.setSeekState(self.SEEK_STATE_EOF)
@@ -1947,7 +1947,7 @@ class InfoBarSeek:
 			self.doEofInternal(False)
 
 	def doEofInternal(self, playing):
-		pass		# Defined in subclasses
+		pass		# Defined in subclasses.
 
 	def __evSOF(self):
 		self.setSeekState(self.SEEK_STATE_PLAY)
@@ -2047,9 +2047,9 @@ class InfoBarTimeshiftState(InfoBarPVRState):
 
 class InfoBarShowMovies:
 
-	# i don't really like this class.
-	# it calls a not further specified "movie list" on up/down/movieList,
-	# so this is not more than an action map
+	# I don't really like this class.
+	# It calls a not further specified "movie list" on up/down/movieList,
+	# so this is not more than an action map.
 	def __init__(self):
 		self["MovieListActions"] = HelpableActionMap(self, ["InfobarMovieListActions"], {
 			"movieList": (self.showMovies, _("Open the movie list")),
@@ -2539,7 +2539,7 @@ class InfoBarExtensions:
 from Tools.BoundFunction import boundFunction
 import inspect
 
-# depends on InfoBarExtensions
+# Depends on InfoBarExtensions
 
 
 class InfoBarPlugins:
@@ -2555,7 +2555,7 @@ class InfoBarPlugins:
 			args = inspect.getfullargspec(p.__call__)[0]
 			if len(args) == 1 or len(args) == 2 and isinstance(self, InfoBarChannelSelection):
 				l.append(((boundFunction(self.getPluginName, p.name), boundFunction(self.runPlugin, p), lambda: True), None, p.name))
-		l.sort(key=lambda e: e[2])  # sort by name
+		l.sort(key=lambda e: e[2])  # Sort by name.
 		return l
 
 	def runPlugin(self, plugin):
@@ -2594,7 +2594,7 @@ class InfoBarJobman:
 
 from Screens.PiPSetup import PiPSetup
 
-# depends on InfoBarExtensions
+# Depends on InfoBarExtensions
 
 
 class InfoBarPiP:
@@ -2671,7 +2671,7 @@ class InfoBarPiP:
 						self.lastPiPServiceTimeoutTimer.startLongTimer(lastPiPServiceTimeout)
 				del self.session.pip
 				if BoxInfo.getItem("LCDMiniTV") and config.lcd.modepip.value >= 1:
-					print('[InfoBarGenerics] LCDMiniTV disable PIP')
+					print("[InfoBarGenerics] LCDMiniTV disable PIP")
 					eDBoxLCD.getInstance().setLCDMode(config.lcd.modeminitv.value)
 				self.session.pipshown = False
 			if hasattr(self, "screenSaverTimerStart"):
@@ -2693,7 +2693,7 @@ class InfoBarPiP:
 					self.session.pipshown = True
 					self.session.pip.servicePath = slist and slist.getCurrentServicePath()
 					if BoxInfo.getItem("LCDMiniTVPiP") and config.lcd.modepip.value >= 1:
-						print('[InfoBarGenerics] LCDMiniTV enable PIP')
+						print("[InfoBarGenerics] LCDMiniTV enable PIP")
 						eDBoxLCD.getInstance().setLCDMode(config.lcd.modepip.value, True)
 				else:
 					self.session.pipshown = False
@@ -3535,7 +3535,7 @@ class InfoBarAdditionalInfo:
 		self["RecordingPossible"] = Boolean(fixed=harddiskmanager.HDDCount() > 0)
 		self["TimeshiftPossible"] = self["RecordingPossible"]
 		self["ExtensionsAvailable"] = Boolean(fixed=1)
-		# TODO: these properties should be queried from the input device keymap
+		# TODO: These properties should be queried from the input device keymap.
 		self["ShowTimeshiftOnYellow"] = Boolean(fixed=0)
 		self["ShowAudioOnYellow"] = Boolean(fixed=0)
 		self["ShowRecordOnRed"] = Boolean(fixed=0)
@@ -3590,11 +3590,11 @@ class InfoBarNotifications:
 				self.hide()
 				dlg.show()
 				self.notificationDialog = dlg
-				eActionMap.getInstance().bindAction('', -maxsize - 1, self.keypressNotification)
+				eActionMap.getInstance().bindAction("", -maxsize - 1, self.keypressNotification)
 			else:
 				dlg = self.session.open(n[1], *n[2], **n[3])
 
-			# remember that this notification is currently active
+			# Remember that this notification is currently active.
 			d = (n[4], dlg)
 			current_notifications.append(d)
 			dlg.onClose.append(boundFunction(self.__notificationClosed, d))
@@ -3603,7 +3603,7 @@ class InfoBarNotifications:
 		if hasattr(self, "notificationDialog"):
 			self.session.deleteDialog(self.notificationDialog)
 			del self.notificationDialog
-			eActionMap.getInstance().unbindAction('', self.keypressNotification)
+			eActionMap.getInstance().unbindAction("", self.keypressNotification)
 
 	def keypressNotification(self, key, flag):
 		if flag:
@@ -3624,7 +3624,7 @@ class InfoBarServiceNotifications:
 
 		try:
 			self.setSeekState(self.SEEK_STATE_PLAY)
-		except:
+		except Exception:
 			pass
 
 
@@ -3666,7 +3666,7 @@ class InfoBarCueSheetSupport:
 				last = resumePointsInstance.getResumePoint(self.session)
 			if last is None:
 				return
-			# only resume if at least 10 seconds ahead, or <10 seconds before the end.
+			# Only resume if at least 10 seconds ahead, or <10 seconds before the end.
 			seekable = self.__getSeekable()
 			if seekable is None:
 				return  # Should not happen?
@@ -3739,8 +3739,8 @@ class InfoBarCueSheetSupport:
 		return True
 
 	def jumpPreviousMark(self):
-		# we add 5 seconds, so if the play position is <5s after
-		# the mark, the mark before will be used
+		# We add 5 seconds, so if the play position is <5s after
+		# the mark, the mark before will be used.
 		self.jumpPreviousNextMark(lambda x: -x - 5 * 90000, start=True)
 
 	def jumpNextMark(self):
@@ -3748,7 +3748,7 @@ class InfoBarCueSheetSupport:
 			self.doSeek(-1)
 
 	def getNearestCutPoint(self, pts, cmp=abs, start=False):
-		# can be optimized
+		# Can be optimized.
 		beforecut = True
 		nearest = None
 		bestdiff = -1
@@ -3760,7 +3760,7 @@ class InfoBarCueSheetSupport:
 		for cp in self.cut_list:
 			if beforecut and cp[1] in (self.CUT_TYPE_IN, self.CUT_TYPE_OUT):
 				beforecut = False
-				if cp[1] == self.CUT_TYPE_IN:  # Start is here, disregard previous marks
+				if cp[1] == self.CUT_TYPE_IN:  # Start is here, disregard previous marks.
 					diff = cmp(cp[0] - pts)
 					if start and diff >= 0:
 						nearest = cp
@@ -3854,10 +3854,10 @@ class InfoBarSummary(Screen):
 		</widget>
 	</screen>"""
 
-# for picon:  (path="piconlcd" will use LCD picons)
-# <widget source="session.CurrentService" render="Picon" position="6,0" size="120,64" path="piconlcd" >
-# <convert type="ServiceName">Reference</convert>
-# </widget>
+# For picon:  (path="piconlcd" will use LCD picons)
+# 		<widget source="session.CurrentService" render="Picon" position="6,0" size="120,64" path="piconlcd" >
+# 			<convert type="ServiceName">Reference</convert>
+# 		</widget>
 
 
 class InfoBarSummarySupport:
@@ -4053,7 +4053,7 @@ class InfoBarServiceErrorPopupSupport:
 				eDVBServicePMTHandler.eventSOF: None,
 				eDVBServicePMTHandler.eventEOF: None,
 				eDVBServicePMTHandler.eventMisconfiguration: _("Service unavailable!\nCheck tuner configuration!"),
-			}.get(error)  # this returns None when the key not exist in the dict
+			}.get(error)  # This returns None when the key not exist in the dictionary.
 
 			if error and not config.usage.hide_zap_errors.value:
 				self.closeNotificationInstantiateDialog()
@@ -4165,34 +4165,12 @@ class InfoBarPowersaver:
 			self.session.open(Screens.Standby.Standby)
 
 
-class InfoBarHDMI:
-	def HDMIIn(self):
-		slist = self.servicelist
-		if slist.dopipzap:
-			curref = self.session.pip.getCurrentService()
-			if curref and curref.type != eServiceReference.idServiceHDMIIn:
-				self.session.pip.playService(hdmiInServiceRef())
-			else:
-				self.session.pip.playService(slist.servicelist.getCurrent())
-		else:
-			curref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
-			if curref and curref.type != eServiceReference.idServiceHDMIIn:
-				if curref and curref.type != -1 and os.path.splitext(curref.toString().split(":")[10])[1].lower() in AUDIO_EXTENSIONS.union(MOVIE_EXTENSIONS, DVD_EXTENSIONS):
-					setResumePoint(self.session)
-				self.session.nav.playService(hdmiInServiceRef())
-			elif isStandardInfoBar(self):
-				self.session.nav.playService(slist.servicelist.getCurrent())
-			else:
-				self.session.nav.playService(self.cur_service)
-
-
-class InfoBarHdmi2:
+class InfoBarHdmi:
 	def __init__(self):
 		self.hdmi_enabled = False
 		self.hdmi_enabled_full = False
 		self.hdmi_enabled_pip = False
-
-		if BoxInfo.getItem("HasHDMIin") or BoxInfo.getItem("HasHDMIinFHD"):
+		if BoxInfo.getItem("HDMIin"):
 			if not self.hdmi_enabled_full:
 				self.addExtension((self.getHDMIInFullScreen, self.HDMIInFull, lambda: True))
 			if not self.hdmi_enabled_pip:
@@ -4210,7 +4188,7 @@ class InfoBarHdmi2:
 				self.session.pip.show()
 				self.session.pipshown = True
 				self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
-			elif BoxInfo.getItem("HasHDMIinPiP"):
+			elif BoxInfo.getItem("HDMIinPiP"):
 				curref = self.session.pip.getCurrentService()
 				if curref and curref.type != eServiceReference.idServiceHDMIIn:
 					self.session.pip.playService(hdmiInServiceRef())

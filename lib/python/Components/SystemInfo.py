@@ -155,6 +155,9 @@ mtdkernel = BoxInfo.getItem("mtdkernel")
 procModel = getBoxProc()
 
 
+def getBoxDisplayName():  # This function returns a tuple like ("BRANDNAME", "BOXNAME")
+	return (DISPLAYBRAND, DISPLAYMODEL)
+
 # Parse the boot commandline.
 cmdline = fileReadLine("/proc/cmdline", source=MODULE_NAME)
 cmdline = {k: v.strip('"') for k, v in findall(r'(\S+)=(".*?"|\S+)', cmdline)}
@@ -165,10 +168,6 @@ def getDemodVersion():
 	if exists("/proc/stb/info/nim_firmware_version"):
 		version = fileReadLine("/proc/stb/info/nim_firmware_version")
 	return version and version.strip()
-
-
-def getBoxDisplayName():  # This function returns a tuple like ("BRANDNAME", "BOXNAME")
-	return (DISPLAYBRAND, DISPLAYMODEL)
 
 
 def getNumVideoDecoders():
@@ -279,7 +278,6 @@ repeat = 400 if MACHINEBUILD in ("maram9", "classm", "axodin", "axodinc", "stars
 BoxInfo.setItem("RemoteRepeat", repeat)
 BoxInfo.setItem("RemoteDelay", 200 if repeat == 400 else 700)
 
-BoxInfo.setItem("hashdmiin", BoxInfo.getItem("hdmifhdin") or BoxInfo.getItem("hdmihdin"))
 BoxInfo.setItem("MiniTV", fileCheck("/proc/stb/fb/sd_detach") or fileCheck("/proc/stb/lcd/live_enable"))
 BoxInfo.setItem("HDMI-PreEmphasis", fileExists("/proc/stb/hdmi/preemphasis"))
 
@@ -361,10 +359,8 @@ if MODEL in ("et7500", "et8500"):
 BoxInfo.setItem("HasFBCtuner", ["Vuplus DVB-C NIM(BCM3158)", "Vuplus DVB-C NIM(BCM3148)", "Vuplus DVB-S NIM(7376 FBC)", "Vuplus DVB-S NIM(45308X FBC)", "Vuplus DVB-S NIM(45208 FBC)", "DVB-S NIM(45208 FBC)", "DVB-S2 NIM(45208 FBC)", "DVB-S2X NIM(45308X FBC)", "DVB-S2 NIM(45308 FBC)", "DVB-C NIM(3128 FBC)", "BCM45208", "BCM45308X", "BCM3158"])
 BoxInfo.setItem("HasHDMI-CEC", fileExists("/dev/hdmi_cec") or fileExists("/dev/misc/hdmi_cec0"))
 BoxInfo.setItem("HaveTouchSensor", MODEL in ("dm520", "dm525", "dm900", "dm920"))
-BoxInfo.setItem("HDMIin", BoxInfo.getItem("HasHDMIinFHD") or BoxInfo.getItem("HasHDMIin"))
+BoxInfo.setItem("HDMIin", BoxInfo.getItem("hdmifhdin") or BoxInfo.getItem("hdmihdin"))
 BoxInfo.setItem("HDMIinPiP", BoxInfo.getItem("HDMIin") and BRAND != "dreambox")
-BoxInfo.setItem("HasHDMIin", MODEL in ("sezammarvel", "xpeedlx3", "atemionemesis", "mbultra", "beyonwizt4", "hd2400", "dm7080", "et10000", "dreamone", "dreamtwo", "vuduo4k", "vuduo4kse", "vuultimo4k", "vuuno4kse", "gbquad4k", "hd2400", "et10000"))
-BoxInfo.setItem("HasHDMIinFHD", MODEL in ("dm820", "dm900", "dm920", "vuultimo4k", "beyonwizu4", "et13000", "sf5008", "vuuno4kse", "vuduo4k", "gbquad4k"))
 BoxInfo.setItem("HasFrontDisplayPicon", MODEL in ("et8500", "vusolo4k", "vuuno4kse", "vuduo4k", "vuduo4kse", "vuultimo4k", "gbquad4k", "gbue4k"))
 BoxInfo.setItem("DreamBoxAudio", MODEL in ("dm7080", "dm800", "dm900", "dm920", "dreamone", "dreamtwo"))
 BoxInfo.setItem("DreamBoxDVI", MODEL in ("dm8000", "dm800"))

@@ -200,9 +200,7 @@ def getHotkeyFunctions():
 		hotkey.functions.append((_("Move PiP"), "Infobar/movePiP", "InfoBar"))
 		hotkey.functions.append((_("Toggle PiPzap"), "Infobar/togglePipzap", "InfoBar"))
 	hotkey.functions.append((_("Activate HbbTV (Redbutton)"), "Infobar/activateRedButton", "InfoBar"))
-	if BoxInfo.getItem("HasHDMIin"):
-		hotkey.functions.append((_("Toggle HDMI In"), "Infobar/HDMIIn", "InfoBar"))
-	if BoxInfo.getItem("HasHDMIinFHD"):
+	if BoxInfo.getItem("hdmihdin") or BoxInfo.getItem("hdmifhdin"):
 		hotkey.functions.append((_("Toggle HDMI-In full screen"), "Infobar/HDMIInFull", "InfoBar"))
 		hotkey.functions.append((_("Toggle HDMI-In PiP"), "Infobar/HDMIInPiP", "InfoBar"))
 	if BoxInfo.getItem("LcdLiveTV"):
