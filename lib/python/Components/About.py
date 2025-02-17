@@ -79,7 +79,8 @@ def getFlashDateString():
 
 
 def returndate(date):
-    return "%s-%s-%s" % (date[:4], date[4:6], date[6:8])
+	return "%s-%s-%s" % (date[:4], date[4:6], date[6:8])
+
 
 def getBuildDateString():
 	return returndate(BoxInfo.getItem("compiledate"))
@@ -136,9 +137,11 @@ def getKernelVersionString():
 
 
 def getImageTypeString():
-	if BoxInfo.getItem("imageversion"):
-		return "%s %s %s" % (BoxInfo.getItem("displaydistro"), BoxInfo.getItem("imageversion"), BoxInfo.getItem("imagetype").title())
-	return "%s %s" % (BoxInfo.getItem("displaydistro"), BoxInfo.getItem("imagetype").title())
+	return "%s %s" % (BoxInfo.getItem("displaydistro"), BoxInfo.getItem("imageversion").title())
+
+
+def getOEVersionString():
+	return BoxInfo.getItem("oe").title()
 
 
 def getCPUSerial():
@@ -151,11 +154,11 @@ def getCPUSerial():
 
 
 def _getCPUSpeedMhz():
-	if MODEL in ('hzero', 'h8', 'sfx6008', 'sfx6018'):
+	if MODEL in ("hzero", "h8", "sfx6008", "sfx6018"):
 		return 1200
-	elif MODEL in ('dreamone', 'dreamtwo', 'dreamseven'):
+	elif MODEL in ("dreamone", "dreamtwo", "dreamseven"):
 		return 1800
-	elif MODEL in ('vuduo4k',):
+	elif MODEL in ("vuduo4k",):
 		return 2100
 	else:
 		return 0
@@ -248,19 +251,19 @@ def getSystemTemperature():
 
 def getChipSetString():
 	try:
-		chipset = open("/proc/stb/info/chipset").read()
+		chipset = open("/proc/stb/info/chipset", "r").read()
 		return str(chipset.lower().replace('\n', ''))
-	except IOError:
+	except OSError:
 		return _("undefined")
 
 
 def getChipSetNumber():
 	try:
-		f = open('/proc/stb/info/chipset')
+		f = open("/proc/stb/info/chipset", "r")
 		chipset = f.read()
 		f.close()
 		return str(chipset.lower().replace('\n', '').replace('brcm', '').replace('bcm', ''))
-	except IOError:
+	except OSError:
 		return _("unavailable")
 
 

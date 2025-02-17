@@ -608,7 +608,7 @@ class DistributionInformation(InformationBase):
 		if BoxInfo.getItem("imagefs"):
 			info.append(formatLine("P1", _("Distribution file system"), BoxInfo.getItem("imagefs").strip()))
 		info.append(formatLine("P1", _("Feed URL"), BoxInfo.getItem("feedsurl")))
-		info.append(formatLine("P1", _("Compiled by"), BoxInfo.getItem("developername")))
+		info.append(formatLine("P1", _("Compiled by"), BoxInfo.getItem("maintainer")))
 		info.append("")
 		info.append(formatLine("S", _("Software information")))
 		if self.extraSpacing:
