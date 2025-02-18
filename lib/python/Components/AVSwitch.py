@@ -51,6 +51,15 @@ class AVSwitch:
 	def setInput(self, input):
 		eAVControl.getInstance().setInput(input, 1)
 
+	def setVideoModeDirect(self, mode):
+		if AMLOGIC:
+			rate = mode[-4:].replace("hz", "Hz")
+			force = int(rate[:-2])
+			mode = mode[:-4]
+			self.setMode("HDMI", mode, rate, force)
+		else:
+			eAVControl.getInstance().setVideoMode(mode)
+
 	def setSystem(self, value):
 		eAVSwitch.getInstance().setVideomode(value)
 
