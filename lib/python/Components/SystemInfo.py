@@ -442,6 +442,7 @@ BoxInfo.setItem("LcdLiveTV", fileCheck("/proc/stb/fb/sd_detach") or fileCheck("/
 BoxInfo.setItem("LcdLiveTVMode", fileCheck("/proc/stb/lcd/mode"))
 BoxInfo.setItem("LcdLiveDecoder", fileCheck("/proc/stb/lcd/live_decoder"))
 BoxInfo.setItem("LCDMiniTV", fileExists("/proc/stb/lcd/mode"))
+BoxInfo.setItem("LCDSKIN", fileExists("/usr/share/enigma2/display"))
 BoxInfo.setItem("ConfigDisplay", BoxInfo.getItem("FrontpanelDisplay"))
 BoxInfo.setItem("PowerLED", fileCheck("/proc/stb/power/powerled") or MODEL in ("gbue4k", "gbquad4k") and fileCheck("/proc/stb/fp/led1_pattern"))
 BoxInfo.setItem("StandbyLED", fileCheck("/proc/stb/power/standbyled") or MODEL in ("gbue4k", "gbquad4k") and fileCheck("/proc/stb/fp/led0_pattern"))
