@@ -53,6 +53,7 @@ def InitUsageConfig():
 	config.misc.spinnerPosition = ConfigSequence(default=[50, 50], limits=[(0, 1260), (0, 700)], seperator=",")
 
 	config.usage.informationExtraSpacing = ConfigYesNo(False)
+	config.usage.movieSelectionInMenu = ConfigYesNo(False)
 
 	def setNumberModeChange(configElement):
 		eDVBDB.getInstance().setNumberingMode(configElement.value)
