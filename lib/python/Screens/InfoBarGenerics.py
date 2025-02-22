@@ -12,7 +12,7 @@ from Components.ServiceEventTracker import ServiceEventTracker
 from Components.Sources.ServiceEvent import ServiceEvent
 from Components.Sources.Boolean import Boolean
 from Components.config import config, ConfigBoolean, ConfigClock, ACTIONKEY_RIGHT
-from Components.SystemInfo import BoxInfo
+from Components.SystemInfo import BoxInfo, getBoxDisplayName
 from Components.UsageConfig import preferredInstantRecordPath, defaultMoviePath
 from Components.VolumeControl import VolumeControl
 from Components.Sources.StaticText import StaticText
@@ -31,6 +31,7 @@ from Screens.MessageBox import MessageBox
 from Screens.MinuteInput import MinuteInput
 from Screens.TimerSelection import TimerSelection
 from Screens.PictureInPicture import PictureInPicture
+from Screens.PiPSetup import PiPSetup
 from Screens.SubtitleDisplay import SubtitleDisplay
 from Screens.RdsDisplay import RdsInfoDisplay, RassInteractive
 from Screens.TimeDateInput import TimeDateInput
@@ -2594,33 +2595,27 @@ class InfoBarJobman:
 		job_manager.in_background = in_background
 
 
-from Screens.PiPSetup import PiPSetup
-
 # Depends on InfoBarExtensions
-
-
+#
 class InfoBarPiP:
 	def __init__(self):
 		try:
 			self.session.pipshown
 		except Exception:
 			self.session.pipshown = False
-
 		self.lastPiPService = None
-
-		if BoxInfo.getItem("PIPAvailable"):
-			self["PiPActions"] = HelpableActionMap(self, ["InfobarPiPActions"], {
+		if BoxInfo.getItem("PIPAvailable") and isinstance(self, InfoBarEPG):
+			self["PiPActions"] = HelpableActionMap(self, "InfobarPiPActions", {
 				"activatePiP": (self.activePiP, self.activePiPName),
 			}, prio=0, description=_("PiP Actions"))
 			if self.allowPiP:
 				self.addExtension((self.getShowHideName, self.showPiP, lambda: True), "blue")
 				self.addExtension((self.getMoveName, self.movePiP, self.pipShown), "green")
 				self.addExtension((self.getSwapName, self.swapPiP, lambda: self.pipShown() and isStandardInfoBar(self)), "yellow")
-				self.addExtension((self.getTogglePipzapName, self.togglePipzap, lambda: True), "red")
+				self.addExtension((self.getTogglePipzapName, self.togglePipzap, self.pipShown), "red")
 			else:
 				self.addExtension((self.getShowHideName, self.showPiP, self.pipShown), "blue")
 				self.addExtension((self.getMoveName, self.movePiP, self.pipShown), "green")
-
 		self.lastPiPServiceTimeoutTimer = eTimer()
 		self.lastPiPServiceTimeoutTimer.callback.append(self.clearLastPiPService)
 
@@ -2631,16 +2626,13 @@ class InfoBarPiP:
 		return self.pipShown() and config.usage.pip_zero_button.value != "standard"
 
 	def getShowHideName(self):
-		if self.session.pipshown:
-			return _("Disable Picture in Picture")
-		else:
-			return _("Activate Picture in Picture")
+		return _("Disable Picture in Picture") if self.session.pipshown else _("Activate Picture in Picture")
 
 	def getSwapName(self):
 		return _("Swap services")
 
 	def getMoveName(self):
-		return _("Move Picture in Picture")
+		return _("Picture in Picture Setup")
 
 	def getTogglePipzapName(self):
 		slist = self.servicelist
@@ -2656,7 +2648,7 @@ class InfoBarPiP:
 			slist.togglePipzap()
 			if slist.dopipzap:
 				currentServicePath = slist.getCurrentServicePath()
-				slist.setCurrentServicePath(self.session.pip.servicePath, doZap=False)
+				self.servicelist.setCurrentServicePath(self.session.pip.servicePath, doZap=False)
 				self.session.pip.servicePath = currentServicePath
 
 	def showPiP(self):
@@ -2668,44 +2660,53 @@ class InfoBarPiP:
 			if self.session.pipshown:
 				lastPiPServiceTimeout = int(config.usage.pip_last_service_timeout.value)
 				if lastPiPServiceTimeout >= 0:
-					self.lastPiPService = self.session.pip.getCurrentService()
+					self.lastPiPService = self.session.pip.getCurrentServiceReference()
 					if lastPiPServiceTimeout:
 						self.lastPiPServiceTimeoutTimer.startLongTimer(lastPiPServiceTimeout)
 				del self.session.pip
 				if BoxInfo.getItem("LCDMiniTV") and config.lcd.modepip.value >= 1:
-					print("[InfoBarGenerics] LCDMiniTV disable PIP")
+					print("[InfoBarGenerics] [LCDMiniTV] disable PiP")
 					eDBoxLCD.getInstance().setLCDMode(config.lcd.modeminitv.value)
 				self.session.pipshown = False
 			if hasattr(self, "screenSaverTimerStart"):
 				self.screenSaverTimerStart()
 		else:
-			self.session.pip = self.session.instantiateDialog(PictureInPicture)
-			self.session.pip.setAnimationMode(0)
-			self.session.pip.show()
-			if isStandardInfoBar(self):
-				newservice = self.lastPiPService or self.session.nav.getCurrentlyPlayingServiceOrGroup() or (slist and slist.servicelist.getCurrent())
-			else:
-				newservice = self.lastPiPService or (slist and slist.servicelist.getCurrent())
-			if self.session.pip.playService(newservice):
-				self.session.pipshown = True
-				self.session.pip.servicePath = slist and slist.getCurrentServicePath()
-				if BoxInfo.getItem("LCDMiniTVPiP") and config.lcd.modepip.value >= 1:
-					print('[InfoBarGenerics] LCDMiniTV enable PIP')
-					eDBoxLCD.getInstance().setLCDMode(config.lcd.modepip.value, True)
-			else:
-				newservice = self.session.nav.getCurrentlyPlayingServiceOrGroup() or (slist and slist.servicelist.getCurrent())
+			service = self.session.nav.getCurrentService()
+			info = service and service.info()
+			if info:
+				xres = str(info.getInfo(iServiceInformation.sVideoWidth))
+			if info and int(xres) <= 720 or BoxInfo.getItem("model") != "blackbox7405":
+				self.session.pip = self.session.instantiateDialog(PictureInPicture)
+				self.session.pip.setAnimationMode(0)
+				self.session.pip.show()
+				if isStandardInfoBar(self):
+					newservice = self.lastPiPService or self.session.nav.getCurrentlyPlayingServiceReference() or self.servicelist.getCurrentSelection()
+				else:
+					newservice = self.lastPiPService or self.servicelist.getCurrentSelection()
 				if self.session.pip.playService(newservice):
 					self.session.pipshown = True
-					self.session.pip.servicePath = slist and slist.getCurrentServicePath()
+					self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
 					if BoxInfo.getItem("LCDMiniTVPiP") and config.lcd.modepip.value >= 1:
-						print("[InfoBarGenerics] LCDMiniTV enable PIP")
+						print("[InfoBarGenerics] [LCDMiniTV] enable PiP")
 						eDBoxLCD.getInstance().setLCDMode(config.lcd.modepip.value, True)
 				else:
-					self.session.pipshown = False
-					del self.session.pip
-			if self.session.pipshown and hasattr(self, "screenSaverTimer"):
-				self.screenSaverTimer.stop()
-			self.lastPiPService = None
+					newservice = self.session.nav.getCurrentlyPlayingServiceReference() or self.servicelist.servicelist.getCurrent()
+					if self.session.pip.playService(newservice):
+						self.session.pipshown = True
+						self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
+						if BoxInfo.getItem("LCDMiniTVPiP") and config.lcd.modepip.value >= 1:
+							print("[InfoBarGenerics] [LCDMiniTV] enable PiP")
+							eDBoxLCD.getInstance().setLCDMode(config.lcd.modepip.value, True)
+					else:
+						self.lastPiPService = None
+						self.session.pipshown = False
+						del self.session.pip
+			elif info:
+				self.session.open(MessageBox, _("Your %s %s does not support PiP HD") % getBoxDisplayName(), type=MessageBox.TYPE_INFO, timeout=5)
+			else:
+				self.session.open(MessageBox, _("No active channel found."), type=MessageBox.TYPE_INFO, timeout=5)
+		if self.session.pipshown and hasattr(self, "screenSaverTimer"):
+			self.screenSaverTimer.stop()
 
 	def clearLastPiPService(self):
 		self.lastPiPService = None
@@ -2729,20 +2730,17 @@ class InfoBarPiP:
 			swapservice = self.session.nav.getCurrentlyPlayingServiceOrGroup()
 			pipref = self.session.pip.getCurrentService()
 			if swapservice and pipref and pipref.toString() != swapservice.toString():
-				slist = self.servicelist
-				if slist:
-					currentServicePath = slist.getCurrentServicePath()
-					currentBouquet = slist.getRoot()
-					slist.setCurrentServicePath(self.session.pip.servicePath, doZap=False)
-				self.session.nav.stopService()
+				currentServicePath = self.servicelist.getCurrentServicePath()
+				currentBouquet = self.servicelist and self.servicelist.getRoot()
+				self.servicelist.setCurrentServicePath(self.session.pip.servicePath, doZap=False)
 				self.session.pip.playService(swapservice)
+				self.session.nav.stopService()  # Stop portal.
 				self.session.nav.playService(pipref, checkParentalControl=False, adjust=False)
-				if slist:
-					self.session.pip.servicePath = currentServicePath
-					self.session.pip.servicePath[1] = currentBouquet
-				if slist and slist.dopipzap:
-					slist.setCurrentSelection(self.session.pip.getCurrentService())
-					slist.saveChannel(pipref)
+				self.session.pip.servicePath = currentServicePath
+				self.session.pip.servicePath[1] = currentBouquet
+				if self.servicelist.dopipzap:
+					# This unfortunately won't work with subservices.
+					self.servicelist.setCurrentSelection(self.session.pip.getCurrentService())
 
 	def movePiP(self):
 		if self.pipShown():
