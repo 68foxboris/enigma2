@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2025-02-06 11:50+0200\n"
+"PO-Revision-Date: 2025-02-23 23:20+0200\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -303,7 +303,7 @@ msgid "%A %-d. %B %Y"
 msgstr "%A %-d. %B %Y"
 
 msgid "%A %-d.%-m"
-msgstr "%A %-d. %-m"
+msgstr "%A %-d.%-m"
 
 msgid "%A %-d.%-m.%Y"
 msgstr "%A %-d.%-m. %Y"
@@ -4359,6 +4359,9 @@ msgstr "Список каналов"
 msgid "Channel List Menu"
 msgstr "Меню списка каналов"
 
+msgid "Channel Number"
+msgstr "Номер канала"
+
 msgid "Channel Selection"
 msgstr "Выбор канала"
 
@@ -8181,6 +8184,9 @@ msgstr "Выход из настроек IPv6"
 msgid "Exit MAC address configuration"
 msgstr "Выход из настроек MAC-адреса"
 
+msgid "Exit Movie Selection"
+msgstr "Выйти из выбора фильма"
+
 msgid "Exit editor"
 msgstr "Выйти из редактора"
 
@@ -11456,6 +11462,12 @@ msgstr "Расположение записей"
 msgid "Movie selection"
 msgstr "Выбор записей"
 
+msgid "Movie Selection Settings"
+msgstr "Настройки выбора фильма"
+
+msgid "Movie playback may not use an invalid/inappropriate directory."
+msgstr "Воспроизведение фильма не может использовать недопустимый/неподходящий каталог."
+
 msgid "Movielist menu"
 msgstr "Меню списка видео"
 
@@ -12517,6 +12529,9 @@ msgstr "Состояние LED в режиме работы"
 
 msgid "Opkg"
 msgstr "Opkg"
+
+msgid "Option to disable picons on the Infobar."
+msgstr "Отключить показ пиконов в инфопанели"
 
 msgid "Option to enable the Hardware Standby Timer."
 msgstr "Включить таймер режима ожидания HDD."
@@ -15668,6 +15683,9 @@ msgstr "Выберите «Да», если вы хотите вывести т�
 msgid "Select 'Yes' if you want to wake the TV for a 'Zap' recording timer is starting."
 msgstr "Выберите «Да», если вы хотите вывести телевизор из спящего режима для запуска таймера записи «Zap»."
 
+msgid "Select 'Yes' to show the 'Movie Selection' entry in the Main Menu. This can provide access to the Movie Selection screen when there is no assigned button on the remote control."
+msgstr "Выберите «Да», чтобы отобразить запись «Выбор фильма» в главном меню. Это может обеспечить доступ к экрану выбора фильма, когда на пульте дистанционного управления нет назначенной кнопки."
+
 msgid "Selects video source displayed on the LCD."
 msgstr "Выбор источника видео для показа на LCD дисплее."
 
@@ -16423,6 +16441,9 @@ msgstr "Показать настройку записи HDMI ..."
 msgid "Show InfoBar"
 msgstr "Показывать инфопанель"
 
+msgid "Show InfoBar picons"
+msgstr "Показывать пиконы в инфопанели"
+
 msgid "Show Information"
 msgstr "Показать информацию"
 
@@ -16576,6 +16597,9 @@ msgstr "Показывать по умолчанию в новой строке"
 msgid "Show default after description"
 msgstr "Показывать по умолчанию после описания"
 
+msgid "Show during operation"
+msgstr "Показать во время работы"
+
 msgid "Show event details"
 msgstr "Показать детали события"
 
@@ -16689,6 +16713,9 @@ msgstr "Показать или скрыть расширенное описан
 
 msgid "Show packages to be updated"
 msgstr "Показать пакеты, которые будут обновлены"
+
+msgid "Show picon background color"
+msgstr "Показать фоновый цвет пикона"
 
 msgid "Show packages languages"
 msgstr "Показать языки пакетов"
@@ -16881,6 +16908,9 @@ msgstr "Показать/скрыть окно"
 
 msgid "Show Live in MiniTV"
 msgstr "Прямая трансляция на MiniTV"
+
+msgid "Show Movie Selection in Main Menu"
+msgstr "Показать выбор фильма в главном меню"
 
 msgid "Show PiP in MiniTV"
 msgstr "Показывать PiP на MiniTV"
@@ -18589,11 +18619,17 @@ msgstr "Эта опция позволяет переключать звук н�
 msgid "This option allows you can to set the auto volume level."
 msgstr "Эта опция настраивает уровень автоматической громкости звука."
 
+msgid "This option allows you choose if the display shows the time, channel number or nothing during operation."
+msgstr "Эта опция позволяет вам выбрать, будет ли на дисплее отображаться время, номер канала или ничего во время работы."
+
 msgid "This option allows you choose how to display elapsed time as + or -"
 msgstr "Эта опция позволяет вам выбрать как отображать прошедшее время как + или -"
 
 msgid "This option allows you choose how to display remaining time, or elapsed time, or both."
 msgstr "Эта опция позволяет вам выбрать как отображать оставшееся время или прошедшее время или оба."
+
+msgid "This option allows you choose the background color of transparent picons."
+msgstr "Эта опция позволяет выбрать цвет фона для прозрачных пиконов."
 
 msgid "This option allows you choose how to display the remaining/elapsed time for live TV."
 msgstr "Эта опция позволяет вам выбрать, как отображать оставшееся / прошедшее время для прямого ТВ."
