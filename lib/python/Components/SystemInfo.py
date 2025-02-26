@@ -315,7 +315,7 @@ BoxInfo.setItem("AndroidMode", BoxInfo.getItem("RecoveryMode") and MODEL == "mul
 BoxInfo.setItem("ArchIsARM64", ARCHITECTURE == "aarch64" or "64" in ARCHITECTURE)
 BoxInfo.setItem("ArchIsARM", ARCHITECTURE.startswith(("arm", "cortex")))
 BoxInfo.setItem("Autoresolution_proc_videomode", MODEL in ("gbue4k", "gbquad4k") and "/proc/stb/video/videomode_50hz" or "/proc/stb/video/videomode")
-BoxInfo.setItem("Blindscan_t2_available", fileCheck("/proc/stb/info/vuMODEL") and MODEL.startswith("vu"))
+BoxInfo.setItem("Blindscan_t2_available", fileCheck("/proc/stb/info/vumodel") and MODEL.startswith("vu"))
 BoxInfo.setItem("BoxName", getBoxName())
 BoxInfo.setItem("BootDevice", getBootdevice())
 BoxInfo.setItem("canFlashWithOfgwrite", not (MODEL.startswith("dm")))
