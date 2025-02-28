@@ -38,7 +38,8 @@
 int eDVBServicePMTHandler::m_debug = -1;
 
 eDVBServicePMTHandler::eDVBServicePMTHandler()
-	:m_ca_servicePtr(0), m_dvb_scan(0), m_decode_demux_num(0xFF), m_no_pat_entry_delay(eTimer::create())
+	:m_last_channel_state(-1), m_ca_servicePtr(0), m_dvb_scan(0), m_decode_demux_num(0xFF),
+	m_no_pat_entry_delay(eTimer::create()), m_have_cached_program(false)
 {
 	m_use_decode_demux = 0;
 	m_pmt_pid = -1;
@@ -97,7 +98,6 @@ void eDVBServicePMTHandler::channelStateChanged(iDVBChannel *channel)
 					}
 					if (m_ca_servicePtr && !m_service->usePMT())
 					{
-						eDebug("[eDVBServicePMTHandler] create cached caPMT");
 						if(eDVBServicePMTHandler::m_debug)
 							eDebug("[eDVBServicePMTHandler] create cached caPMT");
 						eDVBCAHandler::getInstance()->handlePMT(m_reference, m_service);
@@ -229,7 +229,11 @@ void eDVBServicePMTHandler::PATready(int)
 		int pmtpid_single = -1;
 		int pmtpid = -1;
 		int cnt=0;
-		std::vector<ProgramAssociationSection*>::const_iterator i;
+		int tsid=-1;
+		std::vector<ProgramAssociationSection*>::const_iterator i = ptr->getSections().begin();
+		tsid = (*i)->getTableIdExtension(); // in PAT this is the transport stream id
+		if(eDVBServicePMTHandler::m_debug)
+			eDebug("[eDVBServicePMTHandler] PAT TSID: 0x%04x (%d)", tsid, tsid);
 		for (i = ptr->getSections().begin(); pmtpid == -1 && i != ptr->getSections().end(); ++i)
 		{
 			const ProgramAssociationSection &pat = **i;
@@ -316,7 +320,7 @@ void eDVBServicePMTHandler::AITready(int error)
 	m_aitInfoList.clear();
 	if (!m_AIT.getCurrent(ptr))
 	{
-                short profilecode = 0;
+        short profilecode = 0;
 		int orgid = 0, appid = 0, profileVersion = 0;
 		m_ApplicationName = m_HBBTVUrl = "";
 
@@ -380,7 +384,12 @@ void eDVBServicePMTHandler::AITready(int error)
 							for(; interactionit != nameDescriptor->getApplicationNames()->end(); ++interactionit)
 							{
 								applicationName = (*interactionit)->getApplicationName();
-								if(controlCode == 1) m_ApplicationName = applicationName;
+								if(applicationName.size() > 0 && !isUTF8(applicationName)) {
+									applicationName = convertLatin1UTF8(applicationName);
+								}
+								if(controlCode == 1) {
+									m_ApplicationName = applicationName;
+								}
 								break;
 							}
 							break;
@@ -425,12 +434,17 @@ void eDVBServicePMTHandler::AITready(int error)
 							break;
 						}
 					}
+					// Quick'n'dirty hack to prevent crashes because of invalid UTF-8 characters
+					// The root cause is in the SimpleApplicationLocationDescriptor or the AIT is buggy
+					if(SALDescPath.size() == 1)
+						SALDescPath="";
+
 					hbbtvUrl = TPDescPath + SALDescPath;
 				}
 				if(!hbbtvUrl.empty())
 				{
 					const char* uu = hbbtvUrl.c_str();
-					struct aitInfo aitinfo;
+					struct aitInfo aitinfo = {};
 					aitinfo.id = appid;
 					aitinfo.name = applicationName;
 					aitinfo.url = hbbtvUrl;
@@ -509,7 +523,7 @@ void eDVBServicePMTHandler::OCready(int error)
 	{
 		for (std::vector<OCSection*>::const_iterator it = ptr->getSections().begin(); it != ptr->getSections().end(); ++it)
 		{
-			unsigned char* sectionData = (unsigned char*)(*it)->getData();
+			[[maybe_unused]] unsigned char* sectionData = (unsigned char*)(*it)->getData();
 		}
 	}
 	/* for now, do not keep listening for table updates */
@@ -526,7 +540,7 @@ void eDVBServicePMTHandler::getAITApplications(std::map<int, std::string> &aitli
 
 void eDVBServicePMTHandler::getCaIds(std::vector<int> &caids, std::vector<int> &ecmpids, std::vector<std::string> &ecmdatabytes)
 {
-	program prog = {};
+	program prog;
 
 	if (!getProgramInfo(prog))
 	{
@@ -562,11 +576,11 @@ PyObject *eDVBServicePMTHandler::getHbbTVApplications()
 
 int eDVBServicePMTHandler::getProgramInfo(program &program)
 {
+//	ePtr<eTable<ProgramMapSection> > ptr;
 	struct audioMap {
 		int streamType;
 		eDVBService::cacheID cacheTag;
 	};
-	ePtr<eTable<ProgramMapSection> > ptr;
 	int cached_apid[eDVBService::cacheMax];
 	int cached_vpid = -1;
 	int cached_tpid = -1;
@@ -605,12 +619,14 @@ int eDVBServicePMTHandler::getProgramInfo(program &program)
 		const static audioMap audioMapMain[] = {
 			{ audioStream::atMPEG,  eDVBService::cMPEGAPID,  },
 			{ audioStream::atAC3,   eDVBService::cAC3PID,    },
+			{ audioStream::atAC4,    eDVBService::cAC4PID,   },
 			{ audioStream::atDDP,   eDVBService::cDDPPID,    },
 			{ audioStream::atAACHE,	eDVBService::cAACHEAPID, },
-			{ audioStream::atAAC,   eDVBService::cAACAPID,    },
+			{ audioStream::atAAC,   eDVBService::cAACAPID,   },
 			{ audioStream::atDTS,   eDVBService::cDTSPID,    },
 			{ audioStream::atLPCM,  eDVBService::cLPCMPID,   },
 			{ audioStream::atDTSHD, eDVBService::cDTSHDPID,  },
+			{ audioStream::atDRA,    eDVBService::cDRAAPID,  },
 		};
 		static const int nAudioMapMain = sizeof audioMapMain / sizeof audioMapMain[0];
 
@@ -711,8 +727,15 @@ int eDVBServicePMTHandler::getProgramInfo(program &program)
 					it = autoaudio_languages.begin();
 					x <= autoaudio_level && it != autoaudio_languages.end(); x++, it++)
 				{
-					if ((*it).find(as->language_code) != std::string::npos)
+					bool languageFound = false;
+					size_t pos = 0;
+					char delimiter = '/';
+					std::string audioStreamLanguages = program.audioStreams[i].language_code;
+					audioStreamLanguages += delimiter;
+					while ((pos = audioStreamLanguages.find(delimiter)) != std::string::npos)
 					{
+						if ((*it).find(as->language_code) != std::string::npos)
+						{
 						for (int m = 0; m < nAudioMapMain; m++)
 						{
 							eDVBService::cacheID cTag = audioMapMain[m].cacheTag;
@@ -723,8 +746,13 @@ int eDVBServicePMTHandler::getProgramInfo(program &program)
 							}
 						}
 						autoaudio_level = x;
+						languageFound = true;
 						break;
+						}
+						audioStreamLanguages.erase(0, pos + 1);
 					}
+					if (languageFound)
+						break;
 				}
 			}
 		}
@@ -838,12 +866,14 @@ int eDVBServicePMTHandler::getProgramInfo(program &program)
 		// Same entries, but different order from audioMapMain
 		const static audioMap audioMapList[] = {
 			{ audioStream::atAC3,   eDVBService::cAC3PID,    },
+			{ audioStream::atAC4,   eDVBService::cAC4PID,    },
 			{ audioStream::atDDP,   eDVBService::cDDPPID,    },
-			{ audioStream::atAAC,   eDVBService::cAACAPID,    },
+			{ audioStream::atAAC,   eDVBService::cAACAPID,   },
 			{ audioStream::atDTS,   eDVBService::cDTSPID,    },
 			{ audioStream::atLPCM,  eDVBService::cLPCMPID,   },
 			{ audioStream::atDTSHD, eDVBService::cDTSHDPID,  },
 			{ audioStream::atAACHE, eDVBService::cAACHEAPID, },
+			{ audioStream::atDRA,   eDVBService::cDRAAPID,   },
 			{ audioStream::atMPEG,  eDVBService::cMPEGAPID,  },
 		};
 		static const int nAudioMapList = sizeof audioMapList / sizeof audioMapList[0];
@@ -863,7 +893,7 @@ int eDVBServicePMTHandler::getProgramInfo(program &program)
 			vpidtype = videoStream::vtMPEG2;
 		if ( cached_vpid != -1 )
 		{
-			videoStream s = {};
+			videoStream s;
 			s.pid = cached_vpid;
 			s.type = vpidtype;
 			program.videoStreams.push_back(s);
@@ -894,7 +924,7 @@ int eDVBServicePMTHandler::getProgramInfo(program &program)
 		}
 		if (subpid > 0)
 		{
-			subtitleStream s = {};
+			subtitleStream s;
 			s.pid = (subpid & 0xffff0000) >> 16;
 			if (s.pid != program.textPid)
 			{
@@ -916,7 +946,7 @@ int eDVBServicePMTHandler::getProgramInfo(program &program)
 		CAID_LIST &caids = m_service->m_ca;
 		for (CAID_LIST::iterator it(caids.begin()); it != caids.end(); ++it)
 		{
-			program::capid_pair pair = {};
+			program::capid_pair pair;
 			pair.caid = *it;
 			pair.capid = -1; // not known yet
 			pair.databytes.clear();
@@ -939,9 +969,17 @@ int eDVBServicePMTHandler::getProgramInfo(program &program)
 
 int eDVBServicePMTHandler::compareAudioSubtitleCode(const std::string &subtitleTrack, const std::string &audioTrack)
 {
-	for (const auto& _audioTrack : split(audioTrack, "/"))
+	std::size_t pos = audioTrack.find("/");
+	if ( pos != std::string::npos)
 	{
-		if (strcasecmp(subtitleTrack.c_str(), _audioTrack.c_str()) == 0)
+		std::string firstAudio = audioTrack.substr(0, pos);
+		std::string secondAudio = audioTrack.substr(pos + 1);
+		if (strcasecmp(subtitleTrack, firstAudio) == 0 || strcasecmp(subtitleTrack, secondAudio) == 0)
+			return 0;
+	}
+	else
+	{
+		if (strcasecmp(subtitleTrack, audioTrack) == 0)
 			return 0;
 	}
 	return -1;
@@ -1083,7 +1121,7 @@ int eDVBServicePMTHandler::tuneExt(eServiceReferenceDVB &ref, ePtr<iTsSource> &s
 	m_no_pat_entry_delay->stop();
 	m_service_type = type;
 
-		/* use given service as backup. This is used for timeshift where we want to clone the live stream using the cache, but in fact have a PVR channel */
+		/* use given service as backup. This is used for time shift where we want to clone the live stream using the cache, but in fact have a PVR channel */
 	m_service = service;
 
 		/* is this a normal (non PVR) channel? */
@@ -1111,7 +1149,7 @@ int eDVBServicePMTHandler::tuneExt(eServiceReferenceDVB &ref, ePtr<iTsSource> &s
 	{
 		if (!ref.getServiceID().get() /* incorrect sid in meta file or recordings.epl*/ )
 		{
-			eDVBTSTools tstools = {};
+			eDVBTSTools tstools;
 			bool b = source || !tstools.openFile(ref.path.c_str(), 1);
 			eWarning("[eDVBServicePMTHandler] no .meta file found, trying to find PMT pid");
 			if (source)
@@ -1159,7 +1197,8 @@ int eDVBServicePMTHandler::tuneExt(eServiceReferenceDVB &ref, ePtr<iTsSource> &s
 
 			if (ref.path.empty())
 			{
-				m_dvb_scan = new eDVBScan(m_channel, true, false);
+				bool scandebug = eSimpleConfig::getBool("config.crash.debugDVBScan", false);
+				m_dvb_scan = new eDVBScan(m_channel, true, scandebug);
 				if (!eSimpleConfig::getBool("config.misc.disable_background_scan", false))
 				{
 					/*

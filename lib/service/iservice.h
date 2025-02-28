@@ -108,7 +108,7 @@ public:
 #endif
 	std::string getName() const { return name; }
 	std::string getProvider() const { return prov; }
-	void setName( const std::string &s ) { name=s; }
+	void setName( const std::string &n ) { name=n; }
 	void setProvider( const std::string &s ) { prov=s; }
 	int getChannelNum() const { return number; }
 	void setChannelNum(const int n) { number = n; }

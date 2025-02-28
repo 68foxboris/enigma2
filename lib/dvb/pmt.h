@@ -54,8 +54,8 @@ public:
 	std::string m_ApplicationName;
 public:
 	HbbTVApplicationInfo(int controlCode, int orgid, int appid, std::string hbbtvUrl, std::string applicationName,int profileCode)
-		: m_ControlCode(controlCode), m_HbbTVUrl(hbbtvUrl), m_ApplicationName(applicationName), m_OrgId(orgid), m_AppId(appid),
-		m_ProfileCode(profileCode)
+		: m_OrgId(orgid), m_AppId(appid), m_ControlCode(controlCode), m_ProfileCode(profileCode),
+		m_HbbTVUrl(hbbtvUrl), m_ApplicationName(applicationName)
 	{}
 };
 typedef std::list<HbbTVApplicationInfo *> HbbTVApplicationInfoList;
@@ -66,6 +66,7 @@ class eDVBServicePMTHandler: public eDVBPMTParser
 {
 #ifndef SWIG
 	friend class eDVBCAService;
+	friend class eRTSPStreamClient;
 	eServiceReferenceDVB m_reference;
 	ePtr<eDVBService> m_service;
 
@@ -163,6 +164,8 @@ public:
 	void sendEventNoPatEntry();
 	void getHBBTVUrl(std::string &ret) const { ret = m_HBBTVUrl; }
 	void setCaDisable(bool disable) { m_ca_disabled = disable; }
+	void addCaHandler();
+	void removeCaHandler();
 
 	enum serviceType
 	{
@@ -186,8 +189,6 @@ public:
 	int tuneExt(eServiceReferenceDVB &ref, ePtr<iTsSource> &, const char *streaminfo_file, eCueSheet *sg=0, bool simulate=false, eDVBService *service = 0, serviceType type = livetv, bool descramble = true);
 
 	void free();
-	void addCaHandler();
-	void removeCaHandler();
 private:
 	bool m_have_cached_program;
 	program m_cached_program;
