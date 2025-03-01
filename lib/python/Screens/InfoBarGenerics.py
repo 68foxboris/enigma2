@@ -36,10 +36,12 @@ from Screens.SubtitleDisplay import SubtitleDisplay
 from Screens.RdsDisplay import RdsInfoDisplay, RassInteractive
 from Screens.TimeDateInput import TimeDateInput
 from Screens.UnhandledKey import UnhandledKey
-from ServiceReference import ServiceReference, isPlayableForCur, getStreamRelayRef, hdmiInServiceRef
+from ServiceReference import ServiceReference, getStreamRelayRef, isPlayableForCur
 
 from Tools.ASCIItranslit import legacyEncode
-from Tools.Directories import fileExists, fileReadLines, fileWriteLine, fileReadLinesISO, getRecordingFilename, moveFiles
+from Tools.Directories import SCOPE_CONFIG, SCOPE_SKINS, fileExists, fileReadLines, fileWriteLines, fileReadLinesISO, getRecordingFilename, moveFiles, resolveFilename
+from Tools.ServiceReference import hdmiInServiceRef
+from keyids import KEYFLAGS, KEYIDS, KEYIDNAMES
 from Tools.Notifications import AddPopup, AddNotificationWithCallback, current_notifications, lock, notificationAdded, notifications, RemovePopup
 from keyids import KEYFLAGS, KEYIDNAMES, KEYIDS
 from enigma import eAVControl, eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, iPlayableService, eServiceReference, eEPGCache, eActionMap, getDesktop, eDVBDB, eDBoxLCD
@@ -3135,16 +3137,26 @@ class InfoBarAudioSelection:
 			self.audioDownmixToggle(False)
 
 
+# Subservice processing.
+#
+instanceInfoBarSubserviceSelection = None
+
+
 class InfoBarSubserviceSelection:
 	def __init__(self):
-		self["SubserviceSelectionAction"] = HelpableActionMap(self, ["InfobarSubserviceSelectionActions"], {
-			"subserviceSelection": (self.subserviceSelection, _("Subservice list")),
-		}, prio=0, description=_("Sub Service Actions"))
-		self["SubserviceQuickzapAction"] = HelpableActionMap(self, ["InfobarSubserviceQuickzapActions"], {
-			"exit": self.keyHide,
-			"nextSubservice": (self.nextSubservice, _("Switch to next sub service")),
-			"prevSubservice": (self.prevSubservice, _("Switch to previous sub service"))
-		}, prio=-10, description=_("Sub Service Actions"))
+		global instanceInfoBarSubserviceSelection
+		instanceInfoBarSubserviceSelection = self
+		self.subservicesGroups = self.loadSubservicesGroups()
+		self["SubserviceSelectionAction"] = HelpableActionMap(self, ["InfobarSubserviceSelectionActions"],
+			{
+				"subserviceSelection": (self.subserviceSelection, _("Subservice list...")),
+			}, prio=0, description=_("Subservice Actions"))
+
+		self["SubserviceQuickzapAction"] = HelpableActionMap(self, ["InfobarSubserviceQuickzapActions"],
+			{
+				"nextSubservice": (self.nextSubservice, _("Switch to next sub service")),
+				"prevSubservice": (self.prevSubservice, _("Switch to previous sub service"))
+			}, -10)
 		self["SubserviceQuickzapAction"].setEnabled(False)
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
@@ -3156,6 +3168,60 @@ class InfoBarSubserviceSelection:
 
 	def __removeNotifications(self):
 		self.session.nav.event.remove(self.checkSubservicesAvail)
+
+	def loadSubservicesGroups(self):
+		subservicesGroups = []
+		groupedServicesFile = resolveFilename(SCOPE_CONFIG, "groupedservices")
+		if not isfile(groupedServicesFile):
+			groupedServicesFile = resolveFilename(SCOPE_SKINS, "groupedservices")
+			if not isfile(groupedServicesFile):
+				groupedServicesFile = None
+				print("[InfoBarGenerics] No 'groupedservices' file found so no subservices are available.")
+		if groupedServicesFile:
+			subservicesGroups = [list(g) for k, g in itertools.groupby([line.split("#")[0].strip() for line in fileReadLines(groupedServicesFile, [], source=MODULE_NAME)], lambda x: not x) if not k]
+			count = len(subservicesGroups)
+			print(f"[InfoBarGenerics] {count} subservice group{'' if count == 1 else 's'} loaded from '{groupedServicesFile}'.")
+		return subservicesGroups
+
+	def getSubserviceGroups(self):
+		return self.subservicesGroups
+
+	def hasActiveSubservicesForCurrentService(self, serviceReference):
+		if serviceReference and "%3a" not in serviceReference:
+			serviceReference = ":".join(serviceReference.split(":")[:11])
+		if config.usage.showInfoBarSubservices.value == 1:
+			subservices = self.getActiveSubservicesForCurrentService(serviceReference)
+		elif config.usage.showInfoBarSubservices.value == 2:
+			subservices = self.getPossibleSubservicesForCurrentService(serviceReference)
+		else:
+			subservices = None
+		return bool(subservices and len(subservices) > 1)
+
+	def getActiveSubservicesForCurrentService(self, serviceReference):
+		transmissionPaused = [
+			"Sendepause"  # This is for German TV.
+		]
+		activeSubservices = []
+		if config.usage.showInfoBarSubservices.value and serviceReference:
+			possibleSubservices = self.getPossibleSubservicesForCurrentService(serviceReference)
+			epgCache = eEPGCache.getInstance()
+			for subservice in possibleSubservices:
+				events = epgCache.lookupEvent(["T", (subservice, 0, -1)])
+				if events and len(events) == 1:
+					title = events[0][0]
+					if title and not any([x for x in transmissionPaused if x in title]):
+						activeSubservices.append(subservice)
+				elif config.usage.showInfoBarSubservices.value == 2:
+					activeSubservices.append(subservice)
+		return activeSubservices
+
+	def getPossibleSubservicesForCurrentService(self, serviceReference):
+		possibleSubservices = []
+		if serviceReference and self.subservicesGroups:
+			possibleSubserviceGroups = [x for x in self.subservicesGroups if serviceReference in x]
+			if possibleSubserviceGroups:
+				possibleSubservices = possibleSubserviceGroups[0]  # If the service is in multiple groups should we return more options?
+		return possibleSubservices
 
 	def checkSubservicesAvail(self):
 		serviceRef = self.session.nav.getCurrentlyPlayingServiceReference()
@@ -3171,7 +3237,7 @@ class InfoBarSubserviceSelection:
 		self.changeSubservice(-1)
 
 	def playSubservice(self, ref):
-		if ref.getUnsignedData(6) == 0 and "%3a" not in ref.toString():
+		if ref.getUnsignedData(6) == 0:
 			ref.setName("")
 		self.session.nav.playService(ref, checkParentalControl=False, adjust=False)
 
@@ -3868,7 +3934,7 @@ class InfoBarSummarySupport:
 class InfoBarMoviePlayerSummary(Screen):
 	skin = """
 	<screen position="0,0" size="132,64">
-		<widget source="global.CurrentTime" render="Label" position="62,46" size="64,18" font="Regular;16" halign="right" >
+		<widget source="global.CurrentTime" render="Label" position="62,46" size="64,18" font="Regular;16" horizontalAlignment="right" >
 			<convert type="ClockToText">WithSeconds</convert>
 		</widget>
 		<widget source="session.RecordState" render="FixedLabel" text=" " position="62,46" size="64,18" zPosition="1" >
@@ -4178,30 +4244,28 @@ class InfoBarHdmi:
 		}, prio=2, description=_("HDMI-IN Actions"))
 
 	def HDMIInLong(self):
-		if self.LongButtonPressed:
-			if not hasattr(self.session, "pip") and not self.session.pipshown:
-				self.session.pip = self.session.instantiateDialog(PictureInPicture)
+		if not hasattr(self.session, "pip") and not self.session.pipshown:
+			self.session.pip = self.session.instantiateDialog(PictureInPicture)
+			self.session.pip.playService(hdmiInServiceRef())
+			self.session.pip.show()
+			self.session.pipshown = True
+			self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
+		elif BoxInfo.getItem("HasHDMIinPiP"):
+			curref = self.session.pip.getCurrentService()
+			if curref and curref.type != eServiceReference.idServiceHDMIIn:
 				self.session.pip.playService(hdmiInServiceRef())
-				self.session.pip.show()
-				self.session.pipshown = True
 				self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
-			elif BoxInfo.getItem("HDMIinPiP"):
-				curref = self.session.pip.getCurrentService()
-				if curref and curref.type != eServiceReference.idServiceHDMIIn:
-					self.session.pip.playService(hdmiInServiceRef())
-					self.session.pip.servicePath = self.servicelist.getCurrentServicePath()
-				else:
-					self.session.pipshown = False
-					del self.session.pip
+			else:
+				self.session.pipshown = False
+				del self.session.pip
 
 	def HDMIIn(self):
-		if not self.LongButtonPressed:
-			slist = self.servicelist
-			curref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
-			if curref and curref.type != eServiceReference.idServiceHDMIIn:
-				self.session.nav.playService(hdmiInServiceRef())
-			else:
-				self.session.nav.playService(slist.servicelist.getCurrent())
+		slist = self.servicelist
+		curref = self.session.nav.getCurrentlyPlayingServiceOrGroup()
+		if curref and curref.type != eServiceReference.idServiceHDMIIn:
+			self.session.nav.playService(hdmiInServiceRef())
+		else:
+			self.session.nav.playService(slist.servicelist.getCurrent())
 
 	def getHDMIInFullScreen(self):
 		if not self.hdmi_enabled_full:
@@ -4243,6 +4307,7 @@ class InfoBarHdmi:
 		else:
 			self.hdmi_enabled_full = False
 			self.session.nav.playService(slist.servicelist.getCurrent())
+
 
 #########################################################################################
 # handle bsod (python crashes) and show information after crash                         #

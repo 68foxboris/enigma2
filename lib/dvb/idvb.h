@@ -230,8 +230,9 @@ public:
 		avcHdStereo         = 0x1C, // 28             H.264/AVC frame compatible plano - stereoscopic HD digital television service (see note 3)
 		nvodAvcHdStereoTs   = 0x1D, // 29             H.264/AVC frame compatible plano - stereoscopic HD NVOD time - shifted service (see note 3)
 		nvodAvcHdStereoRef  = 0x1E, // 30             H.264/AVC frame compatible plano - stereoscopic HD NVOD reference service (see note 3)
-		nvecTv              = 0x1F, // 31             HEVC digital television service
-				    //0x20, // 32 to 0x7F/127 reserved for future use
+		nvecTv              = 0x1F, // 31             HEVC digital television service (see note 4) 
+		nvecTv20            = 0x20, // 32             HEVC UHD digital television service with HDR and/or a frame rate of 100 Hz, 120 000/1 001 Hz, or 120 Hz, or any combination of HDR and these frame rates (see note 5) 
+				    //0x21, // 33 to 0x7F/127 reserved for future use
 				    //0x80, //128 to 0xFE/254 user defined
 		user134             = 0x86, //134             ???
 		user195             = 0xC3, //195             ???
@@ -298,7 +299,7 @@ public:
 	{
 		chid = eDVBChannelID(getDVBNamespace(), getTransportStreamID(), getOriginalNetworkID());
 	}
-
+	
 	bool getSROriginal(eServiceReferenceDVB &sref) const
 	{
 		std::string s_ref = this->toString();
@@ -348,8 +349,8 @@ public:
 	{
 		cVPID, cMPEGAPID, cTPID, cPCRPID, cAC3PID,
 		cVTYPE, cACHANNEL, cAC3DELAY, cPCMDELAY,
-		cSUBTITLE, cAACHEAPID=12, cDDPPID, cAACAPID,
-		cLPCMPID, cDTSHDPID, cDTSPID,
+		cSUBTITLE, cAACHEAPID=12, cDDPPID, cDTSPID, cAACAPID,
+		cLPCMPID, cDTSHDPID,
 		cDATAPID, cPMTPID, cDRAAPID, cAC4PID, cacheMax
 	};
 
@@ -380,7 +381,7 @@ public:
 	{
 		dxNoSDT=1,                 // don't fetch SDT
 		dxDontshow=2,              // don't show service in all services list
-		dxNoDVB=4,                 // don't use PMT for this service ( use cached pids )
+		dxNoDVB=4,                 // dont use PMT for this service ( use cached pids )
 		dxHoldName=8,              // don't change service name if label differs in the SDT
 		dxNewFound=64,             // show in last scanned bouquet ( until next restart )
 		dxIsDedicated3D=128,       // 3D channel
@@ -858,7 +859,13 @@ public:
 			eventSizeChanged = VIDEO_EVENT_SIZE_CHANGED,
 			eventFrameRateChanged = VIDEO_EVENT_FRAME_RATE_CHANGED,
 			eventProgressiveChanged = 16,
+#ifdef DREAMNEXTGEN
+			eventGammaChanged = 17,
+			eventPtsValid = 32,
+			eventVideoDiscontDetected = 64
+#else
 			eventGammaChanged = 17
+#endif
 		} type;
 		unsigned char aspect;
 		unsigned short height;

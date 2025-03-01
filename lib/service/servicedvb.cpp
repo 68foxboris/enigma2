@@ -340,17 +340,6 @@ eStaticServiceDVBPVRInformation::eStaticServiceDVBPVRInformation(const eServiceR
 	m_parser.parseFile(ref.path);
 }
 
-static bool looksLikeRecording(const std::string& n)
-{
-	return
-		(n.size() > 19) &&
-		(n[8] == ' ') &&
-		(n[13] == ' ') &&
-		(n[14] == '-') &&
-		(n[15] == ' ') &&
-		(isdigit(n[0]));
-}
-
 RESULT eStaticServiceDVBPVRInformation::getName(const eServiceReference &ref, std::string &name)
 {
 	ASSERT(ref == m_ref);
@@ -364,24 +353,60 @@ RESULT eStaticServiceDVBPVRInformation::getName(const eServiceReference &ref, st
 		size_t n = name.rfind('/');
 		if (n != std::string::npos)
 			name = name.substr(n + 1);
-		if (looksLikeRecording(name))
-		{
-			// Parse recording names in 'YYYYMMDD HHMM - ... - name.ts' into name
-			std::size_t dash2 = name.find(" - ", 16, 3);
-			if (dash2 != std::string::npos)
+		if (name.size() >= 3 && name.substr(name.size()-3, 3) == ".ts") {
+			enum { is_unknown, is_short, is_standard, is_long, is_event } name_type = is_unknown;
+
+			std::size_t dash1 = name.find(" - ");
+			std::size_t dash2 = dash1 == std::string::npos
+						? std::string::npos
+						: name.find(" - ", dash1+1);
+			std::size_t dash3 = dash2 == std::string::npos
+						? std::string::npos
+						: name.find(" - ", dash2+1);
+			std::size_t dashlast = name.rfind(" - ");
+
+			struct tm stm = {0};
+			std::string descr = "";
+
+			name.erase(name.size()-3);
+
+			if (dash1 == 8 && strptime(name.substr(0, dash1).c_str(), "%Y%m%d", &stm) != NULL)
 			{
-				struct tm stm = {0};
-				if (strptime(name.c_str(), "%Y%m%d %H%M", &stm) != NULL)
+				name_type = is_short;
+				name = name.substr(dash1+3);
+			} else if (dash1 == 13 && strptime(name.substr(0, dash1).c_str(), "%Y%m%d %H%M", &stm) != NULL)
+			{
+				if (dash3 == std::string::npos)
 				{
+					name_type = is_standard;
+					name = name.substr(dash2+3);
+				}
+				else
+				{
+					name_type = is_long;
+					size_t name_pos = dash2+3;
+					if (name.size() > name_pos)
+						m_parser.m_description = name.substr(dash3+3);
+					name = name.substr(name_pos, dash3-name_pos);
+				}
+			} else if (dashlast != std::string::npos && strptime(name.substr(dashlast+3, dashlast+17).c_str(), "%Y%m%d %H%M_", &stm))
+			{
+				name_type = is_event;
+				name = name.substr(0, dashlast);
+			}
+
+			if(name_type != is_unknown) {
+				if(name_type != is_short || m_parser.m_time_create == 0)
+				{
+					// Force mktime to look up zoneinfo for DST
+					stm.tm_isdst = -1;
 					m_parser.m_time_create = mktime(&stm);
 				}
-				name.erase(0,dash2+3);
 			}
-			if (name[name.size()-3] == '.')
-			{
-				name.erase(name.size()-3);
-			}
+			else
+				name += ".ts";
 		}
+
 		m_parser.m_name = name;
 	}
 
@@ -430,6 +455,11 @@ int eStaticServiceDVBPVRInformation::getLength(const eServiceReference &ref)
 
 int eStaticServiceDVBPVRInformation::getInfo(const eServiceReference &ref, int w)
 {
+	if (m_parser.m_name.empty())
+	{
+		std::string name;
+		getName(ref, name); // This also updates m_parser.m_time_create
+	}
 	switch (w)
 	{
 	case iServiceInformation::sDescription:
@@ -452,6 +482,11 @@ int eStaticServiceDVBPVRInformation::getInfo(const eServiceReference &ref, int w
 
 std::string eStaticServiceDVBPVRInformation::getInfoString(const eServiceReference &ref,int w)
 {
+	if (m_parser.m_name.empty())
+	{
+		std::string name;
+		getName(ref, name); // This also updates m_parser.m_description
+	}
 	switch (w)
 	{
 	case iServiceInformation::sDescription:
@@ -563,7 +598,7 @@ RESULT eDVBPVRServiceOfflineOperations::getListOfFilenames(std::list<std::string
 	res.push_back(m_ref.path);
 
 // handling for old splitted recordings (enigma 1)
-	char buf[255];
+	char buf[255] = {};
 	int slice=1;
 	while(true)
 	{
@@ -1338,39 +1373,34 @@ void eDVBServicePlay::serviceEventTimeshift(int event)
 	case eDVBServicePMTHandler::eventEOF:
 		if ((!m_is_paused) && (m_skipmode >= 0))
 		{
-			goToNextPlaybackFile();
+			if (m_timeshift_file_next.empty())
+			{
+				if (!eConfigManager::getConfigBoolValue("config.timeshift.skipReturnToLive", false))
+				{
+					eDebug("[eDVBServicePlay] timeshift EOF, so let's go live");
+					switchToLive();
+				}
+			}
+			else
+			{
+				eDebug("[eDVBServicePlay] timeshift EOF, switch to next file");
+
+				m_first_program_info |= 2;
+
+				eServiceReferenceDVB r = (eServiceReferenceDVB&)m_reference;
+				r.path = m_timeshift_file_next;
+
+				/* free the timeshift service handler, we need the resources */
+				m_service_handler_timeshift.free();
+				resetTimeshift(1);
+
+				ePtr<iTsSource> source = createTsSource(r);
+				m_service_handler_timeshift.tuneExt(r, source, m_timeshift_file_next.c_str(), m_cue, 0, m_dvb_service, eDVBServicePMTHandler::timeshift_playback, false); /* use the decoder demux for everything */
+
+				m_event((iPlayableService*)this, evUser+1);
+			}
 		}
 		break;
-	}
-}
-
-void eDVBServicePlay::goToNextPlaybackFile()
-{
-	if (m_timeshift_file_next.empty())
-	{
-		if (!eConfigManager::getConfigBoolValue("config.timeshift.skipReturnToLive", false))
-		{
-			eDebug("[eDVBServicePlay] timeshift EOF, so let's go live");
-			switchToLive();
-		}
-	}
-	else
-	{
-		eDebug("[eDVBServicePlay] timeshift EOF, switch to next file %s", m_timeshift_file_next.c_str());
-
-		m_first_program_info |= 2;
-
-		eServiceReferenceDVB r = (eServiceReferenceDVB&)m_reference;
-		r.path = m_timeshift_file_next;
-
-		/* free the timeshift service handler, we need the resources */
-		m_service_handler_timeshift.free();
-		resetTimeshift(1);
-
-		ePtr<iTsSource> source = createTsSource(r);
-		m_service_handler_timeshift.tuneExt(r, source, m_timeshift_file_next.c_str(), m_cue, 0, m_dvb_service, eDVBServicePMTHandler::timeshift_playback, false); /* use the decoder demux for everything */
-
-		m_event((iPlayableService*)this, evUser+1); /* TIMESHIFT_FILE_CHANGED */
 	}
 }
 
@@ -1542,10 +1572,12 @@ RESULT eDVBServicePlay::connectEvent(const sigc::slot<void(iPlayableService*,int
 
 RESULT eDVBServicePlay::pause(ePtr<iPauseableService> &ptr)
 {
+	eServiceReferenceDVB sRelayOrigSref;
+	bool isSRService = ((const eServiceReferenceDVB&)m_reference).getSROriginal(sRelayOrigSref);
 		/* note: we check for timeshift to be enabled,
 			not neccessary active. if you pause when timeshift
 			is not active, you should activate it when unpausing */
-	if ((!m_is_pvr) && (!m_timeshift_enabled))
+	if ((!m_is_pvr) && (!m_timeshift_enabled) && (m_reference.path.empty() || isSRService))
 	{
 		ptr = nullptr;
 		return -1;
@@ -1650,7 +1682,9 @@ RESULT eDVBServicePlay::setFastForward_internal(int ratio, bool final_seek)
 
 RESULT eDVBServicePlay::seek(ePtr<iSeekableService> &ptr)
 {
-	if (m_is_pvr || m_timeshift_enabled)
+	eServiceReferenceDVB sRelayOrigSref;
+	bool isSRService = ((const eServiceReferenceDVB&)m_reference).getSROriginal(sRelayOrigSref);
+	if (m_is_pvr || m_timeshift_enabled || (!m_reference.path.empty() && !isSRService))
 	{
 		ptr = this;
 		return 0;
@@ -1822,7 +1856,7 @@ RESULT eDVBServicePlay::timeshift(ePtr<iTimeshiftService> &ptr)
 		if (!m_timeshift_enabled)
 		{
 			/* query config path */
-			std::string tspath = eSettings::timeshift_path;
+			std::string tspath = eConfigManager::getConfigValue("config.usage.timeshift_path");
 			if(tspath == "")
 			{
 				eDebug("[eDVBServicePlay] timeshift could not query ts path from config");
@@ -1837,9 +1871,9 @@ RESULT eDVBServicePlay::timeshift(ePtr<iTimeshiftService> &ptr)
 				return -2;
 			}
 
-			if (((off_t)fs.f_bavail) * ((off_t)fs.f_bsize) < 1024*1024*1024LL)
+			if (((off_t)fs.f_bavail) * ((off_t)fs.f_bsize) < 200*1024*1024LL)
 			{
-				eTrace("[eDVBServicePlay] timeshift not enough diskspace for timeshift! (less than 1GB)");
+				eDebug("[eDVBServicePlay] timeshift not enough diskspace for timeshift! (less than 200MB)");
 				return -3;
 			}
 		}
@@ -2142,9 +2176,9 @@ std::string eDVBServicePlay::getInfoString(int w)
 	case sLiveStreamDemuxId:
 	{
 		eDVBServicePMTHandler &h = m_timeshift_active ? m_service_handler_timeshift : m_service_handler;
-		std::string demux;
-		demux += h.getDemuxID() + '0';
-		return demux;
+		std::stringstream demux;
+		demux << h.getDemuxID();
+		return demux.str();
 	}
 	case sVideoInfo:
 	{
@@ -2340,7 +2374,7 @@ int eDVBServicePlay::selectAudioStream(int i)
 
 	int rdsPid = apid;
 
-	/* if we are not in PVR mode, timeshift is not active and we are not in pip mode, check if we need to enable the rds reader */
+		/* if timeshift is not active and we are not in pip mode, check if we need to enable the rds reader */
 	if (!(m_timeshift_active || m_decoder_index || m_have_video_pid || !m_is_primary))
 	{
 		int different_pid = program.videoStreams.empty() && program.audioStreams.size() == 1 && program.audioStreams[stream].rdsPid != -1;
@@ -2364,10 +2398,10 @@ int eDVBServicePlay::selectAudioStream(int i)
 				a.) we have an entry in the service db for the current service,
 				b.) we are not playing back something,
 				c.) we are not selecting the default entry. (we wouldn't change
-					anything in the best case, or destroy the default setting in
-					case the real default is not yet available.)
+				    anything in the best case, or destroy the default setting in
+				    case the real default is not yet available.)
 				d.) we have only one audiostream (overwrite the cache to make sure
-					the cache contains the correct audio pid and type)
+				    the cache contains the correct audio pid and type)
 			*/
 	if (m_dvb_service && (i != -1 || program.audioStreams.size() == 1
 		|| m_dvb_service->cacheAudioEmpty()))
@@ -2673,7 +2707,7 @@ RESULT eDVBServicePlay::startTimeshift()
 	if (!m_record)
 		return -3;
 
-	std::string tspath = eSettings::timeshift_path;
+	std::string tspath = eConfigManager::getConfigValue("config.usage.timeshift_path");
 	if (tspath == "")
 	{
 		eDebug("[eDVBServicePlay] could not query timeshift path");
@@ -3435,8 +3469,9 @@ RESULT eDVBServicePlay::enableSubtitles(iSubtitleUser *user, SubtitleTrack &trac
 
 		m_subtitle_widget = user;
 		m_subtitle_parser->start(pid, composition_page_id, ancillary_page_id);
-		if (m_dvb_service)
+		if (m_dvb_service){
 			m_dvb_service->setCacheEntry(eDVBService::cSUBTITLE, ((pid&0xFFFF)<<16)|((composition_page_id&0xFF)<<8)|(ancillary_page_id&0xFF));
+		}
 	}
 	else
 		goto error_out;
@@ -3462,8 +3497,9 @@ RESULT eDVBServicePlay::disableSubtitles()
 		m_teletext_parser->setPageAndMagazine(-1, -1, "und");
 		m_subtitle_pages.clear();
 	}
-	if (m_dvb_service)
+	if (m_dvb_service){
 		m_dvb_service->setCacheEntry(eDVBService::cSUBTITLE, 0);
+	}
 	return 0;
 }
 

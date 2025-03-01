@@ -45,6 +45,16 @@ static int root2gold(int root)
 	return 0;
 }
 
+#ifdef HAVE_OLDE2_API
+#ifndef NO_STREAM_ID_FILTER
+#define NO_STREAM_ID_FILTER    (~0U)
+#endif
+
+#ifndef DTV_STREAM_ID
+#define DTV_STREAM_ID DTV_ISDBS_TS_ID
+#endif
+#endif
+
 DEFINE_REF(eDVBService);
 
 RESULT eBouquet::addService(const eServiceReference &ref, eServiceReference before)
@@ -233,9 +243,7 @@ RESULT eDVBService::getName(const eServiceReference &ref, std::string &name)
 		name = m_service_name;
 	else
 		name = "(...)";
-	if (m_provider_name.empty()) {
-		m_provider_name = ref.prov;
-	}
+
 	return 0;
 }
 
@@ -281,7 +289,7 @@ int eDVBService::isPlayable(const eServiceReference &ref, const eServiceReferenc
 				if (pModule != NULL)
 				{
 					pFunc = PyObject_GetAttrString(pModule, "isPlayable");
-					if (pFunc)
+					if (pFunc) 
 					{
 						pArgs = PyTuple_New(1);
 						pArg = PyUnicode_FromString(ref.toString().c_str());
@@ -811,7 +819,7 @@ void eDVBDB::loadServiceListV5(FILE * f)
 			scount++;
 		}
 	}
-	eDebug("[eDVBDB] Loaded %d channels/transponders and %d services.", tcount, scount);
+	eDebug("loaded %d channels/transponders and %d services", tcount, scount);
 }
 
 void eDVBDB::loadServicelist(const char *file)
@@ -3005,7 +3013,7 @@ PyObject *eDVBDB::getAllServicesRaw(int type)
 			{
 				ePyObject tuple = PyTuple_New(6);
 				ePtr<eDVBService> service = sit->second;
-
+				
 				PyTuple_SET_ITEM(tuple, 0, PyUnicode_FromString(sit->first.toReferenceString().c_str()));
 				PyTuple_SET_ITEM(tuple, 1, PyUnicode_FromString(service->m_provider_name.c_str()));
 				PyTuple_SET_ITEM(tuple, 2, PyUnicode_FromString(service->m_provider_display_name.c_str()));
@@ -3017,7 +3025,7 @@ PyObject *eDVBDB::getAllServicesRaw(int type)
 				Py_DECREF(tuple);
 			}
 			break;
-
+		
 		default:
 			for (std::map<eServiceReferenceDVB, ePtr<eDVBService> >::iterator sit(m_services.begin()); sit != m_services.end(); ++sit)
 			{
@@ -3035,11 +3043,12 @@ PyObject *eDVBDB::getAllServicesRaw(int type)
 			break;
 		}
 
-	}
+	} 
 	else
 		Py_RETURN_NONE;
 	return serviceList;
 }
+
 
 DEFINE_REF(eDVBDBQueryBase);
 
@@ -3089,7 +3098,7 @@ int eDVBDBQueryBase::compareLessEqual(const eServiceReferenceDVB &a, const eServ
 			return aa < bb;
 		}
 	case eDVBChannelQuery::tProvider:
-		return a_service->m_provider_name < b_service->m_provider_name;
+		return a_service->m_provider_display_name < b_service->m_provider_display_name;
 	case eDVBChannelQuery::tType:
 		return a.getServiceType() < b.getServiceType();
 	case eDVBChannelQuery::tBouquet:
@@ -3273,7 +3282,7 @@ eDVBDBProvidersQuery::eDVBDBProvidersQuery(eDVBDB *db, const eServiceReference &
 				ref.flags=eServiceReference::flagDirectory;
 				ref.path.erase(pos);
 				ref.path+="ORDER BY name";
-				// eDebug("[eDVBDB] ref.path now '%s'.", ref.path.c_str());
+//				eDebug("[eDVBDB] ref.path now %s", ref.path.c_str());
 				m_list.push_back(ref);
 			}
 		}

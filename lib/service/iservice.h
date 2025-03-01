@@ -108,7 +108,7 @@ public:
 #endif
 	std::string getName() const { return name; }
 	std::string getProvider() const { return prov; }
-	void setName( const std::string &n ) { name=n; }
+	void setName( const std::string &s ) { name=s; }
 	void setProvider( const std::string &s ) { prov=s; }
 	int getChannelNum() const { return number; }
 	void setChannelNum(const int n) { number = n; }
@@ -671,7 +671,6 @@ public:
 	virtual RESULT startTimeshift()=0;
 	virtual RESULT stopTimeshift(bool swToLive=true)=0;
 	virtual RESULT setNextPlaybackFile(const char *fn)=0; // not needed by our internal timeshift.. but external plugin...
-	virtual void goToNextPlaybackFile()=0;
 
 	virtual int isTimeshiftActive()=0;
 	virtual int isTimeshiftEnabled()=0;
