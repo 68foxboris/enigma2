@@ -32,6 +32,7 @@ class Screen(dict):
 		self.mandatoryWidgets = mandatoryWidgets
 		className = self.__class__.__name__
 		self.skinName = className
+		self.handledWidgets = []
 		self.onFirstExecBegin = []
 		self.onExecBegin = []
 		self.onExecEnd = []
@@ -56,12 +57,13 @@ class Screen(dict):
 		self.desktop = None
 		self.instance = None
 		self.summaries = CList()
-		self["Title"] = StaticText()
-		self["ScreenPath"] = StaticText()
 		self.screenPath = ""  # This is the current screen path without the title.
 		self.screenTitle = ""  # This is the current screen title without the path.
-		self.handledWidgets = []
-		self.setImage(className)
+		self["ScreenPath"] = StaticText()
+		self["Title"] = StaticText()
+		self.screenImage = self.checkImage(className)  # This is the current screen image name.
+		if self.screenImage:
+			self["Image"] = Pixmap()
 		if enableHelp:
 			self["helpActions"] = ActionMap(["HelpActions"], {
 				"displayHelp": self.showHelp
@@ -200,16 +202,38 @@ class Screen(dict):
 
 	title = property(getTitle, setTitle)
 
-	def setImage(self, image, source=None):
-		self.screenImage = None
-		if image and (images := {"menu": menus, "setup": setups}.get(source, screens)):
-			if (x := images.get(image, images.get("default", ""))) and isfile(x := resolveFilename(SCOPE_GUISKIN, x)):
-				self.screenImage = x
-				if self.screenImage and "Image" not in self:
-					self["Image"] = Pixmap()
+	def getScreenPath(self):
+		return self.screenPath
 
-	def setFocus(self, o):
-		self.instance.setFocus(o.instance)
+	def checkImage(self, image, source=None):
+		screenImage = None
+		if image:
+			images = {
+				# "screen": screens,
+				"menu": menus,
+				"setup": setups
+			}.get(source, screens)
+			defaultImage = images.get("default", "")
+			screenImage = images.get(image, defaultImage)
+			if screenImage:
+				screenImage = resolveFilename(SCOPE_GUISKIN, screenImage)
+				msg = f"{'Default' if screenImage == defaultImage and image != 'default' else 'Specified'} {source if source else 'screen'} image for '{image}' is '{screenImage}'"
+				if isfile(screenImage):
+					print(f"[Screen] {msg}.")
+				else:
+					print(f"[Screen] Error: {msg} but this is not a file!")
+					screenImage = None
+		return screenImage
+
+	def setImage(self, image, source=None):
+		self.screenImage = self.checkImage(image, source=source)
+		if self.screenImage and "Image" not in self:
+			self["Image"] = Pixmap()
+
+	def getImage(self):
+		return self.screenImage
+
+	image = property(getImage, setImage)
 
 	def callHelpAction(self, *args):
 		if args:
@@ -222,6 +246,9 @@ class Screen(dict):
 			if self.secondInfoBarScreen and self.secondInfoBarScreen.shown:
 				self.secondInfoBarScreen.hide()
 		self.session.openWithCallback(self.callHelpAction, HelpMenu, self.helpList)
+
+	def setFocus(self, item):
+		self.instance.setFocus(item.instance)
 
 	def setKeyboardModeNone(self):
 		rcinput = eRCInput.getInstance()
@@ -287,6 +314,7 @@ class Screen(dict):
 				if attribute[0] == "title":
 					self.setTitle(_(attribute[1]))
 		self.scale = ((bounds[0], resolution[0]), (bounds[1], resolution[1]))
+		self.skinAttributes.sort(key=lambda a: {"position": 1}.get(a[0], 0))  # We need to make sure that certain attributes come last.
 		applyAllAttributes(self.instance, self.desktop, self.skinAttributes, self.scale)
 		self.createGUIScreen(self.instance, self.desktop)
 
@@ -315,16 +343,15 @@ class Screen(dict):
 		for widget in self.additionalWidgets:
 			if not updateonly:
 				widget.instance = widget.widget(parent)
-				# widget.instance.thisown = 0
 			applyAllAttributes(widget.instance, desktop, widget.skinAttributes, self.scale)
 		if self.screenImage:
-			self["Image"].setPixmap(LoadPixmap(self.screenImage))
-		for f in self.onLayoutFinish:
-			if not isinstance(f, type(self.close)):
-				# exec f in globals(), locals()  # Python 2
-				exec(f, globals(), locals())  # Python 3
+			screenImage = LoadPixmap(self.screenImage)
+			self["Image"].instance.setPixmap(screenImage)
+		for method in self.onLayoutFinish:
+			if not isinstance(method, type(self.close)):
+				exec(method, globals(), locals())
 			else:
-				f()
+				method()
 
 	def deleteGUIScreen(self):
 		for (name, val) in self.items():
