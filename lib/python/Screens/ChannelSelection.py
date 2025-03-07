@@ -2236,8 +2236,7 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 		self.setCurrentSelection(service or self.session.nav.getCurrentlyPlayingServiceReference())
 
 	def isSubservices(self, path=None):
-		path = path or self.getRoot()
-		return path is not None and subservices_tv_ref.getPath() == path.getPath()
+		return subservices_tv_ref == (path or self.getRoot() or eServiceReference())
 
 	def getMutableList(self, root=eServiceReference()):  # Override for subservices
 		# ChannelContextMenu.inBouquet = True --> Wrong menu
