@@ -31,12 +31,18 @@ RESULT eNavigation::playService(const eServiceReference &service)
 {
 	RESULT res = -1;
 
+#if defined(HAVE_FCC)
 	if (!m_fccmgr || m_fccmgr->tryFCCService(service, m_runningService) == -1)
 	{
 		stopService();
 		ASSERT(m_servicehandler);
 		res = m_servicehandler->play(service, m_runningService);
 	}
+#else
+	stopService();
+	ASSERT(m_servicehandler);
+	res = m_servicehandler->play(service, m_runningService);
+#endif
 
 	if (m_runningService)
 	{
@@ -44,7 +50,14 @@ RESULT eNavigation::playService(const eServiceReference &service)
 		m_runningService->connectEvent(sigc::mem_fun(*this, &eNavigation::serviceEvent), m_service_event_conn);
 		res = m_runningService->start();
 	}
+	m_runningServiceRef = service;
 	return res;
+}
+
+RESULT eNavigation::setPiPService(const eServiceReference &service)
+{
+	m_runningPiPServiceRef = service;
+	return 0;
 }
 
 RESULT eNavigation::connectEvent(const sigc::slot<void(int)> &event, ePtr<eConnection> &connection)
@@ -65,6 +78,18 @@ RESULT eNavigation::getCurrentService(ePtr<iPlayableService> &service)
 	return 0;
 }
 
+RESULT eNavigation::getCurrentServiceReference(eServiceReference &service)
+{
+	service = m_runningServiceRef;
+	return 0;
+}
+
+RESULT eNavigation::getCurrentPiPServiceReference(eServiceReference &service)
+{
+	service = m_runningPiPServiceRef;
+	return 0;
+}
+
 RESULT eNavigation::stopService(void)
 {
 	/* check if there is a running service... */
@@ -73,6 +98,7 @@ RESULT eNavigation::stopService(void)
 
 	ePtr<iPlayableService> tmp = m_runningService;
 	m_runningService = 0;
+	m_runningServiceRef = eServiceReference();
 	tmp->stop();
 
 	/* send stop event */
@@ -81,7 +107,15 @@ RESULT eNavigation::stopService(void)
 	/* kill service. */
 	m_service_event_conn = 0;
 
+#if defined(HAVE_FCC)
 	m_fccmgr && m_fccmgr->cleanupFCCService();
+#endif
+	return 0;
+}
+
+RESULT eNavigation::clearPiPService(void)
+{
+	m_runningPiPServiceRef = eServiceReference();
 	return 0;
 }
 
@@ -234,8 +268,19 @@ eNavigation::eNavigation(iServiceHandler *serviceHandler, int decoder)
 	ASSERT(serviceHandler);
 	m_servicehandler = serviceHandler;
 	m_decoder = decoder;
-	if (decoder == 0 )
-		m_fccmgr = new eFCCServiceManager(this);
+#if defined(HAVE_FCC)
+	if (decoder == 0)
+	{
+		m_fccmgr = eFCCServiceManager::getInstance();
+		// don't create eFCCServiceManager twice, last eNavigation for decoder 0 wins
+		if (m_fccmgr)
+		{
+			m_fccmgr->setNav(this);
+		}
+		else
+			m_fccmgr = new eFCCServiceManager(this);
+	}
+#endif
 	instance = this;
 }
 
