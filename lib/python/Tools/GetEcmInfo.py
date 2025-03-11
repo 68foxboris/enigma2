@@ -59,7 +59,7 @@ class GetEcmInfo:
 				d = line.split(":", 1)
 				if len(d) > 1:
 					info[d[0].strip()] = d[1].strip()
-			if info and info.get("from") and config.softcam.hideServerName.value:
+			if info and info.get("from") and config.misc.softcam_hideServerName.value:
 				info["from"] = "".join(["\u2022"] * len(info.get("from")))
 			data = self.getText()
 			return True
