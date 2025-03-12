@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-01-26 03:17+0200\n"
+"PO-Revision-Date: 2025-03-12 19:01+0200\n"
 "Last-Translator: kvinto\n"
 "Language-Team: kvinto\n"
 "Language: uk_UA\n"
@@ -1159,6 +1159,9 @@ msgstr "Альтернативний режим нумерації"
 msgid "Alternative services tuner priority"
 msgstr "Пріоритет використання тюнерів"
 
+msgid "Always"
+msgstr "Завжди"
+
 msgid "Always ask"
 msgstr "Завжди запитувати"
 
@@ -1814,9 +1817,6 @@ msgstr "Записати на DVD"
 msgid "Burundi"
 msgstr "Бурундія"
 
-msgid "Bus: "
-msgstr "Шина: "
-
 msgid "By default, SNR will be shown in dB (when supported by the tuner). This setting forces SNR to be shown as a percentage instead."
 msgstr "За замовчуванням, SNR показується в дБ (якщо підтримує тюнер). при включенні параметра SNR буде показуватися у відсотках."
 
@@ -2087,6 +2087,9 @@ msgstr "Канал"
 msgid "Channel Info"
 msgstr "Інформація про канал"
 
+msgid "Channel Number"
+msgstr "Номер Каналу"
+
 msgid "Channel Selection"
 msgstr "Вибір Каналів"
 
@@ -2162,8 +2165,8 @@ msgstr "Розділ:"
 msgid "Check"
 msgstr "Перевірити"
 
-msgid "Check the internet connection again"
-msgstr "Перевірити підключення до Інтернету ще раз"
+msgid "Check the internet connection"
+msgstr "Перевірити підключення до Інтернету"
 
 msgid "Checking ONID/TSID"
 msgstr "Перевірка ONID/TSID"
@@ -2173,6 +2176,9 @@ msgstr "Перевірка Файлової системи..."
 
 msgid "Checking the internet connection."
 msgstr "Перевірка інтернет з'єднання."
+
+msgid "Check the Internet connection again"
+msgstr "Перевірити підключення до Інтернету ще раз"
 
 msgid ""
 "Checking tuner %s\n"
@@ -2657,6 +2663,9 @@ msgstr "Налаштування функції кнопки '0 'коли вік
 
 msgid "Configure the function of the &lt;  &gt; buttons."
 msgstr "Налаштуйте функцію для кнопок < >."
+
+msgid "Configure the function of the < and > buttons."
+msgstr "Налаштуйте функцію кнопок < та >."
 
 msgid "Configure the gateway."
 msgstr "Налаштування шлюза."
@@ -3565,9 +3574,6 @@ msgstr "Пряме відтворення зв'язаних епізодів б�
 msgid "Directory"
 msgstr "Каталог"
 
-msgid "Directory %s does not exist."
-msgstr "Каталогу %s не існує."
-
 msgid "Directory browser"
 msgstr "Провідник каталогів"
 
@@ -3724,9 +3730,6 @@ msgid ""
 msgstr ""
 "Дійсно хочете перевірити файлову систему?\n"
 "Це займе деякий час!"
-
-msgid "Do you really want to delete %s?"
-msgstr "Ви дійсно хочете видалити %s?"
 
 msgid ""
 "Do you really want to download\n"
@@ -4135,8 +4138,11 @@ msgstr "Включити блимання"
 msgid "Enable blink functionality for some areas like record icon."
 msgstr "Включити функцію миготіння для деяких значень, наприклад значка запису."
 
-msgid "Enable blinking REC symbol on the LCD display"
-msgstr "Включити блимаючий символ запису на LCD дисплеї"
+msgid "Enable blinking rec symbol on the LCD Display in Standby."
+msgstr "Показати у режимі очікування значок Запис на LCD дисплеї."
+
+msgid "Enable blinking rec symbol on the LCD Display."
+msgstr "Включити миготливий символ запису на LCD дисплеї."
 
 msgid "Enable bluetooth audio"
 msgstr "Включити аудіо Bluetooth"
@@ -4530,9 +4536,6 @@ msgstr "Вийти з медіапрогравача?"
 msgid "Exit mediaplayer"
 msgstr "Вийти з медіапрогравача"
 
-msgid "Exit movie list"
-msgstr "Закрити список фільмів"
-
 msgid "Exit movie player?"
 msgstr "Вийти з відео плеєра?"
 
@@ -4822,9 +4825,6 @@ msgstr "URL фіду"
 msgid "Fiji"
 msgstr "Фіджі"
 
-msgid "File system"
-msgstr "Файлова Система"
-
 msgid "Filesystem Check"
 msgstr "Перевірка файлової системи"
 
@@ -4839,6 +4839,9 @@ msgstr "Перевірка файлової системи"
 
 msgid "File System Check"
 msgstr "Перевірка Файлової Системи"
+
+msgid "File system"
+msgstr "Файлова Система"
 
 msgid "Final position at"
 msgstr "Кінцева позиція в"
@@ -5600,6 +5603,9 @@ msgstr "Якщо встановлено 'ніколи', перезапуск в�
 
 msgid "If 'never', will write crash log despite that for the first crash."
 msgstr "Якщо встановлено 'ніколи', буде написано журнал аварії, незважаючи на те, що це перший раз."
+
+msgid "If EPG available"
+msgstr "Якщо ЕПГ доступний"
 
 msgid "If an action is user-configurable, its help entry will be flagged with a '(C)' suffix."
 msgstr "Якщо дію можна налаштувати користувачем, запис про неї буде позначено символом '(C)'."
@@ -7251,6 +7257,9 @@ msgstr "Не знайдено жодного HDD, або HDD не ініціал
 msgid "No active subservices available."
 msgstr "Немає активних підпослуг."
 
+msgid "No Name"
+msgstr "Без назви"
+
 msgid "No age block"
 msgstr "Вікових обмежень немає"
 
@@ -7513,6 +7522,15 @@ msgstr "OK"
 msgid "ONID"
 msgstr "ONID"
 
+msgid "OSCam/NCam Information"
+msgstr "Oscam-Інфо"
+
+msgid "OSCam/NCam Information Settings"
+msgstr "Налаштування інформації OSCam"
+
+msgid "OSCamInfo: Information"
+msgstr "OSCamInfo: Інформація"
+
 msgid "OSCamInfo: Log"
 msgstr "OSCamInfo: Лог"
 
@@ -7711,7 +7729,7 @@ msgstr "Переписати файли спіннера?"
 msgid "Overwrite bootlogo files during software upgrade?"
 msgstr "Переписати файли завантажувача при оновленні?"
 
-msgid "Overwrite configuration files during software upgrade?"
+msgid "Overwrite configuration files during software update?"
 msgstr "Перезаписати файли конфігурації під час оновлення ПЗ?"
 
 msgid "Overwrite configuration files?"
@@ -8595,6 +8613,9 @@ msgstr "Захистити меню вимкнення"
 msgid "Protect timer menu"
 msgstr "Захистити меню таймерів"
 
+msgid "Protocol"
+msgstr "Протокол"
+
 msgid "Provider"
 msgstr "Провайдер"
 
@@ -8685,10 +8706,10 @@ msgstr "Обраний тип RC"
 msgid "REC Symbol"
 msgstr "Значок запису"
 
-msgid "REC symbol in Standby"
+msgid "REC Symbol in Standby"
 msgstr "REC в Режимі очікування"
 
-msgid "REC symbol in use"
+msgid "REC Symbol in use"
 msgstr "Використовується символ REC"
 
 msgid "Random"
@@ -8700,8 +8721,8 @@ msgstr "Рейтинг визначається мовником - %d"
 msgid "Rating undefined"
 msgstr "Рейтинг не визначений"
 
-msgid "Read Userdata from oscam.conf"
-msgstr "Дані користувача з oscam.conf"
+msgid "Read Userdata from oscam/ncam.conf"
+msgstr "Дані користувача з oscam/ncam.conf"
 
 msgid "Really close without saving settings?"
 msgstr "Вийти без збереження налаштувань?"
@@ -9636,6 +9657,9 @@ msgstr "Виберіть 'Так', щоб показати пакети підп
 msgid "Select 'Yes' to show system plugin packages in the Download Plugins screen."
 msgstr "Виберіть 'Так', щоб відобразити пакети плагінів системи на екрані завантаження плагінів."
 
+msgid "Select 'Yes' to show the 'Movie Selection' entry in the Main Menu. This can provide access to the Movie Selection screen when there is no assigned button on the remote control."
+msgstr "Виберіть 'Так', щоб відобразити запис 'Вибір відео' в Головному Меню. Це може забезпечити доступ до екрана вибору відео, якщо на пульті дистанційного керування немає призначеної кнопки."
+
 msgid "Select 'Yes' to show web link packages in the Download Plugins screen."
 msgstr "Виберіть 'Так', щоб відобразити пакети веб-посилань на екрані завантаження плагінів."
 
@@ -10478,6 +10502,9 @@ msgstr "Показати пакети M2k"
 msgid "Show Media playback Remaining/Elapsed as"
 msgstr "Показати при відтворенні залишилось/минуло як"
 
+msgid "Show Movie Selection in Main Menu"
+msgstr "Показати Вибір відео в Головному Меню"
+
 msgid "Show OpenPLi packages"
 msgstr "Показати пакети OpenPLi"
 
@@ -10588,6 +10615,9 @@ msgstr "Показати за замовчуванням у новому ряд�
 
 msgid "Show detailed event info"
 msgstr "Показати докладну інформацію події"
+
+msgid "Show during operation"
+msgstr "Показувати під час роботи"
 
 msgid "Show event details"
 msgstr "Показати деталі події"
@@ -10709,6 +10739,9 @@ msgstr "Показати пакети, які будуть оновлені"
 msgid "Show picon background color"
 msgstr "Показати фоновий колір для піконів"
 
+msgid "Show picon folder name"
+msgstr "Показати назву папки піконів"
+
 msgid "Show picons in channel selection list"
 msgstr "Показати пікони в списку вибору каналів"
 
@@ -10810,6 +10843,12 @@ msgstr "Відображати під-меню"
 
 msgid "Show subservice selection"
 msgstr "Показати вибір підканалів"
+
+msgid "Show subservices"
+msgstr "Показати підканали"
+
+msgid "Show subservices *"
+msgstr "Показати підканали *"
 
 msgid "Show subtitle selection"
 msgstr "Показати вибір субтитрів"
@@ -11111,8 +11150,12 @@ msgstr "Дії кнопок в меню Обновлення ПЗ"
 msgid "Software information"
 msgstr "Інформація про ПЗ"
 
-msgid "Software update starting, please wait."
-msgstr "Починається оновлення ПЗ, зачекайте."
+msgid ""
+"Software update starting, please wait.\n"
+"\n"
+msgstr ""
+"Починається оновлення ПЗ, зачекайте.\n"
+"\n"
 
 msgid "Solomon Islands"
 msgstr "Соломонові острови"
@@ -11805,7 +11848,7 @@ msgstr "ТЕКСТ"
 
 msgid "TRANSLATOR_INFO"
 msgstr ""
-"Переклад:  kvinto - 31.01.2025\n"
+"Переклад:  kvinto - 12.03.2025\n"
 "Пошта:  badsystem@ukr.net"
 
 msgid "TS file is too large for ISO9660 level 1!"
@@ -12174,6 +12217,12 @@ msgstr "Цей параметр дозволяє Вам вибрати спос�
 msgid "This option allows you choose the background color of transparent picons."
 msgstr "Цей параметр дозволяє Вам вибрати колір фону для прозорих піконів."
 
+msgid "This option allows you choose the name of folder picons."
+msgstr "Ця опція дозволяє вибрати назву папки піконів."
+
+msgid "This option allows you choose the option for Subservice indicator or selection."
+msgstr "Ця опція дозволяє вибрати опцію для показу, або вибору субканалу."
+
 msgid "This option allows you enable smoothing filter to control the dithering process."
 msgstr "Цей параметр дозволяє Вам активувати згладжує фільтр, щоб контролювати процес відбору."
 
@@ -12233,6 +12282,9 @@ msgstr "Ця опція дозволяє вибрати спосіб відоб�
 
 msgid "This option allows you to choose how to display elapsed time. As + or -"
 msgstr "Цей параметр дозволяє Вам вибрати, як показати минулий час, як + або -"
+
+msgid "This option allows you choose if the display shows the time, channel number or nothing during operation."
+msgstr "Ця опція дозволяє вибрати відображення на дисплеї під час роботи час, номер каналу чи нічого."
 
 msgid "This option allows you to choose whether or not to display genre information for the event."
 msgstr "Цей параметр дозволяє Вам вибрати, відображати інформацію про жанр передачі чи ні."
@@ -13875,6 +13927,9 @@ msgstr "Білий"
 msgid "Width"
 msgstr "Ширина"
 
+msgid "Wipe Storage Device"
+msgstr "Очистити пристрій зберігання"
+
 msgid "Wireless LAN"
 msgstr "Безпровідний адаптер"
 
@@ -14091,6 +14146,9 @@ msgstr "Ваш PIN-код - 0000. Це PIN-код за замовчування�
 msgid "Your is rebooting"
 msgstr "Ваш приймач перезавантажується"
 
+msgid "Your %s %s is rebooting"
+msgstr "Ваш %s %s перезавантажується"
+
 msgid "Your Receiver has a Software problem detected. Since the last reboot it has occurred %d times.\n"
 msgstr "У Вашому приймачі виявлено проблему з ПЗ. Після останнього перезавантаження воно пройшло %d разів.\n"
 
@@ -14137,8 +14195,8 @@ msgstr "Ваш приймач може використовувати оптим
 msgid "Your receiver can use tone amplitude. Consult your receiver's manual for more information."
 msgstr "Ваш приймач може використовувати тоновий сигнал. Для отримання додаткової інформації зверніться до посібника користувача."
 
-msgid "Your receiver does not have an internet connection"
-msgstr "Ваш приймач не підключений до інтернету"
+msgid "The %s %s does not have an Internet connection."
+msgstr "Ваш %s %s не підключений до інтернету."
 
 msgid ""
 "Your receiver is now ready to be used.\n"
