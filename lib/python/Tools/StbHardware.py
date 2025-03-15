@@ -71,13 +71,6 @@ def getBoxRCType():
 	return rctype
 
 
-def getDemodVersion():
-	version = "unknown"
-	if isfile("/proc/stb/info/nim_firmware_version"):
-		version = fileReadLine("/proc/stb/info/nim_firmware_version", "unknown", source=MODULE_NAME).strip()
-	return version
-
-
 def getFPVersion():
 	version = "unknown"
 	if isfile("/proc/stb/info/micomver"):
