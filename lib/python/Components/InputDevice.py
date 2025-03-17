@@ -7,11 +7,11 @@ from struct import pack
 from enigma import eRCInput
 
 from keyids import KEYIDS, KEYIDNAMES
-from Components.config import ConfigSubsection, ConfigInteger, ConfigSelection, ConfigYesNo, ConfigText, ConfigSlider, config
+from Components.config import ConfigSelection, ConfigSlider, ConfigSubsection, ConfigText, ConfigYesNo, config
 from Components.Console import Console
 from Components.International import international
 from Components.SystemInfo import BoxInfo
-from Tools.Directories import SCOPE_KEYMAPS, SCOPE_SKINS, fileReadLine, fileWriteLine, fileReadLines, fileReadXML, resolveFilename
+from Tools.Directories import SCOPE_KEYMAPS, SCOPE_SKINS, fileReadLine, fileReadLines, fileReadXML, fileWriteLine, resolveFilename
 
 MODULE_NAME = __name__.split(".")[-1]
 
@@ -147,45 +147,43 @@ class Keyboard:
 	KEYBOARD_DISPLAY_NAME = 3
 
 	def __init__(self):
-		self.keyboardMaps = []
-		for keyboardMapInfo in sorted(listdir(resolveFilename(SCOPE_KEYMAPS))):
-			if keyboardMapInfo.endswith(".info"):
-				lines = []
-				lines = fileReadLines(resolveFilename(SCOPE_KEYMAPS, keyboardMapInfo), lines, source=MODULE_NAME)
-				keyboardMapFile = None
-				keyboardMapName = None
-				for line in lines:
-					key, val = [x.strip() for x in line.split("=", 1)]
-					if key == "kmap":
-						keyboardMapFile = val
-					elif key == "name":
-						keyboardMapName = val
-				if keyboardMapFile and keyboardMapName:
-					keyboardMapPath = resolveFilename(SCOPE_KEYMAPS, keyboardMapFile)
-					if isfile(keyboardMapPath):
+		self.keyboards = []
+		keyboards = fileReadXML(resolveFilename(SCOPE_KEYMAPS, "keyboards.xml"), source=MODULE_NAME)
+		if keyboards is not None:
+			for keyboard in sorted(keyboards.findall("keyboard"), key=lambda keyboard: (keyboard.tag, keyboard.get("name"))):
+				keyboardKmap = keyboard.attrib.get("kmap")
+				keyboardName = keyboard.attrib.get("name")
+				if keyboardKmap and keyboardName:
+					keyboardKmapPath = resolveFilename(SCOPE_KEYMAPS, keyboardKmap)
+					if isfile(keyboardKmapPath):
 						if config.crash.debugKeyboards.value:
-							print(f"[InputDevice] Adding keyboard definition '{keyboardKmapFile}' for '{keyboardMapName}'.")
-						self.keyboardMaps.append((keyboardMapFile, keyboardMapName))
+							print(f"[InputDevice] Adding keyboard definition '{keyboardKmap}' for '{keyboardName}'.")
+						self.keyboards.append((keyboardKmap, keyboardKmapPath, keyboardName, _(keyboardName)))
 					else:
-						print(f"[InputDevice] Error: Keyboard definition is invalid!  (kmap='{keyboardKmapFile}', name='{keyboardMapName}')")
+						print(f"[InputDevice] Error: Keyboard definition '{keyboardKmapPath}' doesn't exist for '{keyboardName}'!")
 				else:
-					print(f"[InputDevice] Error: Keyboard definition is invalid!  (kmap='{keyboardKmapFile}', name='{keyboardMapName}')")
-		config.inputDevices.keyboardMap = ConfigSelection(choices=self.keyboardMaps, default=self.getDefaultKeyboardMap())
+					print(f"[InputDevice] Error: Keyboard definition is invalid!  (kmap='{keyboardKmap}', name='{keyboardName}')")
+		languageDefault = f"{international.getLanguageKeyboard()}.kmap"
+		keyboardChoices = []
+		default = 0
+		for index, keyboard in enumerate(self.keyboards):
+			keyboardChoices.append((index, keyboard[self.KEYBOARD_DISPLAY_NAME]))
+			if languageDefault == keyboard[self.KEYBOARD_KMAP]:
+				print(f"[InputDevice] Default keyboard identified as '{keyboard[self.KEYBOARD_DISPLAY_NAME]}' using '{keyboard[self.KEYBOARD_KMAP]}'.")
+				default = index
+		config.inputDevices.keyboardsIndex = ConfigSelection(default=default, choices=keyboardChoices)
+		self.loadKeyboard(config.inputDevices.keyboardsIndex.value)
 
-	def getDefaultKeyboardMap(self):
-		# locale = international.getLocale()
-		locale = "en_US"  # language.getLanguage()
-		if locale:
-			for keyboardMap in self.keyboardMaps:  # See if there is a keyboard keymap specific to the current locale.
-				if keyboardMap[0].startswith(locale):
-					return keyboardMap[0]
-		# language = international.getLanguage()
-		language = locale.split("_")[0]
-		if language:
-			for keyboardMap in self.keyboardMaps:  # See if there is a keyboard keymap specific to the current language.
-				if keyboardMap[0].startswith(language):
-					return keyboardMap[0]
-		return "default.kmap"
+	def loadKeyboard(self, index):
+		if 0 <= index < len(self.keyboards):
+			path = self.keyboards[index][self.KEYBOARD_PATH]
+			print(f"[InputDevice] Loading selected keyboard '{self.keyboards[index][self.KEYBOARD_NAME]}' from '{path}'.")
+			if isfile(path):
+				Console().ePopen(f"/sbin/loadkmap < {path}")
+			else:
+				print(f"[InputDevice] Error: Keyboard definition '{path}' does not exist!")
+		else:
+			print(f"[InputDevice] Error: Keyboard definition index '{index}' is invalid!")
 
 
 class RemoteControl:
@@ -197,7 +195,6 @@ class RemoteControl:
 	knownCompatibleRemotes = [
 		("gb0", "gb1", "gb2", "gb3", "gb4"),
 		("ini0", "ini1", "ini2", "ini3", "ini4", "ini5", "ini6", "ini7", "ini8"),
-		("wetek", "wetek2", "wetek3"),
 		("zgemma1", "zgemma2", "zgemma3", "zgemma4", "zgemma5", "zgemma6", "zgemma7", "evo6", "evo7")
 	]
 

@@ -3,7 +3,7 @@ installdir = $(pkglibdir)/python/Screens
 install_PYTHON = \
 	AudioSelection.py ChannelSelection.py CopyFiles.py InfoBar.py \
 	Menu.py	MessageBox.py Screen.py ServiceScan.py TimerEdit.py \
-	MovieSelection.py Setup.py About.py HarddiskSetup.py FixedMenu.py FlashExpander.py \
+	MovieSelection.py Setup.py HarddiskSetup.py FixedMenu.py FlashExpander.py \
 	Satconfig.py ScanSetup.py NetworkSetup.py Ci.py TimerEntry.py Volume.py VolumeControl.py \
 	EpgSelection.py EventView.py Standby.py ServiceInfo.py \
 	InfoBarGenerics.py HelpMenu.py Wizard.py __init__.py \
@@ -19,4 +19,4 @@ install_PYTHON = \
 	Hotkey.py StreamingClientsInfo.py SoftcamSetup.py SetupFallbacktuner.py \
 	CronTimer.py OScamInfo.py LogManager.py Time.py OSDCalibration.py \
 	QuadPiP.py FlashManager.py MultiBootManager.py ImageBackup.py SkinSelection.py \
-	SwapManager.py DeviceManager.py VolumeAdjust.py
+	SwapManager.py DeviceManager.py VolumeAdjust.py Information.py

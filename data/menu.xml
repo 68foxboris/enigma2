@@ -27,17 +27,24 @@
 		</menu>
 		<item key="scart_switch" level="1" text="VCR scart" conditional="config.usage.show_vcr_scart.value" requires="ScartSwitch"><code>self.session.scart.VCRSbChanged(3)</code></item>
 
-		<menu key="information" level="0" text="Information">
-			<item key="service_info_screen" level="1" text="Service"><screen module="About" screen="ServiceInformation"/></item>
-			<item key="distribution_info_screen" text="OpenPli Information" weight="5"><screen module="About" screen="DistributionInformation"/></item>
-			<item key="receiver_info_screen" text="Receiver Information" weight="10"><screen module="About" screen="ReceiverInformation"/></item>
-			<item key="device_screen" text="Tuner Information" weight="15"><screen module="About" screen="TunerInformation"/></item>
-			<item key="device_info_screen" text="Storage" weight="25"><screen module="About" screen="StorageInformation"/></item>
-			<item key="memory_info_screen" text="Memory" weight="30"><screen module="About" screen="MemoryInformation"/></item>
-			<item key="network_info_screen" text="Network" weight="35"><screen module="About" screen="NetworkInformation"/></item>
-			<item key="geolocation_info_screen" text="Geolocation" weight="45"><screen module="About" screen="GeolocationInformation"/></item>
-			<item key="multiboot_info_screen" text="MultiBoot" weight="40" requires="canMultiBoot"><screen module="About" screen="MultiBootInformation"/></item>
+		<!-- Menu / Information -->
+		<menu key="information" level="0" text="Information" description="This menu contains selections to display information about the receiver." weight="5">
+			<item key="service_info_screen" level="1" text="Service"><screen module="Information" screen="ServiceInformation"/></item>
+			<item key="distribution_info_screen" text="OpenPli Information" weight="5"><screen module="Information" screen="DistributionInformation"/></item>
+			<item key="receiver_info_screen" text="Receiver Information" weight="10"><screen module="Information" screen="ReceiverInformation"/></item>
+			<item key="device_screen" text="Tuner Information" weight="15"><screen module="Information" screen="TunerInformation"/></item>
+			<item key="device_info_screen" text="Storage" weight="25"><screen module="Information" screen="StorageInformation"/></item>
+			<item key="memory_info_screen" text="Memory" weight="30"><screen module="Information" screen="MemoryInformation"/></item>
+			<item key="network_info_screen" text="Network" weight="35"><screen module="Information" screen="NetworkInformation"/></item>
+			<item key="geolocation_info_screen" text="Geolocation" weight="45"><screen module="Information" screen="GeolocationInformation"/></item>
+			<item key="multiboot_info_screen" text="MultiBoot" weight="40" requires="canMultiBoot"><screen module="Information" screen="MultiBootInformation"/></item>
 			<item key="streaming_clients_info_screen" text="Streaming clients info"><screen module="StreamingClientsInfo"/></item>
+			<item key="build_info_screen" level="2" text="Build" weight="55" conditional="config.usage.informationShowAllMenuScreens.value"><screen module="Information" screen="BuildInformation" /></item>
+			<item key="system_info_screen" level="2" text="System" weight="60" conditional="config.usage.informationShowAllMenuScreens.value"><screen module="Information" screen="SystemInformation" /></item>
+			<item key="commit_info_screen" level="2" text="Commit" weight="65" conditional="config.usage.informationShowAllMenuScreens.value"><screen module="Information" screen="CommitInformation" /></item>
+			<item key="debug_info_screen" level="2" text="Debug" weight="70" conditional="config.usage.informationShowAllMenuScreens.value"><screen module="Information" screen="DebugInformation" /></item>
+			<item key="translation_info_screen" level="2" text="Translation" weight="75" conditional="config.usage.informationShowAllMenuScreens.value"><screen module="Information" screen="TranslationInformation" /></item>
+			<item key="service_info_screen" level="1" text="Service" weight="80"><screen module="Information" screen="ServiceInformation" /></item>
 		</menu>
 		<item key="movie_selection" level="0" text="Movie Selection" weight="8" conditional="config.usage.movieSelectionInMenu.value"><screen module="MovieSelection" screen="MovieSelection" /></item>
 		<item key="plugin_selection" level="0" text="Plugin Browser"><screen module="PluginBrowser" screen="PluginBrowser"/></item>

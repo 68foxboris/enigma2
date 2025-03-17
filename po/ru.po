@@ -7700,6 +7700,12 @@ msgstr "Включите эту опцию, чтобы добавить имен
 msgid "Enable this option to add storage device information detected during system boot and hot plug events to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить в файл журнала отладки информацию об устройствах хранения, обнаруженных во время загрузки системы и событий горячего подключения."
 
+msgid "Enable this option to add timer debugging data to the debug log file."
+msgstr "Включите этот параметр, чтобы добавить данные отладки таймера в файл лога отладки."
+
+msgid "Enable this option to show all the available Information screens in the Information menu item list."
+msgstr "Включите эту опцию, чтобы отобразить все доступные информационные экраны в списке пунктов меню 'Информация'."
+
 msgid "Enable this option to show unknown storage devices in device manager."
 msgstr "Включите эту опцию, чтобы отображать неизвестные устройства хранения данных в диспетчере устройств."
 
@@ -7708,6 +7714,9 @@ msgstr "Включите эту настройку, если Вашей сист
 
 msgid "Enable timer"
 msgstr "Включить таймер"
+
+msgid "Enable to add some extra spacing to the Information screens. This can improve readability."
+msgstr "Включите, чтобы добавить дополнительный интервал к информационным экранам. Это может улучшить читаемость."
 
 msgid "Enable timer conflict detection"
 msgstr "Включить обнаружение конфликтов таймера"
@@ -11794,6 +11803,9 @@ msgstr "Сетевое имя (SSID)"
 
 msgid "Network scan"
 msgstr "Поиск сети"
+
+msgid "Network storage on"
+msgstr "Сетевое хранилище включено"
 
 msgid "Network setup"
 msgstr "Настройка сети"
@@ -16540,6 +16552,9 @@ msgstr "Показать дополнительное значение полз�
 msgid "Show alternatives"
 msgstr "Показать альтернативу"
 
+msgid "Show all Information screens"
+msgstr "Показывать все информационные экраны"
+
 msgid "Show animation while busy"
 msgstr "Показывать спиннер при бездействии системы"
 
@@ -16620,6 +16635,9 @@ msgstr "Показать выбор дополнений"
 
 msgid "Show extensions..."
 msgstr "Показать дополнения..."
+
+msgid "Show extra spacing in Information"
+msgstr "Показать дополнительный интервал в информации"
 
 msgid "Show favorites list"
 msgstr "Показать список фаворитов"
@@ -16726,6 +16744,10 @@ msgstr "Показывать пиконы при вводе номера кан�
 msgid "Show picons in service list"
 msgstr "Показывать пиконы в списке каналов"
 
+msgid "Show picon folder name"
+msgstr "Показать имя папки picon"
+
+
 msgid "Show picons in channel selection list"
 msgstr "Показать пиконы в списке выбора каналов"
 
@@ -16806,6 +16828,9 @@ msgstr "Показать колонки для названий событий"
 
 msgid "Show subservice selection"
 msgstr "Показать выбор подканалов"
+
+msgid "Show subservices"
+msgstr "Показывать подканалы"
 
 msgid "Show subtitle selection"
 msgstr "Показать меню выбора субтитров"
@@ -18612,6 +18637,9 @@ msgstr "Эта опция позволяет уменьшить блок-шум 
 
 msgid "This option allows to set the level of dynamic contrast of the picture."
 msgstr "Эта опция позволяет установить уровень динамической контрастности изображения."
+
+msgid "This option allows you choose the name of folder picons."
+msgstr "Эта опция позволяет вам выбрать имя папки picons."
 
 msgid "This option allows you to switch audio to bluetooth speakers."
 msgstr "Эта опция позволяет переключать звук на блютуз динамики."
