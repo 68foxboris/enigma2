@@ -1989,66 +1989,136 @@ class TunerInformation(InformationBase):
 		InformationBase.__init__(self, session)
 		self.setTitle(_("Tuner Information"))
 		self.skinName.insert(0, "TunerInformation")
+		self.frontEndFields = {
+			"DVB API version": "api",
+			"Name": "name",
+			"Frequency": "frequency",
+			"Symbolrate": "symbolrate",
+			"Capabilities": "capabilities",
+			"Delivery Systems": "delivery"
+		}
+		self.broadcasts = ("DVB-S", "DVB-S2", "DVB-C", "DVB-T", "DVB-T2", "ATSC", "ISDB-T", "DTMB")
+		self.tunerList = []
 
+	def fetchInformation(self):
+		self.informationTimer.stop()
+		self.tunerList = []
+		curIndex = -1
+		for count, nim in enumerate(nimmanager.nimList()):
+			tunerData = {}
+			tuner, model = (x.strip() for x in nim.split(":", 1))
+			tuner = tuner.strip("Tuner").strip()
+			if self.tunerList and self.tunerList[curIndex]["model"] == model:
+				self.tunerList[curIndex]["end"] = tuner
+				continue
+			curIndex += 1
+			tunerData["start"] = tuner
+			tunerData["end"] = tuner
+			tunerData["model"] = model
+			for key, value in [(x.strip(), y.strip()) for x, y in [x.split(":", 1) for x in eDVBResourceManager.getInstance().getFrontendCapabilities(count).splitlines()]]:
+				if key in self.frontEndFields:
+					tunerData[self.frontEndFields[key]] = value
+				else:
+					print(f"[Information] Note: Unexpected field '{key}' in front-end with data '{value}'!")
+			if tunerData.get("delivery"):
+				broadcasts = []
+				for broadcast in self.broadcasts:
+					if broadcast.replace("-", "") in tunerData["delivery"]:
+						broadcasts.append(broadcast)
+				if broadcasts:
+					tunerData["broadcast"] = ", ".join(broadcasts)
+			self.tunerList.append(tunerData)
+		for callback in self.onInformationUpdated:
+			callback()
 
 	def displayInformation(self):
+		def parseValues(data):
+			values = {}
+			for item in data.split(","):
+				key, value = item.split("=", 1)
+				values[key] = formatNumber(value)
+			return values
+
+		def formatNumber(number):
+			number = number.strip()
+			value, units = number.split(maxsplit=1) if " " in number else (number, None)
+			if "." in value:
+				format = "%.3f"
+				value = float(value)
+			else:
+				format = "%d"
+				value = int(value)
+			return f"{format_string(format, value, grouping=True)} {units}" if units else format_string(format, value, grouping=True)
+
+		def extractModes(data, mode):
+			values = []
+			if data:
+				mode = f"{mode} "
+				length = len(mode)
+				for item in data.split(","):
+					if item.startswith(mode):
+						values.append(item[length:].capitalize())
+			return sorted(values)
+
+		def sortQAM(values):
+			if "Auto" in values:
+				values.remove("Auto")
+				addAuto = True
+			else:
+				addAuto = False
+			values = [str(x) for x in sorted([int(x) for x in values])]
+			if addAuto:
+				values.append("Auto")
+			return values
+
 		info = []
 		info.append(formatLine("H", _("Tuner information for %s %s") % getBoxDisplayName()))
 		info.append("")
-		nims = nimmanager.nimList()
-		descList = []
-		curIndex = -1
-		for count in range(len(nims)):
-			data = nims[count].split(":")
-			idx = data[0].strip("Tuner").strip()
-			desc = data[1].strip()
-			if descList and descList[curIndex]["desc"] == desc:
-				descList[curIndex]["end"] = idx
-			else:
-				descList.append({
-					"desc": desc,
-					"start": idx,
-					"end": idx
-				})
-				curIndex += 1
-			count += 1
-		for count in range(len(descList)):
-			data = descList[count]["start"] if descList[count]["start"] == descList[count]["end"] else ("%s-%s" % (descList[count]["start"], descList[count]["end"]))
-			info.append(formatLine("P1", "Tuner %s:" % data))
-			data = descList[count]["start"] if descList[count]["start"] == descList[count]["end"] else ("%s-%s" % (descList[count]["start"], descList[count]["end"]))
-			info.append(formatLine("P2", "%s" % descList[count]["desc"]))
-		info.append(formatLine("P1", _("Tuner type"), "%s" % getBoxProcTypeName().split("-")[1])) if getBoxProcTypeName() != _("Unknown") else ""
-		# info.append("")
-		# info.append(formatLine("H", _("Logical tuners")))  # Each tuner is a listed separately even if the hardware is common.
-		# info.append("")
-		# nims = nimmanager.nimListCompressed()
-		# for count in range(len(nims)):
-		# 	tuner, type = (x.strip() for x in nims[count].split(":", 1))
-		# 	info.append(formatLine("P1", tuner, type))
-		info.append("")
-		info.append(formatLine("", _("DVB API"), about.getDVBAPI()))
-		dvbFeToolTxt = ""
-		for nim in range(nimmanager.getSlotCount()):
-			dvbFeToolTxt += eDVBResourceManager.getInstance().getFrontendCapabilities(nim)
-		dvbApiVersion = dvbFeToolTxt.splitlines()[0].replace("DVB API version: ", "").strip() if dvbFeToolTxt else _("N/A")
-		info.append(formatLine("", _("DVB API version"), dvbApiVersion))
-		info.append("")
-		info.append(formatLine("", _("Transcoding"), (_("Yes") if BoxInfo.getItem("transcoding") else _("No"))))
-		info.append(formatLine("", _("MultiTranscoding"), (_("Yes") if BoxInfo.getItem("multitranscoding") else _("No"))))
-		info.append("")
-		info.append(formatLine("", _("DVB-C"), (_("Yes") if "DVBC" in dvbFeToolTxt or "DVB-C" in dvbFeToolTxt else _("No"))))
-		info.append(formatLine("", _("DVB-S"), (_("Yes") if "DVBS" in dvbFeToolTxt or "DVB-S" in dvbFeToolTxt else _("No"))))
-		info.append(formatLine("", _("DVB-T"), (_("Yes") if "DVBT" in dvbFeToolTxt or "DVB-T" in dvbFeToolTxt else _("No"))))
-		info.append("")
-		info.append(formatLine("", _("Multistream"), (_("Yes") if "MULTISTREAM" in dvbFeToolTxt else _("No"))))
-		info.append("")
-		info.append(formatLine("", _("ANNEX-A"), (_("Yes") if "ANNEX_A" in dvbFeToolTxt or "ANNEX-A" in dvbFeToolTxt else _("No"))))
-		info.append(formatLine("", _("ANNEX-B"), (_("Yes") if "ANNEX_B" in dvbFeToolTxt or "ANNEX-B" in dvbFeToolTxt else _("No"))))
-		info.append(formatLine("", _("ANNEX-C"), (_("Yes") if "ANNEX_C" in dvbFeToolTxt or "ANNEX-C" in dvbFeToolTxt else _("No"))))
+		for count, tunerData in enumerate(self.tunerList):
+			if count:
+				info.append("")
+			tuner = tunerData["start"] if tunerData["start"] == tunerData["end"] else f"{tunerData['start']} - {tunerData['end']}"
+			info.append(formatLine("S", f"Tuner {tuner}"))
+			if self.extraSpacing:
+				info.append("")
+			name = tunerData.get("name")
+			if name:
+				info.append(formatLine("P1", _("Name"), name))
+			model = tunerData.get("model")
+			if model:
+				info.append(formatLine("P1", _("Type / Model"), model))
+			broadcast = tunerData.get("broadcast")
+			if broadcast:
+				info.append(formatLine("P1", _("Broadcast systems"), broadcast))
+			capabilities = tunerData.get("capabilities")
+			if capabilities:
+				info.append(formatLine("P1", _("Multistream"), (_("Yes") if "MULTISTREAM" in capabilities else _("No"))))
+			frequency = tunerData.get("frequency")
+			if frequency:
+				data = parseValues(frequency)
+				info.append(formatLine("P1", _("Frequency range"), f"{data['min']}  -  {data['max']}  (Step {data['stepsize']})"))
+			symbolrate = tunerData.get("symbolrate")
+			if symbolrate:
+				data = parseValues(symbolrate)
+				info.append(formatLine("P1", _("Symbol rate"), f"{data['min']}  -  {data['max']}"))
+			FEC = extractModes(capabilities, "FEC")
+			if FEC:
+				info.append(formatLine("P1", _("FEC modes"), ", ".join(FEC)))
+			QAM = sortQAM(extractModes(capabilities, "QAM"))
+			if QAM:
+				info.append(formatLine("P1", _("Modulation modes"), ", ".join(QAM)))
+			api = tunerData.get("api")
+			if api:
+				info.append(formatLine("P1", _("DVB API version"), api))
+		if info:
+			info.append("")
+		info.append(formatLine("S", _("Transcoding"), (_("Yes") if BoxInfo.getItem("transcoding") else _("No"))))
+		info.append(formatLine("S", _("MultiTranscoding"), (_("Yes") if BoxInfo.getItem("multitranscoding") else _("No"))))
 		self["information"].setText("\n".join(info))
 
 	def getSummaryInformation(self):
-		return "DVB Information"
+		return "Tuner Information"
+
 
 
 class InformationSummary(ScreenSummary):
