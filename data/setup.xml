@@ -111,6 +111,10 @@
 		<item level="2" text="Hide channel list in radio mode" description="When enabled, the channel selection list will be hidden while listening to a radio channel. When disabled, the option 'Auto play last service in radio mode' is available.">config.usage.e1like_radio_mode</item>
 		<item level="2" text="Auto play last service in radio mode" conditional="not config.usage.e1like_radio_mode.value" description="When enabled, it will automatically play to the last saved radio service when switching to radio mode.">config.usage.e1like_radio_mode_last_play</item>
 	</setup>
+	<setup key="checkupdate" title="Check update Settings">
+		<item level="1" text="check for firmware updates every" description="Choose the time to check for update avilable every...">config.updatecheck.check_update_notifier</item>
+		<item level="1" text="check for firmware updates on start" description="Enable/Disable check for update after reboot or restart box.">config.updatecheck.check_update_on_boot</item>
+	</setup>
 	<setup key="DNS" title="DNS Settings">
 		<item level="0" text="DNS mode" description="Select the mode of the DNS.">config.usage.dnsMode</item>
 		<item level="0" text="DNS suffix" description="Define the DNS suffix.">config.usage.dnsSuffix</item>
