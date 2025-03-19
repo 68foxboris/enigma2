@@ -20,7 +20,7 @@ install_PYTHON = \
 	Opkg.py SelectionList.py Scanner.py SystemInfo.py PackageInfo.py \
 	Task.py Console.py ResourceManager.py TuneTest.py \
 	Keyboard.py Sensors.py FanControl.py HdmiCec.py \
-	Netlink.py InputHotplug.py \
+	Netlink.py InputHotplug.py updatecheck.py \
 	ImportChannels.py PowerOffTimer.py EpgLoadSave.py StackTrace.py \
 	HdmiRecord.py NetworkTime.py VfdSymbols.py FrontPanelLed.py International.py \
 	Storage.py
