@@ -84,7 +84,7 @@ class FCCSupport:
 		self.__event_tracker = None
 		self.onClose = []
 		self.changeEventTracker()
-		BoxInfo.setItem("FCCactive", self.fccSetupActivate)
+		BoxInfo.setMutableItem("FCCactive", self.fccSetupActivate)
 #		from Screens.PictureInPicture import on_pip_start_stop
 #		on_pip_start_stop.append(self.FCCForceStopforPIP)
 
@@ -176,7 +176,7 @@ class FCCSupport:
 
 		if fcc_changed:
 			self.fccmgr.setFCCEnable(int(self.fccSetupActivate))
-			BoxInfo.setItem("FCCactive", self.fccSetupActivate)
+			BoxInfo.setMutableItem("FCCactive", self.fccSetupActivate)
 			curPlaying = self.session.nav.getCurrentlyPlayingServiceReference()
 			if curPlaying:
 				self.session.nav.stopService()
@@ -249,8 +249,7 @@ class FCCSupport:
 		elif int(sref.getData(0)) in (2, 10): # is RADIO?
 			playable = False
 
-		elif sref.toString() in streamrelay.data:
-			playable = False
+		playable = playable and not streamrelay.checkService(sref)
 
 		return playable
 
@@ -509,7 +508,7 @@ def FCCStart(session, **kwargs):
 
 def main(menuid, **kwargs):
 	if menuid == "scan":
-		return [(_("Fast Channel Change"), FCCStart, "FCCSetup", 0)]
+		return [(_("Fast Channel Change"), FCCStart, "FCCSetup", 5)]
 	else:
 		return []
 
