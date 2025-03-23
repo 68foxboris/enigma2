@@ -29,7 +29,6 @@
 
 		<!-- Menu / Information -->
 		<menu key="information" level="0" text="Information" description="This menu contains selections to display information about the receiver." weight="5">
-			<item key="service_info_screen" level="1" text="Service"><screen module="Information" screen="ServiceInformation"/></item>
 			<item key="distribution_info_screen" text="OpenPli Information" weight="5"><screen module="Information" screen="DistributionInformation"/></item>
 			<item key="receiver_info_screen" text="Receiver Information" weight="10"><screen module="Information" screen="ReceiverInformation"/></item>
 			<item key="device_screen" text="Tuner Information" weight="15"><screen module="Information" screen="TunerInformation"/></item>
