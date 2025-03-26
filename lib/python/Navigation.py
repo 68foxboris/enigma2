@@ -158,18 +158,18 @@ class Navigation:
 			return 1
 		print("[Navigation] playing ref", ref and ref.toString())
 
-		self.currentlyPlayingServiceReference = ref
-		self.currentlyPlayingServiceOrGroup = ref
-		self.originalPlayingServiceReference = ref
-
-		if InfoBarInstance and current_service_source:
-			current_service_source.serviceref = ref
-			current_service_source.newService(ref)
-			InfoBarInstance.session.screen["Event_Now"].updateSource(self.currentlyPlayingServiceReference)
-			InfoBarInstance.session.screen["Event_Next"].updateSource(self.currentlyPlayingServiceReference)
-			InfoBarInstance.serviceStarted()
-
 		if not checkParentalControl or parentalControl.isServicePlayable(ref, boundFunction(self.playService, checkParentalControl=False, forceRestart=forceRestart, adjust=(count > 1 and [0, session] or adjust)), session=session):
+
+			self.currentlyPlayingServiceReference = ref
+			self.currentlyPlayingServiceOrGroup = ref
+			self.originalPlayingServiceReference = ref
+
+			if InfoBarInstance and current_service_source:
+				current_service_source.newService(ref)
+				InfoBarInstance.session.screen["Event_Now"].updateSource(self.currentlyPlayingServiceReference)
+				InfoBarInstance.session.screen["Event_Next"].updateSource(self.currentlyPlayingServiceReference)
+				InfoBarInstance.serviceStarted()
+
 			if ref.flags & eServiceReference.isGroup:
 				oldref = self.currentlyPlayingServiceReference or eServiceReference()
 				playref = getBestPlayableServiceReference(ref, oldref)
