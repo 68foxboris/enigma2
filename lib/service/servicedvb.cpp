@@ -10,6 +10,9 @@
 #include <lib/dvb/db.h>
 #include <lib/dvb/decoder.h>
 
+#include <lib/base/cfile.h>
+#include <lib/dvb/pmtparse.h>
+
 #include <lib/components/file_eraser.h>
 #include <lib/service/servicedvbrecord.h>
 #include <lib/service/event.h>
@@ -2366,6 +2369,18 @@ int eDVBServicePlay::selectAudioStream(int i)
 		return -4;
 	}
 
+#ifdef PASSTHROUGHT_FIX
+	if (apidtype == eDVBPMTParser::audioStream::atAC3 || apidtype == eDVBPMTParser::audioStream::atAAC || apidtype == eDVBPMTParser::audioStream::atDDP) {
+		// Check if the audio type is AC3, AAC, or DDP and ensure passthrough mode is set correctly.
+		std::string pass = CFile::read("/proc/stb/audio/ac3");
+		if(pass.find("passthrough") != std::string::npos)
+		{
+			eTrace("[eDVBServicePlay] Setting 'passthrough' to force correct operation");
+			CFile::writeStr("/proc/stb/audio/ac3", "passthrough");
+		}
+	}
+#endif
+
 	if (position != -1)
 	{
 		ret = seekTo(position);
@@ -2374,7 +2389,7 @@ int eDVBServicePlay::selectAudioStream(int i)
 
 	int rdsPid = apid;
 
-		/* if timeshift is not active and we are not in pip mode, check if we need to enable the rds reader */
+	/* if we are not in PVR mode, time shift is not active and we are not in pip mode, check if we need to enable the rds reader */
 	if (!(m_timeshift_active || m_decoder_index || m_have_video_pid || !m_is_primary))
 	{
 		int different_pid = program.videoStreams.empty() && program.audioStreams.size() == 1 && program.audioStreams[stream].rdsPid != -1;
