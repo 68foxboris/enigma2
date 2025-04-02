@@ -111,6 +111,7 @@ public:
 	void setProgressbarBorderWidth(int value) { m_progressbar_border_width = value; }
 	void setNonplayableMargins(int value) { m_nonplayable_margins = value; }
 	void setItemsDistances(int value) { m_items_distances = value; }
+	void setTextSeparator(const std::string &string) { m_separator = string; }
 
 	void setProgressUnit(const std::string &string) { m_progress_unit = string; }
 	void setNumberingMode(int numberingMode) { m_numbering_mode = numberingMode; }
@@ -219,6 +220,7 @@ private:
 	int m_items_distances;
 
 	std::string m_progress_unit;
+	std::string m_separator;
 	int m_numbering_mode;
 };
 
