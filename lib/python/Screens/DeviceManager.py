@@ -802,8 +802,8 @@ class DeviceManager(Screen):
 					fstab = fileReadLines("/etc/fstab", default=[], source=MODULE_NAME)
 					label = storageDevice.get("label")
 					device = storageDevice.get("device")
-					choiceList = [(f"/media/{x}", f"/media/{x}") for x in self.storageDevices.getMountPoints(storageDevice.get("deviceType"), fstab, onlyPossible=True) + [device, label]]
-					self.session.openWithCallback(keyBlueCallback, ChoiceBox, choiceList=choiceList, buttonList=[], windowTitle=title)
+					list = [(f"/media/{x}", f"/media/{x}") for x in self.storageDevices.getMountPoints(storageDevice.get("deviceType"), fstab, onlyPossible=True) + [device, label]]
+					self.session.openWithCallback(keyBlueCallback, ChoiceBox, list=list, keys=[], windowTitle=title)
 				self.updateDevices()
 
 	def updateDevices(self):
