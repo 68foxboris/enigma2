@@ -3,7 +3,7 @@ name: Ruff Linter
 on:
   push:
     branches:
-      - master
+      - develop
   pull_request:
 
 jobs:

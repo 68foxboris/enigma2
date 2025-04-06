@@ -3,7 +3,7 @@ name: Pylint Code Check
 on:
   push:
     branches:
-      - master
+      - develop
   pull_request:
 
 jobs:
