@@ -22,7 +22,7 @@ class RcModel:
 			remote = "et6x00"
 		elif procmodel == "et6500":
 			remote = "et6500"
-		elif self.model == "azboxhd" and not procmodel in ("elite", "ultra"):
+		elif self.model == "azboxhd" and not in procmodel ("elite", "ultra"):
 			remote = "azboxhd"
 		elif procmodel in ("elite", "ultra"):
 			remote = "azboxelite"

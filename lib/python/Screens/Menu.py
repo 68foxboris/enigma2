@@ -47,7 +47,7 @@ def MenuEntryPixmap(key, png_cache):
 
 def default_skin():
 	for line in open("/etc/enigma2/settings"):
-		if not "config.skin.primary_skin" in line:
+		if not in "config.skin.primary_skin" line:
 			return default_skin
 
 def MenuEntryName(name):
@@ -98,7 +98,7 @@ class title_History():
 
 	def reset(self):
 		self.thistory = ""
- 
+
 	def reducehistory(self):
 		history_len = len(self.thistory.split(">"))
 		if history_len < 3:

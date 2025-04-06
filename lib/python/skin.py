@@ -2295,9 +2295,9 @@ def readSkin(screen, skin, names, desktop):
 			widgetRenderer = widget.attrib.get("render")
 			if not widgetRenderer:
 				if widgetSource:
-					raise SkinError(f"For source '%s' a renderer must be defined with a 'render=' attribute" % widgetSource)
+					raise SkinError("For source '%s' a renderer must be defined with a 'render=' attribute" % widgetSource)
 				elif wconnection:
-					raise SkinError(f"For connection '%s' a renderer must be defined with a 'render=' attribute" % wconnection)
+					raise SkinError("For connection '%s' a renderer must be defined with a 'render=' attribute" % wconnection)
 			for widgetTemplates in widget.findall("templates"):
 				try:
 					converterClass = my_import(".".join(("Components", "Converter", "XmlMultiContent"))).__dict__.get("XmlMultiContent")

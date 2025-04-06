@@ -522,7 +522,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			self.showPiP()
 
 	def connectShowHideNotifier(self, fnc):
-		if not fnc in self.onShowHideNotifiers:
+		if not in fnc self.onShowHideNotifiers:
 			self.onShowHideNotifiers.append(fnc)
 
 	def disconnectShowHideNotifier(self, fnc):
@@ -2928,7 +2928,7 @@ class InfoBarInstantRecord:
 		list = []
 		recording = self.recording[:]
 		for x in recording:
-			if not x in self.session.nav.RecordTimer.timer_list:
+			if not in x self.session.nav.RecordTimer.timer_list:
 				self.recording.remove(x)
 			elif x.dontSave and x.isRunning():
 				list.append((x, False))
@@ -3753,7 +3753,7 @@ class InfoBarCueSheetSupport:
 					AddNotificationWithCallback(self.playLastCB, MessageBox, _("Resuming playback"), timeout=2, type=MessageBox.TYPE_INFO)
 
 	def playLastCB(self, answer):
-		if answer == True:
+		if answer:
 			self.doSeek(self.resume_point)
 		self.hideAfterResume()
 

@@ -210,7 +210,7 @@ class InputDeviceSetup(ConfigListScreen, Screen):
 				self["config"].invalidate(self.nameEntry)
 
 		self["config"].list = self.list
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if not in self.selectionChanged self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 		self.selectionChanged()
 

@@ -16,8 +16,10 @@ from Components.Slider import Slider
 from Screens.TextBox import TextBox
 from Tools.BoundFunction import boundFunction
 from urllib.request import urlopen
-import datetime, os
-import gettext, json
+import datetime
+import os
+import gettext
+import json
 
 opkg_ugradable_filename = '/tmp/.opkg_ugradable'
 
@@ -77,9 +79,9 @@ class InstallerUpdateCheck:
             self.timer = eTimer()
             self.timer.callback.append(self.checkForUpdate)
             config.updatecheck.check_update_notifier.addNotifier(self.configChange, initial_call=True)
-            #logdata('config.updatecheck.check_update_on_boot.value', config.updatecheck.check_update_on_boot.value)
+            # logdata('config.updatecheck.check_update_on_boot.value', config.updatecheck.check_update_on_boot.value)
             if config.updatecheck.check_update_on_boot.value:
-                if connected_to_internet() == True:
+                if connected_to_internet():
                        cprinton('[CheckInetrnet] we are Online')
                        self.checkForUpdate()
                 else:
@@ -138,7 +140,7 @@ class InstallerUpdateCheck:
             return count
 
         def upgradableListFinished(self, value):
-            #logdata('value', value)
+            # logdata('value', value)
             self.total_packages = self.getOpkgUpgradale()
             if self.upgradableListData:
                 (cprint('[UpdateCheck] Updates available...'), self.upgradableListData)
@@ -149,11 +151,11 @@ class InstallerUpdateCheck:
             self.startTimer()
 
         def runUpgrade(self, result):
-            #logdata('runUpgrade', result)
+            # logdata('runUpgrade', result)
             if result:
             	from Screens.SoftwareUpdate import SoftwareUpdate
             	self.session.open(SoftwareUpdate)
-            	#self.session.open(UpdatePlugin) # Old method
+            	# self.session.open(UpdatePlugin) # Old method
 
 
 class UpdatePlugin(Screen, ProtectedScreen):

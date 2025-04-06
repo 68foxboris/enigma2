@@ -242,7 +242,7 @@ class MovieList(GUIComponent):
 			self.reloadDelayTimer.start(5000, 1)
 
 	def connectSelChanged(self, fnc):
-		if not fnc in self.onSelectionChanged:
+		if not in fnc self.onSelectionChanged:
 			self.onSelectionChanged.append(fnc)
 
 	def disconnectSelChanged(self, fnc):
@@ -866,7 +866,7 @@ class MovieList(GUIComponent):
 					found = True
 					self.instance.moveSelectionTo(index + currentIndex + 1)
 					break
-		if found == False and currentIndex > 0:
+		if not found and currentIndex > 0:
 			itemsAbove = self.list[1:currentIndex] #first item (0) points parent folder - no point to include
 			for index, item in enumerate(itemsAbove):
 				ref = item[0]

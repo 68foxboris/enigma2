@@ -18,7 +18,7 @@ def LoadPixmap(path, desktop=None, cached=None, width=0, height=0, scaletoFit=0,
 		ptr = loadJPG(path, 1 if cached else 0)
 	elif path[-4:] == ".svg":
 		scale = getDesktop(0).size().height() / 720.0 if height == 0 else 0
-		ptr = loadSVG(path, 0 if cached == False else 1, width, height, scale, scaletoFit, align)
+		ptr = loadSVG(path, 0 if not cache else 1, width, height, scale, scaletoFit, align)
 	elif path[-1:] == ".":
 		# caching mechanism isn't suitable for multi file images, so it's explicitly disabled
 		alpha = loadPNG(path + "a.png", 0, 0)

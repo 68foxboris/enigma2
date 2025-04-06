@@ -54,7 +54,7 @@ class FallbackTimerList():
 		self.list = []
 		try:
 			timers = loads(data.decode('utf-8'))
-			if 'result' in timers and timers['result'] == False:
+			if 'result' in timers and not timers['result']:
 				self.fallback(_("Fallback API did not return a valid result."))
 			else:
 				self.list = [

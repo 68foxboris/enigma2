@@ -117,7 +117,7 @@ class ParentalControlSetup(ConfigListScreen, ProtectedScreen, Screen):
 	def oldPinEntered(self, answer):
 		if answer:
 			self.session.openWithCallback(self.newPinEntered, PinInput, title=_("Please enter the new PIN code"), windowTitle=_("Enter PIN code"))
-		elif answer == False:
+		elif not answer:
 			self.session.open(MessageBox, _("The PIN code you entered is wrong."), MessageBox.TYPE_ERROR, timeout=5)
 
 	def newPinEntered(self, answer):

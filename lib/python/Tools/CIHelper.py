@@ -110,7 +110,7 @@ class CIHelper:
 				refstr = '1:7:0:0:0:0:0:0:0:0:(provider == "%s") && (type == 1) || (type == 17) || (type == 22) || (type == 25) || (type == 31) || (type == 134) || (type == 195) ORDER BY name:%s' % (x, x)
 				myref = eServiceReference(refstr)
 				servicelist = serviceHandler.list(myref)
-				if not servicelist is None:
+				if not servicelist is not:
 					while True:
 						service = servicelist.getNext()
 						if not service.valid():

@@ -47,7 +47,7 @@ class FrontpanelLed(Element):
 		else:
 			val = self.source.value
 
-		(speed, pattern, pattern_4bit) = self.patterns[val] if self.patterns != True else ledPatterns.getLedPatterns(self.which)[val]
+		(speed, pattern, pattern_4bit) = self.patterns[val] if not self.patterns else ledPatterns.getLedPatterns(self.which)[val]
 
 		try:
 			open("/proc/stb/fp/led%d_pattern" % self.which, "w").write("%08x" % pattern)

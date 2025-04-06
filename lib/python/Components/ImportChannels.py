@@ -167,7 +167,7 @@ class ImportChannels:
 			print("[Import Channels] Writing epg.dat file on server box")
 			try:
 				result = loads(self.getUrl(f"{self.url}/api/saveepg", timeout=30).decode("utf-8"))
-				if "result" not in result and result["result"] == False:
+				if "result" not in result and not result["result"]:
 					self.ImportChannelsDone(False, _("Error when writing epg.dat on the fallback receiver"))
 			except Exception as e:
 				print(f"[Import Channels] Exception: {str(e)}")

@@ -327,7 +327,7 @@ class TimerSanityCheck:
 				else:
 					continue
 				for entry in event[4]:
-					if not entry[1] in self.simultimer:
+					if not in entry[1] self.simultimer:
 						for x in entry[2]:
 							if x in ConflictTunerType:
 								self.simultimer.append(entry[1])

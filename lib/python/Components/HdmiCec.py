@@ -47,7 +47,6 @@ cmdList = {
 	0x91: "<Get menu language>",
 	0x9e: "<CEC Version>",
 	0x9d: "<Inactive Source>",
-	0x9e: "<CEC Version>",
 	0x9f: "<Get CEC Version>",
 	0xa0: "<Vendor Command With ID>",
 	0xa1: "<Clear External Timer>",

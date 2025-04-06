@@ -330,7 +330,7 @@ class UpdatePluginMenu(Screen):
 		self.session.open(MessageBox, _("Backup completed.") if retval else _("Backup failed."), MessageBox.TYPE_INFO, timeout=10)
 
 	def startRestore(self, ret=False):
-		if (ret == True):
+		if ret:
 			self.exe = True
 			self.session.open(RestoreScreen, runRestore=True)
 
@@ -398,7 +398,7 @@ class SoftwareManagerSetup(ConfigListScreen, Screen):
 		self["config"].list = self.list
 		self["config"].l.setSeperation(400)
 		self["config"].l.setList(self.list)
-		if not self.selectionChanged in self["config"].onSelectionChanged:
+		if not in self.selectionChanged self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 		self.selectionChanged()
 
@@ -569,7 +569,7 @@ class PluginManager(Screen, PackageInfoHandler):
 
 		self.cmdList = []
 		self.oktext = _("\nAfter pressing OK, please wait!")
-		if not self.selectionChanged in self["list"].onSelectionChanged:
+		if not in self.selectionChanged self["list"].onSelectionChanged:
 			self["list"].onSelectionChanged.append(self.selectionChanged)
 
 		self.currList = ""
@@ -714,7 +714,7 @@ class PluginManager(Screen, PackageInfoHandler):
 				if current[7] != '':
 					idx = self["list"].getIndex()
 					detailsFile = self.list[idx][1]
-					if self.list[idx][7] == True:
+					if self.list[idx][7]:
 						for entry in self.selectedFiles:
 							if entry[0] == detailsFile:
 								self.selectedFiles.remove(entry)

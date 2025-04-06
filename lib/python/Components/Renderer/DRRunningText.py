@@ -93,20 +93,20 @@ class DRRunningText(Renderer):
 					self.soffset = (-int(value), -int(value))
 				elif attrib == 'valign' and value in ('top', 'center', 'bottom'):
 					valign = {'top': eLabel.alignTop,
-					 'center': eLabel.alignCenter,
-					 'bottom': eLabel.alignBottom}[value]
+					'center': eLabel.alignCenter,
+					'bottom': eLabel.alignBottom}[value]
 					self.txtflags |= {'top': RT_VALIGN_TOP,
-					 'center': RT_VALIGN_CENTER,
-					 'bottom': RT_VALIGN_BOTTOM}[value]
+					'center': RT_VALIGN_CENTER,
+					'bottom': RT_VALIGN_BOTTOM}[value]
 				elif attrib == 'halign' and value in ('left', 'center', 'right', 'block'):
 					self.halign = {'left': eLabel.alignLeft,
-					 'center': eLabel.alignCenter,
-					 'right': eLabel.alignRight,
-					 'block': eLabel.alignBlock}[value]
+					'center': eLabel.alignCenter,
+					'right': eLabel.alignRight,
+					'block': eLabel.alignBlock}[value]
 					self.txtflags |= {'left': RT_HALIGN_LEFT,
-					 'center': RT_HALIGN_CENTER,
-					 'right': RT_HALIGN_RIGHT,
-					 'block': RT_HALIGN_BLOCK}[value]
+					'center': RT_HALIGN_CENTER,
+					'right': RT_HALIGN_RIGHT,
+					'block': RT_HALIGN_BLOCK}[value]
 				elif attrib == 'noWrap':
 					setWrapFlag(attrib, value)
 				elif attrib == 'options':
@@ -122,13 +122,13 @@ class DRRunningText(Renderer):
 							setWrapFlag(opt, val)
 						elif opt == 'movetype' and val in ('none', 'running', 'swimming'):
 							self.type = {'none': NONE,
-							 'running': RUNNING,
-							 'swimming': SWIMMING}[val]
+							'running': RUNNING,
+							'swimming': SWIMMING}[val]
 						elif opt == 'direction' and val in ('left', 'right', 'top', 'bottom'):
 							self.direction = {'left': LEFT,
-							 'right': RIGHT,
-							 'top': TOP,
-							 'bottom': BOTTOM}[val]
+							'right': RIGHT,
+							'top': TOP,
+							'bottom': BOTTOM}[val]
 						elif opt == 'step' and val:
 							self.mStep = retValue(val, 1, self.mStep)
 						elif opt == 'steptime' and val:
@@ -339,7 +339,7 @@ class DRRunningText(Renderer):
 			else:
 				self.moveLabel(self.X, self.P)
 			timeout = self.mStepTimeout
-			if self.mStop != None and self.mStop + abs(self.mStep) > self.P >= self.mStop:
+			if self.mStop cond is not None and self.mStop + abs(self.mStep) > self.P >= self.mStop:
 				if self.type == RUNNING and self.mOneShot > 0:
 					if self.mRepeat > 0 and self.mCount - 1 <= 0:
 						return

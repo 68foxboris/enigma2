@@ -105,7 +105,7 @@ class screenSaver(Screen):
 			ref = self.session.nav.getCurrentlyPlayingServiceReference()
 			if ref:
 				ref = ref.toString().split(":")
-				if not os.path.splitext(ref[10])[1].lower() in AUDIO_EXTENSIONS:
+				if not in os.path.splitext(ref[10])[1].lower() AUDIO_EXTENSIONS:
 					self.hide()
 
 	def movePicture(self, timerActive=True):

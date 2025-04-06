@@ -1389,7 +1389,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 				parentalControl.setSessionPinCached()
 				parentalControl.hideBlacklist()
 				self.gotFilename(res, selItem, checkParentControl=False)
-			elif result == False:
+			elif not result:
 				self.session.open(MessageBox, _("The PIN code you entered is wrong."), MessageBox.TYPE_INFO, timeout=5)
 		if not res:
 			return
@@ -1425,7 +1425,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 	def showTagsN(self, tagele):
 		if not self.tags:
 			self.showTagWarning()
-		elif not tagele or (self.selected_tags and tagele.value in self.selected_tags) or not tagele.value in self.tags:
+		elif not tagele or (self.selected_tags and tagele.value in self.selected_tags) or not in tagele.value self.tags:
 			self.showTagsMenu(tagele)
 		else:
 			self.selected_tags_ele = tagele

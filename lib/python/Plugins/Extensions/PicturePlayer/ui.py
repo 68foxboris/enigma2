@@ -276,7 +276,7 @@ class Pic_Thumb(Screen):
 		framePos = 0
 		Page = 0
 		for x in piclist:
-			if x[0][1] == False:
+			if not x[0][1]:
 				self.filelist.append((index, framePos, Page, x[0][0], path + x[0][0]))
 				index += 1
 				framePos += 1
@@ -441,12 +441,12 @@ class Pic_Full_View(Screen):
 
 		for x in filelist:
 			if len(filelist[0]) == 3:  # orig. filelist
-				if x[0][1] == False:
+				if not x[0][1]:
 					self.filelist.append(path + x[0][0])
 				else:
 					self.dirlistcount += 1
 			elif len(filelist[0]) == 2:  # scanlist
-				if x[0][1] == False:
+				if not x[0][1]:
 					self.filelist.append(x[0][0])
 				else:
 					self.dirlistcount += 1
@@ -474,7 +474,7 @@ class Pic_Full_View(Screen):
 			self.session.nav.stopService()
 		self.setConf()
 		self["play_icon"].hide()
-		if config.pic.infoline.value == False:
+		if not config.pic.infoline.value:
 			self["file"].setText("")
 		self.start_decode()
 
@@ -528,7 +528,7 @@ class Pic_Full_View(Screen):
 
 	def slidePic(self):
 		print("[PicturePlayer] slide to next Picture index=" + str(self.lastindex))
-		if config.pic.loop.value == False and self.lastindex == self.maxentry:
+		if not config.pic.loop.value and self.lastindex == self.maxentry:
 			self.PlayPause()
 		self.shownow = True
 		self.ShowPicture()

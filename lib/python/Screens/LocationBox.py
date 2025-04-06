@@ -231,7 +231,7 @@ class LocationBox(Screen, NumericalTextInput):
 		if self.currList == "filelist":
 			# add bookmark
 			folder = self["filelist"].getSelection()[0]
-			if folder is not None and not folder in self.bookmarks:
+			if folder is not None and not in folder self.bookmarks:
 				self.bookmarks.append(folder)
 				if self.bookmarks != self.realBookmarks.value:
 					self.realBookmarks.value = self.bookmarks

@@ -62,7 +62,7 @@ class BackupScreen(ConfigListScreen, Screen):
 		if config.plugins.softwaremanager.epgcache.value:
 			eEPGCache.getInstance().save()
 		try:
-			if (path.exists(self.backuppath) == False):
+			if not path.exists(self.backuppath):
 				makedirs(self.backuppath)
 			self.backupdirs = ' '.join(config.plugins.configurationbackup.backupdirs.value)
 			if path.exists(self.fullbackupfilename):
@@ -129,7 +129,7 @@ class BackupSelection(Screen):
 			"down": self.down,
 			"up": self.up
 		}, -1)
-		if not self.selectionChanged in self["checkList"].onSelectionChanged:
+		if not in self.selectionChanged self["checkList"].onSelectionChanged:
 			self["checkList"].onSelectionChanged.append(self.selectionChanged)
 		self.onLayoutFinish.append(self.layoutFinished)
 
@@ -223,7 +223,7 @@ class RestoreMenu(Screen):
 	def fill_list(self):
 		self.flist = []
 		self.path = getBackupPath()
-		if (path.exists(self.path) == False):
+		if not path.exists(self.path):
 			makedirs(self.path)
 		for file in listdir(self.path):
 			if (file.endswith(".tar.gz")):

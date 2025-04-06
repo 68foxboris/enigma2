@@ -531,7 +531,7 @@ class TimerEntry(ConfigListScreen, Screen):
 			self["config"].invalidate(self.entryEndTime)
 
 	def subserviceSelected(self, service):
-		if not service is None:
+		if not service is not:
 			self.timer.service_ref = ServiceReference(service[1])
 		self.saveTimer()
 		self.close((True, self.timer))

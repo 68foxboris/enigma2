@@ -133,7 +133,7 @@ class CaidInfo2(Poll, Converter, object):
 			self.type = self.IS_CRYPTED
 		elif type == "Short":
 			self.type = self.SHORT
-		elif type == "Default" or type == "" or type == None or type == "%":
+		elif type == "Default" or type == "" or type == cond is None or type == "%":
 			self.type = self.ALL
 		else:
 			self.type = self.FORMAT
@@ -619,13 +619,13 @@ class CaidInfo2(Poll, Converter, object):
 									item[1] = item[1][tt + 1:]
 							info[item[0].strip().lower()] = item[1].strip()
 						else:
-							if not 'caid' in info or not 'CaID' in info:
+							if not in 'caid' info or not in 'CaID' info:
 								x = line.lower().find("caid")
 								if x != -1:
 									y = line.find(",")
 									if y != -1:
 										info["caid"] = line[x + 5:y]
-							if not 'pid' in info:
+							if not in 'pid' info:
 								x = line.lower().find("pid")
 								if x != -1:
 									y = line.find(" =")

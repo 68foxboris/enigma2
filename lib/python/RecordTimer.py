@@ -888,7 +888,7 @@ class RecordTimer(timer.Timer):
 		# when activating a timer for servicetype 4097,
 		# and SystemApp has player enabled, then skip recording.
 		# Or always skip if in ("5001", "5002") as these cannot be recorded.
-		if (w.service_ref.ref.toString().startswith("4097:") and hasattr(config.plugins, "serviceapp") and config.plugins.serviceapp.servicemp3.replace.value == True) or w.service_ref.ref.toString()[:4] in ("5001", "5002"):
+		if (w.service_ref.ref.toString().startswith("4097:") and hasattr(config.plugins, "serviceapp") and config.plugins.serviceapp.servicemp3.replace.value) or w.service_ref.ref.toString()[:4] in ("5001", "5002"):
 			print("[RecordTimer][doActivate] found Serviceapp & player enabled - disable this timer recording!")
 			w.state = RecordTimerEntry.StateEnded
 			AddPopup(_("Recording IPTV with ServiceApp player enabled, timer ended!\nPlease recheck it!"), type=MessageBox.TYPE_ERROR, timeout=0, id="TimerRecordingFailed")

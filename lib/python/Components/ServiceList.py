@@ -728,7 +728,6 @@ class ServiceListLegacy(ServiceListBase):
 		def nonplayableMargins(value):
 			self.l.setNonplayableMargins(int(value))
 
-
 		def sidesMargin(value):
 			self.sidesMargin = int(value)
  

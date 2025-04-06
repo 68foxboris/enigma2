@@ -465,7 +465,7 @@ class PreviewTask(Task):
 			AddNotificationWithCallback(self.closedCB, MessageBox, _("Do you want to burn this collection to DVD medium?"))
 
 	def closedCB(self, answer):
-		if answer == True:
+		if answer:
 			Task.processFinished(self, 0)
 		else:
 			Task.processFinished(self, 1)

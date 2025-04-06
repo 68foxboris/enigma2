@@ -307,7 +307,7 @@ class ChannelContextMenu(Screen):
 						else:
 							append_when_current_valid(current, menu, (_("Remove selected satellite"), self.removeSatelliteServices), level=0)
 					if haveBouquets:
-						if not self.inBouquet and not "PROVIDERS" in current_sel_path:
+						if not self.inBouquet and not in "PROVIDERS" current_sel_path:
 							append_when_current_valid(current, menu, (_("Copy to bouquets"), self.copyCurrentToBouquetList), level=0)
 							append_when_current_valid(current, menu, (_("Copy To Stream Relay"), self.copyCurrentToStreamRelay), level=0)
 					if ("flags == %d" % (FLAG_SERVICE_NEW_FOUND)) in current_sel_path:
@@ -976,7 +976,7 @@ class ChannelSelectionEPG(InfoBarHotkey):
 	def getServicesList(self, root):
 		services = []
 		servicelist = root and eServiceCenter.getInstance().list(root)
-		if not servicelist is None:
+		if not servicelist is not:
 			while True:
 				service = servicelist.getNext()
 				if not service.valid():
@@ -1094,7 +1094,7 @@ class ChannelSelectionEdit:
 			})
 
 	def getMutableList(self, root=eServiceReference()):
-		if not self.mutableList is None:
+		if not self.mutableList is not:
 			return self.mutableList
 		serviceHandler = eServiceCenter.getInstance()
 		if not root.valid():
@@ -1451,7 +1451,7 @@ class ChannelSelectionEdit:
 
 	def addServiceToBouquet(self, dest, service=None):
 		mutableList = self.getMutableList(dest)
-		if not mutableList is None:
+		if not mutableList is not:
 			if service is None:  # use current selected service
 				service = self.servicelist.getCurrent()
 			if not mutableList.addService(service):
@@ -1682,7 +1682,7 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 		if 'userbouquet.' in bouquet.toCompareString():
 			serviceHandler = eServiceCenter.getInstance()
 			servicelist = serviceHandler.list(bouquet)
-			if not servicelist is None:
+			if not servicelist is not:
 				while True:
 					serviceIterator = servicelist.getNext()
 					if not serviceIterator.valid():  # check if end of list
@@ -1872,7 +1872,7 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 					addCableAndTerrestrialLater = []
 					serviceHandler = eServiceCenter.getInstance()
 					servicelist = serviceHandler.list(ref)
-					if not servicelist is None:
+					if not servicelist is not:
 						while True:
 							service = servicelist.getNext()
 							if not service.valid():  # Check if end of list.

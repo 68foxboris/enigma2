@@ -43,7 +43,7 @@ class MiniTVSetup(ConfigListScreen, Screen):
 		self.list = []
 		self.list.append(self.minitvModeEntry)
 		self["config"].list = self.list
-		self["config"].l.setList(self.list)	
+		self["config"].l.setList(self.list)
 
 class MiniTV:
 	def __init__(self):
