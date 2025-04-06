@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import netifaces as ni
 from os import listdir, remove, system as os_system
 from os.path import basename, exists, isdir, realpath
@@ -110,7 +111,7 @@ class Network:
 				break
 		newlines = []
 		for line in lines:
-			if line and line[0] == "#" and "inet6 dhcp" not in line:
+			if line and line[0] == "#":
 				newlines.append(line[1:])
 			else:
 				newlines.append(line)
