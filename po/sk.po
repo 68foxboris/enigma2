@@ -7632,7 +7632,7 @@ msgid "Resolution"
 msgstr "Rozlíšenie"
 
 msgid "Restart"
-msgstr "Reštartovať"
+msgstr "Reštartovať prijímač"
 
 msgid "Restart GUI now?"
 msgstr "Teraz reštartovať GUI?"
