@@ -27,7 +27,6 @@
 		</menu>
 		<item key="scart_switch" level="1" text="VCR scart" conditional="config.usage.show_vcr_scart.value" requires="ScartSwitch"><code>self.session.scart.VCRSbChanged(3)</code></item>
 
-		<!-- Menu / Information -->
 		<menu key="information" level="0" text="Information" description="This menu contains selections to display information about the receiver." weight="5">
 			<item key="distribution_info_screen" text="OpenPli Information" weight="5"><screen module="Information" screen="DistributionInformation"/></item>
 			<item key="receiver_info_screen" text="Receiver Information" weight="10"><screen module="Information" screen="ReceiverInformation"/></item>
