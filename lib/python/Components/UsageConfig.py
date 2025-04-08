@@ -42,7 +42,6 @@ def InitUsageConfig():
 
 	showrotorpositionChoicesUpdate()
 
-	config.usage.sort_pluginlist = ConfigYesNo(default=True)
 	config.pluginbrowser = ConfigSubsection()
 	config.pluginbrowser.languages_po = ConfigYesNo(default=False)
 	config.pluginbrowser.src = ConfigYesNo(default=False)
@@ -51,6 +50,56 @@ def InitUsageConfig():
 	config.misc.actionLeftRightToPageUpPageDown = ConfigYesNo(default=True)
 
 	config.misc.spinnerPosition = ConfigSequence(default=[50, 50], limits=[(0, 1260), (0, 700)], seperator=",")
+
+	# "UserInterface" settings.
+	#
+	config.usage.menuType = ConfigSelection(default="standard", choices=[
+		("horzanim", _("Horizontal menu")),
+		("horzicon", _("Horizontal icons")),
+		("standard", _("Vertical menu"))
+	])
+	config.usage.menuEntryStyle = ConfigSelection(default="text", choices=[
+		("text", _("Entry text only")),
+		("number", _("Entry number and text")),
+		("image", _("Entry image and text")),
+		("both", _("Entry image, number and text")),
+	])
+	config.usage.menuSortOrder = ConfigSelection(default="user", choices=[
+		("alpha", _("Alphabetical")),
+		("default", _("Default")),
+		("user", _("User defined"))
+	])
+	config.usage.showScreenPath = ConfigSelection(default="off", choices=[
+		("off", _("None")),
+		("small", _("Small")),
+		("large", _("Large"))
+	])
+	config.usage.sortExtensionslist = ConfigSelection(default="", choices=[
+		("alpha", _("Alphabetical")),
+		("", _("Default")),
+		("user", _("User defined"))
+	])
+	config.usage.show_restart_network_extensionslist = ConfigYesNo(default=True)
+	config.usage.sort_pluginlist = ConfigYesNo(default=True)
+	config.usage.showicons = ConfigYesNo(default=True)
+	config.usage.helpSortOrder = ConfigSelection(default="headings+alphabetic", choices=[
+		("headings+alphabetic", _("Alphabetical under headings")),
+		("flat+alphabetic", _("Flat alphabetical")),
+		("flat+remotepos", _("Flat by position on remote")),
+		("flat+remotegroups", _("Flat by key group on remote"))
+	])
+	config.usage.setupShowDefault = ConfigSelection(default="newline", choices=[
+		("", _("Don't show default")),
+		("spaces", _("Show default after description")),
+		("newline", _("Show default on new line"))
+	])
+	config.usage.helpAnimationSpeed = ConfigSelection(default=10, choices=[
+		(1, _("Very fast")),
+		(5, _("Fast")),
+		(10, _("Default")),
+		(20, _("Slow")),
+		(50, _("Very slow"))
+	])
 
 	config.usage.informationShowAllMenuScreens = ConfigYesNo(default=False)
 	config.usage.informationExtraSpacing = ConfigYesNo(False)
@@ -306,11 +355,7 @@ def InitUsageConfig():
 		("menu", _("In menu only")),
 		("plugins", _("In plugins only"))
 	])
-	config.usage.showScreenPath = ConfigSelection(default="small", choices=[
-		("off", _("Disabled")),
-		("small", _("Small")),
-		("large", _("Large"))
-	])
+
 	config.usage.enable_tt_caching = ConfigYesNo(default=True)
 
 	config.usage.tuxtxt_font_and_res = ConfigSelection(default="TTF_SD", choices=[
@@ -519,27 +564,6 @@ def InitUsageConfig():
 		("simple", _("Normal")),
 		("intermediate", _("Advanced")),
 		("expert", _("Expert"))
-	])
-
-	config.usage.sortExtensionslist = ConfigSelection(default="", choices=[
-		("alpha", _("Alphabetical")),
-		("", _("Default")),
-		("user", _("User defined"))
-	])
-
-	config.usage.helpSortOrder = ConfigSelection(default="headings+alphabetic", choices=[
-		("headings+alphabetic", _("Alphabetical under headings")),
-		("flat+alphabetic", _("Flat alphabetical")),
-		("flat+remotepos", _("Flat by position on remote")),
-		("flat+remotegroups", _("Flat by key group on remote"))
-	])
-
-	config.usage.helpAnimationSpeed = ConfigSelection(default="10", choices=[
-		("1", _("Very fast")),
-		("5", _("Fast")),
-		("10", _("Default")),
-		("20", _("Slow")),
-		("50", _("Very slow"))
 	])
 
 	config.usage.startup_to_standby = ConfigSelection(default="no", choices=[
@@ -843,12 +867,6 @@ def InitUsageConfig():
 	config.workaround.deeprecord = ConfigYesNo(default=False)
 	config.workaround.wakeuptime = ConfigSelectionNumber(default=5, stepwidth=1, min=0, max=30, wraparound=True)
 	config.workaround.wakeupwindow = ConfigSelectionNumber(default=5, stepwidth=5, min=5, max=60, wraparound=True)
-
-	config.usage.menutype = ConfigSelection(default="standard", choices=[
-		("horzanim", _("Horizontal menu")),
-		("horzicon", _("Horizontal icons")),
-		("standard", _("Standard menu"))
-	])
 
 	config.usage.show_picon_in_display = ConfigYesNo(default=True)
 	config.usage.hide_zap_errors = ConfigYesNo(default=False)
@@ -1289,12 +1307,6 @@ def InitUsageConfig():
 	config.usage.cursorscroll = ConfigSelectionNumber(min=0, max=50, stepwidth=5, default=0, wraparound=True)
 
 	config.usage.multiboot_order = ConfigYesNo(default=True)
-
-	config.usage.setupShowDefault = ConfigSelection(default="spaces", choices=[
-		("no", _("Don't show default")),
-		("spaces", _("Show default after description")),
-		("newline", _("Show default on new line"))
-	])
 
 	config.epg = ConfigSubsection()
 	config.epg.eit = ConfigYesNo(default=True)

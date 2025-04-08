@@ -8,4 +8,4 @@ install_PYTHON = \
 	Downloader.py Trashcan.py GetEcmInfo.py Alternatives.py TextBoundary.py \
 	camcontrol.py CountryCodes.py MultiBoot.py FallbackTimer.py Hex2strColor.py \
 	Geolocation.py Trace.py Log.py LogConfig.py Conversions.py WeatherID.py \
-	CopyFiles.py AVHelper.py ServiceReference.py
+	CopyFiles.py AVHelper.py ServiceReference.py Migration.py
