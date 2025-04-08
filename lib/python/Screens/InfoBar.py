@@ -76,7 +76,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		self.helpList.append((self["actions"], "InfobarActions", [("showRadio", _("Listen to the radio..."))]))
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-				enigma.iPlayableService.evUpdatedEventInfo: self.__eventInfoChanged
+				enigma.iPlayableService.evUpdatedEventInfo: self.__eventInfoChanged,
 				enigma.iPlayableService.evUpdateTags: self.__eventInfoChanged
 			})
 
