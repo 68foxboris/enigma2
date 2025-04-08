@@ -359,7 +359,6 @@ class InfoBarShowHide(InfoBarScreenSaver):
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
 				iPlayableService.evStart: self.serviceStarted,
-				iPlayableService.evUpdateTags: self.getEvent
 			})
 
 		InfoBarScreenSaver.__init__(self)
@@ -1257,7 +1256,6 @@ class InfoBarEPG:
 		self.epglist = []
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
 			iPlayableService.evUpdatedEventInfo: self.__evEventInfoChanged,
-			iPlayableService.evUpdateTags: self.__evEventInfoChanged
 		})
 
 		self["EPGActions"] = HelpableActionMap(self, ["InfobarEPGActions"], {
