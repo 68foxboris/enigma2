@@ -560,6 +560,10 @@ config.crash.debugTeletext = ConfigYesNo(default=False)
 config.crash.debugStorage = ConfigYesNo(default=False)
 
 
+# Enable numbers in Plugin Browser (Do not move it to other file)
+config.misc.menu_show_numbers = ConfigYesNo(default=False)
+
+
 # config.plugins needs to be defined before InputDevice < HelpMenu < MessageBox < InfoBar
 config.plugins = ConfigSubsection()
 config.plugins.remotecontroltype = ConfigSubsection()
@@ -738,6 +742,14 @@ InitRFmod()
 enigma.eProfileWrite("InitCiConfig")
 from Screens.Ci import InitCiConfig
 InitCiConfig()
+
+# ###############################################################################
+# NOTE: This migration helper can be used to update Enigma2 settings, files etc #
+#       etc that may need to change based on recent code changes.               #
+# ###############################################################################
+#
+from Tools.Migration import migrateSettings  # Migrate settings from older versions of enigma.
+migrateSettings()
 
 # from enigma import dump_malloc_stats
 # t = eTimer()
