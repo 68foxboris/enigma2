@@ -77,6 +77,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
 				enigma.iPlayableService.evUpdatedEventInfo: self.__eventInfoChanged
+				enigma.iPlayableService.evUpdateTags: self.__eventInfoChanged
 			})
 
 		self.current_begin_time = 0
