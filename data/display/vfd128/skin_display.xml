@@ -343,7 +343,7 @@
 	</screen>
 
 	<screen name="NumberZapSummary" position="0,0" size="128,32">
-		<widget source="parent.number_summary" render="Label" position="0,10" size="128,30" font="FdLcD;26" horizontalAlignment="left" noWrap="1" />
+		<widget source="parent.numberSummary" render="Label" position="0,10" size="128,30" font="FdLcD;26" horizontalAlignment="left" noWrap="1" />
 		<panel name="SummaryIconsPanel" />
 		<panel name="SummaryClockPanel" />
 	</screen>
@@ -355,16 +355,16 @@
 	</screen>
 	<screen name="VIXSwapSummary" position="0,0" size="128,32">
 		<widget source="parent.Title" render="Label" position="0,0" size="160,16" font="FdLcD;16" horizontalAlignment="left" noWrap="1" />
-		<widget source="parent.swapname_summary" render="Label" position="0,16" size="128,14" font="FdLcD;16" horizontalAlignment="left" noWrap="1" />
-		<!--<widget source="parent.swapactive_summary" render="Label" position="0,50" size="128,14" font="FdLcD;12" horizontalAlignment="left" transparent="1" />-->
+		<widget source="parent.swapnameSummary" render="Label" position="0,16" size="128,14" font="FdLcD;16" horizontalAlignment="left" noWrap="1" />
+		<!--<widget source="parent.swapactiveSummary" render="Label" position="0,50" size="128,14" font="FdLcD;12" horizontalAlignment="left" transparent="1" />-->
 	</screen>
 	<screen name="UpdatePluginSummary" position="0,0" size="128,32">
 		<widget source="parent.Title" render="Label" position="0,0" size="128,16" font="FdLcD;16" horizontalAlignment="center" verticalAlignment="top" noWrap="1" />
 		<widget source="parent.package" render="Label" position="0,16" size="128,16" font="FdLcD;14" horizontalAlignment="center" verticalAlignment="bottom" noWrap="1" />
 	</screen>
 	<screen name="SoftwareUpdateChangesSummary" position="fill">
-		<!--<widget source="parent.title_summary" render="Label" position="top" size="*,14" font="FdLcD;16" horizontalAlignment="left" verticalAlignment="top" noWrap="1" />-->
-		<widget source="parent.text_summary" render="Label" position="fill" size="*,18" font="FdLcD;10" horizontalAlignment="left" verticalAlignment="top" />
+		<!--<widget source="parent.titleSummary" render="Label" position="top" size="*,14" font="FdLcD;16" horizontalAlignment="left" verticalAlignment="top" noWrap="1" />-->
+		<widget source="parent.textSummary" render="Label" position="fill" size="*,18" font="FdLcD;10" horizontalAlignment="left" verticalAlignment="top" />
 	</screen>
 <!-- AutoTimerOverview -->
 	<screen name="AutoTimerOverviewSummary" position="0,0" size="128,32">
@@ -373,8 +373,8 @@
 	</screen>
 	<screen name="NetworkServicesSummary" position="0,0" size="128,32">
 		<widget source="title" render="Label" position="0,0" size="160,16" font="FdLcD;16" horizontalAlignment="left" noWrap="1" />
-		<widget source="status_summary" render="Label" position="0,16" size="190,16" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
-		<!--<widget source="autostartstatus_summary" render="Label" position="0,49" size="190,15" font="FdLcD;14" horizontalAlignment="left" transparent="1" />-->
+		<widget source="statusSummary" render="Label" position="0,16" size="190,16" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
+		<!--<widget source="autostartstatusSummary" render="Label" position="0,49" size="190,15" font="FdLcD;14" horizontalAlignment="left" transparent="1" />-->
 	</screen>
 	<screen name="CrossEPG_MenuSummary" position="0,0" size="128,32">
 		<widget source="SetupTitle" render="Label" position="0,0" size="160,16" font="FdLcD;16" horizontalAlignment="left" noWrap="1"  />

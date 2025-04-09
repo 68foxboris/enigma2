@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <skin>
+	<colors>
+		<color name="oled1" value="#00adff2f" /> <!--Schriftfarbe Menue gelbgruen-->
+		<color name="oled2" value="#00ffffff" /> <!--Schriftfarbe Textroller-->
+		<color name="oled3" value="#00adff2f" /> <!--Schriftfarbe Uhrzeit usw.-->
+		<color name="oled4" value="#00adff2f" /> <!--Schriftfarbe Sender-->
+		<color name="oled5" value="#00ffffff" /> <!--Schriftfarbe Sendung-->
+		<color name="oled6" value="#00adff2f" /> <!--Schriftfarbe Sender Kanalliste-->
+		<color name="oled7" value="#00ff2525" /> <!--Schriftfarbe Uhr Standby-->
+	</colors>
 	<windowstyle id="1" type="skinned">
 		<color color="#000000" name="Background"/>
 		<color color="#ffffff" name="LabelForeground"/>
@@ -32,17 +41,8 @@
 	</colors>
 
 	<!-- MAIN -->
-	
-	<!-- WIZARD -->
 
-	<screen name="WizardSummary" position="fill">
-		<widget source="text" render="Label" position="top" size="*,180" font="FdLcD;60" horizontalAlignment="center" verticalAlignment="center"/>
-		<widget source="parent.list" render="Label" position="fill" font="FdLcD;50" horizontalAlignment="center" verticalAlignment="center">
-			<convert type="StringListSelection" />
-		</widget>
-	</screen>
-
-	<!-- CHANNEL SELECTION -->
+	<!-- CHANNEL SELECTION-->
 	<screen name="ChannelSelectionSummary" position="0,0" size="800,480"> 
 		<panel name="LCDFullChannelSelectionPicon" />
 	</screen>
