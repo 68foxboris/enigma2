@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <skin>
+	<colors>
+		<color name="oled1" value="#00adff2f" /> <!--Schriftfarbe Menue gelbgruen-->
+		<color name="oled2" value="#00ffffff" /> <!--Schriftfarbe Textroller-->
+		<color name="oled3" value="#00adff2f" /> <!--Schriftfarbe Uhrzeit usw.-->
+		<color name="oled4" value="#00adff2f" /> <!--Schriftfarbe Sender-->
+		<color name="oled5" value="#00ffffff" /> <!--Schriftfarbe Sendung-->
+		<color name="oled6" value="#00adff2f" /> <!--Schriftfarbe Sender Kanalliste-->
+		<color name="oled7" value="#00ff2525" /> <!--Schriftfarbe Uhr Standby-->
+	</colors>
 	<windowstyle id="1" type="skinned">
 		<color color="#000000" name="Background"/>
 		<color color="#ffffff" name="LabelForeground"/>
@@ -28,10 +37,10 @@
 
 <!-- main-->
 	<screen name="InfoBarSummary" position="0,0" size="390,240">
-		<widget source="session.CurrentService" render="Label" position="0,5" size="390,65" font="FdLcD;50" halign="center" foregroundColor="#FFFF00">
+		<widget source="session.CurrentService" render="Label" position="0,5" size="390,65" font="FdLcD;50" halign="center" foregroundColor="#FFFF00" >
 			<convert type="ServiceName">Name</convert>
 		</widget>
-		<widget source="session.Event_Now" render="Label" position="0,70" size="390,50" font="FdLcD;24" halign="center">
+		<widget source="session.Event_Now" render="Label" position="0,70" size="390,50" font="FdLcD;24" halign="center" >
 			<convert type="EventName">Name</convert>
 		</widget>
 		<widget source="session.Event_Now" render="Progress" position="0,135" size="250,20" borderWidth="1" >
@@ -41,23 +50,23 @@
 			<convert type="EventTime">Remaining</convert>
 			<convert type="RemainingToText"></convert>
 		</widget>
-		<eLabel text="TUNER:" position="0,200" size="80,25" font="FdLcD;20" />
-		<widget source="session.FrontendInfo" render="FixedLabel" position="80,200" size="24,24" text="A" foregroundColor="#04B404" font="FdLcD;24" halign="center">
+		<eLabel text="TUNER:" position="0,200" size="80,25" halign="left" font="FdLcD;20" />
+		<widget source="session.FrontendInfo" render="FixedLabel" position="80,200" size="24,24" text="A" foregroundColor="#04B404" font="FdLcD;24" halign="center" >
 			<convert type="FrontendInfo">NUMBER</convert>
 			<convert type="ValueRange">0,0</convert>
 			<convert type="ConditionalShowHide" />
 		</widget>
-		<widget source="session.FrontendInfo" render="FixedLabel" position="80,200" size="24,24" text="B" foregroundColor="#04B404" font="FdLcD;24" halign="center">
+		<widget source="session.FrontendInfo" render="FixedLabel" position="80,200" size="24,24" text="B" foregroundColor="#04B404" font="FdLcD;24" halign="center" >
 			<convert type="FrontendInfo">NUMBER</convert>
 			<convert type="ValueRange">1,1</convert>
 			<convert type="ConditionalShowHide" />
 		</widget>
-		<widget source="session.FrontendInfo" render="FixedLabel" position="80,200" size="24,24" text="C" foregroundColor="#04B404" font="FdLcD;24" halign="center">
+		<widget source="session.FrontendInfo" render="FixedLabel" position="80,200" size="24,24" text="C" foregroundColor="#04B404" font="FdLcD;24" halign="center" >
 			<convert type="FrontendInfo">NUMBER</convert>
 			<convert type="ValueRange">2,2</convert>
 			<convert type="ConditionalShowHide" />
 		</widget>
-		<widget source="session.FrontendInfo" render="FixedLabel" position="80,200" size="24,24" text="D" foregroundColor="#04B404" font="FdLcD;24" halign="center">
+		<widget source="session.FrontendInfo" render="FixedLabel" position="80,200" size="24,24" text="D" foregroundColor="#04B404" font="FdLcD;24" halign="center" >
 			<convert type="FrontendInfo">NUMBER</convert>
 			<convert type="ValueRange">3,3</convert>
 			<convert type="ConditionalShowHide" />
@@ -128,10 +137,10 @@
 
 <!-- channelselection-->
 	<screen name="ChannelSelectionSummary" position="0,0" size="390,240">
-		<widget source="parent.ServiceEvent" render="Label" position="top" size="*,65" font="FdLcD;50" halign="center" foregroundColor="#FFFF00">
+		<widget source="parent.ServiceEvent" render="Label" position="top" size="*,65" font="FdLcD;50" halign="center" foregroundColor="#FFFF00" >
 			<convert type="ServiceName">Name</convert>
 		</widget>
-		<widget source="parent.ServiceEvent" render="Label" position="top" size="*,60" font="FdLcD;25" halign="center">
+		<widget source="parent.ServiceEvent" render="Label" position="top" size="*,60" font="FdLcD;25" halign="center" >
 			<convert type="EventName">Name</convert>
 		</widget>
 		<widget source="parent.ServiceEvent" render="Progress" position="top" size="*,20" borderWidth="3">
@@ -142,18 +151,22 @@
 
 <!-- menus-->
 	<screen name="MenuSummary" position="fill">
-		<widget source="parent.title" render="Label" position="top" size="*,61" font="FdLcD;50" horizontalAlignment="center" verticalAlignment="top" />
-		<widget source="parent.menu" render="Label" position="top" size="*,53" font="FdLcD;26" horizontalAlignment="left" verticalAlignment="center">
+		<widget source="parent.Title" render="Label" position="top" size="*,119" font="FdLcD;38" foregroundColor="#87CEFA" horizontalAlignment="center" verticalAlignment="center" />
+		<eLabel position="top" size="*,1" backgroundColor="white" />
+		<widget source="parent.menu" render="Label" position="top" size="*,119" font="FdLcD;38" horizontalAlignment="center" verticalAlignment="center">
 			<convert type="StringListSelection" />
 		</widget>
 	</screen>
 
 <!-- setup-->
 	<screen name="SetupSummary" position="fill">
-		<widget source="SetupTitle" render="Label" position="top" size="*,61" font="FdLcD;50" horizontalAlignment="left" />
-		<widget source="SetupEntry" render="Label" position="top" size="*,51" font="FdLcD;25" horizontalAlignment="left" />
-		<widget source="SetupValue" render="Label" position="top" size="*,51" font="FdLcD;25" horizontalAlignment="left" />
+		<widget source="SetupTitle" render="Label" position="top" size="*,85" font="FdLcD;38" foregroundColor="#87CEFA" horizontalAlignment="left"  verticalAlignment="center" />
+		<eLabel position="top" size="*,1" backgroundColor="white" />
+		<widget source="SetupEntry" render="Label" position="top" size="*,95" font="FdLcD;25" horizontalAlignment="left" verticalAlignment="center" />
+		<eLabel position="top" size="*,1" backgroundColor="white" />
+		<widget source="SetupValue" render="Label" position="top" size="*,65" font="FdLcD;25" foregroundColor="#F4FA58" horizontalAlignment="left" verticalAlignment="center" />
 	</screen>
+
 
 <!-- misc-->
 	<screen name="SimpleSummary" position="fill">
@@ -322,8 +335,8 @@
 	</screen>
 	<screen name="VISIONSwapSummary" position="0,0" size="390,240">
 		<widget source="parent.Title" render="Label" position="0,38" size="390,26" font="FdLcD;24" horizontalAlignment="left" noWrap="1" />
-		<widget source="parent.swapname_summary" render="Label" position="0,66" size="390,20" font="FdLcD;19" horizontalAlignment="left" noWrap="1" />
-		<widget source="parent.swapactive_summary" render="Label" position="0,93" size="390,16" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
+		<widget source="parent.swapnameSummary" render="Label" position="0,66" size="390,20" font="FdLcD;19" horizontalAlignment="left" noWrap="1" />
+		<widget source="parent.swapactiveSummary" render="Label" position="0,93" size="390,16" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
 		<panel name="SummaryIconsPanel" />
 		<panel name="SummaryClockPanel" />
 	</screen>
@@ -335,8 +348,8 @@
 		<panel name="SummaryClockPanel" />
 	</screen>
 	<screen name="SoftwareUpdateChangesSummary" position="0,0" size="390,240">
-		<widget source="parent.title_summary" render="Label" position="0,0" size="160,15" font="FdLcD;15" horizontalAlignment="left" noWrap="1" />
-		<widget source="parent.text_summary" render="Label" position="0,16" size="390,54" font="FdLcD;12" horizontalAlignment="left" transparent="1" />
+		<widget source="parent.TitleSummary" render="Label" position="0,0" size="160,15" font="FdLcD;15" horizontalAlignment="left" noWrap="1" />
+		<widget source="parent.textSummary" render="Label" position="0,16" size="390,54" font="FdLcD;12" horizontalAlignment="left" transparent="1" />
 		<panel name="SummaryIconsPanel" />
 	</screen>
 

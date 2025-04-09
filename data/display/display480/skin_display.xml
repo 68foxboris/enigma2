@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <skin>
+	<colors>
+		<color name="oled1" value="#00adff2f" /> <!--Schriftfarbe Menue gelbgruen-->
+		<color name="oled2" value="#00ffffff" /> <!--Schriftfarbe Textroller-->
+		<color name="oled3" value="#00adff2f" /> <!--Schriftfarbe Uhrzeit usw.-->
+		<color name="oled4" value="#00adff2f" /> <!--Schriftfarbe Sender-->
+		<color name="oled5" value="#00ffffff" /> <!--Schriftfarbe Sendung-->
+		<color name="oled6" value="#00adff2f" /> <!--Schriftfarbe Sender Kanalliste-->
+		<color name="oled7" value="#00ff2525" /> <!--Schriftfarbe Uhr Standby-->
+	</colors>
 	<windowstyle id="1" type="skinned">
 		<color color="#000000" name="Background"/>
 		<color color="#ffffff" name="LabelForeground"/>
@@ -96,20 +105,22 @@
 		</widget>
 	</screen>
 
-<!-- main-->
-	<!-- menus-->
-	<screen name="MenuSummary" position="0,0" size="480,320">
-		<widget source="parent.title" render="Label" position="0,5" size="480,70" font="FdLcD;55" horizontalAlignment="center" verticalAlignment="center" foregroundColor="#FFFF00" />
-		<widget source="parent.menu" render="Label" position="0,90" size="480,90" font="FdLcD;40" horizontalAlignment="center" verticalAlignment="center">
+<!-- menus-->
+	<screen name="MenuSummary" position="fill">
+		<widget source="parent.Title" render="Label" position="top" size="*,119" font="FdLcD;38" foregroundColor="#87CEFA" horizontalAlignment="center" verticalAlignment="center" />
+		<eLabel position="top" size="*,1" backgroundColor="white" />
+		<widget source="parent.menu" render="Label" position="top" size="*,119" font="FdLcD;38" horizontalAlignment="center" verticalAlignment="center">
 			<convert type="StringListSelection" />
 		</widget>
 	</screen>
 
 <!-- setup-->
-	<screen name="SetupSummary" position="0,0" size="480,320">
-		<widget source="SetupTitle" render="Label" position="0,5" size="480,70" font="FdLcD;55" horizontalAlignment="center" verticalAlignment="center" foregroundColor="#FFFF00" />
-		<widget source="SetupEntry" render="Label" position="0,90" size="480,90" font="FdLcD;40" horizontalAlignment="center" verticalAlignment="center" />
-		<widget source="SetupValue" render="Label" position="0,200" size="480,70" font="FdLcD;40" horizontalAlignment="center" verticalAlignment="center" />
+	<screen name="SetupSummary" position="fill">
+		<widget source="SetupTitle" render="Label" position="top" size="*,85" font="FdLcD;38" foregroundColor="#87CEFA" horizontalAlignment="left"  verticalAlignment="center" />
+		<eLabel position="top" size="*,1" backgroundColor="white" />
+		<widget source="SetupEntry" render="Label" position="top" size="*,95" font="FdLcD;25" horizontalAlignment="left" verticalAlignment="center" />
+		<eLabel position="top" size="*,1" backgroundColor="white" />
+		<widget source="SetupValue" render="Label" position="top" size="*,65" font="FdLcD;25" foregroundColor="#F4FA58" horizontalAlignment="left" verticalAlignment="center" />
 	</screen>
 
 	<!-- InfoBar - Box is turned on -->
@@ -159,7 +170,7 @@
 	</screen>
 
 <!-- channelselection-->
-	<screen name="ChannelSelection_summary" position="0,0" size="480,320">
+	<screen name="ChannelSelectionSummary" position="0,0" size="480,320">
 		<widget source="parent.ServiceEvent" render="Label" position="0,8" size="480,63" font="FdLcD;55" halign="center" foregroundColor="#87CEFA">
 			<convert type="ServiceName">Name</convert>
 		</widget>
@@ -193,7 +204,7 @@
 	</screen>
 
 <!-- EPG Screens -->
-	<screen name="EPGSelection_summary" position="0,0" size="480,320">
+	<screen name="EPGSelectionSummary" position="0,0" size="480,320">
 		<widget source="parent.Service" render="Label" position="0,5" size="480,70" font="FdLcD;55" horizontalAlignment="center" verticalAlignment="center" foregroundColor="#FFFF00" >
 			<convert type="ServiceName">Name</convert>
 		</widget>
@@ -272,29 +283,29 @@
 		</widget>
 		<panel name="SummaryClockPanel" />
 	</screen>
-	<screen name="QuickEPG_summary" position="0,0" size="480,320">
-		<panel name="EPGSelection_summary" />
+	<screen name="QuickEPGSummary" position="0,0" size="480,320">
+		<panel name="EPGSelectionSummary" />
 	</screen>
-	<screen name="GraphicalEPG_summary" position="0,0" size="480,320">
-		<panel name="EPGSelection_summary" />
+	<screen name="GraphicalEPGSummary" position="0,0" size="480,320">
+		<panel name="EPGSelectionSummary" />
 	</screen>
-	<screen name="GraphicalEPGPIG_summary" position="0,0" size="480,320">
-		<panel name="EPGSelection_summary" />
+	<screen name="GraphicalEPGPIGSummary" position="0,0" size="480,320">
+		<panel name="EPGSelectionSummary" />
 	</screen>
-	<screen name="GraphicalInfoBarEPG_summary" position="0,0" size="480,320">
-		<panel name="EPGSelection_summary" />
+	<screen name="GraphicalInfoBarEPGSummary" position="0,0" size="480,320">
+		<panel name="EPGSelectionSummary" />
 	</screen>
-	<screen name="EPGSelectionMulti_summary" position="0,0" size="480,320">
-		<panel name="EPGSelection_summary" />
+	<screen name="EPGSelectionMultiSummary" position="0,0" size="480,320">
+		<panel name="EPGSelectionSummary" />
 	</screen>
 
 <!-- messagebox-->
-	<screen name="MessageBox_summary" position="0,0" size="480,320">
+	<screen name="MessageBoxSummary" position="0,0" size="480,320">
 		<widget source="parent.Text" render="Label" position="0,20" size="480,180" font="FdLcD;40" horizontalAlignment="center" verticalAlignment="center" />
 		<widget source="parent.selectedChoice" conditional="parent.selectedChoice" render="Label" position="0,220" size="400,70" font="FdLcD;40" horizontalAlignment="center" verticalAlignment="center" noWrap="1" />
 	</screen>
-	<screen name="MessageBoxSimple_summary" position="0,0" size="480,320">
-		<panel name="MessageBox_summary" />
+	<screen name="MessageBoxSimpleSummary" position="0,0" size="480,320">
+		<panel name="MessageBoxSummary" />
 	</screen>
 
 <!-- standby -->
@@ -369,7 +380,7 @@
 	</screen>
 
 <!-- JobView Summary -->
-	<screen name="JobView_summary" position="0,0" size="480,320">
+	<screen name="JobViewSummary" position="0,0" size="480,320">
 		<widget source="parent.summary_job_name" render="Label" position="0,38" size="400,58" font="FdLcD;24" horizontalAlignment="left" />
 		<widget source="parent.summary_job_task" render="Label" position="0,100" size="400,25" font="FdLcD;19" horizontalAlignment="left" />
 		<widget source="parent.summary_job_progress" render="Progress" position="0,0" size="285,30" borderWidth="1" zPosition="1" />
@@ -378,17 +389,17 @@
 		</widget>
 	</screen>
 
-	<screen name="EventView_summary" position="0,0" size="480,320">
+	<screen name="EventViewSummary" position="0,0" size="480,320">
 		<widget source="parent.Title" render="Label" position="0,0" size="160,22" font="FdLcD;20" horizontalAlignment="left" noWrap="1" />
 		<widget source="parent.summary_description" render="Label" position="0,22" size="400,140" font="FdLcD;24" />
 	</screen>
 
-	<screen name="EventViewSimple_summary" position="0,0" size="480,320">
+	<screen name="EventViewSimpleSummary" position="0,0" size="480,320">
 		<widget source="parent.Title" render="Label" position="0,0" size="160,22" font="FdLcD;20" horizontalAlignment="left" noWrap="1" />
 		<widget source="parent.summary_description" render="Label" position="0,22" size="400,140" font="FdLcD;24" />
 	</screen>
 
-	<screen name="ChoiceBox_summary" position="0,0" size="480,320">
+	<screen name="ChoiceBoxSummary" position="0,0" size="480,320">
 		<widget source="parent.summary_list" render="Label" position="0,0" size="480,320" font="FdLcD;18" noWrap="1" />
 	</screen>
 
@@ -452,28 +463,28 @@
 		<panel name="SummaryIconsPanel" />
 		<panel name="SummaryClockPanel" />
 	</screen>
-	<screen name="VISIONSwap_summary" position="0,0" size="480,320">
+	<screen name="VISIONSwapSummary" position="0,0" size="480,320">
 		<widget source="parent.Title" render="Label" position="0,38" size="400,26" font="FdLcD;24" horizontalAlignment="left" noWrap="1" />
-		<widget source="parent.swapname_summary" render="Label" position="0,66" size="400,20" font="FdLcD;19" horizontalAlignment="left" noWrap="1" />
-		<widget source="parent.swapactive_summary" render="Label" position="0,93" size="400,16" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
+		<widget source="parent.swapnameSummary" render="Label" position="0,66" size="400,20" font="FdLcD;19" horizontalAlignment="left" noWrap="1" />
+		<widget source="parent.swapactiveSummary" render="Label" position="0,93" size="400,16" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
 		<panel name="SummaryIconsPanel" />
 		<panel name="SummaryClockPanel" />
 	</screen>
-	<screen name="UpdatePlugin_summary" position="0,0" size="480,320">
+	<screen name="UpdatePluginSummary" position="0,0" size="480,320">
 		<widget source="parent.Title" render="Label" position="0,38" size="400,26" font="FdLcD;24" horizontalAlignment="left" noWrap="1" />
 		<widget source="parent.package" render="Label" position="0,66" size="400,20" font="FdLcD;19" horizontalAlignment="left" noWrap="1" />
 		<widget source="parent.status" render="Label" position="0,93" size="400,16" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
 		<panel name="SummaryIconsPanel" />
 		<panel name="SummaryClockPanel" />
 	</screen>
-	<screen name="SoftwareUpdateChanges_summary" position="0,0" size="480,320">
-		<widget source="parent.title_summary" render="Label" position="0,0" size="160,15" font="FdLcD;15" horizontalAlignment="left" noWrap="1" />
-		<widget source="parent.text_summary" render="Label" position="0,16" size="400,54" font="FdLcD;12" horizontalAlignment="left" transparent="1" />
+	<screen name="SoftwareUpdateChangesSummary" position="0,0" size="480,320">
+		<widget source="parent.TitleSummary" render="Label" position="0,0" size="160,15" font="FdLcD;15" horizontalAlignment="left" noWrap="1" />
+		<widget source="parent.textSummary" render="Label" position="0,16" size="400,54" font="FdLcD;12" horizontalAlignment="left" transparent="1" />
 		<panel name="SummaryIconsPanel" />
 	</screen>
 
 	<!-- LCD screen EMC -->
-	<screen name="EMCSelection_summary" position="5,0" size="471,320">
+	<screen name="EMCSelectionSummary" position="5,0" size="471,320">
 		<widget source="parent.Title" render="Label" position="0,0" size="471,96" font="FdLcD;32" foregroundColor="#87CEFA" horizontalAlignment="center" verticalAlignment="center" />
 		<eLabel position="0,99" size="471,1" backgroundColor="white" />
 		<widget source="parent.Service" render="Label" position="0,99" size="471,175" font="FdLcD;34" horizontalAlignment="center" verticalAlignment="center">
@@ -488,7 +499,7 @@
 		</widget>
 	</screen>
 	<screen name="EMCSelectionSummary" position="0,0" size="471,320">
-		<panel name="EMCSelection_summary" />
+		<panel name="EMCSelectionSummary" />
 	</screen>
 	<screen name="EMCMoviePlayerSummary" position="0,0" size="480,320" >
 		<!-- Movie name -->
@@ -522,7 +533,7 @@
 			<convert type="ConditionalShowHide" />
 		</widget>
 	</screen>
-	<screen name="CrossEPG_Downloader_summary" position="0,0" size="480,320">
+	<screen name="CrossEPG_DownloaderSummary" position="0,0" size="480,320">
 		<widget source="parent.Title" render="Label" position="0,38" size="400,26" font="FdLcD;24" horizontalAlignment="left" noWrap="1" />
 		<widget source="parent.summary_action" render="Label" position="0,66" size="400,20" font="FdLcD;19" horizontalAlignment="left" noWrap="1" />
 		<widget source="parent.summary_status" render="Label" position="0,41" size="400,18" font="FdLcD;16" horizontalAlignment="left" noWrap="1" />

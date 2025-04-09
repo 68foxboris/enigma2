@@ -133,7 +133,7 @@
 <!-- movieplayer-->
 	<screen name="InfoBarMoviePlayerSummary" position="0,0" size="255,64">
 		<widget name="statusiconSummary" position="0,0" zPosition="3" size="23,20" pixmaps="play.png,pause.png,stop.png,forward.png,backward.png,slow.png" />
-		<widget source="speed_summary" render="Label" position="30,0" size="160,22" font="FdLcD;18" horizontalAlignment="left" noWrap="1" />
+		<widget source="speedSummary" render="Label" position="30,0" size="160,22" font="FdLcD;18" horizontalAlignment="left" noWrap="1" />
 		<widget source="session.CurrentService" render="Label" position="0,21" size="255,20" font="FdLcD;17" horizontalAlignment="left" noWrap="1">
 			<convert type="ServiceName">Name</convert>
 		</widget>
@@ -365,8 +365,8 @@
 	</screen>
 
 	<screen name="NumberZapSummary" position="0,0" size="255,64">
-		<widget source="parent.service_summary" render="Label" position="0,0" size="160,22" font="FdLcD;18" horizontalAlignment="left" noWrap="1" />
-		<widget source="parent.number_summary" render="Label" position="0,21" size="255,30" font="FdLcD;26" horizontalAlignment="left" noWrap="1" />
+		<widget source="parent.serviceSummary" render="Label" position="0,0" size="160,22" font="FdLcD;18" horizontalAlignment="left" noWrap="1" />
+		<widget source="parent.numberSummary" render="Label" position="0,21" size="255,30" font="FdLcD;26" horizontalAlignment="left" noWrap="1" />
 		<panel name="SummaryIconsPanel" />
 		<panel name="SummaryClockPanel" />
 	</screen>
@@ -380,8 +380,8 @@
 	</screen>
 	<screen name="NetworkServicesSummary" position="0,0" size="255,64">
 		<widget source="title" render="Label" position="0,0" size="160,22" font="FdLcD;18" horizontalAlignment="left" noWrap="1" />
-		<widget source="status_summary" render="Label" position="0,30" size="190,15" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
-		<widget source="autostartstatus_summary" render="Label" position="0,49" size="190,15" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
+		<widget source="statusSummary" render="Label" position="0,30" size="190,15" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
+		<widget source="autostartstatusSummary" render="Label" position="0,49" size="190,15" font="FdLcD;14" horizontalAlignment="left" transparent="1" />
 		<panel name="SummaryIconsPanel" />
 		<panel name="SummaryClockPanel" />
 	</screen>
@@ -534,8 +534,8 @@
 		<widget source="parent.summary_description" conditional="parent.summary_description" render="Label" position="0,42" size="256,22" zPosition="1" font="FdLcD;20" horizontalAlignment="center" verticalAlignment="center" />
 	</screen>
 	<screen name="SoftwareUpdateChangesSummary" position="0,0" size="256,64">
-		<widget source="parent.title_summary" render="Label" position="120,0" size="136,40" font="FdLcD;17" horizontalAlignment="center" verticalAlignment="bottom" />
-		<widget source="parent.text_summary" render="Label" position="0,42" size="256,22" zPosition="1" font="FdLcD;20" horizontalAlignment="center" verticalAlignment="center" />
+		<widget source="parent.titleSummary" render="Label" position="120,0" size="136,40" font="FdLcD;17" horizontalAlignment="center" verticalAlignment="bottom" />
+		<widget source="parent.textSummary" render="Label" position="0,42" size="256,22" zPosition="1" font="FdLcD;20" horizontalAlignment="center" verticalAlignment="center" />
 	</screen>
 	<screen name="AutoBouquetsMaker_MenuSummary" position="0,0" size="255,64">
 		<widget source="SetupTitle" render="Label" position="0,0" size="160,22" font="FdLcD;18" horizontalAlignment="left" noWrap="1"  />

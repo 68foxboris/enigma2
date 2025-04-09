@@ -80,12 +80,12 @@ and the display skin will not be displayed
 
 <!-- Numberzap -->
 	<screen name="NumberZapSummary" position="0,0" size="1,1">
-		<widget source="parent.number_summary" render="Label" position="0,0" size="1,1">
+		<widget source="parent.numberSummary" render="Label" position="0,0" size="1,1">
 			<convert type="VfdDisplay">Number;nozero</convert>
 		</widget>
 	</screen>
 	<screen name="NumberZapPiconSummary" position="0,0" size="1,1">
-		<widget source="parent.number_summary" render="Label" position="0,0" size="1,1">
+		<widget source="parent.numberSummary" render="Label" position="0,0" size="1,1">
 			<convert type="VfdDisplay">Number;nozero</convert>
 		</widget>
 	</screen>

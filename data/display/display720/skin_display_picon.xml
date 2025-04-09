@@ -3,6 +3,15 @@
 <!-- Skin is for et8500 LCD/TFT without panel widgets -->
 
 <skin>
+	<colors>
+		<color name="oled1" value="#00adff2f" /> <!--Schriftfarbe Menue gelbgruen-->
+		<color name="oled2" value="#00ffffff" /> <!--Schriftfarbe Textroller-->
+		<color name="oled3" value="#00adff2f" /> <!--Schriftfarbe Uhrzeit usw.-->
+		<color name="oled4" value="#00adff2f" /> <!--Schriftfarbe Sender-->
+		<color name="oled5" value="#00ffffff" /> <!--Schriftfarbe Sendung-->
+		<color name="oled6" value="#00adff2f" /> <!--Schriftfarbe Sender Kanalliste-->
+		<color name="oled7" value="#00ff2525" /> <!--Schriftfarbe Uhr Standby-->
+	</colors>
 	<windowstyle id="1" type="skinned">
 		<color color="#000000" name="Background"/>
 		<color color="#ffffff" name="LabelForeground"/>
@@ -102,18 +111,18 @@
 			<convert type="ConfigEntryTest">config.usage.blinking_rec_symbol_during_recording,False,CheckSourceBoolean</convert>
 			<convert type="ConditionalShowHide"/>
 		</widget>
-		<widget source="session.Event_Now" render="Label" position="421,145" size="266,46" font="FdLcD;50" foregroundColor="#02c6ff">
+		<widget source="session.Event_Now" render="Label" position="421,145" size="266,46" font="FdLcD;50" halign="right" foregroundColor="#02c6ff" >
 			<convert type="EventTime">Remaining</convert>
 			<convert type="RemainingToText"></convert>
 		</widget>
-		<widget source="session.CurrentService" render="LcdPicon" zPosition="13" position="160,355" size="320,210" transparent="1" alphaTest="blend">
+		<widget source="session.CurrentService" render="LcdPicon" zPosition="13" position="160,355" size="320,210" transparent="1" alphatest="blend">	
 			<convert type="ServiceName">Reference</convert>
 		</widget>
-		<widget source="session.CurrentService" render="Pixmap" pixmap="/usr/share/enigma2/display/skin_default/hd.png" position="10,360" size="65,50">
+		<widget source="session.CurrentService" render="Pixmap" pixmap="skin_default/hd.png" position="10,360" size="65,50" >
 			<convert type="ServiceInfo">IsHD</convert>
 			<convert type="ConditionalShowHide" />
 		</widget>
-		<widget source="session.CurrentService" render="Pixmap" pixmap="/usr/share/enigma2/display/skin_default/dolby.png" position="80,360" size="65,50">
+		<widget source="session.CurrentService" render="Pixmap" pixmap="skin_default/dolby.png" position="80,360" size="65,50" >
 			<convert type="ServiceInfo">IsMultichannel</convert>
 			<convert type="ConditionalShowHide" />
 		</widget>
@@ -134,52 +143,52 @@
 
 <!-- channelselection-->
 	<screen name="ChannelSelectionSummary" position="0,0" size="720,576">
-		<widget source="parent.ServiceEvent" render="Label" position="15,21" size="675,100" foregroundColor="#e5b243" font="FdLcD;95" horizontalAlignment="center" zPosition="14">
+		<widget source="parent.ServiceEvent" render="Label" position="15,21" size="675,100" foregroundColor="#e5b243" font="FdLcD;95" halign="center" zPosition="14">
 			<convert type="ServiceName">Name</convert>
 		</widget>
-		<widget source="parent.ServiceEvent" render="Label" position="14,195" foregroundColor="#e5b243" size="675,120" font="FdLcDLight;55" horizontalAlignment="center" verticalAlignment="center">
+		<widget source="parent.ServiceEvent" render="Label" position="14,195" foregroundColor="#e5b243" size="675,120" font="FdLcDLight;55" halign="center" valign="center">
 			<convert type="EventName">Name</convert>
 		</widget>
 		<widget source="parent.ServiceEvent" render="Progress" position="27,120" size="660,25" foregroundColor="#02c6ff" borderWidth="2">
 			<convert type="EventTime">Progress</convert>
 		</widget>
-		<widget source="parent.ServiceEvent" render="Label" position="14,150" size="139,52" font="FdLcD;50" horizontalAlignment="center" transparent="1" foregroundColor="#02c6ff">
+		<widget source="parent.ServiceEvent" render="Label" position="14,150" size="139,52" font="FdLcD;50" halign="center" transparent="1" foregroundColor="#02c6ff">
 			<convert type="EventTime">StartTime</convert>
 			<convert type="ClockToText">Format:%H:%M</convert>
 		</widget>
-		<widget source="parent.ServiceEvent" render="Label" position="143,150" size="169,52" font="FdLcD;50" horizontalAlignment="center" transparent="1" foregroundColor="#02c6ff" >
+		<widget source="parent.ServiceEvent" render="Label" position="143,150" size="169,52" font="FdLcD;50" halign="center" transparent="1" foregroundColor="#02c6ff" >
 			<convert type="EventTime">EndTime</convert>
 			<convert type="ClockToText">Format:- %H:%M</convert>
 		</widget>
-		<widget source="session.RecordState" render="FixedLabel" text="&#174;" position="20,420" foregroundColor="#ff0000" size="140,70" font="FdLcD;65" horizontalAlignment="center" verticalAlignment="center" zPosition="22">
+		<widget source="session.RecordState" render="FixedLabel" text="&#174;" position="20,420" foregroundColor="#ff0000" size="140,70" font="FdLcD;65" halign="center" valign="center" zPosition="22">
 			<convert type="ConfigEntryTest">config.usage.blinking_rec_symbol_during_recording,True,CheckSourceBoolean</convert>
 			<convert type="ConditionalShowHide">Blink</convert>
 		</widget>
-		<widget source="session.RecordState" render="FixedLabel" text="&#174;" position="20,420" foregroundColor="#ff0000" size="140,70" font="FdLcD;65" horizontalAlignment="center" verticalAlignment="center" zPosition="22">
+		<widget source="session.RecordState" render="FixedLabel" text="&#174;" position="20,420" foregroundColor="#ff0000" size="140,70" font="FdLcD;65" halign="center" valign="center" zPosition="22">
 			<convert type="ConfigEntryTest">config.usage.blinking_rec_symbol_during_recording,False,CheckSourceBoolean</convert>
 			<convert type="ConditionalShowHide"/>
 		</widget>
-		<widget source="parent.ServiceEvent" render="Label" position="421,145" size="266,46" font="FdLcD;50" horizontalAlignment="right" foregroundColor="#02c6ff" >
+		<widget source="parent.ServiceEvent" render="Label" position="421,145" size="266,46" font="FdLcD;50" halign="right" foregroundColor="#02c6ff" >
 			<convert type="EventTime">Remaining</convert>
 			<convert type="RemainingToText"></convert>
 		</widget>
-		<widget source="parent.Service" render="LcdPicon" zPosition="13" position="160,355" size="320,210" transparent="1" alphaTest="blend">
+		<widget source="parent.Service" render="LcdPicon" zPosition="13" position="160,355" size="320,210" transparent="1" alphatest="blend">	
 			<convert type="ServiceName">Reference</convert>
 		</widget>
-		<widget source="session.RecordState" render="FixedLabel" text="&#174;" position="20,420" foregroundColor="#ff0000" size="140,70" font="FdLcD;65" horizontalAlignment="center" verticalAlignment="center" zPosition="22">
+		<widget source="session.RecordState" render="FixedLabel" text="&#174;" position="20,420" foregroundColor="#ff0000" size="140,70" font="FdLcD;65" halign="center" valign="center" zPosition="22">
 			<convert type="ConditionalShowHide">Blink</convert>
 		</widget>
-		<!--widget noWrap="1" font="FdLcD;45" render="Label" position="480,355" size="100,120" source="session.MSNWeather" transparent="1" zPosition="8" verticalAlignment="center" horizontalAlignment="center" >
+		<!--widget noWrap="1" font="FdLcD;45" render="Label" position="480,355" size="100,120" source="session.MSNWeather" transparent="1" zPosition="8" valign="center" halign="center" >
 			<convert type="MSNWeather">temperature_current</convert>
 		</widget>
-		<widget render="MSNWeatherPixmap" position="540,355" size="220,120" source="MSNWeather" transparent="1" zPosition="8" alphaTest="blend" >
+		<widget render="MSNWeatherPixmap" position="540,355" size="220,120" source="MSNWeather" transparent="1" zPosition="8" alphatest="blend" >
 			<convert type="MSNWeather">weathericon,current,/usr/share/enigma2/display/skin_default/,png</convert>
 		</widget-->
-		<widget source="session.CurrentService" render="Pixmap" pixmap="/usr/share/enigma2/display/skin_default/hd.png" position="10,360" size="65,50" >
+		<widget source="session.CurrentService" render="Pixmap" pixmap="skin_default/hd.png" position="10,360" size="65,50" >
 			<convert type="ServiceInfo">IsHD</convert>
 			<convert type="ConditionalShowHide" />
 		</widget>
-		<widget source="session.CurrentService" render="Pixmap" pixmap="/usr/share/enigma2/display/skin_default/dolby.png" position="80,360" size="65,50" >
+		<widget source="session.CurrentService" render="Pixmap" pixmap="skin_default/dolby.png" position="80,360" size="65,50" >
 			<convert type="ServiceInfo">IsMultichannel</convert>
 			<convert type="ConditionalShowHide" />
 		</widget>
@@ -196,7 +205,7 @@
 
 <!-- menus-->
 	<screen name="MenuSummary" position="0,0" size="720,576">
-		<widget source="parent.title" render="Label" position="20,50" foregroundColor="#e5b243" size="670,120" font="FdLcD;90" horizontalAlignment="center" verticalAlignment="top" noWrap="1" />
+		<widget source="parent.Title" render="Label" position="20,50" foregroundColor="#e5b243" size="670,120" font="FdLcD;90" horizontalAlignment="center" verticalAlignment="top" noWrap="1" />
 		<widget source="parent.menu" render="Label" position="20,180" size="670,300" font="FdLcD;70" horizontalAlignment="center" verticalAlignment="top" foregroundColor="#02c6ff" >
 			<convert type="StringListSelection" />
 		</widget>
@@ -255,6 +264,9 @@
 		</widget>
 		<panel name="SummaryClockPanel" />
 	</screen>
+	<screen name="EMCSelectionSummary" position="0,0" size="720,575">
+		<panel name="EMCSelectionSummary" />
+	</screen>
 	<screen name="EMCMoviePlayerSummary" position="0,0" size="720,576">
 		<widget source="session.CurrentService" render="Label" position="255,21" size="460,244" foregroundColor="#e5b243" font="FdLcD; 55" verticalAlignment="center" horizontalAlignment="center" zPosition="14">
 			<convert type="ServiceName">Name</convert>
@@ -271,9 +283,6 @@
 
 <!-- Mediaplayer -->
 	<screen name="MediaPlayerLCDScreen" position="0,0" size="720,576">
-		<widget name="text1" position="2,110" size="0,0" font="FdLcD;70" />
-		<widget name="text3" position="2,110" size="0,0" font="FdLcD;70" />
-		<widget name="text4" position="2,110" size="0,0" font="FdLcD;70" />
 		<widget source="session.CurrentService" render="Label" position="15,21" size="675,320" foregroundColor="#e5b243" font="FdLcD;70" horizontalAlignment="center" verticalAlignment="center" zPosition="14" >
 			<convert type="ServiceName">Name</convert>
 		</widget>

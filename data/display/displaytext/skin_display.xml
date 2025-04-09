@@ -2,6 +2,15 @@
 <!--  Skin: LCD from Magic by MiLo, XmlUnboundNsPrefix -->
 <!--suppress XmlUnboundNsPrefix, XmlUnboundNsPrefix -->
 <skin>
+	<colors>
+		<color name="oled1" value="#00adff2f" /> <!--Schriftfarbe Menue gelbgruen-->
+		<color name="oled2" value="#00ffffff" /> <!--Schriftfarbe Textroller-->
+		<color name="oled3" value="#00adff2f" /> <!--Schriftfarbe Uhrzeit usw.-->
+		<color name="oled4" value="#00adff2f" /> <!--Schriftfarbe Sender-->
+		<color name="oled5" value="#00ffffff" /> <!--Schriftfarbe Sendung-->
+		<color name="oled6" value="#00adff2f" /> <!--Schriftfarbe Sender Kanalliste-->
+		<color name="oled7" value="#00ff2525" /> <!--Schriftfarbe Uhr Standby-->
+	</colors>
 	<windowstyle id="1" type="skinned">
 		<color color="#000000" name="Background"/>
 		<color color="#ffffff" name="LabelForeground"/>
@@ -51,7 +60,7 @@
 		</widget>
 	</screen>
 	<screen name="NumberZapSummary" position="0,0" size="132,64">
-		<widget source="parent.number_summary" render="Label" position="0,0" size="132,64" horizontalAlignment="left" noWrap="1" />
+		<widget source="parent.numberSummary" render="Label" position="0,0" size="132,64" horizontalAlignment="left" noWrap="1" />
 	</screen>
 
 <!-- menus-->
@@ -157,12 +166,12 @@
 
 <!-- EMC  -->
 	<screen name="EMCSelectionSummary" position="0,0" size="132,64">
-		<widget source="parent.Service" render="Label" position="0,0" size="132,64" font="Regular;18" >
+		<widget source="parent.Service" render="Label" position="0,0" size="132,64" font="Regular;18" horizontalAlignment="center" verticalAlignment="center" >
 			<convert type="ServiceName">Name</convert>
 		</widget>
 	</screen>
 	<screen name="EMCSelectionSummary" position="0,0" size="132,64">
-		<panel name="EMCSelection_summary" />
+		<panel name="EMCSelectionSummary" />
 	</screen>
 	<screen name="EMCMoviePlayerSummary" position="0,0" size="132,1">
 		<widget source="session.CurrentService" render="Label" position="0,0" size="132,1">
@@ -177,9 +186,6 @@
 
 <!-- mediaplayer -->
 	<screen name="MediaPlayerLCDScreen" position="0,0" size="132,64">
-		<widget name="text1" position="4,0" size="0,0" font="Regular;16" />
-		<widget name="text3" position="4,36" size="0,0" font="Regular;10" />
-		<widget name="text4" position="4,49" size="0,0" font="Regular;10" />
 		<widget source="session.CurrentService" render="Label" position="0,0" size="120,25" horizontalAlignment="left" noWrap="1" >
 			<convert type="ServicePosition">VFDPosition</convert>
 		</widget>
@@ -246,11 +252,5 @@
 <!-- Shoutcast -->
 	<screen name="SHOUTcastLCDScreen" size="132,64">
 		<widget name="text2" position="0,0" size="120,20" font="Regular;18" horizontalAlignment="left" noWrap="1"  />
-	</screen>
-
-<!-- IMdb  -->
-	<screen name="IMDbLCDScreen" position="0,0" size="1,1">
-		<panel name="MyClockPanel" />
-		<panel name="MyRecPanel" />
 	</screen>
 </skin>
