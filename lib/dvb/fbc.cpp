@@ -271,7 +271,7 @@ bool eFBCTunerManager::IsSCR(eDVBRegisteredFrontend *fe)
 {
 	ePtr<eDVBSatelliteEquipmentControl> sec = eDVBSatelliteEquipmentControl::getInstance();
 	int slot_idx = FESlotID(fe);
-	bool is_unicable = false;
+	int idx;
 
 	for (int idx=0; idx <= sec->m_lnbidx; ++idx )
 	{
@@ -282,7 +282,7 @@ bool eFBCTunerManager::IsSCR(eDVBRegisteredFrontend *fe)
 			break;
 		}
 	}
-	return is_unicable;
+	return(false);
 }
 
 bool eFBCTunerManager::IsFEUsed(eDVBRegisteredFrontend *fe, bool a_simulate) const
@@ -500,7 +500,7 @@ int eFBCTunerManager::IsCompatibleWith(ePtr<iDVBFrontendParameters> &feparm, eDV
 		if(IsLinked(*it)) // No link to a fe linked to another.
 			continue;
 
-		if(isUnicable(*it))
+		if(IsSCR(*it))
 			continue;
 
 		// temporarily add this leaf to the current "linked" chain, at the tail
