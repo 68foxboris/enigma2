@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2025-02-23 23:20+0200\n"
+"PO-Revision-Date: 2025-04-11 15:44+0300\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>=14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.5\n"
+"X-Generator: Poedit 3.4.4\n"
 
 msgid ""
 "\n"
@@ -2640,6 +2640,9 @@ msgstr "Альтернативный радио режим"
 msgid "Alternative services tuner priority"
 msgstr "Приоритет используемых тюнеров"
 
+msgid "Always"
+msgstr "Всегда"
+
 msgid "Always ask"
 msgstr "Всегда спрашивать"
 
@@ -4524,6 +4527,9 @@ msgstr "Проверка ONID/TSID"
 msgid "Checking filesystem..."
 msgstr "Проверка файловой системы..."
 
+msgid "Check update Settings"
+msgstr "Проверить настройки обновления"
+
 msgid "Checking the internet connection"
 msgstr "Проверка подключения к интернету"
 
@@ -4633,6 +4639,9 @@ msgstr "Выберите целевое расположение каталог�
 
 msgid "Choose the target location for the slots."
 msgstr "Выберите целевое расположение слотов."
+
+msgid "Choose the time to check for update avilable every..."
+msgstr "Выберите время для проверки наличия обновлений каждые..."
 
 msgid "Choose time interval to which the graphics will be rounded off."
 msgstr "Укажите временной интервал, в котором графика будет отключена."
@@ -5499,6 +5508,9 @@ msgstr "Не удалось установить соединение с исп�
 
 msgid "Connection information"
 msgstr "Информация о подключении"
+
+msgid "Connector"
+msgstr "Соединитель"
 
 msgid "Console"
 msgstr "Консоль"
@@ -7736,6 +7748,9 @@ msgstr "Включить переключение с помощью кнопок
 msgid "Enable/Disable IPv6 support of your receiver.\n"
 msgstr "Включить/отключить поддержку IPv6 вашего приемника.\n"
 
+msgid "Enable/Disable check for update after reboot or restart box."
+msgstr "Включить/отключить проверку обновлений после перезагрузки или перезапуска."
+
 msgid "Enabled"
 msgstr "Включить"
 
@@ -7901,6 +7916,18 @@ msgstr "Права"
 
 msgid "Entertainment"
 msgstr "Разрешения"
+
+msgid "Entry image and text"
+msgstr "Изображение и текст записи"
+
+msgid "Entry image, number and text"
+msgstr "Значок, номер и текст"
+
+msgid "Entry number and text"
+msgstr "Номер и текст"
+
+msgid "Entry text only"
+msgstr "Только текст"
 
 msgid "Epg/Guide"
 msgstr "Epg/ТВ-гид"
@@ -8804,6 +8831,9 @@ msgstr "Тоновый сигнал принудительно"
 msgid "Force de-interlace"
 msgstr "Всегда использовать прогрессивную развёртку"
 
+msgid "Force frame"
+msgstr ""
+
 msgid "Force legacy signal stats"
 msgstr "Статистика уровня snr/db из E2(если поддерживается)"
 
@@ -9680,6 +9710,9 @@ msgstr "Значки"
 msgid "I check Internet speedtest, be patient..."
 msgstr "Я проверяю скорость интернета, наберитесь терпения..."
 
+msgid "If EPG available"
+msgstr "Если доступен EPG"
+
 msgid "If disabled, underline characters in file and directory names are not shown and are replaced with spaces."
 msgstr "Если этот параметр отключен,символы подчеркивания в именах файлов и каталогов не отображаются и заменяются пробелами."
 
@@ -9694,6 +9727,9 @@ msgstr "Если включено, на дисплее отображается 
 
 msgid "If enabled, then there will be displayed icons for new/unseen items too."
 msgstr "Если включено то будут отображаться значки для новых/невидимых предметов."
+
+msgid "If enabled, using a time window to detect a wake up from deep standby by a timer. Default setting ist disabled and used a special signal from the receiver. But some devices set a wrong or none signal and the wake up detection can fails."
+msgstr "Если включено, использование временного окна для обнаружения пробуждения из глубокого режима ожидания по таймеру. По умолчанию настройка отключена и используется специальный сигнал от ресивера. Но некоторые устройства устанавливают неправильный сигнал или его нет, и обнаружение пробуждения может не работать."
 
 msgid "If is enabled and movie playback is finished, then after return to movielist will not be automaticaly start service playback."
 msgstr "Если включено и воспроизведение фильма завершено,то после возврата в список видео не будет автоматически запускаться служба воспроизведения."
@@ -9945,6 +9981,9 @@ msgstr "Включить данные о загрузке экрана"
 msgid "Include teletext details"
 msgstr "Включить данные телетекста"
 
+msgid "Include timer data"
+msgstr "Включить данные таймера"
+
 msgid "Incorrect service type for Picture in Picture!"
 msgstr "Некорректный тип канала для PiP!"
 
@@ -10040,6 +10079,12 @@ msgstr "Ввод"
 
 msgid "Input "
 msgstr "Ввод "
+
+msgid "Input 1"
+msgstr "Вход 1"
+
+msgid "Input 2"
+msgstr "Вход 2"
 
 msgid "Input %d"
 msgstr "Ввод %d"
@@ -10353,6 +10398,9 @@ msgstr "Настройка клавиатуры / пульта ДУ"
 
 msgid "Keyboard"
 msgstr "Клавиатура"
+
+msgid "Keyboard Settings"
+msgstr "Настройки клавиатуры"
 
 msgid "Keyboard data entry"
 msgstr "Ввод данных клавиатуры"
@@ -10801,8 +10849,11 @@ msgstr "Настройка журналов"
 msgid "Logs location"
 msgstr "Расположение журналов"
 
+msgid "Logs Settings"
+msgstr "Настройки журналов"
+
 msgid "Log Manager"
-msgstr "Диспетчер журналов"
+msgstr "Управление логами"
 
 msgid "Logs older then the set no of days will be deleted."
 msgstr "Журналы старше установленного количества дней будут удалены."
@@ -11109,6 +11160,18 @@ msgstr "Информация о памяти для %s %s"
 
 msgid "Menu"
 msgstr "Меню"
+
+msgid "Menu entry style"
+msgstr "Вид пунктов меню"
+
+msgid "Menu style"
+msgstr "Стиль меню"
+
+msgid "Menu icons"
+msgstr "Значки меню"
+
+msgid "Menu entry sort order"
+msgstr "Порядок сортировки пунктов меню"
 
 msgid "  Menu key : Select quad channel"
 msgstr "  Клавиша меню: выбор четырехканального канала"
@@ -12543,7 +12606,7 @@ msgid "Opkg"
 msgstr "Opkg"
 
 msgid "Option to disable picons on the Infobar."
-msgstr "Отключить показ пиконов в инфопанели"
+msgstr "Отключить показ пиконов в инфопанели."
 
 msgid "Option to enable the Hardware Standby Timer."
 msgstr "Включить таймер режима ожидания HDD."
@@ -12797,6 +12860,12 @@ msgstr ""
 
 msgid "Passthrough"
 msgstr "Прямой звук"
+
+msgid "Passthrough audio handling delay AC3"
+msgstr "Задержка обработки сквозного звука AC3"
+
+msgid "Passthrough audio handling delay AC3+"
+msgstr "Задержка обработки сквозного звука AC3+"
 
 msgid "Password"
 msgstr "Пароль"
@@ -15486,6 +15555,12 @@ msgstr "Задайте время задержки требуемой для о�
 msgid "Select the character or action under the keyboard cursor"
 msgstr "Выберите символ или действие под курсором виртуальной клавиатуры"
 
+msgid "Select the display design for menus."
+msgstr "Выберите дизайн для меню."
+
+msgid "Select the display options for each menu entry item. If menu numbers are available then the number buttons can be used to select the numbered menu entries directly."
+msgstr "Выберите параметры отображения для каждого пункта меню. Если пункты меню пронумерованы, то можно использовать цифровые кнопки для их непосредственного вызова."
+
 msgid "Select the file system for the device."
 msgstr "Выберите файловую систему для устройства."
 
@@ -15494,6 +15569,9 @@ msgstr "Выберите выделенный образ и переходите
 
 msgid "Select the highlighted slot and reboot"
 msgstr "Выберите выделенный слот и перезагрузите ресивер"
+
+msgid "Select the input connector you want to use."
+msgstr "Выберите входной разъем, который вы хотите использовать."
 
 msgid "Select the layout of the installed plugins in the Plugin Browser screen. NOTE: The change is not immediate but will be seen when Plugin Browser is restarted!"
 msgstr "Выберите расположение установленных плагинов на экране браузера плагинов. ПРИМЕЧАНИЕ: изменение не вступает в силу немедленно, но будет видно при перезапуске обозревателя плагинов!"
@@ -15563,6 +15641,9 @@ msgstr "Выберите набор символов с виртуальной �
 
 msgid "Select the sort order of the Plugin Browser menu entries. User defined also allows the plugin entries to be hidden."
 msgstr "Выберите порядок сортировки пунктов меню обозревателя подключаемых модулей. Определяемый пользователем также позволяет скрывать записи плагина."
+
+msgid "Select the sort order of the menu entries. User defined also allows the menu entries to be hidden."
+msgstr "Выберите порядок сортировки пунктов меню. Определяемый пользователем также позволяет скрывать пункты меню."
 
 msgid "Select the source of the default DNS settings."
 msgstr "Выберите источник настроек DNS по умолчанию."
@@ -16747,7 +16828,6 @@ msgstr "Показывать пиконы в списке каналов"
 msgid "Show picon folder name"
 msgstr "Показать имя папки picon"
 
-
 msgid "Show picons in channel selection list"
 msgstr "Показать пиконы в списке выбора каналов"
 
@@ -16831,6 +16911,9 @@ msgstr "Показать выбор подканалов"
 
 msgid "Show subservices"
 msgstr "Показывать подканалы"
+
+msgid "Show subservices *"
+msgstr "Показывать подканалы *"
 
 msgid "Show subtitle selection"
 msgstr "Показать меню выбора субтитров"
@@ -17760,6 +17843,9 @@ msgstr "Сохранить положение"
 msgid "Stored position"
 msgstr "Сохраненное положение"
 
+msgid "Stream Relay Settings"
+msgstr "Настройка ретрансляции потоков"
+
 msgid "Stream Relay Setup"
 msgstr "Настройка Stream Relay"
 
@@ -18389,6 +18475,12 @@ msgstr "Следующие файлы были найдены..."
 msgid "The hostname or the IP address of the NTP server to synchronise the time with."
 msgstr "Имя хоста или IP-адрес NTP-сервера, с которого нужно синхронизировать время."
 
+msgid "The default settings are 5 minutes earlier to wake up from deep standby. It possibly may be necessary to change this. (e.g.: the actual wake-up time is inaccurate or to late, waiting to a network-drive, etc.)"
+msgstr "Настройки по умолчанию - на 5 минут раньше, чтобы выйти из глубокого режима ожидания. Возможно, это необходимо изменить. (например: фактическое время пробуждения неточное или слишком позднее, ожидание сетевого диска и т. д.)"
+
+msgid "The default settings are wake up time - 5 minutes and timer begin time + 5 minutes. This setting changed the time window before the wake up time. So can be detected a wake up by a timer even at very early starting receivers."
+msgstr "Настройки по умолчанию: 'время пробуждения' - 5 минут и 'начало таймера' + 5 минут. Этот параметр изменяет временной интервал до времени пробуждения. Поэтому пробуждение по таймеру может быть определено даже на рано загружающихся ресиверах."
+
 msgid "The frame rate of the recording. Ideally, this will match the frame rate of the source or be an integer multiple. If in doubt, set to 60, which should work with most sources."
 msgstr "Частота кадров при записи.В идеале это должно соответствовать частоте кадров источника или быть целочисленным.Если сомневаетесь установите 60,что должно работать с большинством источников."
 
@@ -18659,6 +18751,9 @@ msgstr "Эта опция позволяет вам выбрать как ото
 msgid "This option allows you choose the background color of transparent picons."
 msgstr "Эта опция позволяет выбрать цвет фона для прозрачных пиконов."
 
+msgid "This option allows you choose the option for Subservice indicator or selection."
+msgstr "Эта опция позволяет вам выбрать между индикацией или выбором подканалов."
+
 msgid "This option allows you choose how to display the remaining/elapsed time for live TV."
 msgstr "Эта опция позволяет вам выбрать, как отображать оставшееся / прошедшее время для прямого ТВ."
 
@@ -18745,6 +18840,9 @@ msgstr "Эта опция позволяет скрывать и сортиро�
 
 msgid "This option allows you to select if the default value for a setup item is shown and, if so, where it is displayed in relation to the description."
 msgstr "Эта опция позволяет вам выбрать, будет ли отображаться значение по умолчанию для элемента настройки, и если да, то где оно будет отображаться по отношению к описанию."
+
+msgid "This option allows you to show icons of menu."
+msgstr "Эта опция позволяет отображать значки меню."
 
 msgid "This option allows you to power off the display."
 msgstr "Эта опция позволяет отключить дисплей."
@@ -19311,6 +19409,9 @@ msgstr "Китайский традиционный"
 
 msgid "Transcode"
 msgstr "Транскодировать"
+
+msgid "Transcoding Setup"
+msgstr "Настройка транскодирования"
 
 msgid "Transcoding: "
 msgstr "Транскодирование: "
@@ -20003,6 +20104,15 @@ msgstr "Использование корзины в списке видео"
 msgid "Used service scan type"
 msgstr "Используемый тип сканирования канала"
 
+msgid "Used to specify delay when switching between services and AC3 passthrough is enabled."
+msgstr "Используется для указания задержки при переключении между службами и включении сквозной передачи AC3."
+
+msgid "Used to specify delay when switching between services and AC3+/Atmos passthrough is enabled."
+msgstr "Используется для указания задержки при переключении между службами и включении сквозной передачи AC3+/Atmos."
+
+msgid "Use workaround for wake up from deep-standby"
+msgstr "Другой путь для выхода из глубокого режима ожидания"
+
 msgid "Used"
 msgstr "Используется"
 
@@ -20130,6 +20240,9 @@ msgstr "Вертикальная"
 
 msgid "Vertical alignment for the service number."
 msgstr "Выравнивание по вертикали для номера канала."
+
+msgid "Vertical menu"
+msgstr "Вертикальное меню"
 
 msgid "Vertical alignment for the event-progress."
 msgstr "Выравнивание по вертикали линейки прогресса передачи."
@@ -20470,6 +20583,9 @@ msgstr "Пробуждение"
 
 msgid "Wakeup A/V receiver from standby."
 msgstr "Включить аудио/видео систему при выходе из ожидания."
+
+msgid "Wake up time before a timer begins [mins]"
+msgstr "Включить до начала таймера за [мин]"
 
 msgid "Wake up to standby"
 msgstr "Пробуждение в режим ожидания"
@@ -21762,6 +21878,12 @@ msgstr "по центру, завернутый"
 msgid "chapters"
 msgstr "разделы"
 
+msgid "check for firmware updates every"
+msgstr "проверяйте наличие обновлений прошивки каждые"
+
+msgid "check for firmware updates on start"
+msgstr "проверить наличие обновлений прошивки при запуске"
+
 msgid "childrens's youth program (general)"
 msgstr "детские/молодежные программы (общее)"
 
@@ -22248,6 +22370,9 @@ msgstr "модуль отключён"
 msgid "month"
 msgstr "месяц"
 
+msgid "monthly"
+msgstr "ежемесячно"
+
 msgid "motor sport"
 msgstr "автоспорт"
 
@@ -22298,6 +22423,12 @@ msgstr "никогда"
 
 msgid "new media"
 msgstr "новый медиаресурс"
+
+msgid "new line"
+msgstr "новая строка"
+
+msgid "2 new lines"
+msgstr "2 новые строки"
 
 msgid "news magazine"
 msgstr "журнал новостей"
@@ -22364,6 +22495,9 @@ msgstr "не запущенно"
 
 msgid "not set"
 msgstr "не задано"
+
+msgid "nothing"
+msgstr "ничего"
 
 msgid "not supported"
 msgstr "не поддерживается"
@@ -22965,6 +23099,9 @@ msgstr "водные виды спорта"
 
 msgid "weekly"
 msgstr "еженедельно"
+
+msgid "week"
+msgstr "неделя"
 
 msgid "west"
 msgstr "запад"
