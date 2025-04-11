@@ -276,11 +276,9 @@ bool eFBCTunerManager::IsSCR(eDVBRegisteredFrontend *fe)
 	for (int idx=0; idx <= sec->m_lnbidx; ++idx )
 	{
 		eDVBSatelliteLNBParameters &lnb_param = sec->m_lnbs[idx];
-		if ( lnb_param.m_slot_mask & (1 << slot_idx) )
-		{
-			is_unicable = lnb_param.SatCR_idx != -1;
-			break;
-		}
+
+		if (lnb_param.m_slot_mask & (1 << slot_idx))
+			return(lnb_param.SatCR_format != SatCR_format_none);
 	}
 	return(false);
 }
