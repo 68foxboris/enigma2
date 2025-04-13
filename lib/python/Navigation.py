@@ -2,7 +2,7 @@ from os import remove
 from os.path import exists
 from time import ctime, time
 
-from enigma import eServiceCenter, eServiceReference, eTimer, getBestPlayableServiceReference, iPlayableService, iServiceInformation, pNavigation, eStreamServer
+from enigma import eServiceCenter, eServiceReference, eTimer, getBestPlayableServiceReference, iPlayableService, iServiceInformation, iRecordableServicePtr, pNavigation, eStreamServer
 
 import NavigationInstance
 import RecordTimer
