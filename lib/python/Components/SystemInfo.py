@@ -286,6 +286,7 @@ try:
 except:
 	branch = ""
 branch_e2plugins = "?sha=python3"
+
 commitLogs = [
 	("OpenPli Enigma2", "https://api.github.com/repos/68foxboris/enigma2/commits"),
 	("Openpli OE Core", "https://api.github.com/repos/openpli/openpli-oe-core/commits"),
@@ -294,8 +295,7 @@ commitLogs = [
 	("Aio Grab", "https://api.github.com/repos/openpli/aio-grab/commits"),
 	("Plugin EPGImport", "https://api.github.com/repos/openpli/enigma2-plugin-extensions-epgimport/commits"),
 	("Skin PLi HD", "https://api.github.com/repos/68foxboris/skin-PLiHD/commits"),
-	("https://api.github.com/repos/oe-alliance/OpenWebif/commits", "OpenWebif", API_GITHUB),
-	("Hans settings", "https://gitlab.openpli.org/api/v4/projects/5/repository/commits")
+	("OpenWebif", "https://api.github.com/repos/oe-alliance/OpenWebif/commits")
 ]
 BoxInfo.setItem("InformationCommitLogs", commitLogs)
 
