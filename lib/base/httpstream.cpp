@@ -166,6 +166,8 @@ int eHttpStream::openUrl(const std::string &url, std::string &newurl)
 		goto error;
 
 	result = sscanf(linebuf, "%99s %d %99s", proto, &statuscode, statusmsg);
+	eDebug("[eHttpStream] %s: http result code: %d", __func__, result);
+	eDebug("[eHttpStream] %s: http response code: %d", __func__, statuscode);
 	if (statuscode != 301)
 		if (result != 3 || (statuscode != 200 && statuscode != 206 && statuscode != 302))
 		{
@@ -399,10 +401,4 @@ off_t eHttpStream::length()
 off_t eHttpStream::offset()
 {
 	return 0;
-}
-
-int eHttpStream::reconnect()
-{
-	close();
-	return open(streamUrl.c_str());
 }
