@@ -433,7 +433,7 @@ class ConfigListScreen:
 			if len(item) > 1:
 				if item[1].isChanged():
 					itemText = item[0][0] if isinstance(item[0], tuple) else item[0]
- 					if itemText.endswith("*"):
+					if itemText.endswith("*"):
 						quitData = (QUIT_RESTART, _("Restart GUI now?"))
 					elif itemText.endswith("#"):
 						quitData = (QUIT_REBOOT, _("Reboot %s %s now?") % getBoxDisplayName())
