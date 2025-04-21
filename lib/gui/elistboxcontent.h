@@ -75,6 +75,7 @@ public:
 	void setSeperation(int sep) { m_seperation = sep; }
 	int getEntryLeftOffset();
 	int getHeaderLeftOffset();
+	int getIndentSize();
 	int currentCursorSelectable();
 	void setSlider(int height, int space)
 	{
@@ -123,7 +124,6 @@ public:
 	void entryRemoved(int idx);
 	void setTemplate(SWIG_PYOBJECT(ePyObject) tmplate);
 	int getMaxItemTextWidth();
-
 protected:
 	virtual void setBuildArgs(int selected) {}
 	virtual bool getIsMarked(int selected) { return false; }
