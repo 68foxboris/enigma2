@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from time import localtime, mktime
-from Components.config import ConfigClock, ConfigNumber, ConfigYesNo, ConfigSubsection, ConfigSelection, config
+from Components.config import ConfigClock, ConfigEnableDisable, ConfigNumber, ConfigYesNo, ConfigSubsection, ConfigSelection, config
 from Components.SystemInfo import BoxInfo
 
 
@@ -33,10 +33,10 @@ def InitRecordingConfig():
 	config.recording.timer_default_type = ConfigSelection(choices=[("zap", _("zap")), ("record", _("record")), ("zap+record", _("zap and record"))], default="record")
 
 	if BoxInfo.getItem("CanDescrambleInStandby"):
-		config.recording.standbyDescramble = ConfigYesNo(default=True)
-		config.recording.standbyDescrambleShutdown = ConfigYesNo(default=True)
+		config.recording.standbyDescramble = ConfigEnableDisable(default=True)
+		config.recording.standbyDescrambleShutdown = ConfigEnableDisable(default=True)
 	else:
-		config.recording.standbyDescramble = ConfigYesNo(default=False)
-		config.recording.standbyDescrambleShutdown = ConfigYesNo(default=False)
+		config.recording.standbyDescramble = ConfigEnableDisable(default=False)
+		config.recording.standbyDescrambleShutdown = ConfigEnableDisable(default=False)
 	config.recording.standbyDescrambleStart = ConfigClock(default=calculateTime(0, 1))
 	config.recording.standbyDescrambleEnd = ConfigClock(default=calculateTime(23, 59))
