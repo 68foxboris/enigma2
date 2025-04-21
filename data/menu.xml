@@ -63,7 +63,7 @@
 					</menu>
 					<menu key="audio" level="1" text="Audio Settings">
 						<item key="au_setup" text="Audio Settings" level="0"><setup setupKey="Audio_setup"/></item>
-						<item key="volume_adjust" level="1" text="Volume Adjust" weight="5"><screen module="VolumeAdjust" screen="VolumeAdjust" /></item>
+						<item key="volume_adjust" level="1" text="Volume Adjust Settings" weight="5"><screen module="VolumeControl" screen="VolumeAdjustSettings" /></item>
 						<item key="subtitle_setup" level="2" text="Subtitle Settings" weight="20"><setup setupKey="Subtitle"/></item>
 						<item key="autolanguage_setup" level="0" text="Auto Language Settings"><setup setupKey="AutoLanguage"/></item>
 					</menu>

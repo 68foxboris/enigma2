@@ -348,6 +348,8 @@ def runScreenTest():
 	runNextScreen(session, screensToRun)
 	enigma.eProfileWrite("VolumeControl")
 	vol = VolumeControl(session)
+	enigma.eProfileWrite("VolumeAdjust")
+	vol = VolumeAdjust(session)
 	enigma.eProfileWrite("Processing Screen")
 	processing = Processing(session)
 	enigma.eProfileWrite("Global MessageBox Screen")
@@ -363,9 +365,6 @@ def runScreenTest():
 	enigma.eProfileWrite("Trashcan")
 	import Tools.Trashcan
 	Tools.Trashcan.init(session)
-	enigma.eProfileWrite("VolumeAdjustAutoStart")
-	from Screens.VolumeAdjust import autostart
-	autostart(session)
 	enigma.eProfileWrite("RunReactor")
 	enigma.eProfileDone()
 	from Components.FrontPanelLed import FrontPanelLed
@@ -652,7 +651,7 @@ enigma.eProfileWrite("CIHandler")
 from Screens.Ci import CiHandler
 
 enigma.eProfileWrite("VolumeControl")
-from Components.VolumeControl import VolumeControl
+from Screens.VolumeControl import VolumeAdjust, VolumeControl
 
 enigma.eProfileWrite("Processing")
 from Screens.Processing import Processing
