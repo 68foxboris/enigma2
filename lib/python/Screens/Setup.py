@@ -100,7 +100,7 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 				if including and include:
 					self.addItem(element, indent=indent)
 			elif element.tag == "if":
-				indent = element.get("indent", "").lower()
+				indent = element.get("indent", "")
 				indent = int(indent) if indent and indent.isnumeric() and int(indent) > 0 else None
 				if including:
 					self.addItems(element, including=include, indent=indent)
@@ -118,7 +118,7 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 			itemText = indent + (_(x) if (x := element.get("text")) else "* fix me *")
 			itemDescription = _(x) if (x := element.get("description")) else ""
 		restart = element.get("restart", "").lower()
-		indent = element.get("indent", "").lower() or str(indent)
+		indent = element.get("indent", "") or indent
 		indent = int(indent) if indent and indent.isnumeric() and int(indent) > 0 else None
 		if restart == "gui" and not itemText.endswith("*"):  # Add "*" as restart indicator based on the restart attribute.
 			itemText = f"{itemText}*"
