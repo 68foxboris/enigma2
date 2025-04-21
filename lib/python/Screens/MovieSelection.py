@@ -16,6 +16,7 @@ from Components.ServiceEventTracker import ServiceEventTracker, InfoBarBase
 from Components.Sources.Boolean import Boolean
 from Components.Sources.ServiceEvent import ServiceEvent
 from Components.Sources.StaticText import StaticText
+from Components.SystemInfo import BoxInfo
 from Components.UsageConfig import preferredTimerPath
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 
@@ -377,7 +378,8 @@ class MovieContextMenu(Screen, ProtectedScreen):
 					if self.isResetable():
 						append_to_menu(menu, (_("Reset playback position"), csel.do_reset))
 					if service.getPath().endswith('.ts'):
-						append_to_menu(menu, (_("Start offline decode"), csel.do_decode))
+						if BoxInfo.getItem("CanOfflineDecode"):
+							append_to_menu(menu, (_("Start offline decode"), csel.do_decode))
 				elif BlurayPlayer is None and csel.isBlurayFolderAndFile(service):
 					append_to_menu(menu, (_("Auto play blu-ray file"), csel.playBlurayFile))
 				if config.ParentalControl.servicepin[0].value and config.ParentalControl.servicepinactive.value and config.ParentalControl.hideBlacklist.value and config.ParentalControl.storeservicepin.value != "never":

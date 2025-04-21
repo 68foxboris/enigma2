@@ -11,6 +11,7 @@ from Components.Console import Console
 from Components.ImportChannels import ImportChannels
 from Components.SystemInfo import BoxInfo, getBoxDisplayName
 from Components.Sources.StreamService import StreamServiceList
+from Components.ScrambledRecordings import ScrambledRecordings
 from Components.Task import job_manager
 from Tools.Directories import mediaFilesInUse
 from Tools.Notifications import AddNotification
@@ -316,7 +317,7 @@ class Standby(StandbyScreen):
 class StandbySummary(Screen):
 	skin = """
 	<screen position="0,0" size="132,64">
-		<widget source="global.CurrentTime" render="Label" position="0,0" size="132,64" font="Regular;40" halign="center">
+		<widget source="global.CurrentTime" render="Label" position="0,0" size="132,64" font="Regular;40" horizontalAlignment="center">
 			<convert type="ClockToText" />
 		</widget>
 		<widget source="session.RecordState" render="FixedLabel" text=" " position="0,0" size="132,64" zPosition="1" >
@@ -329,8 +330,8 @@ class StandbySummary(Screen):
 class QuitMainloopScreen(Screen):
 	def __init__(self, session, retvalue=QUIT_SHUTDOWN):
 		self.skin = """<screen name="QuitMainloopScreen" position="fill" flags="wfNoBorder">
-				<ePixmap pixmap="icons/input_info.png" position="c-27,c-60" size="53,53" alphatest="on" />
-				<widget name="text" position="center,c+5" size="720,100" font="Regular;22" halign="center" />
+				<ePixmap pixmap="icons/input_info.png" position="c-27,c-60" size="53,53" alphaTest="on" />
+				<widget name="text" position="center,c+5" size="720,100" font="Regular;22" horizontalAlignment="center" />
 			</screen>"""
 		Screen.__init__(self, session)
 		from Components.Label import Label
@@ -353,11 +354,17 @@ inTryQuitMainloop = False
 def getReasons(session, retvalue=QUIT_SHUTDOWN):
 	recordings = session.nav.getRecordings()
 	jobs = len(job_manager.getPendingJobs())
+	if BoxInfo.getItem("CanDescrambleInStandby"):
+		scrambledRecordings = ScrambledRecordings()
+		scrambledList = scrambledRecordings.readList(returnLength=True)
+	else:
+		scrambledList = []
 	reasons = []
-	next_rec_time = -1
+	nextRecordingTime = -1
+	self.descramble = False
 	if not recordings:
-		next_rec_time = session.nav.RecordTimer.getNextRecordingTime()
-	if recordings or (next_rec_time > 0 and (next_rec_time - time()) < 360):
+		nextRecordingTime = session.nav.RecordTimer.getNextRecordingTime()
+	if recordings or (nextRecordingTime > 0 and (nextRecordingTime - time()) < 360):
 		reasons.append(_("Recording(s) are in progress or coming up in few seconds!"))
 	if jobs:
 		if jobs == 1:
@@ -371,6 +378,24 @@ def getReasons(session, retvalue=QUIT_SHUTDOWN):
 		reasons.append(_("Client is streaming from this box!"))
 	if not reasons and mediaFilesInUse(session) and retvalue in (QUIT_SHUTDOWN, QUIT_REBOOT, QUIT_KODI, QUIT_UPGRADE_FP, QUIT_UPGRADE_PROGRAM):
 		reasons.append(_("A file from media is in use!"))
+	if jobs and retvalue in (QUIT_SHUTDOWN, QUIT_REBOOT, QUIT_KODI):
+		reason = _('%d jobs are running in the background!') % jobs
+		default_yes = False
+		timeout = 30
+	if len(scrambledList) and retvalue == QUIT_SHUTDOWN:
+		duration = 0
+		for scrambledListItem in scrambledList:
+			duration += scrambledListItem[1]
+		count = len(scrambledList)
+		reason = [
+			ngettext("There is %d scrambled recording, which will be unscrambled during Standby.", "There are %d scrambled recordings, which will be unscrambled during Standby.", count) % count,
+			_("The process will take approximately %d minutes to complete.") % min(int(duration // 60), 2),
+			 _("Select 'Yes' to shut down immediately instead of starting the descramble.")
+		]
+		reason = f"{reason[0]} {reason[1]}\n\n{reason[2]}"
+		default_yes = False
+		self.descramble = True
+		timeout = 30
 	return "\n".join(reasons)
 
 
@@ -451,6 +476,10 @@ class TryQuitMainloop(MessageBox):
 						oled.write("0")
 			self.quitMainloop()
 		else:
+			if self.descramble:
+				from Components.PvrDescrambleConvert import pvr_descramble_convert
+				if pvr_descramble_convert.scrambledRecordsLeft():
+					self.session.open(Standby)
 			MessageBox.close(self, True)
 
 	def quitMainloopDelay(self):

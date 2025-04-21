@@ -21,6 +21,7 @@ public:
 	RESULT getError(int &error) { error = m_error; return 0; };
 	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr);
 	RESULT subServices(ePtr<iSubserviceList> &ptr);
+	RESULT getServiceType(int &serviceType) { serviceType = -1; return -1; };
 	RESULT getFilenameExtension(std::string &ext) { ext = ".stream"; return 0; };
 
 private:
@@ -53,7 +54,7 @@ private:
 	static void handlePadAdded(GstElement *element, GstPad *pad, gpointer user_data);
 	static gboolean handleAutoPlugCont(GstElement *bin, GstPad *pad, GstCaps *caps, gpointer user_data);
 
-			/* events */
+	/* events */
 	sigc::signal<void(iRecordableService*,int)> m_event;
 };
 

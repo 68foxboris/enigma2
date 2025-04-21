@@ -72,12 +72,13 @@ public:
 	int getInfo(int w);
 	std::string getInfoString(int w);
 	ePtr<iServiceInfoContainer> getInfoObject(int w);
+
 	void setQpipMode(bool value, bool audio) { }
 
 private:
 	friend class eServiceFactoryHDMI;
 	eServiceHDMI(eServiceReference ref);
-	sigc::signal<void(iPlayableService*, int)> m_event;
+	sigc::signal<void(iPlayableService*,int)> m_event;
 	eServiceReference m_ref;
 	int m_decoder_index;
 	bool m_noaudio;
@@ -99,6 +100,7 @@ public:
 	RESULT frontendInfo(ePtr<iFrontendInformation> &ptr);
 	RESULT stream(ePtr<iStreamableService> &ptr);
 	RESULT subServices(ePtr<iSubserviceList> &ptr);
+	RESULT getServiceType(int &serviceType) { serviceType = -1; return -1; };
 	RESULT getFilenameExtension(std::string &ext) { ext = ".ts"; return 0; };
 
 private:

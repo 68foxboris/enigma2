@@ -5,6 +5,7 @@ from enigma import eEPGCache, getBestPlayableServiceReference, eStreamServer, eS
 from Components.config import config
 from Components.UsageConfig import defaultMoviePath
 from Components.SystemInfo import BoxInfo
+from Components.ScrambledRecordings import ScrambledRecordings
 from Components.TimerSanityCheck import TimerSanityCheck
 
 from Screens.MessageBox import MessageBox
@@ -154,7 +155,7 @@ class RecordTimerEntry(timer.TimerEntry):
 			RecordTimerEntry.staticGotRecordEvent(None, iRecordableService.evEnd)
 #################################################################
 
-	def __init__(self, serviceref, begin, end, name, description, eit, disabled=False, justplay=False, afterEvent=AFTEREVENT.AUTO, checkOldTimers=False, dirname=None, tags=None, descramble=True, record_ecm=False, always_zap=False, zap_wakeup="always", rename_repeat=True, conflict_detection=True, pipzap=False):
+	def __init__(self, serviceref, begin, end, name, description, eit, disabled=False, justplay=False, afterEvent=AFTEREVENT.AUTO, checkOldTimers=False, dirname=None, tags=None, descramble=True, record_ecm=False, always_zap=False, zap_wakeup="always", rename_repeat=True, conflict_detection=True, pipzap=False, filename=None):
 		timer.TimerEntry.__init__(self, int(begin), int(end))
 
 		if checkOldTimers:
@@ -196,6 +197,12 @@ class RecordTimerEntry(timer.TimerEntry):
 		self.external = self.external_prev = False
 		self.setAdvancedPriorityFrontend = None
 		self.background_zap = None
+
+		if self.descramble or not self.record_ecm:
+			if cihelper.ServiceIsAssigned(self.service_ref.ref):
+				self.descramble = False
+				self.record_ecm = True
+
 		if BoxInfo.getItem("DVB-T_priority_tuner_available") or BoxInfo.getItem("DVB-C_priority_tuner_available") or BoxInfo.getItem("DVB-S_priority_tuner_available") or BoxInfo.getItem("ATSC_priority_tuner_available"):
 			rec_ref = self.service_ref and self.service_ref.ref
 			str_service = rec_ref and rec_ref.toString()
@@ -223,6 +230,12 @@ class RecordTimerEntry(timer.TimerEntry):
 		self.change_frontend = False
 		self.InfoBarInstance = Screens.InfoBar.InfoBar.instance
 		self.ts_dialog = None
+
+		self.PVRFilename = filename
+		self.isPVRDescramble = False
+		self.pvrConvert = False
+		self.scrambledRecordings = ScrambledRecordings()
+
 		self.log_entries = []
 		self.flags = set()
 		self.resetState()
@@ -235,6 +248,14 @@ class RecordTimerEntry(timer.TimerEntry):
 		print("[[RecordTimer]]", msg)
 
 	def calculateFilename(self, name=None):
+		if self.PVRFilename:
+			self.Filename = self.PVRFilename
+			self.PVRFilename = None
+			self.isPVRDescramble = True
+			if config.recording.debug.value:
+				self.log(0, "Filename calculated as: '%s'" % self.Filename)
+			return self.Filename
+
 		service_name = self.service_ref.getServiceName()
 		begin_date = strftime("%Y%m%d %H%M", localtime(self.begin))
 		name = name or self.name
@@ -592,6 +613,11 @@ class RecordTimerEntry(timer.TimerEntry):
 				return True
 			self.log_tuner(12, "stop")
 			if not self.justplay:
+				scamble = not self.descramble or config.recording.never_decrypt.value
+				if not self.isPVRDescramble and scamble:
+					print(f"[RecordTimer] Add Recording to pending descramble list: {self.Filename}")
+					self.scrambledRecordings.writeList(append=f"{self.Filename}{self.record_service.getFilenameExtension()}")
+
 				NavigationInstance.instance.stopRecordService(self.record_service)
 				if self.background_zap is not None and Screens.Standby.inStandby:
 					cur_ref = NavigationInstance.instance.getCurrentlyPlayingServiceReference()
@@ -790,6 +816,8 @@ class RecordTimerEntry(timer.TimerEntry):
 			# that in our state, with also keeping the possibility to re-try.
 			# TODO: this has to be done.
 		elif event == iRecordableService.evStart:
+			if self.pvrConvert:
+				return
 			text = _("A recording has started:\n%s") % self.name
 			notify = config.usage.show_message_when_recording_starts.value and not Screens.Standby.inStandby and self.InfoBarInstance and self.InfoBarInstance.execing
 			if self.dirnameHadToFallback:

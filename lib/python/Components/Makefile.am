@@ -23,4 +23,4 @@ install_PYTHON = \
 	Netlink.py InputHotplug.py updatecheck.py \
 	ImportChannels.py PowerOffTimer.py EpgLoadSave.py StackTrace.py \
 	HdmiRecord.py NetworkTime.py VfdSymbols.py FrontPanelLed.py International.py \
-	Storage.py
+	Storage.py PvrDescrambleConvert.py ScrambledRecordings.py

@@ -554,8 +554,8 @@ config.crash.debugScreens = ConfigYesNo(default=False)
 config.crash.debugSkin = ConfigYesNo(default=False)
 config.crash.debugDVBScan = ConfigYesNo(default=False)
 config.crash.debugDVBTime = ConfigYesNo(default=False)
-config.crash.debugTimers = ConfigYesNo(default=False)
 config.crash.debugDVB = ConfigYesNo(default=False)
+config.crash.debugTimers = ConfigYesNo(default=False)
 config.crash.debugTeletext = ConfigYesNo(default=False)
 config.crash.debugStorage = ConfigYesNo(default=False)
 
@@ -631,6 +631,7 @@ from Screens.StartWizard import *
 from Tools.BoundFunction import boundFunction
 from Plugins.Plugin import PluginDescriptor
 
+# Display.
 enigma.eProfileWrite("ScreenGlobals")
 from Screens.Globals import Globals
 from Screens.SessionGlobals import SessionGlobals
@@ -690,6 +691,9 @@ InitRecordingConfig()
 enigma.eProfileWrite("InitUsageConfig")
 from Components.UsageConfig import InitUsageConfig, DEFAULTKEYMAP
 InitUsageConfig()
+
+enigma.eProfileWrite("InitPvrDescrambleConvert")
+from Components.PvrDescrambleConvert import pvr_descramble_convert
 
 enigma.eProfileWrite("InitTimeZones")
 from Components.Timezones import InitTimeZones
