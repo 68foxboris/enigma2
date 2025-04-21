@@ -2667,6 +2667,10 @@ msgstr "Американское Самоа"
 msgid "Amlogic"
 msgstr "Amlogic"
 
+#, python-format
+msgid "Amount %d / Success %d / Failed %d"
+msgstr "Итог %d / Успех %d / Неудача %d"
+
 msgid "An empty filename is illegal."
 msgstr "Пустое имя недопустимо."
 
@@ -4251,6 +4255,9 @@ msgstr "Серийный номер карты"
 
 msgid "Cascade PiP"
 msgstr "Каскад PiP"
+
+msgid "Catchup player commands"
+msgstr "Команды игрока архивов"
 
 msgid "Cayman Islands"
 msgstr "Каймановы острова"
@@ -6570,6 +6577,21 @@ msgstr "Декодировать полученные http потоки"
 
 msgid "Descramble sending http streams"
 msgstr "Декодировать отправленные http потоки"
+
+msgid "Descramble end time"
+msgstr "Время окончания декодирования"
+
+msgid "Descramble in Standby"
+msgstr "Дескремблирование в режиме ожидания"
+
+msgid "Descramble in Standby finished"
+msgstr "Дескремблирование в режиме ожидания завершено"
+
+msgid "Descramble recordings before Shutdown"
+msgstr "Дескремблирование записей перед выключением"
+
+msgid "Descramble start time"
+msgstr "Время начала дескремблирования"
 
 msgid "Description"
 msgstr "Описание"
@@ -12984,6 +13006,9 @@ msgstr "Пиксели\n"
 msgid "Play"
 msgstr "Воспроизведение"
 
+msgid "Play archive"
+msgstr "Воспроизвести архив"
+
 msgid "Play DVD"
 msgstr "Воспроизведение DVD"
 
@@ -15260,6 +15285,12 @@ msgstr "Похоже, проверка фонового обновления в�
 msgid "Seems a background update check is in progress, please wait a few minutes and then try again."
 msgstr "Похоже, проверка фонового обновления выполняется, подождите несколько минут и повторите попытку."
 
+msgid "Select a time, when in Standby mode, after which the descramble can proceed."
+msgstr "Выберите время в режиме ожидания, после которого можно будет продолжить декодирование."
+
+msgid "Select a time, when in Standby, before which descramble can proceed."
+msgstr "Выберите время в режиме ожидания, до которого может быть выполнено дешифрование."
+
 msgid "Seems internet connection down, Or TMBD Plugin not on feed."
 msgstr "Кажется интернет не работает или плагина TMBD нет на фиде."
 
@@ -15697,6 +15728,12 @@ msgstr "Выберите часовой пояс в области или рег
 msgid "Select timezone in the area or region."
 msgstr "Выберите часовой пояс в области или регионе."
 
+msgid "Set to 'Enabled' to descramble queued scrambled recordings in Standby mode before shutting down."
+msgstr "Установите значение «Включено», чтобы расшифровывать зашифрованные записи, находящиеся в очереди, в режиме ожидания перед выключением."
+
+msgid "Set to 'Enabled' to descramble queued scrambled recordings in Standby."
+msgstr "Установите значение «Включено», чтобы расшифровывать зашифрованные записи, находящиеся в очереди, в режиме ожидания."
+
 msgid "Select update source"
 msgstr "Выбор источника обновления"
 
@@ -15778,6 +15815,9 @@ msgstr "Выберите «Да», если вы хотите вывести т�
 
 msgid "Select 'Yes' to show the 'Movie Selection' entry in the Main Menu. This can provide access to the Movie Selection screen when there is no assigned button on the remote control."
 msgstr "Выберите «Да», чтобы отобразить запись «Выбор фильма» в главном меню. Это может обеспечить доступ к экрану выбора фильма, когда на пульте дистанционного управления нет назначенной кнопки."
+
+msgid "Select 'Yes' to shut down immediately instead of starting the descramble."
+msgstr "Выберите «Да», чтобы немедленно завершить работу, не запуская декодирование."
 
 msgid "Selects video source displayed on the LCD."
 msgstr "Выбор источника видео для показа на LCD дисплее."
@@ -18487,6 +18527,10 @@ msgstr "Частота кадров при записи.В идеале это �
 msgid "The height of the picture. The input will be scaled to match this value."
 msgstr "Высота картины.Входные данные будут масштабироваться в соответствии с этим значением."
 
+#, python-format
+msgid "The process will take approximately %d minutes to complete."
+msgstr "Процесс займет приблизительно %d минут."
+
 msgid ""
 "The network wizard extension is not installed!\n"
 "Please install it."
@@ -18657,6 +18701,13 @@ msgstr "Нет сохраненных плейлистов для загрузк
 
 msgid "There are no updates available."
 msgstr "Нет доступных обновлений."
+
+#, python-format
+msgid "There is %d scrambled recording, which will be unscrambled during Standby."
+msgid_plural "There are %d scrambled recordings, which will be unscrambled during Standby."
+msgstr[0] "Имеется %d зашифрованная запись, которая будет расшифрована в режиме ожидания."
+msgstr[1] "Имеются %d зашифрованных записей, которые будут расшифрованы в режиме ожидания."
+msgstr[2] "Имеются %d зашифрованных записей, которые будут расшифрованы в режиме ожидания."
 
 msgid "There is no signal to lock on !"
 msgstr "Нет сигнала по этому захвату !"
@@ -22258,6 +22309,10 @@ msgstr "настоятельно рекомендуется."
 
 msgid "jazz"
 msgstr "джаз"
+
+#, python-format
+msgid "%d jobs are running in the background!"
+msgstr "%d заданий выполняются в фоновом режиме!"
 
 msgid "jump back to the previous title"
 msgstr "перейти к предыдущей главе"
