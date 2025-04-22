@@ -4227,13 +4227,13 @@ msgstr "Невозможно удалить загруженный образ"
 msgid "Cannot delete file"
 msgstr "Не удаётся удалить файл"
 
-#. TRANSLATORS: "Cannot determine (east/west) limit ..., aborting !"
+#. TRANSLATORS: "Cannot determine (east/west) limit ..., aborting!"
 #, python-format
-msgid "Cannot determine %s limit ..., aborting !"
+msgid "Cannot determine %s limit ..., aborting!"
 msgstr "Невозможно определить предел %s ..., отмена!"
 
-msgid "Cannot find any signal ..., aborting !"
-msgstr "Сигнал не найден, прерываем !"
+msgid "Cannot find any signal ..., aborting!"
+msgstr "Сигнал не найден, прерываем!"
 
 msgid "Cannot find images - please try later or select an alternate image"
 msgstr "Не удается найти имидж. Повторите попытку позже или выберите альтернативный имидж"
@@ -22409,7 +22409,7 @@ msgstr "развлечения (Хобби)"
 msgid "length"
 msgstr "длина"
 
-msgid "limit ..., aborting !"
+msgid "limit ..., aborting!"
 msgstr "предел ..., прервано!"
 
 msgid "list style compact"
