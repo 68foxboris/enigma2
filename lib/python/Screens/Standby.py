@@ -10,8 +10,8 @@ from Components.AVSwitch import AVSwitch
 from Components.Console import Console
 from Components.ImportChannels import ImportChannels
 from Components.SystemInfo import BoxInfo, getBoxDisplayName
-from Components.Sources.StreamService import StreamServiceList
 from Components.ScrambledRecordings import ScrambledRecordings
+from Components.Sources.StreamService import StreamServiceList
 from Components.Task import job_manager
 from Tools.Directories import mediaFilesInUse
 from Tools.Notifications import AddNotification
@@ -317,7 +317,7 @@ class Standby(StandbyScreen):
 class StandbySummary(Screen):
 	skin = """
 	<screen position="0,0" size="132,64">
-		<widget source="global.CurrentTime" render="Label" position="0,0" size="132,64" font="Regular;40" horizontalAlignment="center">
+		<widget source="global.CurrentTime" render="Label" position="0,0" size="132,64" font="Regular;40" halign="center">
 			<convert type="ClockToText" />
 		</widget>
 		<widget source="session.RecordState" render="FixedLabel" text=" " position="0,0" size="132,64" zPosition="1" >
@@ -330,8 +330,8 @@ class StandbySummary(Screen):
 class QuitMainloopScreen(Screen):
 	def __init__(self, session, retvalue=QUIT_SHUTDOWN):
 		self.skin = """<screen name="QuitMainloopScreen" position="fill" flags="wfNoBorder">
-				<ePixmap pixmap="icons/input_info.png" position="c-27,c-60" size="53,53" alphaTest="on" />
-				<widget name="text" position="center,c+5" size="720,100" font="Regular;22" horizontalAlignment="center" />
+				<ePixmap pixmap="icons/input_info.png" position="c-27,c-60" size="53,53" alphatest="on" />
+				<widget name="text" position="center,c+5" size="720,100" font="Regular;22" halign="center" />
 			</screen>"""
 		Screen.__init__(self, session)
 		from Components.Label import Label
@@ -361,7 +361,8 @@ def getReasons(session, retvalue=QUIT_SHUTDOWN):
 		scrambledList = []
 	reasons = []
 	nextRecordingTime = -1
-	self.descramble = False
+	descramble = False
+
 	if not recordings:
 		nextRecordingTime = session.nav.RecordTimer.getNextRecordingTime()
 	if recordings or (nextRecordingTime > 0 and (nextRecordingTime - time()) < 360):
@@ -379,32 +380,35 @@ def getReasons(session, retvalue=QUIT_SHUTDOWN):
 	if not reasons and mediaFilesInUse(session) and retvalue in (QUIT_SHUTDOWN, QUIT_REBOOT, QUIT_KODI, QUIT_UPGRADE_FP, QUIT_UPGRADE_PROGRAM):
 		reasons.append(_("A file from media is in use!"))
 	if jobs and retvalue in (QUIT_SHUTDOWN, QUIT_REBOOT, QUIT_KODI):
-		reason = _('%d jobs are running in the background!') % jobs
-		default_yes = False
-		timeout = 30
-	if len(scrambledList) and retvalue == QUIT_SHUTDOWN:
+		reasons.append(_('%d jobs are running in the background!'))
+	if len(scrambledList) and retvalue == QUIT_SHUTDOWN and config.recording.standbyDescrambleShutdown.value:
 		duration = 0
 		for scrambledListItem in scrambledList:
 			duration += scrambledListItem[1]
 		count = len(scrambledList)
-		reason = [
+		reasons = [
 			ngettext("There is %d scrambled recording, which will be unscrambled during Standby.", "There are %d scrambled recordings, which will be unscrambled during Standby.", count) % count,
 			_("The process will take approximately %d minutes to complete.") % min(int(duration // 60), 2),
-			_("Select 'Yes' to shut down immediately instead of starting the descramble.")
+			 _("Select 'Yes' to shut down immediately instead of starting the descramble.")
 		]
-		reason = f"{reason[0]} {reason[1]}\n\n{reason[2]}"
-		default_yes = False
-		self.descramble = True
-		timeout = 30
-	return "\n".join(reasons)
+		reasons.append("\n".join(reason))
+		descramble = True
+
+	# Гарантируем возврат кортежа из двух элементов
+	if reasons:
+		return "\n".join(reasons), descramble
+	return "", descramble  # Возвращаем пустую строку и descramble
 
 
 class TryQuitMainloop(MessageBox):
 	def __init__(self, session, retvalue=QUIT_SHUTDOWN, timeout=-1, default_yes=False, check_reasons=True):
 		self.retval = retvalue
 		self.connected = False
-		reason = check_reasons and getReasons(session, retvalue)
-		if reason:
+		self.descramble = False  # Добавляем атрибут класса
+
+		if check_reasons:
+			reasons, self.descramble = getReasons(session, retvalue)  # Получаем оба значения
+		if reasons:
 			text = {
 				QUIT_SHUTDOWN: _("Really shutdown now?"),
 				QUIT_REBOOT: _("Really reboot now?"),
