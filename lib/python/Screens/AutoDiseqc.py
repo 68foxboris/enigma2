@@ -432,6 +432,8 @@ class AutoDiseqc(ConfigListScreen, Screen):
 					config.Nims[self.feid].simpleDiSEqCSetCircularLNB.value = True
 					self.circular_setup = 2
 
+			config.Nims[self.feid].configMode.value = "simple"
+
 			self.saveAndReloadNimConfig()
 			self.state += 1
 
