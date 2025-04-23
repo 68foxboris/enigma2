@@ -1472,6 +1472,21 @@ def InitUsageConfig():
 	choiceList = [("no", _("no")), ("nothing", _("omit")), ("space", _("space")), ("dot", ". "), ("dash", " - "), ("asterisk", " * "), ("hashtag", " # ")]
 	config.epg.replace_newlines = ConfigSelection(default="no", choices=choiceList)
 
+	config.epg.filter = ConfigYesNo(default=False)
+	config.epg.filter_start = ConfigClock(default=time.mktime((1970, 1, 1, 6, 0, 0, 0, 0, 0)))
+	config.epg.filter_end = ConfigClock(default=time.mktime((1970, 1, 1, 20, 0, 0, 0, 0, 0)))
+	def validateEPGFilterTimes(configElement):
+		def minutes(t):
+			return t[0] * 60 + t[1]
+		start, end = minutes(config.epg.filter_start.value), minutes(config.epg.filter_end.value)
+		if start == end:
+			config.epg.filter_end.value = [(config.epg.filter_end.value[0] + 1) % 24, config.epg.filter_end.value[1]]
+			print("[UsageConfig] EPG filter - start and end times must be different.")
+	config.epg.filter_start.addNotifier(validateEPGFilterTimes)
+	config.epg.filter_end.addNotifier(validateEPGFilterTimes)
+	config.epg.filter_reversal = ConfigYesNo(default=False)
+	config.epg.filter_keepsorting = ConfigYesNo(default=False)
+
 	def correctInvalidEPGDataChange(configElement):
 		eServiceEvent.setUTF8CorrectMode(int(configElement.value))
 	config.epg.correct_invalid_epgdata = ConfigSelection(default="1", choices=[("0", _("Disabled")), ("1", _("Enabled")), ("2", _("Debug"))])
