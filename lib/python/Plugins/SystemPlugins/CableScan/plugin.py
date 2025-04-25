@@ -29,7 +29,7 @@ class CableScan:
 		self.done = False
 
 	def execBegin(self):
-		self.text.setText(_('Scanning...'))
+		self.text.setText(_("Scanning"))
 		self.progressbar.setValue(0)
 		self.scan = eCableScan(self.scanNetwork, self.scanFrequency, self.scanSymbolRate, self.scanModulation, self.keepNumbers, self.hdList)
 		self.scan.scanCompleted.get().append(self.scanCompleted)
@@ -47,7 +47,7 @@ class CableScan:
 	def scanCompleted(self, result):
 		self.done = True
 		if result < 0:
-			self.text.setText(_('Scan failed!'))
+			self.text.setText(_("Scan failed!"))
 		else:
 			self.text.setText(ngettext("Scan completed, %d channel found.", "Scan completed, %d channels found.", result) % result)
 
@@ -123,10 +123,10 @@ class CableScanScreen(Setup):
 		self.prevservice = None
 		self.nimlist = nimlist
 		self["config"].list = [
-			(_('Frequency'), config.plugins.CableScan.frequency),
-			(_('Symbol rate'), config.plugins.CableScan.symbolrate),
-			(_('Modulation'), config.plugins.CableScan.modulation),
-			(_('Network ID') + _(' (0 - all networks)'), config.plugins.CableScan.networkid),
+			(_("Frequency"), config.plugins.CableScan.frequency),
+			(_("Symbol rate"), config.plugins.CableScan.symbolrate),
+			(_("Modulation"), config.plugins.CableScan.modulation),
+			(_("Network ID") + _(" (0 - all networks)"), config.plugins.CableScan.networkid),
 			(_("Use official channel numbering"), config.plugins.CableScan.keepnumbering),
 			(_("HD list"), config.plugins.CableScan.hdlist),
 			(_("Enable auto cable scan"), config.plugins.CableScan.auto)
