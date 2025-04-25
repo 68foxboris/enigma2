@@ -1473,8 +1473,8 @@ def InitUsageConfig():
 	config.epg.replace_newlines = ConfigSelection(default="no", choices=choiceList)
 
 	config.epg.filter = ConfigYesNo(default=False)
-	config.epg.filter_start = ConfigClock(default=time.mktime((1970, 1, 1, 6, 0, 0, 0, 0, 0)))
-	config.epg.filter_end = ConfigClock(default=time.mktime((1970, 1, 1, 20, 0, 0, 0, 0, 0)))
+	config.epg.filter_start = ConfigClock(default=mktime((1970, 1, 1, 6, 0, 0, 0, 0, 0)))
+	config.epg.filter_end = ConfigClock(default=mktime((1970, 1, 1, 20, 0, 0, 0, 0, 0)))
 	def validateEPGFilterTimes(configElement):
 		def minutes(t):
 			return t[0] * 60 + t[1]
