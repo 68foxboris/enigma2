@@ -67,11 +67,11 @@ class WlanStatus(Screen):
 		self.iface = iface
 
 		self["LabelBSSID"] = StaticText(_("Access point") + ":")
- 		self["LabelESSID"] = StaticText(_("SSID") + ":")
+		self["LabelESSID"] = StaticText(_("SSID") + ":")
 		self["LabelQuality"] = StaticText(_("Link quality:"))
 		self["LabelSignal"] = StaticText(_("Signal strength") + ":")
- 		self["LabelBitrate"] = StaticText(_("Bitrate") + ":")
- 		self["LabelEnc"] = StaticText(_("Encryption") + ":")
+		self["LabelBitrate"] = StaticText(_("Bitrate") + ":")
+		self["LabelEnc"] = StaticText(_("Encryption") + ":")
 
 		self["LabelChannel"] = StaticText(_("Channel") + ":")
 		self["LabelEncType"] = StaticText(_("Encryption Type:"))
