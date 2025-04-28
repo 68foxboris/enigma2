@@ -24,6 +24,7 @@ public:
 	eSize getItemSize() { return m_itemsize; }
 	int getMaxItemTextWidth();
 	uint8_t getOrientation() { return m_orientation; }
+	int getListSize() { return size(); }
 
 #ifndef SWIG
 protected:
@@ -124,6 +125,7 @@ public:
 	void entryRemoved(int idx);
 	void setTemplate(SWIG_PYOBJECT(ePyObject) tmplate);
 	int getMaxItemTextWidth();
+	int getListSize() { return size(); }
 protected:
 	virtual void setBuildArgs(int selected) {}
 	virtual bool getIsMarked(int selected) { return false; }
