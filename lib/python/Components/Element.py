@@ -32,7 +32,6 @@ class Element:
 	def connectUpstream(self, upstream):
 		assert not self.SINGLE_SOURCE or self.source is None
 		self.sources.append(upstream)
-		self.source = upstream
 		self.source = upstream  # The self.source always refers to the last recent source added.
 		self.changed((self.CHANGED_DEFAULT,))
 
@@ -62,7 +61,7 @@ class Element:
 		self.downstream_elements.changed(*args, **kwargs)
 		self.cache = None
 		for x in self.onChanged:
-			x()
+ 			x()
 
 	def setSuspend(self, suspended):
 		changed = self.__suspended != suspended
