@@ -4590,6 +4590,15 @@ msgstr "Chinese - Simplified"
 msgid "Chinese - Traditional"
 msgstr "Chinese - Traditional"
 
+msgid "Chkroot Manager Actions"
+msgstr "Действия менеджера Chkroot"
+
+msgid "Chkroot MultiBoot Initialization in progress!"
+msgstr "Инициализация Chkroot MultiBoot идет!"
+
+msgid "Chkroot MultiBoot Manager"
+msgstr "Менеджер Chkroot MultiBoot"
+
 msgid "Chipset"
 msgstr "Читсет"
 
@@ -4856,6 +4865,9 @@ msgstr "Закрыть экран"
 
 msgid "Close the Kexec MultiBoot Manager"
 msgstr "Закройте диспетчер Kexec MultiBoot"
+
+msgid "Close the Chkroot MultiBoot Manager"
+msgstr "Закройте Chkroot MultiBoot Manager"
 
 msgid "Close the current screen"
 msgstr "Закройте текущий экран"
@@ -7688,6 +7700,9 @@ msgstr "Включить функцию затухания инфобара"
 
 msgid "Enable infobar fade-out"
 msgstr "Включить затухание инфобара"
+
+msgid "Enable Chkroot MultiBoot"
+msgstr "Включить Chkroot MultiBoot"
 
 msgid "Enable Kexec MultiBoot"
 msgstr "Активировать Vu+ мультибут"
@@ -17729,6 +17744,9 @@ msgstr "Время старта"
 msgid "Start the backup of the selected image"
 msgstr "Запустить резервное копирование выбранного образа"
 
+msgid "Start the Chkroot initialization"
+msgstr "Запустить инициализацию Chkroot"
+
 msgid "Start time to ignore inactivity sleeptimer"
 msgstr "Начало периода времени игнорирования"
 
@@ -18705,6 +18723,10 @@ msgstr "Рестарт GUI Вашего ресивера выполнен для
 
 msgid "The width of the picture. The input will be scaled to match this value."
 msgstr "Ширина картинки.Входные данные будут масштабироваться в соответствии с этим значением."
+
+#, python-format
+msgid "The %s %s will reboot within 1 seconds."
+msgstr "%s %s перезагрузится в течение 1 секунды."
 
 msgid ""
 "The wireless LAN plugin is not installed!\n"
