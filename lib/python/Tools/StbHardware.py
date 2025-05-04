@@ -5,6 +5,7 @@ from struct import pack, unpack
 from time import localtime, time, timezone
 
 from Tools.Directories import fileReadLine, fileWriteLine
+from Components.SystemInfo import BoxInfo
 
 MODULE_NAME = __name__.split(".")[-1]
 wasTimerWakeup = None

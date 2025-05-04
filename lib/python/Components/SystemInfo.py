@@ -149,8 +149,8 @@ DISPLAYTYPE = BoxInfo.getItem("displaytype")
 MTDROOTFS = BoxInfo.getItem("mtdrootfs")
 DISPLAYMODEL = BoxInfo.getItem("displaymodel")
 DISPLAYBRAND = BoxInfo.getItem("displaybrand")
+MACHINEBUILD = MODEL
 PLATFORM = BoxInfo.getItem("platform")
-MACHINEBUILD = BoxInfo.getItem("machinebuild")
 mtdkernel = BoxInfo.getItem("mtdkernel")
 procModel = getBoxProc()
 
@@ -271,6 +271,7 @@ BoxInfo.setItem("DebugLevel", eGetEnigmaDebugLvl())
 BoxInfo.setItem("InDebugMode", eGetEnigmaDebugLvl() >= 4)
 BoxInfo.setItem("ModuleLayout", getModuleLayout())
 
+BoxInfo.setItem("BoxName", getBoxName())
 BoxInfo.setItem("RCImage", getRCFile("png"))
 BoxInfo.setItem("RCMapping", getRCFile("xml"))
 BoxInfo.setItem("RemoteEnable", MACHINEBUILD in ("dm800",))

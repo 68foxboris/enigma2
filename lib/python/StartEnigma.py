@@ -517,14 +517,12 @@ enigma.eProfileWrite("BoxInfo")
 from Components.SystemInfo import BoxInfo
 
 BRAND = BoxInfo.getItem("brand")
-BOX_TYPE = BoxInfo.getItem("machinebuild")
 MODEL = BoxInfo.getItem("model")
 DISPLAYBRAND = BoxInfo.getItem("displaybrand")
 
 print("[StartEnigma] Receiver name = %s %s" % (DISPLAYBRAND, BoxInfo.getItem("displaymodel")))
 print("[StartEnigma] Build Brand = %s" % BRAND)
 print("[StartEnigma] Build Model = %s" % MODEL)
-print("[StartEnigma] Platform = %s" % BoxInfo.getItem("platform"))
 print("[StartEnigma] SoC family = %s" % BoxInfo.getItem("socfamily"))
 
 if BoxInfo.getItem("architecture") in ("aarch64"):
