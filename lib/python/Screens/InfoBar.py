@@ -49,10 +49,10 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		Screen.__init__(self, session, enableHelp=True)
 		self["actions"] = HelpableActionMap(self, ["InfobarActions"],
 			{
-				"showMovies": (self.showMovies, _("Play recorded movies...")),
-				"showRadio": (self.showRadio, _("Show the radio player...")),
-				"showTv": (self.showTv, _("Show the tv player...")),
-				"toggleTvRadio": (self.toggleTvRadio, _("Toggle the tv and the radio player...")),
+				"showMovies": (self.showMovies, _("Open Movie Selection")),
+				"showRadio": (self.showRadio, _("Open Radio bouquet selection")),
+				"showTv": (self.showTv, _("Open TV bouquet selection")),
+				"toggleTvRadio": (self.toggleTvRadio, _("Toggles between TV and Radio")),
 			}, prio=2)
 
 		self["InstantExtensionsActions"] = HelpableActionMap(self, ["InfobarExtensions"],
@@ -72,14 +72,12 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 				InfoBarHdmi, InfoBarPlugins, InfoBarServiceErrorPopupSupport, InfoBarHotkey, InfoBarJobman:
 			x.__init__(self)
 
-		self.helpList.append((self["actions"], "InfobarActions", [("showMovies", _("Watch recordings..."))]))
-		self.helpList.append((self["actions"], "InfobarActions", [("showRadio", _("Listen to the radio..."))]))
-
+		# self.helpList.append((self["actions"], "InfobarActions", [("showMovies", _("Watch recordings..."))]))
+		# self.helpList.append((self["actions"], "InfobarActions", [("showRadio", _("Listen to the radio..."))]))
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-				enigma.iPlayableService.evUpdatedEventInfo: self.__eventInfoChanged,
-				enigma.iPlayableService.evUpdateTags: self.__eventInfoChanged
-			})
-
+			enigma.iPlayableService.evUpdatedEventInfo: self.__eventInfoChanged,
+			enigma.iPlayableService.evUpdateTags: self.__eventInfoChanged
+		})
 		self.current_begin_time = 0
 		assert InfoBar.instance is None, "class InfoBar is a singleton class and just one instance of this class is allowed!"
 		InfoBar.instance = self
@@ -252,8 +250,8 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 
 		self["actions"] = HelpableActionMap(self, ["MoviePlayerActions"],
 			{
-				"leavePlayer": (self.leavePlayer, _("leave movie player...")),
-				"leavePlayerOnExit": (self.leavePlayerOnExit, _("leave movie player...")),
+				"leavePlayer": (self.leavePlayer, _("Leave movie player")),
+				"leavePlayerOnExit": (self.leavePlayerOnExit, _("Leave movie player")),
 				"channelUp": (self.channelUp, _("when PiPzap enabled zap channel up...")),
 				"channelDown": (self.channelDown, _("when PiPzap enabled zap channel down...")),
 			})

@@ -10674,6 +10674,9 @@ msgstr "Латвийский"
 msgid "Leave DVD player?"
 msgstr "Выйти из проигрывателя DVD?"
 
+msgid "Leave movie player"
+msgstr "Выйти из видеоплеера"
+
 msgid "Leave this set to 'yes' unless you fully understand why you are adjusting it."
 msgstr "Оставьте значение 'Да', если не вполне понимаете, чего хотите добиться этой настройкой."
 
@@ -11240,8 +11243,8 @@ msgstr "Значки меню"
 msgid "Menu entry sort order"
 msgstr "Порядок сортировки пунктов меню"
 
-msgid "  Menu key : Select quad channel"
-msgstr "  Клавиша меню: выбор четырехканального канала"
+msgid "Menu key : Select quad channel"
+msgstr "Клавиша меню: выбор четырехканального канала"
 
 msgid "Menusort (%s)"
 msgstr "Сортировка меню (%s)"
@@ -12587,6 +12590,48 @@ msgstr "Запустить автотаймер"
 
 msgid "Open AutoTimerlist..."
 msgstr "Открыть список автотаймеров."
+
+msgid "Open AutoTimer Overview"
+msgstr "Обзор открытого AutoTimer"
+
+msgid "Open RecordTimer Overview"
+msgstr "Обзор Open RecordTimer"
+
+msgid "Open Movie Selection"
+msgstr "Открыть выбор фильмов"
+
+msgid "Open VideoMode"
+msgstr "Открыть ВидеоРежим"
+
+msgid "Open Information menu"
+msgstr "Открыть меню информации"
+
+msgid "Open Setup menu"
+msgstr "Открыть меню настроек"
+
+msgid "Open Scheduler Overview"
+msgstr "Обзор открытого планировщика"
+
+msgid "Open MediaCenter"
+msgstr "Открыть Медиацентр"
+
+msgid "Open Media Player"
+msgstr "Открыть медиаплеер"
+
+msgid "Open Plugin Browser"
+msgstr "Открыть браузер плагинов"
+
+msgid "Open Radio bouquet selection"
+msgstr "Открыть выбор Радио-букета"
+
+msgid "Open TV bouquet selection"
+msgstr "Открыть выбор ТВ-букета"
+
+msgid "Open Simple Umount"
+msgstr "Открыть Простое Размонтирование"
+
+msgid "Open SleepTimer Settings"
+msgstr "Открыть настройки SleepTimer"
 
 msgid "Open EPGSearch..."
 msgstr "Запустить поиск по ТВ-гиду."
@@ -19446,6 +19491,9 @@ msgstr "Переключатель ТВ/РАДИО режима"
 msgid "Toggle a cut mark at the current position"
 msgstr "Расположить метку обработки в текущей позиции"
 
+msgid "Toggles between TV and Radio"
+msgstr "Переключение между ТВ и радио"
+
 msgid "Toggle between the available TV and RADIO services"
 msgstr "Переключение между доступными каналами ТВ и РАДИО"
 
@@ -22430,9 +22478,6 @@ msgstr "модули ядра"
 
 msgid "languages"
 msgstr "язык"
-
-msgid "leave movie player..."
-msgstr "выйти из проигрывателя."
 
 msgid "left"
 msgstr "левый"
