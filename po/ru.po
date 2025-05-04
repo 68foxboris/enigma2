@@ -15598,6 +15598,9 @@ msgstr "Выберите информацию о канале для просм�
 msgid "Select service to add..."
 msgstr "Выберите канал для добавления..."
 
+msgid "Select SeekBar to be activated by arrow L/R (long) or << >> (long)."
+msgstr "Выберите SeekBar, который будет активироваться стрелкой L/R (длинная) или << >> (длинная)."
+
 msgid "Select the AI-Powered Translation target language."
 msgstr "Настройте язык перевода на основе искусственного интеллекта."
 
@@ -17165,6 +17168,9 @@ msgstr "Сигнал: "
 
 msgid "Signed by"
 msgstr "Подписано"
+
+msgid "SeekBar activation"
+msgstr "Активация SeekBar"
 
 msgid "Similar"
 msgstr "Аналогичный"
