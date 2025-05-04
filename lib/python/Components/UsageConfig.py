@@ -7,7 +7,7 @@ from skin import getcomponentTemplateNames, parameters, domScreens
 from Components.Harddisk import harddiskmanager
 from Components.International import international
 from Components.Console import Console
-from Components.config import ConfigSubsection, ConfigDirectory, ConfigYesNo, config, ConfigSelection, ConfigText, ConfigNumber, ConfigSet, ConfigLocations, ConfigSelectionNumber, ConfigSelectionInteger, ConfigClock, ConfigSlider, ConfigEnableDisable, ConfigSubDict, ConfigDictionarySet, ConfigInteger, ConfigSequence, ConfigPassword, ConfigIP, NoSave, ConfigBoolean, configfile
+from Components.config import ConfigBoolean, ConfigClock, ConfigDictionarySet, ConfigDirectory, ConfigFloat, ConfigInteger, ConfigIP, ConfigLocations, ConfigNumber, ConfigPassword, ConfigSelection, ConfigSelectionNumber, ConfigSequence, ConfigSet, ConfigSlider, ConfigSubDict, ConfigSubsection, ConfigText, ConfigYesNo, ConfigEnableDisable, NoSave, config, configfile
 from Tools.Directories import SCOPE_HDD, SCOPE_TIMESHIFT, defaultRecordingLocation, resolveFilename, fileWriteLine, fileReadXML, SCOPE_SKIN
 from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eSubtitleSettings, eSettings, eDVBLocalTimeHandler, eEPGCache
 from Components.About import GetIPsFromNetworkInterfaces
@@ -258,6 +258,12 @@ def InitUsageConfig():
 	config.usage.multiepg_ask_bouquet = ConfigYesNo(default=False)
 	config.usage.showpicon = ConfigYesNo(default=True)
 	config.usage.numberZapDigits = ConfigSelection(default=4, choices=[(x, ngettext("%d Digit", "%d Digits", x) % x) for x in range(1, 6)])
+	config.usage.numberZapDisplay = ConfigSelection(default="number", choices=[
+		("number", _("Number only")),
+		("name", _("Number and name")),
+		("picon", _("Number and picon")),
+		("both", _("Number, name and picon"))
+	])
 
 	# New ServiceList
 	config.channelSelection = ConfigSubsection()
