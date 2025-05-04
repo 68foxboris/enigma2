@@ -758,10 +758,8 @@ class NumberZap(Screen):
 
 		self.handleServiceName()
 
-		if len(self.numberString) >= int(config.misc.zapkey_delay.value) and int(config.misc.zapkey_delay.value) != 0:
-			if self.Timer.isActive():
-				self.Timer.stop()
-			self.Timer.start(2000, True)  # two seconds to be able to establish any number of digits for Zap
+		if len(self.numberString) >= config.usage.numberZapDigits.value:
+			self.keyOK()
 
 	def __init__(self, session, number, searchNumberFunction=None):
 		Screen.__init__(self, session)
@@ -799,6 +797,8 @@ class NumberZap(Screen):
 
 		self.Timer = eTimer()
 		self.Timer.callback.append(self.keyOK)
+		if config.usage.numberZapDigits.value == 1:
+			self.Timer.start(100, True)
 		if int(config.misc.zapkey_delay.value) > 0:
 			self.Timer.start(int(1000 * int(config.misc.zapkey_delay.value)), True)
 
