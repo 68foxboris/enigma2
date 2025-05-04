@@ -807,18 +807,33 @@ class InfoBarNumberZap:
 	""" Handles an initial number for NumberZapping """
 
 	def __init__(self):
-		self["NumberActions"] = HelpableNumberActionMap(self, ["NumberActions"], {
-			"1": (self.keyNumberGlobal, _("Digit entry for service selection")),
-			"2": (self.keyNumberGlobal, _("Digit entry for service selection")),
-			"3": (self.keyNumberGlobal, _("Digit entry for service selection")),
-			"4": (self.keyNumberGlobal, _("Digit entry for service selection")),
-			"5": (self.keyNumberGlobal, _("Digit entry for service selection")),
-			"6": (self.keyNumberGlobal, _("Digit entry for service selection")),
-			"7": (self.keyNumberGlobal, _("Digit entry for service selection")),
-			"8": (self.keyNumberGlobal, _("Digit entry for service selection")),
-			"9": (self.keyNumberGlobal, _("Digit entry for service selection")),
-			"0": (self.keyNumberGlobal, _("Digit entry for service selection"))
-		}, prio=0, description=_("Service Zap Actions"))
+		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
+				iPlayableService.evStart: self.__serviceStarted,
+			})
+		self.toggleSeekStatus = False
+		self["NumberActions"] = NumberActionMap(["NumberActions", "InfobarSeekActions"],
+			{
+				"1": self.keyNumberGlobal,
+				"2": self.keyNumberGlobal,
+				"3": self.keyNumberGlobal,
+				"4": self.keyNumberGlobal,
+				"5": self.keyNumberGlobal,
+				"6": self.keyNumberGlobal,
+				"7": self.keyNumberGlobal,
+				"8": self.keyNumberGlobal,
+				"9": self.keyNumberGlobal,
+				"0": self.keyNumberGlobal,
+				"toggleSeek": self.toggleSeek,
+			})
+
+	def __serviceStarted(self):
+		self.toggleSeekStatus = False
+
+	def toggleSeek(self):
+		self.seekable = self.getSeek()
+		if self.seekable:
+			self.toggleSeekStatus = not self.toggleSeekStatus
+			self.VideoMode_window.setText(_("Numberbuttons Seek") if self.toggleSeekStatus else _("Numberbuttons Zap"))
 
 	def keyNumberGlobal(self, number):
 		if number == 0:
@@ -827,6 +842,15 @@ class InfoBarNumberZap:
 			elif len(self.servicelist.history) > 1:
 				self.checkTimeshiftRunning(self.recallPrevService)
 		else:
+			if self.toggleSeekStatus:
+				length = self.seekable.getLength() or (None, 0)
+				if length[1] > 0:
+					key = int(number)
+					time = (-config.seek.selfdefined_13.value, False, config.seek.selfdefined_13.value,
+						-config.seek.selfdefined_46.value, False, config.seek.selfdefined_46.value,
+						-config.seek.selfdefined_79.value, False, config.seek.selfdefined_79.value)[key - 1]
+					self.seekable.seekRelative(time < 0 and -1 or 1, abs(time * 90000))
+				return
 			if "TimeshiftActions" in self and self.timeshiftEnabled():
 				ts = self.getTimeshift()
 				if ts and ts.isTimeshiftActive():
