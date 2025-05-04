@@ -2910,6 +2910,10 @@ msgstr "Спросить пользователя (Ответ по умолча�
 msgid "Aspect"
 msgstr "Соотношение сторон"
 
+#, python-format
+msgid "Aspect ratio set to '%s'."
+msgstr "Соотношение сторон установлено на «%s»."
+
 msgid "Aspect Ratio"
 msgstr "Соотношение сторон"
 
@@ -4168,7 +4172,7 @@ msgid "Cancel execution?"
 msgstr "Отменить выполнение?"
 
 msgid "Cancel the selection"
-msgstr "Отмена выбора"
+msgstr "Отменить выбор"
 
 msgid "Cancel the scan and exit all menus"
 msgstr "Прервать поиск и закрыть все меню"
@@ -5987,6 +5991,12 @@ msgstr "Видео редактор..."
 
 msgid "Cyan"
 msgstr "Голубой"
+
+msgid "Cycle through the available aspect ratios"
+msgstr "Перебирайте доступные соотношения сторон"
+
+msgid "Cycle through the InfoBars"
+msgstr "Прокрутите информационные панели"
 
 msgid "Cyprus"
 msgstr "Кипр"
@@ -10750,6 +10760,9 @@ msgstr "Обнаружена ссылка"
 msgid "Linked titles with a DVD menu"
 msgstr "Названия, связанные с DVD меню"
 
+msgid "List available EPG functions"
+msgstr "Список доступных функций ТВ-гида"
+
 msgid "List available networks"
 msgstr "Просмотр списка доступных сетей"
 
@@ -11603,6 +11616,9 @@ msgstr "Расположение записей"
 
 msgid "Movie selection"
 msgstr "Выбор записей"
+
+msgid "Movie Selection Actions"
+msgstr "Действия по выбору фильма"
 
 msgid "Movie Selection Settings"
 msgstr "Настройки выбора фильма"
@@ -12585,6 +12601,12 @@ msgstr "Выберите 'да' только если вы использует�
 msgid "Open"
 msgstr "Открыть"
 
+msgid "Open Aspect Ratio Settings"
+msgstr "Открыть настройки соотношения сторон"
+
+msgid "Open Audio options"
+msgstr "Открыть параметры звука"
+
 msgid "Open AutoTimer"
 msgstr "Запустить автотаймер"
 
@@ -12594,11 +12616,41 @@ msgstr "Открыть список автотаймеров."
 msgid "Open AutoTimer Overview"
 msgstr "Обзор открытого AutoTimer"
 
+msgid "Open EPG"
+msgstr "Открыть ТВ-гид"
+
+msgid "Open EPG for current service"
+msgstr "Открыть ТВ-гид для текущей услуги"
+
+msgid "Open HDMIRecord Settings"
+msgstr "Откройте настройки HDMIRecord"
+
+msgid "Open RFmod Settings"
+msgstr "Открыть настройки RFmod"
+
+msgid "Open Extensions"
+msgstr "Открыть расширения"
+
+msgid "Open Network Settings"
+msgstr "Открыть настройки сети"
+
 msgid "Open RecordTimer Overview"
 msgstr "Обзор Open RecordTimer"
 
 msgid "Open Movie Selection"
 msgstr "Открыть выбор фильмов"
+
+msgid "Open Setup"
+msgstr "Открыть установку"
+
+msgid "Open event information"
+msgstr "Открыть информацию о событии"
+
+msgid "Open Usage and GUI Settings"
+msgstr "Открыть настройки использования и графического интерфейса"
+
+msgid "Open Subtitle options"
+msgstr "Открыть параметры субтитров"
 
 msgid "Open VideoMode"
 msgstr "Открыть ВидеоРежим"
@@ -12611,6 +12663,12 @@ msgstr "Открыть меню настроек"
 
 msgid "Open Scheduler Overview"
 msgstr "Обзор открытого планировщика"
+
+msgid "Open Subservices selection"
+msgstr "Выбор открытых подсервисов"
+
+msgid "Open Main Menu"
+msgstr "Открыть главное меню"
 
 msgid "Open MediaCenter"
 msgstr "Открыть Медиацентр"
@@ -12626,6 +12684,12 @@ msgstr "Открыть выбор Радио-букета"
 
 msgid "Open TV bouquet selection"
 msgstr "Открыть выбор ТВ-букета"
+
+msgid "Open Satellites selection"
+msgstr "Открыть выбор спутников"
+
+msgid "Open Services / Reception selection"
+msgstr "Открытые каналы / Выбор рецептов"
 
 msgid "Open Simple Umount"
 msgstr "Открыть Простое Размонтирование"
@@ -13074,6 +13138,12 @@ msgstr "Пикон и название канала"
 
 msgid "Picture player"
 msgstr "Просмотр изображений"
+
+msgid "Picture in Picture Actions"
+msgstr "Действия «картинка в картинке»"
+
+msgid "Picture in Picture Settings"
+msgstr "Настройки «картинка в картинке»"
 
 msgid "Pillarbox"
 msgstr "Чёрные полосы слева и справа"
@@ -14346,8 +14416,8 @@ msgstr "Режим восстановления"
 msgid "Red"
 msgstr "Красный"
 
-msgid "Red button..."
-msgstr "Красная кнопка..."
+msgid "RED button / HbbTV"
+msgstr "КРАСНАЯ кнопка / HbbTV"
 
 msgid "Red colored"
 msgstr "Название канала красным цветом"
@@ -15284,6 +15354,12 @@ msgstr[2] "Сканирование: %d%% завершено"
 
 msgid "Scans default lamedbs sorted by satellite with a connected dish positioner"
 msgstr "Сканирование записей lamedb с сортировкой по спутникам при использовании позиционера"
+
+msgid "Skip backward (enter time)"
+msgstr "Перейти назад (введите время)"
+
+msgid "Skip forward (enter time)"
+msgstr "Перейти вперед (введите время)"
 
 msgid "Schedule EPG and channel list import"
 msgstr "Расписание импорта ТВ-гида и списка каналов"
@@ -16562,6 +16638,9 @@ msgstr "Следует ли устанавливать FTP-соединение 
 
 msgid "Show"
 msgstr "Показать"
+
+msgid "Show/Hide Actions"
+msgstr "Показать/Скрыть действия"
 
 msgid "Show /tmp/ecm.info"
 msgstr "Показать /tmp/ecm.info"
@@ -18126,6 +18205,9 @@ msgstr "Субтитры отключены"
 msgid "Subtitle enabled"
 msgstr "Субтитры включены"
 
+msgid "Subtitle Selection"
+msgstr "Выбор субтитров"
+
 msgid "Subtitles"
 msgstr "Субтитры"
 
@@ -19476,6 +19558,9 @@ msgstr "К выбору субтитров"
 msgid "Today"
 msgstr "Сегодня"
 
+msgid "Toggle Dolby Digital down mix"
+msgstr "Включить/выключить Dolby Digital down mix"
+
 msgid "Toggle HDMI In"
 msgstr "Смена HDMI In"
 
@@ -20432,6 +20517,9 @@ msgstr "Вертикальная скорость поворота"
 
 msgid "View list of available %s extensions."
 msgstr "Просмотр списка доступных %s дополнений."
+
+msgid "View Teletext"
+msgstr "Посмотреть телетекст"
 
 msgid "Video PID"
 msgstr "Видео PID"
@@ -21824,6 +21912,18 @@ msgstr "Переключить на выбранный канал или пок�
 
 msgid "Zap up"
 msgstr "Переключить вверх"
+
+msgid "Zap to next service"
+msgstr "Перейти к следующему каналу"
+
+msgid "Zap to next service in the history"
+msgstr "Перейти к следующему каналу в истории"
+
+msgid "Zap to previous service"
+msgstr "Перейти к предыдущему каналу"
+
+msgid "Zap to previous service in the history"
+msgstr "Перейти к предыдущему каналу в истории"
 
 msgid "Zapped to timer service %s as Picture in Picture!"
 msgstr "Таймер - переключено на сервис %s как PiP!"
