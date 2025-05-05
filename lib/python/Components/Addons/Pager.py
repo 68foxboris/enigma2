@@ -40,7 +40,7 @@ class Pager(GUIAddon):
 
 		onSelectionChanged = x if (x := getattr(self.source, "onSelectionChanged", None)) is not None else getattr(self.source, "onSelChanged", None)
 
-		if isinstance(onSelectionChanged, list) and self.initPager not in onSelectionChanged:
+		if (isinstance(onSelectionChanged, list) or isinstance(onSelectionChanged, List)) and self.initPager not in onSelectionChanged:
 			onSelectionChanged.append(self.initPager)
 
 		self.initPager()
@@ -164,7 +164,7 @@ class Pager(GUIAddon):
 			return self.source.index
 		if hasattr(self.source, "currentIndex"):
 			return self.source.currentIndex
-		return self.l.getCurrentSelectionIndex()
+		return self.source.l.getCurrentSelectionIndex()
 
 	def getSourceSize(self):
 		if isinstance(self.source, List):  # Components.Sources.List

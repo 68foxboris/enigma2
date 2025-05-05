@@ -64,7 +64,7 @@ class MainMenu(GUIAddon):
 		res.append(MultiContentEntryText(
 				pos=(xPos, 0),
 				size=(textWidth, self.itemHeight),
-				font=0, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER,
+				font=0, flags=RT_BLEND | RT_HALIGN_LEFT | RT_VALIGN_CENTER,
 				text=item_text,
 				color=self.foregroundColor, color_sel=self.foregroundColorSelected,
 				backcolor=None, backcolor_sel=None))
@@ -77,6 +77,7 @@ class MainMenu(GUIAddon):
 
 	def selectionChanged(self):
 		if self.instance and hasattr(self, "source"):
+			self.source.setIndex(self.instance.getCurrentIndex()) # relay selection changed to underlaying list
 			self.source.setConnectedGuiElement(self)
 
 	def setFont(self, value):
