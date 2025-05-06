@@ -26,18 +26,15 @@ def isHD():
 class Time(Setup):
 	def __init__(self, session):
 		Setup.__init__(self, session=session, setup="Time")
+		self.addSaveNotifier(self.updateNetworkTime)
 		self["key_yellow"] = StaticText("")
-		self["geolocationActions"] = HelpableActionMap(self, ["ColorActions"], {
-			"yellow": (self.useGeolocation, _("Use geolocation to set the current time zone location")),
-			"green": (self.keySave, _("Save and update Network Time")),
+		self["geolocationActions"] = HelpableActionMap(self, "ColorActions", {
+			"yellow": (self.useGeolocation, _("Use geolocation to set the current time zone location"))
 		}, prio=0, description=_("Time Setup Actions"))
-		self.NTPserver = config.misc.NTPserver.value
-		self.SyncTimeUsing = config.misc.SyncTimeUsing.value
-		self.useNTPminutes = config.misc.useNTPminutes.value
 		self.selectionChanged()
 
 	def updateNetworkTime(self):
-		if not self.NTPserver == config.misc.NTPserver.value or not self.SyncTimeUsing == config.misc.SyncTimeUsing.value or not self.useNTPminutes == config.misc.useNTPminutes.value:
+		if config.misc.SyncTimeUsing.isChanged() or config.misc.NTPserver.isChanged() or config.misc.useNTPminutes.isChanged():
 			ntpSyncPoller.timeCheck()
 
 	def selectionChanged(self):
@@ -52,11 +49,11 @@ class Time(Setup):
 	def useGeolocation(self):
 		geolocationData = geolocation.getGeolocationData(fields="status,message,timezone,proxy")
 		if geolocationData.get("proxy", True):
-			self.session.open(MessageBox, 'Geolocation data is not available.', MessageBox.TYPE_INFO, timeout=3)
+			self.setFootnote(_("Geolocation data is not available."))
 			return
 		tz = geolocationData.get("timezone", None)
 		if tz is None:
-			self.session.open(MessageBox, 'Geolocation data does not contain time zone information.', MessageBox.TYPE_INFO, timeout=3)
+			self.setFootnote(_("Geolocation data does not contain time zone information."))
 		else:
 			areaItem = None
 			valItem = None
@@ -74,28 +71,24 @@ class Time(Setup):
 			if valItem is not None:
 				valItem[1].changed()
 			self["config"].invalidate(valItem)
-			self.session.open(MessageBox, 'Geolocation data has been used to set the time zone.', MessageBox.TYPE_INFO, timeout=3)
+			self.setFootnote(_("Geolocation data has been used to set the time zone."))
 
 	def yellow(self):  # Invoked from the Wizard.
 		self.useGeolocation()
-
-	def keySave(self):
-		Setup.keySave(self)
-		self.updateNetworkTime()
 
 
 class TimeWizard(ConfigListScreen, Screen, ShowRemoteControl):
 	if isHD():
 		skin = """
-		<screen name="TimeWizard" position="center,60" size="1280,720" resolution="1280,720">
+		<screen name="TimeWizard" position="0,0" size="1280,720" resolution="1280,720">
 			<widget name="text" position="30,10" size="1000,47" font="Regular;20" transparent="1" verticalAlignment="center" />
 			<widget name="config" position="212,95" size="944,430" enableWrapAround="1" entryFont="Regular;25" valueFont="Regular;25" itemHeight="35" scrollbarMode="showOnDemand" />
 			<eLabel position="234,710" zPosition="2" size="234,2" foregroundColor="#00ff2525" backgroundColor="#00ff2525"/>
 			<eLabel position="519,710" zPosition="2" size="234,2" foregroundColor="#00bab329" backgroundColor="#00bab329"/>
-			<widget source="key_red" render="Label" objectTypes="key_red,StaticText" position="234,670" size="180,40" backgroundColor="key_red" conditional="key_red" font="Regular;20" foregroundColor="key_text" horizontalAlignment="center" verticalAlignment="center">
+			<widget source="key_red" render="Label" objectTypes="key_red,StaticText" position="234,670" size="234,40" backgroundColor="key_red" conditional="key_red" font="Regular;20" foregroundColor="key_text" horizontalAlignment="center" verticalAlignment="center">
 				<convert type="ConditionalShowHide" />
 			</widget>
-			<widget source="key_yellow" render="Label" objectTypes="key_yellow,StaticText" position="519,670" size="180,40" backgroundColor="key_yellow" conditional="key_yellow" font="Regular;20" foregroundColor="key_text" horizontalAlignment="center" verticalAlignment="center">
+			<widget source="key_yellow" render="Label" objectTypes="key_yellow,StaticText" position="519,670" size="234,40" backgroundColor="key_yellow" conditional="key_yellow" font="Regular;20" foregroundColor="key_text" horizontalAlignment="center" verticalAlignment="center">
 				<convert type="ConditionalShowHide" />
 			</widget>
 			<widget name="HelpWindow" position="0,0" size="0,0" alphaTest="blend" conditional="HelpWindow" transparent="1" zPosition="+1" />
@@ -205,6 +198,14 @@ class TimeWizard(ConfigListScreen, Screen, ShowRemoteControl):
 		self.onLayoutFinish.append(self.selectKeys)
 		self.updateTimeList()
 
+	def keyLeft(self):
+		ConfigListScreen.keyLeft(self)
+		self.updateTimeList()
+
+	def keyRight(self):
+		ConfigListScreen.keyRight(self)
+		self.updateTimeList()
+
 	def selectKeys(self):
 		self.clearSelectedKeys()
 		self.selectKey("UP")
@@ -219,8 +220,9 @@ class TimeWizard(ConfigListScreen, Screen, ShowRemoteControl):
 		self.list.append((_("Time zone area"), config.timezone.area))
 		self.list.append((_("Time zone"), config.timezone.val))
 		self.list.append((_("Time synchronization method"), config.misc.SyncTimeUsing))
-		self.list.append((_("pool.ntp.org"), config.misc.NTPserver))
-		self.list.append((_("Sync NTP every (minutes)"), config.misc.useNTPminutes))
+		if config.misc.SyncTimeUsing.value == "1":
+			self.list.append((_("pool.ntp.org"), config.misc.NTPserver))
+			self.list.append((_("Sync NTP every (minutes)"), config.misc.useNTPminutes))
 		if config.usage.date.enabled.value:
 			self.list.append((_("Date style"), config.usage.date.dayfull))
 			config.usage.date.dayfull.save()
