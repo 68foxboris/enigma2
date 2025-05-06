@@ -339,10 +339,8 @@
 		<item level="0" text="Behavior when a movie reaches the end" description="Configure the behavior when reaching the end of a movie, during movie playback.">config.usage.on_movie_eof</item>
 		<item level="2" text="Display message before playing next movie" description="When enabled, a popup message will be shown when a movie has finished and the next one will start.">config.usage.next_movie_msg</item>
 		<item level="1" text="Show InfoBar on skip forward/backward" description="Select 'Yes, to display the InfoBar when fast forwarding or rewinding during media playback.">config.usage.show_infobar_on_skip</item>
-		<!--
 		<item level="1" text="Show PVR status in MoviePlayer InfoBar" description="This option moves the PVR status display from a separate window into the MoviePlayer InfoBar.">config.usage.movieplayer_pvrstate</item>
 		<item level="1" text="Show persistent InfoBar while paused" description="Select 'Yes' the keep the InfoBar displayed, with no timeout, while media playback is paused.">config.usage.show_infobar_locked_on_pause</item>
-		-->
 		<item level="2" text="Behavior of 'pause' when paused" description="Configure the behavior of the 'pause' key when movie playback is already paused.">config.seek.on_pause</item>
 		<item level="2" text="SeekBar activation" description="Select SeekBar to be activated by arrow L/R (long) or &lt;&lt; &gt;&gt; (long).">config.seek.baractivation</item>
 		<item level="2" text="Arrow skip mode" description="Select how the arrow ('UP', 'DOWN', 'LEFT', and 'RIGHT') buttons will act during seek actions.">config.seek.arrowSkipMode</item>
