@@ -11,11 +11,13 @@ from Screens.Screen import Screen
 from Screens.Standby import TryQuitMainloop
 from Screens.Opkg import Opkg
 from Screens.SoftwareUpdate import SoftwareUpdate
+from Screens.MultiBootManager import MultiBootManager
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.Input import Input
 from Components.Opkg import OpkgComponent
 from Components.Sources.StaticText import StaticText
 from Components.ScrollLabel import ScrollLabel
+from Components.SystemInfo import BoxInfo
 from Components.Pixmap import Pixmap
 from Components.MenuList import MenuList
 from Components.Sources.List import List
@@ -137,6 +139,8 @@ class UpdatePluginMenu(Screen):
 			print("[SoftwareManager] building menu entries")
 			self.list.append(("install-extensions", _("Manage extensions"), _("Manage extensions or plugins for your receiver.") + self.oktext, None))
 			self.list.append(("software-update", _("Software update"), _("Online update of your receiver software.") + self.oktext, None))
+			if BoxInfo.getItem("canMultiBoot"):
+				self.list.append(("multi-boot", _("MultiBoot Manager"), _("Maintain your multi boot device.") + self.oktext + "\n\n" + self.infotext, None))
 			self.list.append(("system-backup", _("Backup system settings"), _("Backup your receiver settings.") + self.oktext + "\n\n" + self.infotext, None))
 			self.list.append(("system-restore", _("Restore system settings"), _("Restore your receiver settings.") + self.oktext, None))
 			self.list.append(("opkg-install", _("Install local extension"), _("Scan for local extensions and install them.") + self.oktext, None))
@@ -195,7 +199,7 @@ class UpdatePluginMenu(Screen):
 			"6": self.go,
 			"7": self.go,
 			"8": self.go,
-			"9": self.go
+			"9": self.go,
 		}, -1)
 		self.onLayoutFinish.append(self.layoutFinished)
 		self.backuppath = getBackupPath()
@@ -262,6 +266,8 @@ class UpdatePluginMenu(Screen):
 					self.session.open(SoftwareUpdate, self.skin_path)
 				elif (currentEntry == "install-extensions"):
 					self.session.open(PluginManager, self.skin_path)
+				elif (currentEntry == "multi-boot"):
+					self.session.open(MultiBootManager)
 				elif (currentEntry == "system-backup"):
 					self.session.openWithCallback(self.backupDone, BackupScreen, runBackup=True)
 				elif (currentEntry == "system-restore"):
