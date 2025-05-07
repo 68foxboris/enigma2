@@ -619,8 +619,10 @@ class DistributionInformation(InformationBase):
 			info.append("")
 		info.append(formatLine("P1", _("GCC version"), about.getGccVersion()))
 		info.append(formatLine("P1", _("Glibc version"), about.getGlibcVersion()))
+		info.append(formatLine("P1", _("UPX version"), about.getUpxVersion()))
 		info.append(formatLine("P1", _("OpenSSL version"), about.getopensslVersionString()))
 		info.append(formatLine("P1", _("Python version"), about.getPythonVersionString()))
+		info.append(formatLine("P1", _("Samba version"), about.getSambaVersionString()))
 		info.append(formatLine("P1", _("GStreamer version"), about.getGStreamerVersionString().replace("GStreamer ", "")))
 		info.append(formatLine("P1", _("FFmpeg version"), about.getFFmpegVersionString()))
 
