@@ -17,12 +17,12 @@ from Components.SystemInfo import BoxInfo, getBoxDisplayName
 from Components.UsageConfig import preferredInstantRecordPath, defaultMoviePath
 from Components.VolumeControl import VolumeControl
 from Components.Sources.StaticText import StaticText
+from Components.Task import job_manager
 from Screens.EpgSelection import EPGSelection
 from Plugins.Plugin import PluginDescriptor
 
 from Screens.Screen import Screen
 from Screens.ScreenSaver import InfoBarScreenSaver
-import Screens.Standby
 from Screens import Standby
 from Screens.ChoiceBox import ChoiceBox
 from Screens.Dish import Dish
@@ -33,6 +33,7 @@ from Screens.MinuteInput import MinuteInput
 from Screens.TimerSelection import TimerSelection
 from Screens.PictureInPicture import PictureInPicture
 from Screens.PiPSetup import PiPSetup
+from Screens.PVRState import PVRState, TimeshiftState
 from Screens.SubtitleDisplay import SubtitleDisplay
 from Screens.RdsDisplay import RdsInfoDisplay, RassInteractive
 from Screens.TimeDateInput import TimeDateInput
@@ -44,10 +45,17 @@ from Tools.Directories import SCOPE_CONFIG, SCOPE_SKINS, fileExists, fileReadLin
 from Tools.ServiceReference import hdmiInServiceRef
 from keyids import KEYFLAGS, KEYIDS, KEYIDNAMES
 from Tools.Notifications import AddPopup, AddNotificationWithCallback, current_notifications, lock, notificationAdded, notifications, RemovePopup
+from Tools.BoundFunction import boundFunction
+
 from keyids import KEYFLAGS, KEYIDNAMES, KEYIDS
+
+from RecordTimer import parseEvent
+
 from enigma import eAVControl, eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, iPlayableService, eServiceReference, eEPGCache, eActionMap, getDesktop, eDVBDB, eDBoxLCD, getBsodCounter, resetBsodCounter
 from skin import findSkinScreen
 from time import time, localtime, strftime
+import Screens.Standby
+import inspect
 import os
 from os.path import isfile
 from bisect import insort
@@ -2111,9 +2119,6 @@ class InfoBarSeek:
 			self.jumpNextMark()
 
 
-from Screens.PVRState import PVRState, TimeshiftState
-
-
 class InfoBarPVRState:
 	def __init__(self, screen=PVRState, force_show=False):
 		self.onChangedEntry = []
@@ -2132,11 +2137,12 @@ class InfoBarPVRState:
 			self["state"].setText("")
 			self["statusicon"].setPixmapNum(6)
 			self["speed"].setText("")
-		if self.shown and self.seekstate != self.SEEK_STATE_EOF and not config.usage.movieplayer_pvrstate.value:
-			self.DimmingTimer.stop()
-			self.doWriteAlpha(config.av.osd_alpha.value)
-			self.pvrStateDialog.show()
-			self.startHideTimer()
+		if config.usage.show_infobar_do_dimming.value is True:
+			if self.shown and self.seekstate != self.SEEK_STATE_EOF and not config.usage.movieplayer_pvrstate.value:
+				self.DimmingTimer.stop()
+				self.doWriteAlpha(config.av.osd_alpha.value)
+				self.pvrStateDialog.show()
+				self.startHideTimer()
 
 	def __playStateChanged(self, state):
 		playstateString = state[3]
@@ -2741,9 +2747,6 @@ class InfoBarExtensions:
 		from Screens.LogManager import LogManager
 		self.session.open(LogManager)
 
-from Tools.BoundFunction import boundFunction
-import inspect
-
 
 class InfoBarPlugins:  # Depends on InfoBarExtensions.
 	def __init__(self):
@@ -2772,9 +2775,6 @@ class InfoBarPlugins:  # Depends on InfoBarExtensions.
 				print(f"[InfoBarGenerics] InfoBarPlugins: Error: {str(err)}!")
 
 
-from Components.Task import job_manager
-
-
 class InfoBarJobman:
 	def __init__(self):
 		self.addExtension(extension=self.getJobList, type=InfoBarExtensions.EXTENSION_LIST)
@@ -2799,9 +2799,7 @@ class InfoBarJobman:
 		job_manager.in_background = in_background
 
 
-# Depends on InfoBarExtensions
-#
-class InfoBarPiP:
+class InfoBarPiP:  # Depends on InfoBarExtensions
 	def __init__(self):
 		try:
 			self.session.pipshown
@@ -2959,8 +2957,6 @@ class InfoBarPiP:
 			self.showPiP()
 		elif "stop" == use:
 			self.showPiP()
-
-from RecordTimer import parseEvent
 
 
 class InfoBarInstantRecord:
