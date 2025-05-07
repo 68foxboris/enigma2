@@ -107,27 +107,8 @@ def getEnigmaVersionString():
 
 
 def getGStreamerVersionString():
-	from glob import glob
-	try:
-		gst = [x.split("Version: ") for x in open(glob("/var/lib/opkg/info/gstreamer[0-9].[0-9].control")[0]) if x.startswith("Version:")][0]
-		return "%s" % gst[1].split("+")[0].split("-")[0].replace("\n", "")
-	except:
-		try:
-			from glob import glob
-			print("[About] Read /var/lib/opkg/info/gstreamer.control")
-			gst = [x.split("Version: ") for x in open(glob("/var/lib/opkg/info/gstreamer?.[0-9].control")[0]) if x.startswith("Version:")][0]
-			return "%s" % gst[1].split("+")[0].replace("\n", "")
-		except:
-			return _("Not installed")
-
-
-def getFFmpegVersionString():
-	lines = fileReadLines("/var/lib/opkg/info/ffmpeg.control", source=MODULE_NAME)
-	if lines:
-		for line in lines:
-			if line[0:8] == "Version:":
-				return line[9:].split("+")[0]
-	return _("Not Installed")
+	from enigma import getGStreamerVersionString
+	return getGStreamerVersionString()
 
 
 def getKernelVersionString():
@@ -155,11 +136,11 @@ def getCPUSerial():
 
 
 def _getCPUSpeedMhz():
-	if MODEL in ("hzero", "h8", "sfx6008", "sfx6018"):
+	if MODEL in ('hzero', 'h8', 'sfx6008', 'sfx6018'):
 		return 1200
-	elif MODEL in ("dreamone", "dreamtwo", "dreamseven"):
+	elif MODEL in ('dreamone', 'dreamtwo', 'dreamseven'):
 		return 1800
-	elif MODEL in ("vuduo4k",):
+	elif MODEL in ('vuduo4k',):
 		return 2100
 	else:
 		return 0
@@ -380,31 +361,16 @@ def getPythonVersionString():
 		return _("Unknown")
 
 
-def getopensslVersionString():
-	lines = fileReadLines("/var/lib/opkg/info/openssl.control", source=MODULE_NAME)
-	if lines:
-		for line in lines:
-			if line[0:8] == "Version:":
-				return line[9:].split("+")[0]
-	return _("Not Installed")
+def getVersionFromOpkg(fileName):
+	return next((line[9:].split("+")[0] for line in fileReadLines(f"/var/lib/opkg/info/{fileName}.control", source=MODULE_NAME) if line.startswith("Version:")), ("Not Installed"))
 
 
-def getSambaVersionString():
-	lines = fileReadLines("/var/lib/opkg/info/samba.control", source=MODULE_NAME)
-	if lines:
-		for line in lines:
-			if line[0:8] == "Version:":
-				return line[9:].split("+")[0]
-	return _("Not Installed")
-
-
-def getUpxVersion():
-	p = Popen("strings /bin/bash | grep '$Id: UPX.*Copyright'", stdout=PIPE, stderr=PIPE, shell=True, text=True)
-	#$Id: UPX 4.24 Copyright (C) 1996-2024 the UPX Team. All Rights Reserved. $
-	stdout, stderr = p.communicate()
-	if len(stderr) == 0:
-		return stdout.split(" ")[2]
-	return _("Unknown")
+def getFileCompressionInfo():
+	result = Popen("strings /bin/bash | grep '$Id: UPX.*Copyright'", stdout=PIPE, shell=True, text=True)
+	# $Id: UPX 4.24 Copyright (C) 1996-2024 the UPX Team. All Rights Reserved. $
+	output = result.communicate()[0]
+	parts = output.strip().split() if result.returncode == 0 and output else []
+	return f"{_("Enabled")} ({parts[1].lower()} {parts[2]})" if len(parts) >= 3 else _("Disabled")
 
 
 # For modules that do "from About import about"
