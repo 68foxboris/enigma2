@@ -39,8 +39,6 @@ MODULE_NAME = "StartEnigma"  # This is done here as "__name__.split(".")[-1]" re
 # Session.doClose:
 # * Destroy screen.
 #
-
-
 class Session:
 	def __init__(self, desktop=None, summaryDesktop=None, navigation=None):
 		self.desktop = desktop
@@ -517,6 +515,7 @@ enigma.eProfileWrite("BoxInfo")
 from Components.SystemInfo import BoxInfo
 
 BRAND = BoxInfo.getItem("brand")
+BOX_TYPE = BoxInfo.getItem("machinebuild")
 MODEL = BoxInfo.getItem("model")
 DISPLAYBRAND = BoxInfo.getItem("displaybrand")
 
