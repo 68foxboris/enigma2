@@ -38,18 +38,15 @@ from Screens.SubtitleDisplay import SubtitleDisplay
 from Screens.RdsDisplay import RdsInfoDisplay, RassInteractive
 from Screens.TimeDateInput import TimeDateInput
 from Screens.UnhandledKey import UnhandledKey
-from ServiceReference import ServiceReference, getStreamRelayRef, isPlayableForCur
+from ServiceReference import ServiceReference, getStreamRelayRef, hdmiInServiceRef, isPlayableForCur
 
 from Tools.ASCIItranslit import legacyEncode
 from Tools.Directories import SCOPE_CONFIG, SCOPE_SKINS, fileExists, fileReadLines, fileWriteLines, fileReadLinesISO, getRecordingFilename, moveFiles, resolveFilename
-from Tools.ServiceReference import hdmiInServiceRef
 from keyids import KEYFLAGS, KEYIDS, KEYIDNAMES
 from Tools.Notifications import AddPopup, AddNotificationWithCallback, current_notifications, lock, notificationAdded, notifications, RemovePopup
 from Tools.BoundFunction import boundFunction
 
 from keyids import KEYFLAGS, KEYIDNAMES, KEYIDS
-
-from RecordTimer import parseEvent
 
 from enigma import eAVControl, eTimer, eServiceCenter, eDVBServicePMTHandler, iServiceInformation, iPlayableService, eServiceReference, eEPGCache, eActionMap, getDesktop, eDVBDB, eDBoxLCD, getBsodCounter, resetBsodCounter
 from skin import findSkinScreen
@@ -65,7 +62,7 @@ import datetime
 from re import match
 from pickle import load as pickle_load, dump as pickle_dump, HIGHEST_PROTOCOL as pickle_HIGHEST_PROTOCOL
 
-from RecordTimer import RecordTimerEntry, RecordTimer, findSafeRecordPath
+from RecordTimer import RecordTimer, RecordTimerEntry, findSafeRecordPath, parseEvent
 
 # hack alert!
 from Screens.Menu import MainMenu, mdom

@@ -43,7 +43,6 @@ class ServiceReference(eServiceReference):
 	def toString(self):
 		return self.ref.toString()
 
-
 def getStreamRelayRef(sref):
 	try:
 		if "http" in sref:
@@ -55,7 +54,6 @@ def getStreamRelayRef(sref):
 	except Exception:
 		pass
 	return sref, False
-
 
 def getPlayingref(ref):
 	playingref = None
@@ -69,11 +67,9 @@ def getPlayingref(ref):
 		playingref = eServiceReference()
 	return playingref
 
-
 def isPlayableForCur(ref):
 	info = eServiceCenter.getInstance().info(ref)
 	return info and info.isPlayable(ref, getPlayingref(ref))
-
 
 def resolveAlternate(ref):
 	nref = None
@@ -82,7 +78,6 @@ def resolveAlternate(ref):
 		if not nref:
 			nref = getBestPlayableServiceReference(ref, eServiceReference(), True)
 	return nref
-
 
 def makeServiceQueryStr(serviceTypes):
 	return ' || '.join(['(type == %d)' % x for x in serviceTypes])
@@ -123,33 +118,43 @@ service_types_radio_ref.setPath(makeServiceQueryStr((
 	eServiceReferenceDVB.dRadioAvc,
 )))
 
-
 def serviceRefAppendPath(sref, path):
 	nsref = eServiceReference(sref)
 	nsref.setPath(nsref.getPath() + path)
 	return nsref
 
-
 def hdmiInServiceRef():
 	return eServiceReference(eServiceReference.idServiceHDMIIn, eServiceReference.noFlags, eServiceReferenceDVB.dTv)
+
+# Apply ServiceReference method proxies to the eServiceReference object so the two classes can be used interchangeably
+# These are required for ServiceReference backwards compatibility
+eServiceReference.isRecordable = lambda serviceref: serviceref.flags & eServiceReference.isGroup or (serviceref.type == eServiceReference.idDVB or serviceref.type == eServiceReference.idDVB + 0x100 or serviceref.type == 0x2000 or serviceref.type == 0x1001 or serviceref.type == eServiceReference.idServiceMP3)
+
 def __repr(serviceref):
 	chnum = serviceref.getChannelNum()
 	chnum = ", ChannelNum=" + str(chnum) if chnum else ""
 	return "eServiceReference(Name=%s%s, String=%s)" % (serviceref.getServiceName(), chnum, serviceref.toString())
+
 eServiceReference.__repr__ = __repr
+
 def __toString(serviceref):
 	return serviceref.toString()
+
 eServiceReference.__str__ = __toString
+
 def __getServiceName(serviceref):
 	info = eServiceCenter.getInstance().info(serviceref)
 	return info and info.getName(serviceref) or ""
 eServiceReference.getServiceName = __getServiceName
+
 def __info(serviceref):
 	return eServiceCenter.getInstance().info(serviceref)
 eServiceReference.info = __info
+
 def __list(serviceref):
 	return eServiceCenter.getInstance().list(serviceref)
 eServiceReference.list = __list
+
 # ref is obsolete but kept for compatibility.
 # A ServiceReference *is* an eServiceReference now, so you no longer need to use .ref
 def __getRef(serviceref):
@@ -157,14 +162,17 @@ def __getRef(serviceref):
 def __setRef(self, serviceref):
 	eServiceReference.__init__(self, serviceref)
 eServiceReference.ref = property(__getRef, __setRef,)
+
 # getType is obsolete but kept for compatibility. Use "serviceref.type" instead
 def __getType(serviceref):
 	return serviceref.type
 eServiceReference.getType = __getType
+
 # getFlags is obsolete but kept for compatibility. Use "serviceref.flags" instead
 def __getFlags(serviceref):
 	return serviceref.flags
 eServiceReference.getFlags = __getFlags
+
 # Compatibility class that exposes eServiceReference as ServiceReference
 # Don't use this for new code. eServiceReference now supports everything in one single type
 class ServiceReference(eServiceReference):
@@ -175,6 +183,7 @@ class ServiceReference(eServiceReference):
 			new.__class__ = ServiceReference
 			return new
 		return eServiceReference.__new__(cls)
+
 	def __init__(self, ref, reftype=eServiceReference.idInvalid, flags=0, path=''):
 		if reftype != eServiceReference.idInvalid:
 			eServiceReference.__init__(self, reftype, flags, path)
