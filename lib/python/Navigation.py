@@ -70,7 +70,7 @@ class Navigation:
 		self.Scheduler = Scheduler.Scheduler()  # Initialize Scheduler before RecordTimer.loadTimers.
 		if not self.RecordTimer:
 			self.RecordTimer = RecordTimer.RecordTimer()
-			self.RecordTimer.loadTimers()  # Call loadTimers after initialize of self.RecordTimer.
+			self.RecordTimer.loadTimer()  # Call loadTimer after initialize of self.RecordTimer.
 			self.isRecordTimerImageStandard = True
 		self.Scheduler.loadTimers()  # Call loadTimers after initialize of self.Scheduler.
 		self.__wasTimerWakeup = False

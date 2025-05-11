@@ -40,3 +40,12 @@ def InitRecordingConfig():
 		config.recording.standbyDescrambleShutdown = ConfigEnableDisable(default=False)
 	config.recording.standbyDescrambleStart = ConfigClock(default=calculateTime(0, 1))
 	config.recording.standbyDescrambleEnd = ConfigClock(default=calculateTime(23, 59))
+
+
+def recType(configString):
+	return {
+		"any": pNavigation.isAnyRecording,
+		"real": pNavigation.isRealRecording,
+		"real_streaming": pNavigation.isRealRecording | pNavigation.isStreaming,
+		"real_pseudo": pNavigation.isRealRecording | pNavigation.isPseudoRecording
+	}.get(configString)
