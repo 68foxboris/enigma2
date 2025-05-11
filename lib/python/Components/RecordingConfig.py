@@ -2,6 +2,7 @@
 from time import localtime, mktime
 from Components.config import ConfigClock, ConfigEnableDisable, ConfigNumber, ConfigYesNo, ConfigSubsection, ConfigSelection, config
 from Components.SystemInfo import BoxInfo
+from enigma import pNavigation
 
 
 def calculateTime(hours, minutes, day_offset=0):
@@ -31,6 +32,14 @@ def InitRecordingConfig():
 	config.recording.zap_record_service_in_standby = ConfigYesNo(default=False)
 	config.recording.offline_decode_delay = ConfigNumber(default=1000)
 	config.recording.timer_default_type = ConfigSelection(choices=[("zap", _("zap")), ("record", _("record")), ("zap+record", _("zap and record"))], default="record")
+	choices = [
+		("any", _("Any recordings")),
+		("real", _("Real recordings")),
+		("real_streaming", _("Real recordings or streaming")),
+		("real_pseudo", _("Real or pseudo recordings"))
+	]
+	config.recording.show_rec_symbol_for_rec_types = ConfigSelection(default="real_streaming", choices=choices)
+	config.recording.warn_box_restart_rec_types = ConfigSelection(default="real_streaming", choices=choices)
 
 	if BoxInfo.getItem("CanDescrambleInStandby"):
 		config.recording.standbyDescramble = ConfigEnableDisable(default=True)

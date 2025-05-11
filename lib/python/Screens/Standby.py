@@ -2,6 +2,7 @@ from os.path import isfile
 import struct
 import RecordTimer
 import Components.ParentalControl
+import Components.RecordingConfig
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.ActionMap import ActionMap
@@ -352,7 +353,7 @@ inTryQuitMainloop = False
 
 
 def getReasons(session, retvalue=QUIT_SHUTDOWN):
-	recordings = session.nav.getRecordings()
+	recordings = session.nav.getRecordings(False, Components.RecordingConfig.recType(config.recording.warn_box_restart_rec_types.getValue()))
 	jobs = len(job_manager.getPendingJobs())
 	if BoxInfo.getItem("CanDescrambleInStandby"):
 		scrambledRecordings = ScrambledRecordings()
@@ -433,7 +434,7 @@ class TryQuitMainloop(MessageBox):
 
 	def getRecordEvent(self, recservice, event):
 		if event == iRecordableService.evEnd:
-			recordings = self.session.nav.getRecordings()
+			recordings = self.session.nav.getRecordings(False, Components.RecordingConfig.recType(config.recording.warn_box_restart_rec_types.getValue()))
 			if not recordings:  # no more recordings exist
 				rec_time = self.session.nav.RecordTimer.getNextRecordingTime()
 				if rec_time > 0 and (rec_time - time()) < 360:
