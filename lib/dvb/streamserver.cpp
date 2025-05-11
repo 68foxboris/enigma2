@@ -16,6 +16,7 @@
 #include <lib/base/esimpleconfig.h>
 #include <lib/base/cfile.h>
 #include <lib/base/e2avahi.h>
+#include <lib/nav/core.h>
 
 #include <lib/dvb/streamserver.h>
 #include <lib/dvb/encoder.h>
@@ -53,13 +54,13 @@ void eStreamClient::start()
 void eStreamClient::set_socket_option(int fd, int optid, int option)
 {
 	if(::setsockopt(fd, SOL_SOCKET, optid, &option, sizeof(option)))
-		eDebug("Failed to set socket option: %m");
+		eDebug("[eStreamClient] Failed to set socket option: %m");
 }
 
 void eStreamClient::set_tcp_option(int fd, int optid, int option)
 {
 	if(::setsockopt(fd, SOL_TCP, optid, &option, sizeof(option)))
-		eDebug("Failed to set TCP parameter: %m");
+		eDebug("[eStreamClient] Failed to set TCP parameter: %m");
 }
 
 void eStreamClient::notifier(int what)
@@ -166,6 +167,8 @@ void eStreamClient::notifier(int what)
 				pos = serviceref.find('?');
 				if (pos == std::string::npos)
 				{
+					parent->startStream(serviceref);
+
 					eDebug("[eDVBServiceStream] stream ref: %s", serviceref.c_str());
 					if (eDVBServiceStream::start(serviceref.c_str(), streamFd) >= 0)
 					{
@@ -188,6 +191,9 @@ void eStreamClient::notifier(int what)
 					eDebug("[eDVBServiceStream] stream ref: %s", serviceref.c_str());
 					if (posdur != std::string::npos)
 					{
+
+						parent->startStream(serviceref);
+
 						if (eDVBServiceStream::start(serviceref.c_str(), streamFd) >= 0)
 						{
 							running = true;
@@ -253,11 +259,11 @@ void eStreamClient::notifier(int what)
 
 						encoderFd = -1;
 
-						if(eEncoder::getInstance())
+						if (eEncoder::getInstance())
 							encoderFd = eEncoder::getInstance()->allocateEncoder(serviceref, buffersize, bitrate, width, height, framerate, !!interlaced, aspectratio,
 									vcodec, acodec);
 
-						if(encoderFd >= 0)
+						if (encoderFd >= 0)
 						{
 							m_serviceref = serviceref;
 							m_useencoder = true;
@@ -345,8 +351,17 @@ void eStreamServer::connectionLost(eStreamClient *client)
 	eSmartPtrList<eStreamClient>::iterator it = std::find(clients.begin(), clients.end(), client );
 	if (it != clients.end())
 	{
+        std::string serviceref = it->getServiceref();
 		clients.erase(it);
+		streamStatusChanged(2,serviceref.c_str());
+		eNavigation::getInstance()->removeStreamService(serviceref);
 	}
+}
+
+void eStreamServer::startStream(const std::string serviceref)
+{
+	streamStatusChanged(0,serviceref.c_str());
+	eNavigation::getInstance()->addStreamService(serviceref);
 }
 
 void eStreamServer::stopStream()
@@ -354,6 +369,8 @@ void eStreamServer::stopStream()
 	eSmartPtrList<eStreamClient>::iterator it = clients.begin();
 	if (it != clients.end())
 	{
+		streamStatusChanged(1,it->getServiceref().c_str());
+		eNavigation::getInstance()->removeStreamService(it->getServiceref());
 		it->stopStream();
 	}
 }
@@ -451,8 +468,6 @@ PyObject *eStreamServer::getConnectedClientDetails(int index)
 	return ret;
 
 }
-
-
 
 PyObject *eStreamServer::getConnectedClients()
 {
