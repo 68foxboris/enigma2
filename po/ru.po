@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2025-04-21 19:41+0300\n"
+"PO-Revision-Date: 2025-05-14 06:49+0300\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -79,21 +79,6 @@ msgstr " (Радио)"
 
 msgid " (TV)"
 msgstr " (ТВ)"
-
-msgid " (auto detection)"
-msgstr " (автоматическое определение)"
-
-msgid " (disabled)"
-msgstr " (отключено)"
-
-msgid " (higher than any auto)"
-msgstr " (выше чем любой авто)"
-
-msgid " (higher than rotor any auto)"
-msgstr " (выше чем любой авто ротора)"
-
-msgid " (lower than any auto)"
-msgstr " (ниже чем любой авто)"
 
 msgid " - %d elements exist! Overwrite"
 msgstr " -%d элементов существует! Перезаписать"
@@ -253,8 +238,11 @@ msgid "%.2f GB"
 msgstr "%.2f ГБ"
 
 #, python-format
-msgid "%.3f MHz"
-msgstr "%.3f MHz"
+msgid "%.2f Second"
+msgid_plural "%.2f Seconds"
+msgstr[0] "%.2f Второй"
+msgstr[1] "%.2f Секунды"
+msgstr[2] "%.2f секунд"
 
 #, python-format
 msgid "%02d.%02d."
@@ -1067,7 +1055,7 @@ msgstr[2] "%d пакетов загружено."
 msgid "%d package was identified for upgrade."
 msgid_plural "%d packages were identified for upgrade."
 msgstr[0] "%d пакет отмечен для обновления."
-msgstr[1] "%d пакетов отмечено для обновления."
+msgstr[1] "%d пакета отмечено для обновления."
 msgstr[2] "%d пакетов отмечено для обновления."
 
 #, python-format
@@ -1459,12 +1447,6 @@ msgstr "* Текущая анимация"
 msgid " - information"
 msgstr " - информация"
 
-msgid "+/-"
-msgstr "+/-"
-
-msgid "---Weather---"
-msgstr "---Погода---"
-
 msgid "+24 Hours"
 msgstr "+24 часа"
 
@@ -1488,7 +1470,7 @@ msgid "-NO SERVICE\n"
 msgstr "-НЕТ КАНАЛОВ\n"
 
 msgid "-SERVICE ERROR:%d\n"
-msgstr "-ОШИБКА СЕРВИСА:%d\n"
+msgstr "-ОШИБКА КАНАЛА:%d\n"
 
 msgid "/s"
 msgstr "/с"
@@ -1771,6 +1753,9 @@ msgstr "<Дефолтный скин>"
 
 msgid "<Default movie location>"
 msgstr "<Расположение записей по умолчанию>"
+
+msgid "<Flash expander inactive>"
+msgstr "< Расширение флеш-памяти неактивно >"
 
 msgid "<Last timer location>"
 msgstr "<Расположение последнего таймера>"
@@ -2740,6 +2725,9 @@ msgstr "Антигуа и Барбуда"
 msgid "Any activity"
 msgstr "Любая активность"
 
+msgid "Any recordings"
+msgstr "Любые записи"
+
 msgid "Apply any changes to the active locale/language and exit"
 msgstr "Примените все изменения к активной локали/языку и выйдите из системы"
 
@@ -2879,6 +2867,12 @@ msgstr "Аргентина"
 
 msgid "Armenia"
 msgstr "Армения"
+
+msgid "Armenian"
+msgstr "Армянский"
+
+msgid "Arrow skip mode"
+msgstr "Режим пропуска стрелок"
 
 msgid "Artist"
 msgstr "Артист"
@@ -3467,6 +3461,12 @@ msgstr "Прежде чем изменять эти настройки, попр
 
 msgid "Begin time"
 msgstr "Время начала"
+
+msgid "Behavior of 'pause' when paused"
+msgstr "Действие кнопки 'ПАУЗА' во время паузы"
+
+msgid "Behavior of 0 key in PiP-mode"
+msgstr "Действие кнопки 0 в режиме PiP"
 
 msgid "Behavior of '0' button in PiP mode"
 msgstr "Поведение кнопки 0 в режиме PiP"
@@ -4759,6 +4759,9 @@ msgstr "Город"
 msgid "City: "
 msgstr "Город: "
 
+msgid "Clean (Just flash and start clean)"
+msgstr "Очистить (просто прошить и начать чистить)"
+
 msgid "Clean network trash cans"
 msgstr "Очистить сетевую корзину"
 
@@ -5095,6 +5098,9 @@ msgstr "Настройте тип по умолчанию для новых та
 
 msgid "Configure for how long the infobar will remain visible after activation."
 msgstr "Настройка для показа инфобара после его активации в секундах."
+
+msgid "Configure for which types of recordings a warning about active recordings is shown when attempting to restart the box or the GUI."
+msgstr "Укажите, для каких типов записей следует выводить предупреждение, когда будет выбрана перезагрузка ресивера или пользовательского интерфейса."
 
 msgid "Configure how long finished events should remain visible in the EPG. Useful when you need information about an event which has just finished, or has been delayed (or for plugins that support catchup)."
 msgstr "Позволяет показать(сохранить) данные EPG о прошедших событиях. Удобно, когда хотите знать что-то о передаче, которая закончилась раньше или для плагинов, которые поддерживают архив."
@@ -5983,6 +5989,12 @@ msgstr "Настройка поведения курсора в списке к�
 msgid "Cut"
 msgstr "Нарезка"
 
+msgid "CutList skip time for '%s' button"
+msgstr "CutList пропускает время для кнопки '%s'"
+
+msgid "CutList skip time for '%s'/'%s' buttons"
+msgstr "CutList пропускает время для кнопок '%s'/'%s'"
+
 msgid "Cutlist editor"
 msgstr "Видео редактор"
 
@@ -6395,6 +6407,12 @@ msgstr "Определите параметры монтирования фай�
 
 msgid "Define the location of the EPG Cache file."
 msgstr "Выбор расположения кеша ТВ-гида файла."
+
+msgid "Defined / Active"
+msgstr "Определено / Активно"
+
+msgid "Defined skips"
+msgstr "Определенные пропуски"
 
 msgid "Defined volume offset"
 msgstr "Определенное смещение объема"
@@ -7590,6 +7608,9 @@ msgstr "Включить 5V для антенны"
 msgid "Enable debug logs *"
 msgstr "Включить журналы отладки *"
 
+msgid "Enable Chkroot MultiBoot"
+msgstr "Включить Chkroot MultiBoot"
+
 msgid "Enable EIT EPG"
 msgstr "Включить EIT ТВ-гид"
 
@@ -7607,6 +7628,9 @@ msgstr "Включить графы конвейера GStreamer *"
 
 msgid "Enable IPv6"
 msgstr "Включить IPv6"
+
+msgid "Enable InfoBar fade-out"
+msgstr "Включить затухание инфопанели"
 
 msgid "Enable FreeSat EPG"
 msgstr "Включить FreeSat ТВ-гид"
@@ -7702,6 +7726,9 @@ msgstr "Включить резервный удалённый ресивер"
 msgid "Enable favourites edit"
 msgstr "Включить редактирование фаворитов"
 
+msgid "Enable filtering in SingleEPG"
+msgstr "Включить фильтрацию в SingleEPG"
+
 msgid "Enable import timer from fallback tuner"
 msgstr "Включить импорт таймеров из резервного ресивера"
 
@@ -7711,9 +7738,6 @@ msgstr "Включить функцию затухания инфобара"
 msgid "Enable infobar fade-out"
 msgstr "Включить затухание инфобара"
 
-msgid "Enable Chkroot MultiBoot"
-msgstr "Включить Chkroot MultiBoot"
-
 msgid "Enable Kexec MultiBoot"
 msgstr "Активировать Vu+ мультибут"
 
@@ -7722,6 +7746,9 @@ msgstr "Включить режим перемещения"
 
 msgid "Enable multiple bouquets"
 msgstr "Включить мульти-букеты"
+
+msgid "Enable numbers"
+msgstr "Включить номера"
 
 msgid "Enable or disable IPv6"
 msgstr "Включить или отключить IPv6"
@@ -7740,6 +7767,9 @@ msgstr "Включить удалённый ресивер Enigma2 для поп
 
 msgid "Enable screenshot of LCD in /tmp"
 msgstr "Включить скриншот LCD в / tmp"
+
+msgid "Enable setting a time interval for filtering events in SingleEPG using the `Stop` button."
+msgstr "Включите настройку временного интервала для фильтрации событий в SingleEPG с помощью кнопки «Стоп»."
 
 msgid "Enable teletext caching"
 msgstr "Включить кэширование телетекста"
@@ -7779,6 +7809,9 @@ msgstr "Включите этот параметр, чтобы добавить 
 
 msgid "Enable this option to add screen names and resolution data to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить имена экранов и данные о разрешении в файл лога отладки."
+
+msgid "Enable this option to add skin load information detected during system boot to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить информацию о загрузке скина, обнаруженную во время загрузки системы, в файл журнала отладки."
 
 msgid "Enable this option to add storage device information detected during system boot and hot plug events to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить в файл журнала отладки информацию об устройствах хранения, обнаруженных во время загрузки системы и событий горячего подключения."
@@ -8152,6 +8185,9 @@ msgid ""
 msgstr ""
 "Ошибка: %s\n"
 "Повторить?"
+
+msgid "Error: Cannot find any images!"
+msgstr "Ошибка: Не удаётся найти имиджи!"
 
 msgid "Error: Directory '%s' already exists!"
 msgstr "Этот путь %s уже существует!"
@@ -8537,6 +8573,9 @@ msgstr ""
 "\n"
 "Действительно выполнить сброс на заводские установки?"
 
+msgid "Fade the InfoBar on hide."
+msgstr "Затухание инфопанели при исчезании."
+
 msgid "Fade the infobar when hiding"
 msgstr "Затухание инфопанели при исчезании"
 
@@ -8771,6 +8810,9 @@ msgstr ""
 "Файл oscam.conf/ncan.conf не найден\n"
 "Пожалуйста введите имя/пароль вручную."
 
+msgid "File compression"
+msgstr "Сжатие файлов"
+
 msgid "Filename"
 msgstr "Название файла"
 
@@ -8845,6 +8887,21 @@ msgstr "Прошивка образа"
 
 msgid "Flash image"
 msgstr "Прошивка образа"
+
+msgid "Flash Manager Actions"
+msgstr "Действия менеджера прошивок"
+
+msgid "Flash Online"
+msgstr "Прошивка онлайн"
+
+msgid "Flash Online a new image"
+msgstr "Прошить ресивер новым образом из сети"
+
+msgid "Flash and restore settings and no plugins"
+msgstr "Прошить и восстановить настройки без плагинов"
+
+msgid "Flash and restore settings and selected plugins (Ask user)"
+msgstr "Прошить и восстановить настройки и выбранные плагины (спросить у пользователя)"
 
 #, python-format
 msgid "Flash directory '%s' not allowed!"
@@ -10962,6 +11019,12 @@ msgstr "Лог-файл больше не существует"
 msgid "Logs folder location"
 msgstr "Расположение папки журналов"
 
+msgid "Long << / >>"
+msgstr "Долгое нажатие ◀◀ / ▶▶"
+
+msgid "Long Left/Right"
+msgstr "Долгое нажатие ВЛЕВО/ВПРАВО"
+
 msgid "Long filenames"
 msgstr "Длинные имена файлов"
 
@@ -12396,6 +12459,9 @@ msgstr "Количество повторов текста на дисплее."
 msgid "Number of rows"
 msgstr "Количество рядов"
 
+msgid "Numeric skip mode"
+msgstr "Режим числового пропуска"
+
 msgid "Numbering mode"
 msgstr "Режим нумерации"
 
@@ -13400,6 +13466,9 @@ msgstr ""
 "\n"
 "Нажмите ОК для продолжения."
 
+msgid "Please select what to do after flash of the following image:"
+msgstr "Выберите, что делать после прошивки следующего образа:"
+
 msgid ""
 "Please select the wireless network that you want to connect to.\n"
 "\n"
@@ -14155,6 +14224,9 @@ msgstr "Быстрое меню"
 msgid "QuickMenu/Extensions"
 msgstr "Быстрое меню/Дополнения"
 
+msgid "Quit Movie Player with EXIT button"
+msgstr "Выйдите из Movie Player с помощью кнопки EXIT"
+
 msgid "RAM (Details)"
 msgstr "ОЗУ (подробно)"
 
@@ -14244,6 +14316,15 @@ msgstr "Готовы к удалению \"%s\"?"
 
 msgid "Really delete this entry?"
 msgstr "Действительно удалить эту запись?"
+
+msgid "Real or pseudo recordings"
+msgstr "Реальные или псевдозаписи"
+
+msgid "Real recordings"
+msgstr "Реальные записи"
+
+msgid "Real recordings or streaming"
+msgstr "Реальные записи или потоковое вещание"
 
 msgid "  Red key : Show/Hide channel name"
 msgstr "  Красная кнопка: показать/скрыть название канала"
@@ -14910,7 +14991,7 @@ msgid "Retrieving boot slot information..."
 msgstr "Получение информации о загрузочном слоте..."
 
 msgid "Retrieving image list, please wait..."
-msgstr "Получаем список эмуляторов. Пожалуйста подождите..."
+msgstr "Получаем список имиджей. Пожалуйста подождите..."
 
 msgid "Retrieving image slots - Please wait..."
 msgstr "Идёт распаковка образов, пожалуйста подождите..."
@@ -15110,6 +15191,12 @@ msgstr "Журнал Samba"
 
 msgid "Samba setup"
 msgstr "Настройки Samba"
+
+msgid "Samba version: "
+msgstr "Версия Samba: "
+
+msgid "Samba version"
+msgstr "Версия Samba"
 
 msgid "Same as in active"
 msgstr "То же, что при активности"
@@ -15448,8 +15535,23 @@ msgstr "Перемотать назад (введите время)"
 msgid "Seek forward"
 msgstr "Перемотка вперёд"
 
+msgid "Seek forward  short"
+msgstr "Перемотка вперёд  короткая"
+
 msgid "Seek forward (enter time)"
 msgstr "Перемотать вперёд (Введите время)"
+
+msgid "Seek forward long"
+msgstr "Перемотка вперёд длинная"
+
+msgid "SeekBar activation"
+msgstr "Вызов панели перемотки"
+
+msgid "Seekbar"
+msgstr "Панель перемотки"
+
+msgid "Seekbar sensibility"
+msgstr "Точность перемотки"
 
 msgid "Seems a background update check is in progress, please try again later."
 msgstr "Похоже, проверка фонового обновления выполняется, повторите попытку позже."
@@ -15662,6 +15764,12 @@ msgstr "Выберите, как долго (в секундах) будут о�
 msgid "Select how quickly the dish should move between satellites."
 msgstr "Выберите, как быстро тарелка должна перемещаться между спутниками."
 
+msgid "Select how the arrow ('UP', 'DOWN', 'LEFT', and 'RIGHT') buttons will act during seek actions."
+msgstr "Выберите, как будут действовать кнопки со стрелками («ВВЕРХ», «ВНИЗ», «ВЛЕВО» и «ВПРАВО») во время поиска."
+
+msgid "Select how the number buttons will act during seek actions."
+msgstr "Выберите, как будут действовать цифровые кнопки во время поиска."
+
 msgid "Select how the satellite dish is set up. i.e. fixed dish, single LNB, DiSEqC switch, positioner, etc."
 msgstr "Выберите способ настройки спутниковой антенны. т.е. фиксированная тарелка, одиночный LNB, переключатель DiSEqC, позиционер и т.д."
 
@@ -15808,6 +15916,9 @@ msgstr "Выберите номер модели вашего устройств
 
 msgid "Select the movie path"
 msgstr "Выбрать папку для фильмов"
+
+msgid "Select the preferred service information to display, in addition to the service number, for the service selection pop up screen."
+msgstr "Выберите предпочтительную информацию об услуге, которая будет отображаться в дополнение к номеру услуги на всплывающем экране выбора услуги."
 
 msgid "Select the previous service and close the scanner"
 msgstr "Выберите предыдущую услугу и закройте сканер"
@@ -15991,6 +16102,12 @@ msgstr "Выберите «Да», если вы хотите вывести т�
 msgid "Select 'Yes' if you want to wake the TV for a 'Zap' recording timer is starting."
 msgstr "Выберите «Да», если вы хотите вывести телевизор из спящего режима для запуска таймера записи «Zap»."
 
+msgid "Select 'Yes, to display the InfoBar when fast forwarding or rewinding during media playback."
+msgstr "Выберите «Да», чтобы отображать информационную панель при быстрой перемотке вперед или назад во время воспроизведения мультимедиа."
+
+msgid "Select 'Yes' the keep the InfoBar displayed, with no timeout, while media playback is paused."
+msgstr "Выберите «Да», чтобы информационная панель отображалась без тайм-аута во время приостановки воспроизведения мультимедиа."
+
 msgid "Select 'Yes' to show the 'Movie Selection' entry in the Main Menu. This can provide access to the Movie Selection screen when there is no assigned button on the remote control."
 msgstr "Выберите «Да», чтобы отобразить запись «Выбор фильма» в главном меню. Это может обеспечить доступ к экрану выбора фильма, когда на пульте дистанционного управления нет назначенной кнопки."
 
@@ -16169,6 +16286,24 @@ msgstr ""
 "Канал недоступен!\n"
 "Проверьте настройки тюнера!"
 
+msgid "Service width"
+msgstr "Ширина названия канала"
+
+msgid "Service zap delay mode"
+msgstr "Задержка срабатывания кнопок при выборе канала"
+
+msgid "Service zap first button delay"
+msgstr "Задержка первой кнопки"
+
+msgid "Service zap other button delay"
+msgstr "Задержка следующей кнопки"
+
+msgid "Service zap screen contents"
+msgstr "Содержимое экрана Service Zap"
+
+msgid "ServiceName"
+msgstr "Название канала"
+
 msgid "ServicePicon"
 msgstr "Пикон канала"
 
@@ -16320,6 +16455,9 @@ msgstr "Установите время задержки между повтор
 msgid "Set the global sort method"
 msgstr "Выбор способа сортировки"
 
+msgid "Set the jump-size of the seekbar."
+msgstr "Задайте шаг перехода для панели перемотки."
+
 msgid "Set the password of the OpenWebif from your fallback tuner"
 msgstr "Установить пароль OpenWebif из вашего резервного ресивера"
 
@@ -16334,6 +16472,12 @@ msgstr "Установите скорость прокрутки текста н
 
 msgid "Set the scrolling speed of text on the front panel display."
 msgstr "Установите скорость прокрутки текста на дисплее передней панели."
+
+msgid "Set the skip time interval for the '%s' button."
+msgstr "Установите интервал пропуска для кнопки «%s»."
+
+msgid "Set the skip time interval for the '%s'/'%s' buttons."
+msgstr "Установите интервал пропуска для кнопок '%s'/'%s'."
 
 msgid "Set the sort method for this directory"
 msgstr "Установите метод сортировки для этого каталога"
@@ -16687,6 +16831,9 @@ msgstr "Показать 480/576p 24fps как"
 msgid "Show 720p 24fps as"
 msgstr "Показать 720p 24fps как"
 
+msgid "Show Alternatives"
+msgstr "Показать Альтернативы"
+
 msgid "Show Audioselection"
 msgstr "Показать выбор аудио"
 
@@ -16797,6 +16944,9 @@ msgstr "Показать PIP на передней панели"
 
 msgid "Show PIP in the front panel display"
 msgstr "Показать PIP на дисплее передней панели"
+
+msgid "Show PVR status in MoviePlayer InfoBar"
+msgstr "Показывать статус записи в инфопанели видеопроигрывателя"
 
 msgid "Show PVR status in Movie Player infobar"
 msgstr "Показывать состояние PVR в инфопанели плеера"
@@ -16957,6 +17107,9 @@ msgstr "Показать меню помощи"
 msgid "Show icon for new/unseen items"
 msgstr "Показ значки для новых/невидимых элементов"
 
+msgid "Show in Extension Menu"
+msgstr "Показывать в меню дополнений"
+
 msgid "Show in Standby"
 msgstr "Показать в режиме ожидания"
 
@@ -16975,10 +17128,16 @@ msgstr "Показать/скрыть панель фокусировки"
 msgid "Show infobar on channel change"
 msgstr "Показать инфобар при смене каналов"
 
+msgid "Show InfoBar on event change"
+msgstr "Показать инфобар при смене события"
+
 msgid "Show infobar on event change"
 msgstr "Показать инфобар при смене события"
 
 msgid "Show infobar on skip forward/backward"
+msgstr "Показать инфобар при перемотке вперед/назад"
+
+msgid "Show InfoBar on skip forward/backward"
 msgstr "Показать инфобар при перемотке вперед/назад"
 
 msgid "Show latest commits"
@@ -17038,6 +17197,9 @@ msgstr "Показать или скрыть расширенное описан
 msgid "Show packages to be updated"
 msgstr "Показать пакеты, которые будут обновлены"
 
+msgid "Show persistent InfoBar while paused"
+msgstr "Не скрывать инфопанель во время паузы"
+
 msgid "Show picon background color"
 msgstr "Показать фоновый цвет пикона"
 
@@ -17076,6 +17238,9 @@ msgstr "Показать индикатор записи"
 
 msgid "Show recording symbol"
 msgstr "Показать индикатор записи"
+
+msgid "Show PWR status in MoviePlayer InfoBar"
+msgstr "Показывать статус PWR в информационной панели MoviePlayer"
 
 msgid "Show screen saver"
 msgstr "Запустить хранитель экрана через"
@@ -17227,6 +17392,9 @@ msgstr "Показать неизвестные устройства"
 msgid "Show vertical timelines"
 msgstr "Показать вертикальные сроки"
 
+msgid "Show warning before restart"
+msgstr "Показывать предупреждение перед перезагрузкой"
+
 msgid "Show warning before set 'Ignore conflict'"
 msgstr "Показать предупреждение перед установкой 'Игнорировать конфликт'"
 
@@ -17292,9 +17460,6 @@ msgstr "Сигнал: "
 
 msgid "Signed by"
 msgstr "Подписано"
-
-msgid "SeekBar activation"
-msgstr "Активация SeekBar"
 
 msgid "Similar"
 msgstr "Аналогичный"
@@ -17397,6 +17562,24 @@ msgstr "Пропускать пустые каналы"
 
 msgid "Skip forward"
 msgstr "Перейти вперёд"
+
+msgid "Skip jumping to live while timeshifting with plugins"
+msgstr "Игнорировать живое вещание во время таймшифта потока от плагинов"
+
+msgid "Skip package installation, only core packages will be available"
+msgstr "Пропустить установку пакетов. Будут доступны только основные пакеты"
+
+msgid "Skip sensibility (Horizontal)"
+msgstr "Пропустить чувствительность (горизонтальную)"
+
+msgid "Skip sensibility (Vertical)"
+msgstr "Чувствительность к пропускам (вертикальная)"
+
+msgid "Skip time for '%s' button"
+msgstr "Пропустить время для кнопки '%s'"
+
+msgid "Skip time for '%s'/'%s' buttons"
+msgstr "Пропустить время для кнопок '%s'/'%s'"
 
 msgid "Skip jumping to live TV while timeshifting with plugins"
 msgstr "Пропускайте переходы, чтобы быть во время сдвига во времени с помощью плагинов"
@@ -18377,6 +18560,9 @@ msgstr "Скорость потока & FEC"
 msgid "Symbol rate:"
 msgstr "Скорость потока:"
 
+msgid "Symmetrical skips"
+msgstr "Симметричные пропуски"
+
 msgid "Sync NTP every (minutes)"
 msgstr "Синхронизировать NTP каждые (Мин)"
 
@@ -19145,8 +19331,17 @@ msgstr "Здесь можете настроить 3D глубину"
 msgid "This option lets you adjust the transparency of the OSD."
 msgstr "Здесь можете настроить прозрачность пользовательского интерфейса."
 
-msgid "This option lets you choose the 3D mode"
-msgstr "Эта опция позволяет режим 3D"
+msgid "This option lets you adjust the 3D depth of the OSD."
+msgstr "Здесь можете настроить 3D глубину меню."
+
+msgid "This option lets you choose the 3D mode of the OSD."
+msgstr "Эта опция позволяет выбрать 3D-режим для меню."
+
+msgid "This option lets you show the 3D OSD menu option in the Extension Menu screen."
+msgstr "Эта опция позволяет добавить параметр в меню дополнений."
+
+msgid "This option moves the PVR status display from a separate window into the MoviePlayer InfoBar."
+msgstr "Эта опция перемещает индикатор статуса записи из отдельного окна в инфопанель видеопроигрывателя."
 
 msgid "This option lets you show the option in the extension screen."
 msgstr "Эта опция позволяет добавить параметр в меню дополнений."
@@ -19177,6 +19372,9 @@ msgstr "Эта опция устанавливает подавление лож
 
 msgid "This option sets up the picture sharpness, used when the picture is being upscaled."
 msgstr "Эта опция устанавливает резкость, используемую при масштабировании изображения."
+
+msgid "This option to enable numbers in Plugin Browser"
+msgstr "Эта опция позволяет включить числа в браузере плагинов"
 
 msgid "This plugin is installed."
 msgstr "Этот плагин установлен."
@@ -19668,6 +19866,9 @@ msgstr "Всего:"
 
 msgid "Track"
 msgstr "Дорожка"
+
+msgid "Traditional"
+msgstr "Традиционный"
 
 msgid "Traditional Chinese"
 msgstr "Китайский традиционный"
@@ -20782,6 +20983,9 @@ msgstr "Громкость"
 msgid "Volume Adjust Service Selection Actions"
 msgstr "Действия по выбору услуг регулировки громкости"
 
+msgid "Volume Adjust Settings"
+msgstr "Настройки регулировки громкости"
+
 msgid "Volume adjustment mode"
 msgstr "Режим регулировки громкости"
 
@@ -21199,6 +21403,9 @@ msgid "When enabled, http streams are descrambled on the server side. The (remot
 msgstr "Если это включено, то http стрим потоки декодируются на стороне сервера. (Дистанционный) клиент получатель стрим потока не должен делать декодирование. По дефолту включено."
 
 msgid "When enabled, it is possible to leave the movie player with exit."
+msgstr "Если включено,то можно закрыть видеоплеер с помощью кнопки выход."
+
+msgid "When enabled, it is possible to leave the Movie Player with exit."
 msgstr "Если включено,то можно закрыть видеоплеер с помощью кнопки выход."
 
 msgid "When enabled, measure power consumption to detect when the rotor stops turning (when supported by the tuner)."
@@ -22093,6 +22300,9 @@ msgstr "звуковые дорожки"
 msgid "auto"
 msgstr "авто"
 
+msgid " (auto detection)"
+msgstr " (автоматическое определение)"
+
 msgid "auto deepstandby"
 msgstr "перейти в глубокий режим ожидания"
 
@@ -22265,6 +22475,9 @@ msgstr "включить редактирование букета"
 
 msgid "disabled"
 msgstr "отключён"
+
+msgid " (disabled)"
+msgstr " (отключено)"
 
 msgid "disconnected"
 msgstr "отключено"
@@ -22506,6 +22719,12 @@ msgstr "высота"
 msgid "help..."
 msgstr "помощь..."
 
+msgid " (higher than any auto)"
+msgstr " (выше чем любой авто)"
+
+msgid " (higher than rotor any auto)"
+msgstr " (выше чем любой авто ротора)"
+
 msgid "hops:"
 msgstr "скачки:"
 
@@ -22626,6 +22845,9 @@ msgstr "длительный"
 
 msgid "loopthrough to"
 msgstr "петля к"
+
+msgid " (lower than any auto)"
+msgstr " (ниже чем любой авто)"
 
 msgid "magazines/reports/documentary"
 msgstr "журналы/Репортажи/Документалистика"
@@ -22811,7 +23033,7 @@ msgctxt "now/next: 'next' event label"
 msgid "Next"
 msgstr "ДАЛЕЕ"
 
-msgctxt "now/next: 'now' event label"
+msgctxt "now/next: 'now' event labequitl"
 msgid "Now"
 msgstr "СЕЙЧАС"
 
