@@ -198,8 +198,7 @@ class RecordTimerEntry(timer.TimerEntry):
 		self.setAdvancedPriorityFrontend = None
 		self.background_zap = None
 
-		if self.descramble or not self.record_ecm:
-			if cihelper.ServiceIsAssigned(self.service_ref.ref):
+		if (self.descramble or not self.record_ecm) and BoxInfo.getItem("CanDescrambleInStandby") and config.recording.standbyDescramble.value and cihelper.ServiceIsAssigned(self.service_ref.ref):
 				self.descramble = False
 				self.record_ecm = True
 
