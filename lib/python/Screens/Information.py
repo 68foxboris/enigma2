@@ -2,8 +2,8 @@ from datetime import datetime
 from glob import glob
 from json import loads
 from locale import format_string
-from os import listdir, popen, remove, statvfs
-from os.path import getmtime, isfile, isdir, join, basename
+from os import listdir, remove, statvfs
+from os.path import basename, getmtime, isdir, isfile, join
 from subprocess import PIPE, Popen
 from time import localtime, strftime, strptime
 from urllib.request import urlopen
@@ -162,12 +162,14 @@ class InformationBase(Screen):
 	def fetchInformation(self):
 		self.informationTimer.stop()
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def refreshInformation(self):
 		self.informationTimer.start(25)
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def displayInformation(self):
 		pass
@@ -288,7 +290,8 @@ class CommitInformation(InformationBase):
 				info = str(err)
 		self.cachedCommitInfo[name] = info
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def refreshInformation(self):  # Should we limit the number of fetches per minute?
 		self.cachedCommitInfo = {}
@@ -436,7 +439,8 @@ class DebugInformation(InformationBase):
 			self.debugLogs = [(name, name, name)]
 			self.cachedDebugInfo[name] = f"0,{_('No log files found so debug logs are unavailable!')}"
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def findLogFiles(self):
 		debugLogs = []
@@ -775,7 +779,8 @@ class MemoryInformation(InformationBase):
 		fileWriteLine("/proc/sys/vm/drop_caches", "3")
 		self.informationTimer.start(25)
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def getSummaryInformation(self):
 		return "Memory Information Data"
@@ -792,7 +797,8 @@ class MultiBootInformation(InformationBase):
 		def fetchInformationCallback(slotImages):
 			self.slotImages = slotImages
 			for callback in self.onInformationUpdated:
-				callback()
+				if callable(callback):
+					callback()
 
 		self.informationTimer.stop()
 		MultiBoot.getSlotImageList(fetchInformationCallback)
@@ -937,7 +943,8 @@ class NetworkInformation(InformationBase):
 			info.append(_("Access to geolocation information requires an Internet connection."))
 		self.geolocationData = info
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def fetchInformation(self):
 		self.informationTimer.stop()
@@ -949,7 +956,8 @@ class NetworkInformation(InformationBase):
 			else:
 				self.console.ePopen(("/usr/sbin/ethtool", "/usr/sbin/ethtool", interface), self.ethtoolInfoFinished, extra_args=interface)
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def isBlacklisted(self, interface):
 		for type in ("lo", "wifi", "wmaster", "sit", "tun", "sys", "p2p", "ip6_vti", "ip_vti", "ip6tn", "wg", "tap"):
@@ -1009,7 +1017,8 @@ class NetworkInformation(InformationBase):
 					else:
 						self.interfaceData[extraArgs][key] = value
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def iwconfigInfoFinished(self, result, retVal, extraArgs):  # This temporary code borrowed and adapted from the new but unreleased Network.py!
 		if retVal == 0:
@@ -1050,7 +1059,8 @@ class NetworkInformation(InformationBase):
 			if "ssid" in self.interfaceData[extraArgs]:
 				self.interfaceData[extraArgs]["SSID"] = self.interfaceData[extraArgs]["ssid"]
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def ethtoolInfoFinished(self, result, retVal, extraArgs):  # This temporary code borrowed and adapted from the new but unreleased Network.py!
 		if retVal == 0:
@@ -1068,7 +1078,8 @@ class NetworkInformation(InformationBase):
 				if "Link detected:" in line:
 					self.interfaceData[extraArgs]["link"] = line.split(":")[1].strip().lower() == "yes"
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def displayInformation(self):
 		info = []
@@ -1183,15 +1194,15 @@ class ReceiverInformation(InformationBase):
 		hwRelease = fileReadLine("/proc/stb/info/release", source=MODULE_NAME)
 		if hwRelease:
 			info.append(formatLine("P1", _("Factory release"), hwRelease))
-		displaytype = BoxInfo.getItem("displaytype")
-		if displaytype and not displaytype.startswith(" "):
-			info.append(formatLine("P1", _("Display type"), displaytype))
+		displayType = BoxInfo.getItem("displaytype")
+		if displayType and not displayType.startswith(" "):
+			info.append(formatLine("P1", _("Display type"), displayType))
 		fpVersion = getFPVersion()
 		if fpVersion and fpVersion != "unknown":
 			info.append(formatLine("P1", _("Front processor version"), fpVersion))
-		DemodVersion = getDemodVersion()
-		if DemodVersion and DemodVersion != "unknown":
-			info.append(formatLine("P1", _("Demod firmware version"), DemodVersion))
+		demodVersion = getDemodVersion()
+		if demodVersion and demodVersion != "unknown":
+			info.append(formatLine("P1", _("Demod firmware version"), demodVersion))
 		transcoding = _("Yes") if BoxInfo.getItem("transcoding") else _("MultiTranscoding") if BoxInfo.getItem("multitranscoding") else _("No")
 		info.append(formatLine("P1", _("Transcoding"), transcoding))
 		temp = about.getSystemTemperature()
@@ -1422,7 +1433,8 @@ class ServiceInformation(InformationBase):
 		name, label, method = self.serviceCommands[self.serviceCommandsIndex]
 		self.info = method()
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def fetchInformationDelayed(self):  # This allows the newly selected service to stabilize before updating the service data.
 		self.informationTimer.startLongTimer(3)
@@ -1719,7 +1731,8 @@ class StorageInformation(InformationBase):
 		self.informationTimer.stop()
 		self.console.ePopen("df -mh | grep -v '^Filesystem'", self.fetchComplete)
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def fetchComplete(self, result, retVal, extraArgs=None):
 		self.mountInfo = []
@@ -1747,7 +1760,8 @@ class StorageInformation(InformationBase):
 				if keep:
 					self.mountInfo.append(["", 0, 0, 0, "N/A", path])
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def displayInformation(self):
 		info = []
@@ -1929,7 +1943,8 @@ class SystemInformation(InformationBase):
 		def fetchInformationCallback(result, retVal, extraArgs):
 			self.info = [x.rstrip() for x in result.split("\n")]
 			for callback in self.onInformationUpdated:
-				callback()
+				if callable(callback):
+					callback()
 
 		self.informationTimer.stop()
 		name, command, path = self.systemCommands[self.systemCommandsIndex]
@@ -1943,7 +1958,8 @@ class SystemInformation(InformationBase):
 			except OSError as err:
 				self.info = [_("Error %d: System information file '%s' can't be read!  (%s)") % (err.errno, path, err.strerror)]
 			for callback in self.onInformationUpdated:
-				callback()
+				if callable(callback):
+					callback()
 
 	def displayInformation(self):
 		name, command, path = self.systemCommands[self.systemCommandsIndex]
@@ -2036,7 +2052,8 @@ class TunerInformation(InformationBase):
 					tunerData["broadcast"] = ", ".join(broadcasts)
 			self.tunerList.append(tunerData)
 		for callback in self.onInformationUpdated:
-			callback()
+			if callable(callback):
+				callback()
 
 	def displayInformation(self):
 		def parseValues(data):
