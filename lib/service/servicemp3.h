@@ -314,6 +314,8 @@ private:
 	bool m_subtitles_paused;
 	bool m_use_prefillbuffer;
 	bool m_paused;
+	bool m_clear_buffers;
+	bool m_initial_start;
 	bool m_first_paused;
 	/* cuesheet load check */
 	bool m_cuesheet_loaded;
@@ -392,7 +394,7 @@ private:
 	void pushSubtitles();
 	void pullSubtitle(GstBuffer *buffer);
 	void sourceTimeout();
-	void clearBuffers();
+	void clearBuffers(bool force=false);
 #ifdef PASSTHROUGH_FIX
 	void forcePassthrough();
 #endif

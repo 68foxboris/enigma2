@@ -519,7 +519,7 @@ eServiceMP3::eServiceMP3(eServiceReference ref):
 	m_cuesheet_changed(0),
 	m_cutlist_enabled(1),
 	m_ref(ref),
-	m_pump(eApp, 1, "eServiceMP3")
+	m_pump(eApp, 1,"eServiceMP3")
 {
 	m_subtitle_sync_timer = eTimer::create(eApp);
 	m_dvb_subtitle_sync_timer = eTimer::create(eApp);
@@ -539,6 +539,8 @@ eServiceMP3::eServiceMP3(eServiceReference ref):
 	m_is_live = false;
 	m_use_prefillbuffer = false;
 	m_paused = false;
+	m_clear_buffers = true;
+	m_initial_start = false;
 	m_first_paused = false;
 	m_cuesheet_loaded = false; /* cuesheet CVR */
 	m_audiosink_not_running = false;
@@ -1310,11 +1312,12 @@ RESULT eServiceMP3::trickSeek(gdouble ratio)
 		ret = gst_element_get_state(m_gst_playbin, &state, &pending, 3LL * GST_SECOND);
 		if (state == GST_STATE_PLAYING && pending == GST_STATE_PAUSED)
 		{
-
+			m_clear_buffers = true;
 			if (m_currentAudioStream >= 0)
 				selectAudioStream(m_currentAudioStream, true);
 			else
 				selectAudioStream(0, true);
+			m_clear_buffers = false;
 
 			if (pos_ret >= 0)
 			{
@@ -2008,11 +2011,16 @@ RESULT eServiceMP3::selectTrack(unsigned int i)
 		return m_currentAudioStream;
 	eDebug("[eServiceMP3 selectTrack %d", i);
 
-	return selectAudioStream(i);
+	m_clear_buffers = true;
+	int result = selectAudioStream(i);
+	m_clear_buffers = false;
+	return result;
 }
 
-void eServiceMP3::clearBuffers()
+void eServiceMP3::clearBuffers(bool force)
 {
+	if (!m_clear_buffers && !force) return;
+
 	bool validposition = false;
 	pts_t ppos = 0;
 	if (getPlayPosition(ppos) >= 0)
@@ -2024,16 +2032,14 @@ void eServiceMP3::clearBuffers()
 	}
 	if (validposition)
 	{
-		//flush
+		/* flush */
 		seekTo(ppos);
 	}
 }
 
-
 int eServiceMP3::selectAudioStream(int i, bool skipAudioFix)
 {
 	int current_audio, current_audio_orig;
-
 	g_object_get (m_gst_playbin, "current-audio", &current_audio_orig, NULL);
 	g_object_set (m_gst_playbin, "current-audio", i, NULL);
 	g_object_get (m_gst_playbin, "current-audio", &current_audio, NULL);
@@ -2384,10 +2390,17 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 						}
 
 						if (autoaudio)
-							selectTrack(autoaudio);
+							selectAudioStream(autoaudio);
 					}
-					else {
-						selectTrack(m_currentAudioStream);
+					else
+					{
+						selectAudioStream(m_currentAudioStream);
+					}
+					m_clear_buffers = false;
+					if (!m_initial_start)
+					{
+						seekTo(0);
+						m_initial_start = true;
 					}
 					if (!m_first_paused)
 						m_event((iPlayableService*)this, evGstreamerPlayStarted);
@@ -2647,12 +2660,12 @@ void eServiceMP3::gstBusCall(GstMessage *msg)
 
 			if (hasChanges)
 			{
-				eDebug("[eServiceMP3] audio or subtitle stream difference -- re enumerating");
+				eTrace("[eServiceMP3] audio or subtitle stream difference -- re enumerating");
 				m_audioStreams.clear();
 				m_subtitleStreams.clear();
 				std::copy(audioStreams_temp.begin(), audioStreams_temp.end(), back_inserter(m_audioStreams));
 				std::copy(subtitleStreams_temp.begin(), subtitleStreams_temp.end(), back_inserter(m_subtitleStreams));
-				eDebug("[eServiceMP3] evUpdatedInfo called for audiosubs");
+				eDebug("[eServiceMP3] GST_MESSAGE_ASYNC_DONE before evUpdatedInfo");
 				m_event((iPlayableService*)this, evUpdatedInfo);
 			}
 
@@ -3044,10 +3057,10 @@ audiotype_t eServiceMP3::gstCheckAudioPad(GstStructure* structure)
 		}
 	}
 
-	else if ( gst_structure_has_name (structure, "audio/x-ac3") || gst_structure_has_name (structure, "audio/x-eac3") ||
-			  gst_structure_has_name (structure, "audio/ac3") || gst_structure_has_name (structure, "audio/eac3") ||
-			  gst_structure_has_name (structure, "audio/x-raw") || gst_structure_has_name (structure, "audio/x-true-hd") )
+	else if ( gst_structure_has_name (structure, "audio/x-ac3") || gst_structure_has_name (structure, "audio/ac3") )
 		return atAC3;
+	else if (gst_structure_has_name (structure, "audio/x-eac3") || gst_structure_has_name (structure, "audio/eac3") || gst_structure_has_name (structure, "audio/x-true-hd") || gst_structure_has_name (structure, "audio/xTrueHD"))
+		return atEAC3;
 	else if ( gst_structure_has_name (structure, "audio/x-dts") || gst_structure_has_name (structure, "audio/dts") )
 		return atDTS;
 
