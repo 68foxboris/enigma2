@@ -312,7 +312,7 @@ class PositionerSetup(Screen):
 
 	def showMessageBox(self):
 		text = _("Sorry, this tuner is in use.")
-		if self.session.nav.getRecordings():
+		if self.session.nav.getAnyRecordingsCount():
 			text += "\n"
 			text += _("Maybe the reason that recording is currently running. Please stop the recording before trying to configure the positioner.")
 		self.session.open(MessageBox, text, MessageBox.TYPE_ERROR)
