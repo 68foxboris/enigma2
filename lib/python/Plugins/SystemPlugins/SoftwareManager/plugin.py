@@ -1399,17 +1399,10 @@ class OPKGSource(Screen):
 			except OSError:
 				pass
 
-		desk = getDesktop(0)
-		x = int(desk.size().width())
-		y = int(desk.size().height())
-
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("Save"))
 
-		if (y >= 720):
-			self["text"] = Input(text, maxSize=False, type=Input.TEXT)
-		else:
-			self["text"] = Input(text, maxSize=False, visible_width=55, type=Input.TEXT)
+		self["text"] = Input(text, maxSize=False, type=Input.TEXT)
 
 		self["actions"] = NumberActionMap(["WizardActions", "InputActions", "TextEntryActions", "KeyboardInputActions", "ShortcutActions"],
 		{
