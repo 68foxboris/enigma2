@@ -678,6 +678,12 @@ class InfoBarShowHide(InfoBarScreenSaver):
 			whitelist.bouquets.append(bouquet)
 		open(whitelist.FILENAME_BOUQUETS, 'w').write('\n'.join(whitelist.bouquets))
 
+	def checkStreamrelay(self, service=None):
+		return streamrelay.check(self.session.nav, service)
+
+	def ToggleStreamrelay(self, service=None):
+		streamrelay.toggle(self.session.nav, service)
+
 
 class BufferIndicator(Screen):
 	def __init__(self, session):
