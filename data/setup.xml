@@ -336,6 +336,9 @@
 			<item level="0" text="Web browser base visibility" description="Base transparency for OpenOpera web browser.">config.osd.alpha_webbrowser</item>
 		</if>
 	</setup>
+	<setup key="Password" title="Password Settings">
+		<item level="0" text="New password" description="Setting a password is strongly advised if your STB is open to the Internet. You must set a password in order to be able to use network services like FTP, Telnet or SSH.">config.network.password</item>
+	</setup>
 	<setup key="Playback" title="Playback Settings">
 		<item level="2" text="Show movie lengths in movielist" description="When enabled, the lenght of each recording will be shown in the movielist (this might cause some additional loading time).">config.usage.load_length_of_movies_in_moviellist</item>
 		<item level="2" text="Show status icons in movielist" description="Configure the type of status indication icons shown in the movielist.">config.usage.show_icons_in_movielist</item>
