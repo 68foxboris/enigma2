@@ -23,7 +23,7 @@ config.plugins.fccsetup.zapupdown = ConfigYesNo(default=True)
 config.plugins.fccsetup.history = ConfigYesNo(default=False)
 config.plugins.fccsetup.priority = ConfigSelection(default="zapupdown", choices={"zapupdown": _("Zap Up/Down"), "historynextback": _("History Prev/Next")})
 config.plugins.fccsetup.disableforrec = ConfigYesNo(default=True)
-config.plugins.fccsetup.extensions = ConfigYesNo(default=False)
+config.plugins.fccsetup.extensions = ConfigYesNo(default=True)
 
 FccInstance = None
 
@@ -84,7 +84,7 @@ class FCCSupport:
 		self.__event_tracker = None
 		self.onClose = []
 		self.changeEventTracker()
-		BoxInfo.setMutableItem("FCCactive", self.fccSetupActivate)
+		BoxInfo.setItem("FCCactive", self.fccSetupActivate)
 #		from Screens.PictureInPicture import on_pip_start_stop
 #		on_pip_start_stop.append(self.FCCForceStopforPIP)
 
@@ -176,7 +176,7 @@ class FCCSupport:
 
 		if fcc_changed:
 			self.fccmgr.setFCCEnable(int(self.fccSetupActivate))
-			BoxInfo.setMutableItem("FCCactive", self.fccSetupActivate)
+			BoxInfo.setItem("FCCactive", self.fccSetupActivate)
 			curPlaying = self.session.nav.getCurrentlyPlayingServiceReference()
 			if curPlaying:
 				self.session.nav.stopService()
