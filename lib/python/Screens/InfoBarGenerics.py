@@ -175,6 +175,12 @@ class InfoBarStreamRelay:
 		ref = ref.split(":")
 		return ":".join(ref[:11]), len(ref) > 11 and ref[-1]
 
+	def check(self, nav, service):
+		return (service or nav.getCurrentlyPlayingServiceReference()) and service.toCompareString() in self.__srefs
+
+	def write(self):
+		fileWriteLines(self.FILENAME, self.__srefs, source=self.__class__.__name__)
+
 	def toggle(self, nav, service):
 		if (servicestring := (service and self.splitref(service.toString())[0])):
 			if servicestring in self.__srefs:
