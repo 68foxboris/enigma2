@@ -271,7 +271,7 @@ def InitAVSwitch():
 	BoxInfo.setItem("Canedidchecking", bypassEDID)
 	if bypassEDID:
 		def setEDIDBypass(configElement):
-			value = "00000001" if configElement.value else "00000000"Add commentMore actions
+			value = "00000001" if configElement.value else "00000000"
 			fileWriteLine("/proc/stb/hdmi/bypass_edid_checking", value, source=MODULE_NAME)
 
 		config.av.bypass_edid_checking = ConfigYesNo(default=True)
