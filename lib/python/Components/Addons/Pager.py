@@ -164,7 +164,7 @@ class Pager(GUIAddon):
 			return self.source.index
 		if hasattr(self.source, "currentIndex"):
 			return self.source.currentIndex
-		return self.source.l.getCurrentSelectionIndex()
+		return self.l.getCurrentSelectionIndex()
 
 	def getSourceSize(self):
 		if isinstance(self.source, List):  # Components.Sources.List
