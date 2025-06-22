@@ -32,7 +32,7 @@
 		</device>
 		<!-- Keyboard specific buttons -->
 		<key id="KEY_KPPLUS" mapto="volumeUp" flags="mr" />
-		<key id="KEY_KPMINUS" mapto="volumeDown" flags="mr" />Add commentMore actions
+		<key id="KEY_KPMINUS" mapto="volumeDown" flags="mr" />
 		<key id="KEY_KPASTERISK" mapto="volumeMute" flags="m" />
 		<key id="KEY_KPASTERISK" mapto="volumeMuteLong" flags="l" />
 	</map>

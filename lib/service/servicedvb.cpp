@@ -342,7 +342,7 @@ eStaticServiceDVBPVRInformation::eStaticServiceDVBPVRInformation(const eServiceR
 {
 	m_ref = ref;
 	m_parser.parseFile(ref.path);
-	if (m_parser.m_description.empty())Add commentMore actions
+	if (m_parser.m_description.empty())
 		m_txtdescription = m_parser.parseTxtFile(ref.path);
 }
 
@@ -496,7 +496,7 @@ std::string eStaticServiceDVBPVRInformation::getInfoString(const eServiceReferen
 	switch (w)
 	{
 	case iServiceInformation::sDescription:
-		if (m_parser.m_description.empty() && !m_txtdescription.empty())Add commentMore actions
+		if (m_parser.m_description.empty() && !m_txtdescription.empty())
 			return m_txtdescription;
 		return m_parser.m_description;
 	case iServiceInformation::sServiceref:
