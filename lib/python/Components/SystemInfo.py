@@ -465,7 +465,7 @@ BoxInfo.setItem("FrontpanelLEDColorControl", fileExists("/proc/stb/fp/led_color"
 BoxInfo.setItem("FrontpanelLEDFadeControl", fileExists("/proc/stb/fp/led_fade"))
 
 # Network services.
-BoxInfo.setItem("inadyn", fileExists("/etc/init.d/inadyn-mt"))Add commentMore actions
+BoxInfo.setItem("inadyn", fileExists("/etc/init.d/inadyn-mt"))
 BoxInfo.setItem("minidlna", fileExists("/etc/init.d/minidlna"))
 BoxInfo.setItem("ushare", fileExists("/etc/init.d/ushare"))
 BoxInfo.setItem("samba", fileExists("/etc/init.d/samba"))

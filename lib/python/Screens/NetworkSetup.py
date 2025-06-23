@@ -2100,7 +2100,7 @@ class NetworkMiniDLNASetup(Setup):
 		self.session.openWithCallback(selectSharesCallBack, uShareSelection, self.selectedFiles)
 
 
-class NetworkSambaSetup(Setup):Add commentMore actions
+class NetworkSambaSetup(Setup):
 	def __init__(self, session):
 		Setup.__init__(self, session=session, setup="NetworkSamba")
 

@@ -1621,7 +1621,7 @@ def InitUsageConfig():
 		("end", _("At end"))
 	])
 
-	config.samba = ConfigSubsection()Add commentMore actions
+	config.samba = ConfigSubsection()
 	config.samba.enableAutoShare = ConfigYesNo(default=True)
 	config.samba.autoShareAccess = ConfigSelection(default=1, choices=[
 		(0, _("Read Only")),
