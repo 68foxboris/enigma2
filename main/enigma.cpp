@@ -47,7 +47,7 @@ int object_total_remaining;
 
 void object_dump()
 {
-	printf("%d items left\n", object_total_remaining);
+	printf("%d items left.\n", object_total_remaining);
 }
 #endif
 
@@ -260,6 +260,7 @@ int main(int argc, char **argv)
 	eLog(0, "[Enigma] Python path is '%s'.", getenv("PYTHONPATH"));
 	eLog(0, "[Enigma] DVB API version %d, DVB API version minor %d.", DVB_API_VERSION, DVB_API_VERSION_MINOR);
 	eLog(0, "[Enigma] Enigma debug level %d.", debugLvl);
+	eLog(0, "[Enigma] sourcedate %s / %s %s.", enigma2_date, enigma2_branch);
 
 	ePython python;
 	eMain main;
@@ -429,7 +430,7 @@ void runMainloop()
 
 const char *getEnigmaVersionString()
 {
-	return enigma2_version;
+	return enigma2_date;
 }
 
 const char *getBoxType()
@@ -454,7 +455,7 @@ const char *getGStreamerVersionString()
 
 int getE2Flags()
 {
-	return 1;
+	return 3; // start/stop Audio = 1 | WebP = 2
 }
 
 bool checkLogin(const char *user, const char *password)
@@ -502,13 +503,13 @@ void dump_malloc_stats(void)
 #ifdef __GLIBC__
 #if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 33)
 	struct mallinfo2 mi = mallinfo2();
-	eDebug("[Enigma] MALLOC: %u total", mi.uordblks);
+	eDebug("[Enigma] MALLOC %u total.", mi.uordblks);
 #else
 	struct mallinfo mi = mallinfo();
-	eDebug("[Enigma] MALLOC: %d total", mi.uordblks);
+	eDebug("[Enigma] MALLOC %d total.", mi.uordblks);
 #endif
 #else
-	eDebug("[Enigma] MALLOC: info not exposed");
+	eDebug("[Enigma] MALLOC info not exposed");
 #endif
 }
 

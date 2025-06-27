@@ -36,6 +36,7 @@ enigma2_LDADD = \
 	@TUXTXT_LIBS@ \
 	@BASE_LIBS@ \
 	@LIBGIF_LIBS@ \
+	@LIBWEBP_LIBS@ \
 	@LIBJPEG_LIBS@ \
 	@LIBVUGLES2_LIBS@ \
 	@LIBSDL_LIBS@ \
@@ -45,7 +46,8 @@ enigma2_LDADD = \
 	@LIBDDVD_LIBS@ \
 	@ALSA_LIBS@ \
 	@AVAHI_LIBS@ \
-        @LIBHIACCEL_LIBS@ \
+	@LIBHIACCEL_LIBS@ \
+	@SWSCALE_LIBS@ \
 	@LIBDL_LIBS@ \
 	-ltuxtxt32bpp
 
