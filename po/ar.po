@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OBH enigma2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-16 15:41+0100\n"
+"POT-Creation-Date: 2025-07-01 17:09+0200\n"
 "PO-Revision-Date: 2019-04-12 12:36+0300\n"
 "Last-Translator: mosad - مساعد الجعيد <abo-mishal@hotmail.com>\n"
 "Language-Team: mosad - مساعد الجعيد\n"
@@ -3563,6 +3563,10 @@ msgstr "دليل البرامج الإلكترونية"
 msgid "EPG Select Actions"
 msgstr "حدد الاجراء"
 
+#, fuzzy
+msgid "EPG filter switching"
+msgstr "التحول الآلى الى السكارت"
+
 msgid "EPG language selection 1"
 msgstr "إختيار لغة دليل البرامج الإلكترونية الأولى"
 
@@ -3582,6 +3586,10 @@ msgstr "إعدادات دليل البرامج الإلكترونية"
 
 msgid "EPG:"
 msgstr ""
+
+#, fuzzy
+msgid "EPGFilter Actions"
+msgstr "حدد الاجراء"
 
 msgid "EPGSETUP"
 msgstr ""
@@ -3738,6 +3746,10 @@ msgid "Enable favourites edit"
 msgstr "تفعيل تحرير المفضله"
 
 #, fuzzy
+msgid "Enable filtering in SingleEPG"
+msgstr "تمكين دليل البرامج الإلكترونية لقنوات شركة فيرجن"
+
+#, fuzzy
 msgid "Enable freesat EPG"
 msgstr "تمكين دليل البرامج اليومية للأقمار المجانية"
 
@@ -3762,6 +3774,9 @@ msgid "Enable power off timer"
 msgstr "تمكين وضع التحريك للقنوات"
 
 msgid "Enable remote enigma2 receiver to be tried to tune into services that cannot be tuned into locally (e.g. tuner is occupied or service type is unavailable on the local tuner. Specify complete URL including http:// and port number (normally ...:8001), e.g. http://second_box:8001."
+msgstr ""
+
+msgid "Enable setting a time interval for filtering events in SingleEPG using the 'Stop' button."
 msgstr ""
 
 msgid "Enable teletext caching"
@@ -3814,6 +3829,9 @@ msgstr "إنتهاء تحرير الباقة"
 
 msgid "End favourites edit"
 msgstr "إنتهاء تحرير المفضلة"
+
+msgid "End of the time interval during which events must begin to be displayed. If the filter is active, use keys 3 and 6 to adjust the end time, and key 0 to save."
+msgstr ""
 
 msgid "End time"
 msgstr "وقت النهاية"
@@ -5369,9 +5387,6 @@ msgstr "تثبيت الملحقات"
 msgid "Install local extension"
 msgstr "تثبيت إضافات محليه"
 
-msgid "Install picons on"
-msgstr "تثبيت الايقونات في"
-
 #, fuzzy
 msgid "Install plugin"
 msgstr "نثبيت"
@@ -5412,6 +5427,10 @@ msgstr "الفلاش الداخلى"
 
 msgid "Internal hdd only"
 msgstr "القرص الصلب الداخلي فقط"
+
+#, fuzzy
+msgid "Internet"
+msgstr "داخلية"
 
 msgid "Internet (ntp)"
 msgstr ""
@@ -5543,6 +5562,10 @@ msgid "Kazakhstan"
 msgstr "كازاخستان"
 
 msgid "Keep service"
+msgstr "البقاء على القناة"
+
+#, fuzzy
+msgid "Keep sorting"
 msgstr "البقاء على القناة"
 
 msgid "Kenya"
@@ -6747,6 +6770,36 @@ msgstr "عدد الصفوف لعرض في الشاشة الصغيرة"
 
 msgid "Number or SMS style data entry"
 msgstr ""
+
+#, fuzzy
+msgid "Numberbuttons Seek"
+msgstr "مزيد من التعليم"
+
+#, fuzzy
+msgid "Numberbuttons Zap"
+msgstr "مزيد من التعليم"
+
+msgid "Numberzap"
+msgstr ""
+
+msgid "Numberzap or seek backward big step"
+msgstr ""
+
+msgid "Numberzap or seek backward medium step"
+msgstr ""
+
+msgid "Numberzap or seek backward small step"
+msgstr ""
+
+msgid "Numberzap or seek forward medium step"
+msgstr ""
+
+msgid "Numberzap or seek forward small step"
+msgstr ""
+
+#, fuzzy
+msgid "Numberzap or zap to previous service"
+msgstr "العوده إلى خدمة القناة السابقه"
 
 #, fuzzy
 msgid "OE Version: "
@@ -9272,6 +9325,10 @@ msgstr "أسم القناة"
 msgid "Services"
 msgstr "القنوات"
 
+#, fuzzy, python-format
+msgid "Set %s as default?"
+msgstr "تعيين افتراضي"
+
 msgid "Set CI assignment for detection of available services."
 msgstr ""
 
@@ -10166,6 +10223,9 @@ msgstr "أبدأ من البداية"
 msgid "Start instant recording"
 msgstr "بدء التسجيل الفوري"
 
+msgid "Start of the time interval during which events must begin to be displayed. If the filter is active, use keys 1 and 4 to adjust the start time, and key 0 to save."
+msgstr ""
+
 msgid "Start offline decode"
 msgstr "تشغيل فتح التشفير بدون إتصال"
 
@@ -10347,6 +10407,14 @@ msgstr "التدفق"
 
 msgid "Stream request"
 msgstr "طلب البث"
+
+#, fuzzy
+msgid "Stream-tv"
+msgstr "التدفق"
+
+#, fuzzy
+msgid "Streaming"
+msgstr "التدفق"
 
 msgid "Streaming clients info"
 msgstr "معلومات المشاركين في البث"
@@ -11297,6 +11365,10 @@ msgid "Toggle Configuration Mode or AutoDisqc"
 msgstr "وضع التكوين: %s"
 
 #, fuzzy
+msgid "Toggle Filter Order"
+msgstr "أختار صيغة بث الفديو"
+
+#, fuzzy
 msgid "Toggle HDMI In"
 msgstr "تبديل تشغيل كيبل عالي الوضوح في وضع خاصية قناة داخل قناة"
 
@@ -11316,6 +11388,9 @@ msgstr ""
 
 msgid "Toggle a cut mark at the current position"
 msgstr "تبديل علامة القطع في المكان الحالي"
+
+msgid "Toggle between zap and seek mode"
+msgstr ""
 
 #, fuzzy
 msgid "Toggle dashed flickering line for this service"
@@ -11788,6 +11863,9 @@ msgstr "أستخدام خاصية قناة داخل قناة إذا كان ذل�
 msgid "Use circular LNB"
 msgstr "استخدام لاقط دائري"
 
+msgid "Use current filter values as default"
+msgstr ""
+
 msgid "Use fastscan channel names"
 msgstr "إستخدم البحث السريع بأسماء القنوات"
 
@@ -11889,6 +11967,9 @@ msgstr "استخدام لاقط %d"
 
 msgid "Using fixed address"
 msgstr "إستخدام عناوين محددة"
+
+msgid "Using the 'Stop' button will cyclically switch displaying events starting: 'outside the interval', 'within the interval', and 'without filtering', instead of 'within the interval', 'outside the interval', and 'without filtering'."
+msgstr ""
 
 #, python-format
 msgid "Using tuner %s"
@@ -12522,6 +12603,9 @@ msgstr ""
 #, fuzzy
 msgid "When set to 'Yes', all locations where SNR is displayed in dB's will show an SNR percentage, and vice versa."
 msgstr "إذا تم التعيين على نعم، فستعرض جميع الأماكن التي يتم فيها عرض نسبة الإشارة إلى الضوضاء (SNR) بالديسيبل نسبة نسبة الإشارة إلى الضوضاء (SNR) والعكس صحيح"
+
+msgid "When switching the filter, the selected EPG sorting is preserved."
+msgstr ""
 
 msgid "When the content has an aspect ratio of 16:9, choose whether to scale/stretch the picture."
 msgstr "عندما يكون المحتوى على نسبة العرض إلى الارتفاع 16: 9، واختيار ما إذا كان مقياس / تمتد الصورة."
