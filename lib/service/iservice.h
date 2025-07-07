@@ -423,6 +423,7 @@ public:
 
 		sGamma,
 		sVideoInfo,
+		sExtendedDescription,
 
 		sUser = 0x100
 	};
