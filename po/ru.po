@@ -1580,20 +1580,8 @@ msgstr "2 часа"
 msgid "2 minutes"
 msgstr "2 минуты"
 
-msgid "23.976"
-msgstr "23.976"
-
-msgid "24"
-msgstr "24"
-
 msgid "24 hours"
 msgstr "24 часа"
-
-msgid "25"
-msgstr "25"
-
-msgid "29.97"
-msgstr "29.97"
 
 msgid "2nd InfoBar"
 msgstr "Вторая инфопанель"
@@ -1627,9 +1615,6 @@ msgstr "3"
 
 msgid "3 hours"
 msgstr "3 часа"
-
-msgid "30"
-msgstr "30"
 
 msgid "30 minutes"
 msgstr "30 минут"
@@ -1675,9 +1660,6 @@ msgstr "4:3 режим ящика"
 
 msgid "4:3 PanScan"
 msgstr "4:3 Панорама"
-
-msgid "4K"
-msgstr "4K"
 
 msgid "4_3_letterbox"
 msgstr "4:3 режим ящика"
@@ -3172,6 +3154,9 @@ msgstr "Автоматическое сканирование"
 
 msgid "Automatically start timeshift after"
 msgstr "Автоматический старт таймшифта через"
+
+msgid "Automatic shares access"
+msgstr "Автоматический доступ к общим папкам"
 
 msgid "Automatically turn on external subtitles"
 msgstr "Автоматически подключать внешние субтитры"
@@ -6720,6 +6705,9 @@ msgstr "Диспетчер устройств"
 msgid "Device Manager Actions"
 msgstr "Действия диспетчера устройств"
 
+msgid "Device Settings"
+msgstr "Сетевой адаптер"
+
 msgid "Device is enabled."
 msgstr "Устройство включено."
 
@@ -7680,6 +7668,9 @@ msgstr "Быстрый автопоиск"
 #, python-format
 msgid "Enable auto fast scan for %s"
 msgstr "Включить автоматический быстрый поиск для %s"
+
+msgid "Enable automatic shares"
+msgstr "Включить автоматический общий доступ"
 
 msgid "Enable autorefresh templates."
 msgstr "Включить автоматическое обновление шаблонов."
@@ -11726,25 +11717,25 @@ msgid "Multi-EPG bouquet selection"
 msgstr "Выбор букетов при старте Мульти ТВ-гид"
 
 msgid "MultiBoot"
-msgstr "Мультизагрузка"
+msgstr "MultiBoot"
 
 msgid "MultiBoot Information"
-msgstr "Инфо о мультизагрузке"
+msgstr "MultiBoot информация"
 
 msgid "MultiBoot Manager"
-msgstr "Диспетчер мультизагрузки"
+msgstr "Диспетчер MultiBoot"
 
 msgid "MultiBoot Manager Actions"
-msgstr "Действия диспетчера мультизагрузки"
+msgstr "Действия диспетчера MultiBoot"
 
 msgid "MultiBoot boot mode"
-msgstr "Режим мультизагрузки"
+msgstr "Режим MultiBoot"
 
 msgid "MultiBoot startup file"
-msgstr "Загрузочный файл мультизагрузки"
+msgstr "Стартовый файл в MultiBoot"
 
 msgid "Multiboot Image created:"
-msgstr "Мультизагрузочный образ создан:"
+msgstr "Образ Multiboot создан:"
 
 msgid "MultiBoot Image Manager"
 msgstr "Диспетчер мультизагрузки"
@@ -13115,6 +13106,9 @@ msgstr "Пароль"
 msgid "Password (httpwd)"
 msgstr "Пароль (httpwd)"
 
+msgid "Password Settings"
+msgstr "Пароль"
+
 msgid "Password changed."
 msgstr "Пароль изменён."
 
@@ -14300,6 +14294,12 @@ msgstr "Рейтинг неопределен"
 msgid "Read Userdata from oscam.conf"
 msgstr "Данные пользователя из oscam.conf"
 
+msgid "Read Only"
+msgstr "Только для чтения"
+
+msgid "Read/Write"
+msgstr "Чтение/Запись"
+
 msgid "Reader"
 msgstr "Ридер"
 
@@ -15186,6 +15186,15 @@ msgstr "Сен-Пьер и Микелон"
 msgid "Saint Vincent and the Grenadines"
 msgstr "Святой Винсент и Гренадины"
 
+msgid "Samba Client"
+msgstr "Самба-клиент"
+
+msgid "Samba Server"
+msgstr "Самба-сервер"
+
+msgid "Samba Settings"
+msgstr "Настройки Samba"
+
 msgid "Samba log"
 msgstr "Журнал Samba"
 
@@ -15594,6 +15603,12 @@ msgstr "Выберите 'FBC SCR' ,если Ваш тюнер испрольз�
 
 msgid "Select 'No' to only write a log message to the debug log file."
 msgstr "Если выключено, то в лог попадёт только сообщение об ошибке."
+
+msgid "Select the access mode for the automatically exported samba shares."
+msgstr "Выберите режим доступа для автоматически экспортируемых общих ресурсов Samba."
+
+msgid "Select 'Yes' to allow each storage device detected to be automatically exported as samba share."
+msgstr "Выберите 'Да', чтобы разрешить автоматически экспортировать каждое обнаруженное устройство хранения данных как общий ресурс Samba."
 
 msgid "Select 'Yes' to show the volume level on any automated changes of volume level."
 msgstr "Выберите «Да», чтобы отображать уровень громкости при любых автоматических изменениях уровня громкости."
