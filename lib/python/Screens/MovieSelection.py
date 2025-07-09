@@ -41,7 +41,7 @@ from enigma import eServiceReference, eServiceCenter, eTimer, eSize, iPlayableSe
 import time
 from time import localtime, strftime
 from skin import findSkinScreen
-import pickle
+from pickle import dump, load
 
 config.movielist = ConfigSubsection()
 config.movielist.moviesort = ConfigInteger(default=MovieList.SORT_GROUPWISE)
@@ -1185,7 +1185,8 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 		if config.movielist.settings_per_directory.value:
 			try:
 				path = join(config.movielist.last_videodir.value, ".e2settings.pkl")
-				pickle.dump(self.settings, open(path, "wb"))
+				with open(path, "wb") as fd:
+					dump(self.settings, fd, protocol=5)
 			except Exception as err:
 				print(f"[MovieSelection] Error {err.errno}: Failed to save settings to '{path}'!  ({err.strerror})")
 		# Also set config items, in case the user has a read-only disk
