@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys
-import pickle
+from pickle import dump, load
 
 infilename = "iso-639-3.tab"
 outfilename = "iso-639-3.pck"
@@ -23,4 +23,4 @@ with open(infilename) as f:
 				data[item[i]] = name
 
 with open(outfilename, 'wb') as f:
-	pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
+	dump(data, f, protocol=5)
