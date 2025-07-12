@@ -60,7 +60,7 @@ from sys import maxsize
 import itertools
 import datetime
 from re import match
-from pickle import dump, load
+from pickle import load as pickle_load, dump as pickle_dump
 
 from RecordTimer import RecordTimer, RecordTimerEntry, findSafeRecordPath, parseEvent
 
@@ -91,7 +91,7 @@ class ResumePoints():
 
 	def saveResumePoints(self):
 		with open(self.resumePointFile, "wb") as f:
-			dump(self.resumePointCache, f, protocol=5)
+			pickle_dump(self.resumePointCache, f, protocol=5)
 
 	def delResumePoint(self, ref):
 		if (sref := ref.toString()) in self.resumePointCache:
