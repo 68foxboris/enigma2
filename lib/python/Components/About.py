@@ -9,7 +9,6 @@ from platform import libc_ver
 from re import search
 from socket import AF_INET, SOCK_DGRAM, inet_ntoa, socket
 from struct import pack, unpack
-from subprocess import Popen, PIPE
 from sys import maxsize, modules, version as pyversion
 from time import localtime, strftime
 
@@ -104,11 +103,6 @@ def getEnigmaVersionString():
 	if '-(no branch)' in enigma_version:
 		enigma_version = enigma_version[:-12]
 	return enigma_version
-
-
-def getGStreamerVersionString():
-	from enigma import getGStreamerVersionString
-	return getGStreamerVersionString()
 
 
 def getKernelVersionString():
@@ -229,14 +223,6 @@ def getSystemTemperature():
 	if temperature:
 		return "%s%s C" % (temperature, "\u00B0")
 	return temperature
-
-
-def getChipSetString():
-	try:
-		chipset = open("/proc/stb/info/chipset", "r").read()
-		return str(chipset.lower().replace('\n', ''))
-	except OSError:
-		return _("undefined")
 
 
 def getChipSetNumber():

@@ -2,7 +2,6 @@ import os
 from os.path import isfile
 from enigma import eAVControl, eDVBVolumecontrol, getDesktop
 from Components.config import config, ConfigSlider, ConfigSelection, ConfigSubDict, ConfigYesNo, ConfigEnableDisable, ConfigOnOff, ConfigSubsection, ConfigSelectionNumber, ConfigBoolean, ConfigNothing, NoSave, ConfigInteger
-from Components.About import about, getChipSetNumber
 from Components.SystemInfo import BoxInfo
 from Tools.CList import CList
 from Tools.Directories import fileReadLine, fileWriteLine
@@ -17,6 +16,7 @@ has_scart = BoxInfo.getItem("HasScart")
 has_yuv = BoxInfo.getItem("yuv")
 has_rca = BoxInfo.getItem("rca")
 has_avjack = BoxInfo.getItem("avjack")
+chipSetString = str(BoxInfo.getItem("ChipsetString"))
 
 config.av.edid_override = ConfigYesNo(default=False)
 
@@ -165,19 +165,20 @@ class VideoHardware:
 		modes["HDMI"] = ["720p", "1080p", "2160p", "1080i", "576p", "480p", "576i", "480i"]
 	if AMLOGIC:
 		modes["HDMI"] = ["720p", "1080p", "smpte", "2160p30", "2160p", "1080i", "576p", "576i", "480p", "480i"]
-	elif getChipSetNumber() in ("7376", "7444", "7366", "5272s", "7445", "7445s"):
+	elif (chipSetString in ("7376", "7444", "7366", "5272s", "7445", "7445s")):
 		modes["HDMI"] = ["720p", "1080p", "2160p", "1080i", "576p", "576i", "480p", "480i"]
-	elif getChipSetNumber() in ("7252", "7251", "7251S", "7252S", "7251s", "7252s", "7278", "7444s", "3798mv200", "3798mv200h", "3798cv200", "hisi3798mv200", "hi3798mv200h", "hi3798cv200", "hi3798mv300", "3798mv300"):
+	elif (chipSetString in ("7252", "7251", "7251S", "7252S", "7251s", "7252s", "7278", "7444s", "3798mv200", "3798mv200h", "3798cv200", "hisi3798mv200", "hi3798mv200h", "hi3798cv200", "hi3798mv300", "3798mv300")):
 		modes["HDMI"] = ["720p", "1080p", "2160p", "2160p30", "1080i", "576p", "576i", "480p", "480i"]
-	elif getChipSetNumber() == "s905":
+	elif (chipSetString == "s905"):
 		modes["HDMI"] = ["720p", "1080p", "2160p", "2160p30", "1080i"]
-	elif getChipSetNumber() in ("7241", "7358", "7362", "73625", "7356", "73565", "7424", "7425", "7435", "7581", "3716mv410", "3716cv100", "3716mv430", "pnx8471", "8634", "8655", "8653", "7346", "7552", "7584", "75845", "7585", "7162", "7111"):
+	elif (chipSetString in ("7241", "7358", "7362", "73625", "7356", "73565", "7424", "7425", "7435", "7581", "3716mv410", "3716cv100", "3716mv430", "pnx8471", "8634", "8655", "8653", "7346", "7552", "7584", "75845", "7585", "7162", "7111")):
 		modes["HDMI"] = ["720p", "1080p", "1080i", "576p", "576i", "480p", "480i"]
-	elif getChipSetNumber() == "8726":
+	elif (chipSetString == "8726"):
 		modes["HDMI"] = ["720p", "1080p", "1080i"]
 	else:
 		modes["HDMI"] = ["720p", "1080p", "2160p", "2160p30", "1080i", "576p", "480p", "576i", "480i"]
 	modes["YPbPr"] = modes["HDMI"]
+
 	if BoxInfo.getItem("scartyuv", False):
 		modes["Scart-YPbPr"] = modes["HDMI"]
 	if "YPbPr" in modes and not BoxInfo.getItem("yuv", False):
