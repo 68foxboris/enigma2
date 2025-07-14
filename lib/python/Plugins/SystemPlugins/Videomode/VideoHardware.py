@@ -16,7 +16,7 @@ has_scart = BoxInfo.getItem("HasScart")
 has_yuv = BoxInfo.getItem("yuv")
 has_rca = BoxInfo.getItem("rca")
 has_avjack = BoxInfo.getItem("avjack")
-chipSetString = str(BoxInfo.getItem("ChipsetString"))
+chipSetString = BoxInfo.getItem("ChipsetString")
 
 config.av.edid_override = ConfigYesNo(default=False)
 
