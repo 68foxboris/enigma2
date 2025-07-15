@@ -617,7 +617,8 @@ class DistributionInformation(InformationBase):
 			info.append(formatLine("P1", _("Distribution folder"), BoxInfo.getItem("imagedir")))
 		if BoxInfo.getItem("imagefs"):
 			info.append(formatLine("P1", _("Distribution file system"), BoxInfo.getItem("imagefs").strip()))
-		info.append(formatLine("P1", _("File compression"), about.getFileCompressionInfo()))
+		upxVersion = BoxInfo.getItem("upx")
+		info.append(formatLine("P1", _("File compression"), f"{_("Enabled")} (upx {upxVersion})" if upxVersion else _("Disabled")))
 		info.append(formatLine("P1", _("Feed URL"), BoxInfo.getItem("feedsurl")))
 		info.append(formatLine("P1", _("Compiled by"), BoxInfo.getItem("maintainer")))
 		info.append("")
@@ -628,7 +629,7 @@ class DistributionInformation(InformationBase):
 		info.append(formatLine("P1", _("Glibc version"), about.getGlibcVersion()))
 		info.append(formatLine("P1", _("OpenSSL version"), about.getVersionFromOpkg("openssl")))
 		info.append(formatLine("P1", _("Python version"), about.getPythonVersionString()))
-		info.append(formatLine("P1", _("Rust version"), about.getRustVersion()))
+		info.append(formatLine("P1", _("Rust version"), BoxInfo.getItem("rust")))
 		info.append(formatLine("P1", _("Samba version"), about.getVersionFromOpkg("samba")))
 		info.append(formatLine("P1", _("GStreamer version"), getGStreamerVersionString().replace("GStreamer ", "")))
 		info.append(formatLine("P1", _("FFmpeg version"), about.getVersionFromOpkg("ffmpeg")))
