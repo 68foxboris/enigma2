@@ -1369,6 +1369,10 @@ msgid "%sRefresh rate for UHD"
 msgstr "%sЧастота обновления для UHD"
 
 #, python-format
+msgid "%d slots have been created on the device.\n"
+msgstr "На устройстве создано %d слотов.\n"
+
+#, python-format
 msgid "%sShow 1080i as 1080p"
 msgstr "%sПоказывать 1080i как 1080p"
 
@@ -1459,6 +1463,12 @@ msgstr "-"
 
 msgid "- No space left on backup device."
 msgstr "- На устройстве резервного копирования не осталось места."
+
+msgid "- No write permission on backup device."
+msgstr "- Нет разрешения на запись на устройстве резервного копирования."
+
+msgid "- Wrong backup destination."
+msgstr "- Неправильное место назначения резервного копирования."
 
 msgid "-24 Hours"
 msgstr "-24 часа"
@@ -1699,9 +1709,6 @@ msgstr "8 символов"
 
 msgid "8 hours"
 msgstr "8 часов"
-
-msgid "8K"
-msgstr "8K"
 
 msgid "8bit"
 msgstr "8бит"
@@ -2203,16 +2210,16 @@ msgid "Add a new title"
 msgstr "Добавить новое название"
 
 msgid "Add a RADIO service to the Volume Offset list"
-msgstr "Добавить службу РАДИО в список Volume Offset"
+msgstr "Добавить службу РАДИО в список компенсации громкости"
 
 msgid "Add a TV service to the Volume Offset list"
-msgstr "Добавить ТВ-сервис в список Volume Offset"
+msgstr "Добавить ТВ-сервис в список компенсации громкости"
 
 msgid "Add a service to the Volume Offset list"
-msgstr "Добавить канал в список Volume Offset"
+msgstr "Добавить канал в список компенсации громкости"
 
 msgid "Add the current/active service to the Volume Offset list"
-msgstr "Добавить текущий/активный канал в список Volume Offset"
+msgstr "Добавить текущий/активный канал в список компенсации громкости"
 
 msgid "Add a record timer"
 msgstr "Добавить таймер записи"
@@ -2249,6 +2256,9 @@ msgstr "Добавить файлы в плейлист"
 
 msgid "Add legacy LEFT/RIGHT actions"
 msgstr "Добавить устаревшие действия ВЛЕВО/ВПРАВО"
+
+msgid "Add more slots"
+msgstr "Добавить больше слотов"
 
 msgid "Add new tag"
 msgstr "Добавить новый тег"
@@ -2289,6 +2299,9 @@ msgstr "Добавить каналы в этот букет?"
 msgid "Add timer"
 msgstr "Добавить таймер"
 
+msgid "Add the selected service to a bouquet or alternative"
+msgstr "Добавить выбранный канал в букет или альтернативу"
+
 msgid "Add title"
 msgstr "Добавить название"
 
@@ -2311,7 +2324,7 @@ msgid "Add/remove change timer for current event"
 msgstr "Добавить/удалить/изменить таймер для текущего события"
 
 msgid "Add/Remove the current service to/from the Volume Offset list"
-msgstr "Добавить/удалить текущую службу в/из списка Volume Offset"
+msgstr "Добавить/удалить текущий сервис в/из списка смещения громкости"
 
 msgid "Adding schedule..."
 msgstr "Добавление задания..."
@@ -2638,7 +2651,7 @@ msgid "Always include ECM in recordings"
 msgstr "Всегда включать ECM в записи"
 
 msgid "Always include ECM messages in recordings. This overrides the individual timer settings globally. It allows recordings to be always decrypted afterwards (sometimes called offline decoding), if supported by your receiver."
-msgstr "Всегда включать сообщения ECM в записи. Это переопределяет индивидуальные настройки таймера глобально. Это позволяет всегда расшифровывать записи впоследствии (иногда это называется офлайн-декодированием), если это поддерживается вашим приемником."
+msgstr "Всегда включать сообщения ECM в запись. Эта функция глобально переопределяет установки отдельных таймеров. Это позволяет дешифровать запись позже (автономное/offline декодирование), если такая возможность реализована в вашем ресивере. По умолчанию: 'ВЫКЛ'."
 
 msgid "Always show bouquets"
 msgstr "Всегда показывать букеты"
@@ -2649,12 +2662,15 @@ msgstr "Всегда выбирай ОК"
 msgid "American Samoa"
 msgstr "Американское Самоа"
 
+msgid "Amharic"
+msgstr "Амхарский"
+
 msgid "Amlogic"
 msgstr "Amlogic"
 
 #, python-format
 msgid "Amount %d / Success %d / Failed %d"
-msgstr "Итог %d / Успех %d / Неудача %d"
+msgstr "Сумма %d / Успех %d / Неудача %d"
 
 msgid "An empty filename is illegal."
 msgstr "Пустое имя недопустимо."
@@ -2709,6 +2725,9 @@ msgstr "Любая активность"
 
 msgid "Any recordings"
 msgstr "Любые записи"
+
+msgid "Aperture F number"
+msgstr "Число F диафрагмы"
 
 msgid "Apply any changes to the active locale/language and exit"
 msgstr "Примените все изменения к активной локали/языку и выйдите из системы"
@@ -2793,7 +2812,7 @@ msgid "Are you sure you want to delete this image?"
 msgstr "Вы уверены, что хотите удалить этот образ?"
 
 msgid "Are you sure you want to delete this log:\n"
-msgstr "Вы уверены, что хотите удалить этот журнал:\n"
+msgstr "Вы уверены,что хотите удалить этот журнал:\n"
 
 msgid ""
 "Are you sure you want to delete all selected logs:\n"
@@ -2918,7 +2937,7 @@ msgid "Assigned CAIds:"
 msgstr "Назначены CAIds:"
 
 msgid "Assigned services/provider:"
-msgstr "Назначенные каналы/оператор:"
+msgstr "Назначены каналы/оператор:"
 
 msgid "At End:"
 msgstr "В конце:"
@@ -5823,6 +5842,9 @@ msgstr "Создать дамп корневой файловой системы
 msgid "Create root journaling flash file system."
 msgstr "Создать корневую журналируемую флеш-файловую систему."
 
+msgid "Create slots for the selected device"
+msgstr "Создать слоты для выбранного устройства"
+
 msgid "Create swap"
 msgstr "Создать swap"
 
@@ -6386,6 +6408,9 @@ msgstr "Задайте DNS-суффикс."
 
 msgid "Define the custom mountpoint for the device."
 msgstr "Определите пользовательскую точку монтирования для устройства."
+
+msgid "Define the default settings backup target location. Select 'Ask user' to prompt the user for the target location when the backup is run."
+msgstr "Определите целевое расположение резервной копии настроек по умолчанию. Выберите «Спросить пользователя», чтобы запросить у пользователя целевое расположение при запуске резервного копирования."
 
 msgid "Define the file system mount options."
 msgstr "Определите параметры монтирования файловой системы."
@@ -10503,6 +10528,13 @@ msgstr "Пакеты ядра"
 msgid "Kernel file"
 msgstr "Файл ядра"
 
+msgid "Kernel partition"
+msgstr "Раздел ядра"
+
+#, python-format
+msgid "Kernel%s partition"
+msgstr "Раздел ядра%s"
+
 msgid "Kernel version"
 msgstr "Версия ядра"
 
@@ -12230,9 +12262,6 @@ msgstr "Сервера не получены!"
 
 msgid "No services/providers selected"
 msgstr "Не выбраны каналы/провайдеры"
-
-msgid "- No write permission on backup device."
-msgstr "- Нет разрешения на запись на устройстве резервного копирования."
 
 msgid "No standby"
 msgstr "Не переходить в режим ожидания"
@@ -15114,6 +15143,9 @@ msgstr "Русский"
 msgid "Russian Federation"
 msgstr "Российская Федерация"
 
+msgid "Rust version"
+msgstr "Версия Rust"
+
 msgid "Rwanda"
 msgstr "Руанда"
 
@@ -15583,6 +15615,9 @@ msgstr "Похоже, у вашего ресивера проблема с пр�
 msgid "Select"
 msgstr "Выбрать"
 
+msgid "Select a device to create multiboot slots"
+msgstr "Выберите устройство для создания мультизагрузочных слотов"
+
 msgid "Select a device to use as the flash expander"
 msgstr "Выберите устройство для использования в качестве flash expander"
 
@@ -15853,6 +15888,9 @@ msgstr "Выбор слота"
 
 msgid "Select sort method:"
 msgstr "Выбор способа сортировки:"
+
+msgid "Select target device for slot creation"
+msgstr "Выберите целевое устройство для создания слота"
 
 msgid "Select target folder"
 msgstr "Выбрать целевую папку"
@@ -16570,6 +16608,9 @@ msgstr "Настройка"
 
 msgid "Settings..."
 msgstr "Настройка..."
+
+msgid "Settings Backup Target"
+msgstr "Настройки Резервного копирования цели"
 
 msgid "Setting Packages"
 msgstr "Пакеты настройки"
@@ -17701,6 +17742,9 @@ msgstr "Менеджер слотов"
 
 msgid "Slot Manager Actions"
 msgstr "Действия диспетчера слотов"
+
+msgid "Slot F: Flash Slot Image Backup (Current image)"
+msgstr "Слот F: Резервное копирование образа слота флэш-памяти (текущее изображение)"
 
 msgid "Slot R: Root Slot Full Backup (Current image)"
 msgstr "Слот R: полное резервное копирование корневого слота (текущий образ)"
@@ -21633,9 +21677,6 @@ msgstr "Запись не удалась!"
 msgid "Write to /tmp/positionersetup.log"
 msgstr "Запись в /tmp/positionersetup.log"
 
-msgid "- Wrong backup destination."
-msgstr "- Неправильное место назначения резервного копирования."
-
 msgid "XBox support"
 msgstr "XBOX поддержка"
 
@@ -22217,7 +22258,7 @@ msgid "[move mode]"
 msgstr "[Режим перемещения]"
 
 msgid "a gui to assign services/providers to common interface modules"
-msgstr "интерфейс для назначения сервисов/провайдеров на CAM-модули"
+msgstr "интерфейс для назначения каналов/операторов на CAM-модули"
 
 msgid "a gui to assign services/providers/caids to common interface modules"
 msgstr "интерфейс для назначения сервисов/провайдеров/идентов на CAM-модули"
