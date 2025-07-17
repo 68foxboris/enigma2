@@ -84,7 +84,7 @@ class FCCSupport:
 		self.__event_tracker = None
 		self.onClose = []
 		self.changeEventTracker()
-		BoxInfo.setItem("FCCactive", self.fccSetupActivate)
+		BoxInfo.setMutableItem("FCCactive", self.fccSetupActivate)
 #		from Screens.PictureInPicture import on_pip_start_stop
 #		on_pip_start_stop.append(self.FCCForceStopforPIP)
 
@@ -176,7 +176,7 @@ class FCCSupport:
 
 		if fcc_changed:
 			self.fccmgr.setFCCEnable(int(self.fccSetupActivate))
-			BoxInfo.setItem("FCCactive", self.fccSetupActivate)
+			BoxInfo.setMutableItem("FCCactive", self.fccSetupActivate)
 			curPlaying = self.session.nav.getCurrentlyPlayingServiceReference()
 			if curPlaying:
 				self.session.nav.stopService()
@@ -184,7 +184,7 @@ class FCCSupport:
 
 	# get current recording state
 	def getRecordings(self):
-		self.recordings = self.session.nav.getAnyRecordingsCount() > 0
+		self.recordings = bool(self.session.nav.getRecordings())
 
 	def addRecordEventCallback(self, enable=True):
 		if enable:
