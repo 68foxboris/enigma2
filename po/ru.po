@@ -80,6 +80,9 @@ msgstr " (Радио)"
 msgid " (TV)"
 msgstr " (ТВ)"
 
+msgid "(The file '/media/hdd/images/config/myrestore.sh' exists and will be run after the image is flashed.)"
+msgstr "(Файл '/media/hdd/images/config/myrestore.sh' существует и будет запущен после прошивки образа.)"
+
 msgid " - %d elements exist! Overwrite"
 msgstr " -%d элементов существует! Перезаписать"
 
@@ -1283,6 +1286,10 @@ msgstr "%s Действия с информацией"
 #, python-format
 msgid "%s Setup"
 msgstr "Настройка %s"
+
+#, python-format
+msgid "%s version"
+msgstr "%s версия"
 
 #, python-format
 msgid "%s View"
@@ -6828,8 +6835,15 @@ msgstr "Директория содержит %s и %s."
 msgid "Disable"
 msgstr "Отключено"
 
+msgid "Disable Chkroot"
+msgstr "Отключить Chkroot"
+
 msgid "Disable FCC during recordings"
 msgstr "Отключить FCC во время записи"
+
+msgid "Disable Fast Channel Change"
+msgstr "Отключить быструю смену каналов"
+
 
 msgid "Disable Animations"
 msgstr "Отключить анимацию"
@@ -7040,6 +7054,10 @@ msgstr "Вы действительно хотите удалить %s?"
 msgid "Do you really want to delete ?"
 msgstr "Действительно хотите удалить ?"
 
+#, python-format
+msgid "Do you really want to delete '%s'?"
+msgstr "Действительно удалить %s?"
+
 msgid "Do you really want to delete this timer?"
 msgstr "Вы действительно хотите удалить этот таймер?"
 
@@ -7113,6 +7131,10 @@ msgid ""
 msgstr ""
 "Вы хотите прошить образ\n"
 "%s"
+
+#, python-format
+msgid "Do you want to flash the image '%s'?"
+msgstr "Вы хотите прошить образ '%s'?"
 
 msgid "Do you want to install Plugins?"
 msgstr "Вы хотите установить плагины?"
@@ -7317,6 +7339,9 @@ msgstr "Загруженные образы"
 
 msgid "Downloading"
 msgstr "Загрузка"
+
+msgid "Download Image"
+msgstr "Загрузить образ"
 
 msgid "Downloading Image"
 msgstr "Загрузка образа"
@@ -7934,17 +7959,11 @@ msgstr "Ревизия Enigma2"
 msgid "Enigma2 skin selector"
 msgstr "Селектор скинов Enigma2"
 
-msgid "Enigma2 version"
-msgstr "Версия Enigma2"
-
 msgid "Enigma (re)starts: %d\n"
 msgstr "Энигма (ре)стартов: %d\n"
 
 msgid "Enigma debug level: %d\n"
 msgstr "Энигма - уровень отладки: %d\n"
-
-msgid "Enigma version: "
-msgstr "Версия энигмы: "
 
 msgid "Enter"
 msgstr "Ввод"
@@ -8027,6 +8046,9 @@ msgstr "Введите высокую частоту гетеродина низ
 
 msgid "Enter your low band local oscillator frequency. For more information consult the spec sheet of your LNB."
 msgstr "Введите низкую частоту гетеродина низкочастотного генератора. Для получения дополнительной информации смотрите спецификацию вашего LNB."
+
+msgid "Enter your personal feed URL to allow you to select packages from your personal feed."
+msgstr "Введите URL-адрес своего личного фида, чтобы можно было выбирать пакеты из него."
 
 msgid "Enter the subscription code to fully enable the AI-Powered Translation plugin, the unified code for trial is 15."
 msgstr "Введите код подписки, чтобы полностью включить плагин AI-Powered Translation; единый код для пробной версии — 15."
@@ -8543,12 +8565,6 @@ msgstr "FEC"
 
 msgid "FEC:"
 msgstr "FEC:"
-
-msgid "FFmpeg version: "
-msgstr "Версия FFmpeg: "
-
-msgid "FFmpeg version"
-msgstr "Версия FFmpeg"
 
 msgid "FHD"
 msgstr "FHD"
@@ -9143,21 +9159,6 @@ msgstr "Г"
 msgid "GB"
 msgstr "ГБ"
 
-msgid "GStreamer version: "
-msgstr "Версия GStreamer: "
-
-msgid "GCC version: "
-msgstr "Версия GCC: "
-
-msgid "Glibc version: "
-msgstr "Версия Glibc: "
-
-msgid "GCC version"
-msgstr "Версия GCC"
-
-msgid "Glibc version"
-msgstr "Версия Glibc"
-
 msgid "GUI Settings"
 msgstr "Настройки GUI"
 
@@ -9169,9 +9170,6 @@ msgstr "Категория лога отладки GStreamer *"
 
 msgid "GStreamer debug log level *"
 msgstr "Уровень лога отладки GStreamer *"
-
-msgid "GStreamer version"
-msgstr "Версия GStreamer"
 
 msgid ""
 "GUI needs a restart to apply a new language\n"
@@ -10205,6 +10203,9 @@ msgstr "Начальная скорость перемотки назад"
 
 msgid "Initial scroll delay"
 msgstr "Начальная задержка прокрутки"
+
+msgid "Initialize"
+msgstr "Включить"
 
 msgid "Initial signal quality"
 msgstr "Начальное качество сигнала"
@@ -12330,8 +12331,11 @@ msgstr "Нет, я не хочу устанавливать плагины"
 msgid "No, but restart from begin"
 msgstr "Нет, но сделать рестарт и начать сначала"
 
-msgid "No, do not flash image"
-msgstr "Нет, не прошивать имидж"
+msgid "No, don't flash this image"
+msgstr "Нет, не прошивать этот образ"
+
+msgid "No, just start my %s %s"
+msgstr "Нет, только запустить %s %s"
 
 msgid "No, except Wakeup timer"
 msgstr "Нет, исключение таймер включения"
@@ -12807,9 +12811,6 @@ msgstr "Открыть, долгая"
 msgid "Open satellites list"
 msgstr "Открыть список спутников"
 
-msgid "OpenSSL version"
-msgstr "Версия OpenSSL"
-
 msgid "Open select location"
 msgstr "Открыть выбор расположения"
 
@@ -12824,9 +12825,6 @@ msgstr "Открыть настройки тюнера "
 
 msgid "Open the Plugin Browser settings screen"
 msgstr "Откройте экран настроек браузера плагинов"
-
-msgid "OpenSSL version: "
-msgstr "Версия OpenSSL: "
 
 msgid "OpenPli Information"
 msgstr "Информация OpenPli"
@@ -13185,6 +13183,10 @@ msgstr "Постоянные изменения ключа сортировки"
 
 msgid "Permanently delete all recordings in the trash can?"
 msgstr "Окончательно удалить все записи в корзине?"
+
+msgid "Permanently disable the MultiBoot option?"
+msgstr "Навсегда отключить опцию MultiBoot?"
+
 
 msgid "Permanently remove all deleted items"
 msgstr "Окончательное удаление всех файлов"
@@ -14163,9 +14165,6 @@ msgstr "Провайдеры:"
 msgid "Providers: "
 msgstr "Провайдеры: "
 
-msgid "Python version"
-msgstr "Версия Python"
-
 msgid "Puerto Rico"
 msgstr "Пуэрто-Рико"
 
@@ -14207,9 +14206,6 @@ msgstr "Перевести ресивер в режим ожидания."
 
 msgid "Python frontend for /tmp/mmi.socket"
 msgstr "Python интерфейс для /tmp/mmi.socket"
-
-msgid "Python version: "
-msgstr "Версия Python: "
 
 msgid "Python:\t\t%s"
 msgstr "Python\t\t%s"
@@ -14658,6 +14654,9 @@ msgstr "Удалить все лог-файлы"
 
 msgid "Remove all new found flags"
 msgstr "Удалите все новые найденные флаги"
+
+msgid "Remove Files"
+msgstr "Удалить файлы"
 
 msgid "Remove Plugin"
 msgstr "Удалить плагин"
@@ -15143,9 +15142,6 @@ msgstr "Русский"
 msgid "Russian Federation"
 msgstr "Российская Федерация"
 
-msgid "Rust version"
-msgstr "Версия Rust"
-
 msgid "Rwanda"
 msgstr "Руанда"
 
@@ -15232,12 +15228,6 @@ msgstr "Журнал Samba"
 
 msgid "Samba setup"
 msgstr "Настройки Samba"
-
-msgid "Samba version: "
-msgstr "Версия Samba: "
-
-msgid "Samba version"
-msgstr "Версия Samba"
 
 msgid "Same as in active"
 msgstr "То же, что при активности"
@@ -15565,7 +15555,13 @@ msgid "Security Packages"
 msgstr "Пакеты безопасности"
 
 msgid "Seek"
-msgstr "Перемотка"
+msgstr "Искать"
+
+msgid "Seek Actions"
+msgstr "Поиск действий"
+
+msgid "Seek back short"
+msgstr "Перемотка назад"
 
 msgid "Seek backward"
 msgstr "Перемотка назад"
@@ -15645,17 +15641,92 @@ msgstr "Выберите режим доступа для автоматичес
 msgid "Select 'Yes' to allow each storage device detected to be automatically exported as samba share."
 msgstr "Выберите 'Да', чтобы разрешить автоматически экспортировать каждое обнаруженное устройство хранения данных как общий ресурс Samba."
 
-msgid "Select 'Yes' to show the volume level on any automated changes of volume level."
-msgstr "Выберите «Да», чтобы отображать уровень громкости при любых автоматических изменениях уровня громкости."
-
 msgid "Select 'Yes' to enable AI-Powered Translation for all teletext and DVB subtitles."
 msgstr "Выберите «Да», чтобы включить функцию перевода на базе искусственного интеллекта для всех телетекстов и субтитров DVB."
 
 msgid "Select 'Yes' to hide the server name and IP address of the server."
 msgstr "Выберите «Да», чтобы скрыть имя и IP-адрес сервера."
 
+msgid "Select 'Yes' to show 'dev', 'staticdev', 'dbg' and 'doc' packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты 'dev', 'staticdev', 'dbg' и 'doc' в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show LCD skin packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты скинов ЖК-дисплея в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show OpenPLi packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты OpenPLi в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show OpenViX packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты OpenViX в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show Softcam packages in the Download Plugins screen."
+msgstr "Выберите 'Да, чтобы отобразить пакеты Softcam в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show directories at the top/start of the list, or select 'No' to show files first."
+msgstr "Выберите 'Да', чтобы показывать каталоги сверху/в начале списка, или 'Нет', чтобы сначала отображались файлы."
+
+msgid "Select 'Yes' to show driver packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты драйверов в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show extensions packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты расширений в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show kernel packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты ядра в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show m2k packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты m2k в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show picon packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отображать пакеты пиконов в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show plugin skin packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты скинов для плагинов в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show security packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты безопасности в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show settings packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты настроек в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show skin component packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты компонентов скина в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show skin packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты скинов в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show source 'src' packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты исходного кода 'src' в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show subscription packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы показывать пакеты с подпиской в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show system plugin packages in the Download Plugins screen."
+msgstr "Выберите 'Да', чтобы отобразить пакеты системных плагинов в диалоге загрузки плагинов."
+
+msgid "Select 'Yes' to show the 'Movie Selection' entry in the Main Menu. This can provide access to the Movie Selection screen when there is no assigned button on the remote control."
+msgstr "Выберите 'Да', чтобы отобразить запись 'Выбор фильма' в главном меню. Это может обеспечить доступ к экрану выбора фильма, когда на пульте дистанционного управления нет назначенной кнопки."
+
+msgid "Select 'Yes' to show the advanced setting options."
+msgstr "Выберите 'Да', чтобы отобразить дополнительные параметры настройки."
+
+msgid "Select 'Yes' to show the bouquet selection screen every time you open the EPG."
+msgstr "Если выбрать 'Да', то каждый раз при открытии ТВ-гида будет показываться список букетов."
+
+msgid "Select 'Yes' to show the channel list after switching between Radio and TV modes."
+msgstr "Если выберете 'Да', то после переключения между режимами Радио и ТВ будет показываться список каналов."
+
+msgid "Select 'Yes' to show the current directory in the list of directories. Note that File Commander must be restarted for this change to take effect."
+msgstr "Выберите 'Да', чтобы отобразить текущий каталог в списке каталогов. Обратите внимание, что File Commander необходимо перезапустить, чтобы это изменение вступило в силу."
+
+msgid "Select 'Yes' to show the volume level on any automated changes of volume level."
+msgstr "Выберите 'Да', чтобы отображать уровень громкости при любых автоматических изменениях уровня громкости."
+
 msgid "Select 'Yes' to show this plugin in the Plugin Browser."
 msgstr "Выберите «Да», чтобы отобразить этот плагин в браузере плагинов."
+
+msgid "Select 'Yes' to use alternate GitHub feed IP addresses. This can be helpful if you use a VPN and the normal feeds can't be accessed via the published DNS names."
+msgstr "Выберите 'Да', чтобы использовать альтернативные IP-адреса канала GitHub. Это может быть полезно, если вы используете VPN и к обычным каналам нет доступа через публичные DNS-имена."
 
 msgid "Select 'Yes' when you want to configure this tuner for ATSC"
 msgstr "Выберите 'Да', если вы хотите настроить этот тюнер для ATSC"
@@ -16160,9 +16231,6 @@ msgstr "Выберите «Да», чтобы отображать информ�
 
 msgid "Select 'Yes' the keep the InfoBar displayed, with no timeout, while media playback is paused."
 msgstr "Выберите «Да», чтобы информационная панель отображалась без тайм-аута во время приостановки воспроизведения мультимедиа."
-
-msgid "Select 'Yes' to show the 'Movie Selection' entry in the Main Menu. This can provide access to the Movie Selection screen when there is no assigned button on the remote control."
-msgstr "Выберите «Да», чтобы отобразить запись «Выбор фильма» в главном меню. Это может обеспечить доступ к экрану выбора фильма, когда на пульте дистанционного управления нет назначенной кнопки."
 
 msgid "Select 'Yes' to shut down immediately instead of starting the descramble."
 msgstr "Выберите «Да», чтобы немедленно завершить работу, не запуская декодирование."
@@ -18891,6 +18959,14 @@ msgstr "Ваш %s %s считывает сохраненные данные ТВ
 msgid "The %s %s stores the EPG data every (hours)."
 msgstr "Ваш %s %s сохраняет данные ТВ-гида каждые (часов)."
 
+#, python-format
+msgid "The %s %s will reboot within 1 seconds."
+msgstr "%s %s перезагрузится в течение 1 секунды."
+
+#, python-format
+msgid "The %s %s will reboot within 10 seconds, unless there are eMMC slots to restore. Restoring eMMC slots can take from 1 to 5 minutes per slot."
+msgstr "%s %s перезагрузится в течение 10 секунд, если нет слотов eMMC для восстановления. Восстановление слотов eMMC может занять от 1 до 5 минут на каждый слот."
+
 msgid "The AI mode used for translating languages. You can choose the one that gives the most accurate translation for your target language."
 msgstr "Режим ИИ, используемый для перевода языков. Вы можете выбрать тот, который дает наиболее точный перевод для вашего целевого языка."
 
@@ -19101,10 +19177,6 @@ msgstr "Рестарт GUI Вашего ресивера выполнен для
 
 msgid "The width of the picture. The input will be scaled to match this value."
 msgstr "Ширина картинки.Входные данные будут масштабироваться в соответствии с этим значением."
-
-#, python-format
-msgid "The %s %s will reboot within 1 seconds."
-msgstr "%s %s перезагрузится в течение 1 секунды."
 
 msgid ""
 "The wireless LAN plugin is not installed!\n"
@@ -20174,6 +20246,10 @@ msgstr "Тип LNB/устройства"
 
 msgid "Type of scan"
 msgstr "Тип поиска"
+
+#, python-format
+msgid "UBI slot %s%s"
+msgstr "Слот UBI %s%s"
 
 msgid "UNKNOWN"
 msgstr "НЕИЗВЕСТНО"
