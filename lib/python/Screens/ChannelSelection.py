@@ -1584,7 +1584,7 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 		self.movemode = False
 		self.showSatDetails = False
 
-		self["channelSelectBaseActions"] = HelpableNumberActionMap(self, ["ColorActions", "ChannelSelectBaseActions", "NumberActions", "InputAsciiActions"],
+		self["channelSelectBaseActions"] = HelpableNumberActionMap(self, ["ColorActions", "NumberActions", "InputAsciiActions"],
 			{
 				"red": (self.showAllServices, _("Show all available services")),
 				"green": (boundFunction(self.showSatellites, changeMode=True), _("Show list of transponders")),
@@ -1638,38 +1638,6 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 		self.functiontitle = ""
 		self.recallBouquetMode()
 		self.instanceInfoBarSubserviceSelection = None
-
-	def layoutFinished(self):
-		self.servicelist.instance.enableAutoNavigation(config.misc.actionLeftRightToPageUpPageDown.value)  # Override list box navigation.
-
-	def _helpPrevNextBouquet(self, prev):
-		if ("reverseB" in config.usage.servicelist_cursor_behavior.value) == prev:
-			return _("Move up in bouquet list")
-		else:
-			return _("Move down in bouquet list")
-
-	def _helpKeyleftright(self, prev):
-		if config.usage.oldstyle_channel_select_controls.value:
-			return _("Bouquet down") if prev else _("Bouquet up")
-		else:
-			return _("Page down") if prev else _("Page up")
-
-	def _helpKeyNumberGlobal(self, number):
-		editmode = {2: _("Rename"), 6: _("Toggle movemode"), 8: _("Remove")}.get(number, None)
-		if self.isBasePathEqual(self.bouquet_root):
-			if hasattr(self, "editMode") and self.editMode:
-				return editmode
-			else:
-				return _("Zap to channel number")
-		else:
-			current_root = self.getRoot()
-			if current_root and 'FROM BOUQUET "bouquets.' in current_root.getPath():
-				if hasattr(self, "editMode") and self.editMode:
-					return editmode
-				else:
-					return _("Zap to channel number")
-			else:
-				return _("Search in SMS mode")
 
 	def compileTitle(self):
 		self.setTitle(f"{self.maintitle}{self.modetitle}{self.functiontitle}{self.servicetitle}")
@@ -1792,6 +1760,19 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 
 	def moveEnd(self):  # This is used by InfoBarGenerics.
 		self.servicelist.goBottom()
+
+	def getCurrentMode(self):
+		return self.mode
+
+	def setCurrentMode(self, mode):
+		if mode != MODE_RADIO:
+			mode = MODE_TV
+		self.servicePath = self.servicePathRadio if mode == MODE_RADIO else self.servicePathTV
+		self.mode = mode
+		self.recallBouquetMode()
+		self.buildTitleString()
+		# modeString = {MODE_RADIO: "Radio", MODE_TV: "TV"}.get(mode)
+		# print(f"[ChannelSelection] DEBUG {modeString} Mode selected.")
 
 	def clearPath(self):
 		del self.servicePath[:]
