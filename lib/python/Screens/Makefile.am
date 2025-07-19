@@ -18,5 +18,5 @@ install_PYTHON = \
 	InputDeviceSetup.py DVD.py SoftwareUpdate.py AutoDiseqc.py InstallWizard.py ScreenSaver.py \
 	Hotkey.py StreamingClientsInfo.py SoftcamSetup.py SetupFallbacktuner.py \
 	CronTimer.py OScamInfo.py LogManager.py Time.py OSDCalibration.py \
-	QuadPiP.py FlashManager.py MultiBootManager.py ImageBackup.py SkinSelection.py \
+	FlashManager.py MultiBootManager.py ImageBackup.py SkinSelection.py \
 	SwapManager.py DeviceManager.py Information.py
