@@ -1779,6 +1779,12 @@ def InitUsageConfig():
 		config.usage.vfd_final_scroll_delay = ConfigSelection(default="1000", choices=choiceList)
 		config.usage.vfd_final_scroll_delay.addNotifier(final_scroll_delay, immediate_feedback=False)
 
+	def quadpip_mode_notifier(configElement):
+		if BoxInfo.getItem("HasQuadpip"):
+			open(BoxInfo.getItem("HasQuadpip"), "w").write("mosaic" if configElement.value else "normal")
+	config.usage.QuadpipMode = NoSave(ConfigYesNo(default=False))
+	config.usage.QuadpipMode.addNotifier(quadpip_mode_notifier)
+
 	if BoxInfo.getItem("HasBypassEdidChecking"):
 		def setHasBypassEdidChecking(configElement):
 			with open(BoxInfo.getItem("HasBypassEdidChecking"), "w") as fd:

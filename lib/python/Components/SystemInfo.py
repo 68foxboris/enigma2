@@ -309,6 +309,7 @@ for cam in API_STREAMRELAY:
 BoxInfo.setItem("12V_Output", Misc_Options.getInstance().detected_12V_output())
 BoxInfo.setItem("3DMode", fileCheck("/proc/stb/fb/3dmode") or fileCheck("/proc/stb/fb/primary/3d"))
 BoxInfo.setItem("3DZNorm", fileCheck("/proc/stb/fb/znorm") or fileCheck("/proc/stb/fb/primary/zoffset"))
+BoxInfo.setItem("HasQuadpip", fileCheck("/proc/stb/video/decodermode"))
 BoxInfo.setItem("7segment", DISPLAYTYPE == "7segment" or "7seg" in DISPLAYTYPE)
 BoxInfo.setItem("textlcd", DISPLAYTYPE == "textlcd" or "text" in DISPLAYTYPE)
 BoxInfo.setItem("AmlogicFamily", SOC_FAMILY.startswith(("aml", "meson")) or exists("/proc/device-tree/amlogic-dt-id") or exists("/usr/bin/amlhalt") or exists("/sys/module/amports"))
