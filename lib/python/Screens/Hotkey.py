@@ -214,7 +214,7 @@ def getHotkeyFunctions():
 		hotkey.functions.append((_("Softcam Setup"), "SoftcamSetup", "Setup"))
 	hotkey.functions.append((_("HotKey Setup"), "Module/Screens.Hotkey/HotkeySetup", "Setup"))
 	hotkey.functions.append((_("Software update"), "Module/Screens.SoftwareUpdate/UpdatePlugin", "Setup"))
-	hotkey.functions.append((_("Latest Commits"), "Module/Screens.About/CommitInfo", "Setup"))
+	hotkey.functions.append((_("Latest Commits"), "Module/Screens.Information/CommitInfo", "Setup"))
 	hotkey.functions.append((_("CI (Common Interface) Setup"), "Module/Screens.Ci/CiSelection", "Setup"))
 	hotkey.functions.append((_("Tuner Configuration"), "Module/Screens.Satconfig/NimSelection", "Scanning"))
 	hotkey.functions.append((_("Manual Scan"), "Module/Screens.ScanSetup/ScanSetup", "Scanning"))
@@ -225,7 +225,7 @@ def getHotkeyFunctions():
 	hotkey.functions.append((_("SkinSelection"), "Module/Screens.SkinSelection/SkinSelection", "Setup"))
 	hotkey.functions.append((_("Plugin Browser"), "Module/Screens.PluginBrowser/PluginBrowser", "Setup"))
 	hotkey.functions.append((_("Sleeptimer edit"), "Module/Screens.SleepTimerEdit/SleepTimerEdit", "Setup"))
-	hotkey.functions.append((_("Channel Info"), "Module/Screens.About/ServiceInformation", "Setup"))
+	hotkey.functions.append((_("Channel Info"), "Module/Screens.Information/ServiceInformation", "Setup"))
 	hotkey.functions.append((_("Timer"), "Module/Screens.TimerEdit/TimerEditList", "Setup"))
 	for plugin in plugins.getPluginsForMenu("system"):
 		if plugin[2]:
@@ -249,7 +249,7 @@ def getHotkeyFunctions():
 	hotkey.functions.append((_("Subtitles Settings"), "Setup/subtitlesetup", "Setup"))
 	hotkey.functions.append((_("Language"), "Module/Screens.LocaleSelection/LocaleSelection", "Setup"))
 	hotkey.functions.append((_("OScam Information"), "Module/Screens.OScamInfo/OSCamInfo", "Plugins"))
-	hotkey.functions.append((_("Memory Info"), "Module/Screens.About/MemoryInfo", "Setup"))
+	hotkey.functions.append((_("Memory Info"), "Module/Screens.Information/MemoryInfo", "Setup"))
 	hotkey.functions.append((_("Reload Skin"), "ReloadSkin/", "Setup"))
 	if BoxInfo.getItem("canMultiBoot"):
 		hotkey.functions.append((_("Multiboot image selector"), "Module/Screens.FlashImage/MultibootSelection", "Setup"))
