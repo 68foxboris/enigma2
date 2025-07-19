@@ -201,10 +201,10 @@ class ChannelContextMenu(Screen):
 				"1": self.unhideParentalServices,
 				"2": self.renameEntry,
 				"3": self.findCurrentlyPlayed,
-				"4": self.showSubservices,
-				"5": self.insertEntry,
-				"6": self.addServiceToBouquetOrAlternative,
-				"7": self.toggleMoveModeSelect,
+				"4": self.insertEntry,
+				"5": self.addServiceToBouquetOrAlternative,
+				"6": self.toggleMoveModeSelect,
+				"7": self.showSubservices,
 				"8": self.removeEntry
 			})
 		menu = []
@@ -1638,6 +1638,35 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 		self.functiontitle = ""
 		self.recallBouquetMode()
 		self.instanceInfoBarSubserviceSelection = None
+
+	def _helpPrevNextBouquet(self, prev):
+		if ("reverseB" in config.usage.servicelist_cursor_behavior.value) == prev:
+			return _("Move up in bouquet list")
+		else:
+			return _("Move down in bouquet list")
+
+	def _helpKeyleftright(self, prev):
+		if config.usage.oldstyle_channel_select_controls.value:
+			return _("Bouquet down") if prev else _("Bouquet up")
+		else:
+			return _("Page down") if prev else _("Page up")
+
+	def _helpKeyNumberGlobal(self, number):
+		editmode = {2: _("Rename"), 6: _("Toggle movemode"), 8: _("Remove")}.get(number, None)
+		if self.isBasePathEqual(self.bouquet_root):
+			if hasattr(self, "editMode") and self.editMode:
+				return editmode
+			else:
+				return _("Zap to channel number")
+		else:
+			current_root = self.getRoot()
+			if current_root and 'FROM BOUQUET "bouquets.' in current_root.getPath():
+				if hasattr(self, "editMode") and self.editMode:
+					return editmode
+				else:
+					return _("Zap to channel number")
+			else:
+				return _("Search in SMS mode")
 
 	def compileTitle(self):
 		self.setTitle(f"{self.maintitle}{self.modetitle}{self.functiontitle}{self.servicetitle}")
