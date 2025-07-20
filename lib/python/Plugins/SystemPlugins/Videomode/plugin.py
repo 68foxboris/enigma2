@@ -180,6 +180,13 @@ class VideoSetup(ConfigListScreen, Screen):
 		else:
 			self.keySave()
 
+	def keySave(self):
+		mode = config.av.videomode[config.av.videoport.value].value
+		if BoxInfo.getItem("ForceSet10bitMode2160p") and mode.startswith("2160p") and config.av.hdmicolordepth.value in ("8bit", "auto"):  # Hack for GB QUAD 4K Pro
+			config.av.hdmicolordepth.value = "10bit"
+			config.av.hdmicolordepth.save()
+		ConfigListScreen.keySave(self)
+
 
 class VideomodeHotplug:
 	def __init__(self, hw):
