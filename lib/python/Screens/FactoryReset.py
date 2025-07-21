@@ -30,7 +30,7 @@ class FactoryReset(ConfigListScreen, Screen, ProtectedScreen):
         def __init__(self, session):
                 Screen.__init__(self, session)
                 ProtectedScreen.__init__(self)
-                self.skinName = ["ParentalControlSetup", "Setup"]
+                self.skinName = ["FactoryReset", "Setup"]
                 self.title = _("Factory Reset")
                 self.onChangedEntry = []
 
