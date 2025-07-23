@@ -7746,8 +7746,23 @@ msgstr "Включить редактирование букета"
 msgid "Enable bouquet selection in multi-EPG"
 msgstr "Включить выбор букетов при запуске мульти-ТВ-гида"
 
+msgid "Enable chapter support for video files"
+msgstr "Включить поддержку глав для видеофайлов"
+
 msgid "Enable core dumps *"
-msgstr "Включить дампы ядра *"
+msgstr "Включить дампы памяти *"
+
+msgid "Enable cut file support for audio files"
+msgstr "Поддержка вырезанных файлов для аудиофайлов"
+
+msgid "Enable cut file support for audio files, e.g. mp3."
+msgstr "Поддержка вырезанных файлов для аудиофайлов. (например, mp3)"
+
+msgid "Enable cut file support for non *.ts files"
+msgstr "Поддержка вырезанных файлов для файлов, отличных от * .ts"
+
+msgid "Enable cut file support for non *.ts files, e.g. mp4."
+msgstr "Поддержка вырезанных файлов для файлов, отличных от * .ts. (например, mp4)"
 
 msgid "Enable client mode"
 msgstr "Включить режим клиента"
@@ -14306,7 +14321,7 @@ msgstr "Ram диск"
 msgid "Random"
 msgstr "Случайно"
 
-msgid "Random password"
+msgid "Random Password"
 msgstr "Случайный пароль"
 
 #, python-format
@@ -16671,6 +16686,9 @@ msgstr "Задать напряжение и 22KHz"
 msgid "Sets the root directory of movie list, to remove the '..' from being shown in that folder."
 msgstr "Устанавливает корневой каталог списка фильмов, чтобы убрать «..» из отображаемой в этой папке."
 
+msgid "Setting a password is strongly advised if your STB is open to the Internet. You must set a password in order to be able to use network services like FTP, Telnet or SSH."
+msgstr "Настоятельно рекомендуется установить пароль, если ваш ресивер открыт для доступа из Интернет. Вы должны установить пароль, чтобы иметь возможность использовать такие сетевые службы, как FTP, Telnet или SSH."
+
 msgid "Settings"
 msgstr "Настройка"
 
@@ -16950,13 +16968,13 @@ msgid "Show 30p up to resolution 720p or higher than 720p as a different Framera
 msgstr "Показывать 30p до разрешения 720p. Для разрешения выше 720p - другая частота обновления."
 
 msgid "Show 480/576p 24fps as"
-msgstr "Показать 480/576p 24fps как"
+msgstr "Показывать 480/576p 24fps как"
 
 msgid "Show 720p 24fps as"
-msgstr "Показать 720p 24fps как"
+msgstr "Показывать 720p 24fps как"
 
 msgid "Show Alternatives"
-msgstr "Показать Альтернативы"
+msgstr "Показать альтернативы"
 
 msgid "Show Audioselection"
 msgstr "Показать выбор аудио"
@@ -17115,7 +17133,7 @@ msgid "Show Transponder Remaining/Elapsed as"
 msgstr "Показывать при просмотре Осталось/Прошло как"
 
 msgid "Show True/False as graphical switch"
-msgstr "Использовать графический переключатель"
+msgstr "Показывать переключатели Да/Нет графически"
 
 msgid "Show VCR scart on main menu"
 msgstr "Показать 'Видеомагнитофон' в главном меню"
@@ -17155,6 +17173,9 @@ msgstr "Показывать индикатор на экране при зан�
 
 msgid "Show channel numbers in channel selection"
 msgstr "Показывать номер канала в селекторе каналов"
+
+msgid "Show chapter positions for supported video files. (gstreamer version must be greather than 1)"
+msgstr "Показывает положение глав для поддерживаемых видеофайлов. (версия gstreamer должна быть больше 1)"
 
 msgid "Show columns"
 msgstr "Показать столбцы"
@@ -19989,9 +20010,6 @@ msgstr "Общий swap"
 msgid "Total clients streaming: "
 msgstr "Всего клиентов стриминга: "
 
-msgid "Transcoding"
-msgstr "Транскодирование"
-
 msgid "Total:"
 msgstr "Всего:"
 
@@ -20006,6 +20024,9 @@ msgstr "Китайский традиционный"
 
 msgid "Transcode"
 msgstr "Транскодировать"
+
+msgid "Transcoding"
+msgstr "Транскодирование"
 
 msgid "Transcoding Setup"
 msgstr "Настройка транскодирования"

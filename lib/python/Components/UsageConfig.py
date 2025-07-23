@@ -16,19 +16,18 @@ from Components.Renderer.FrontpanelLed import ledPatterns, PATTERN_ON, PATTERN_O
 from Components.ServiceList import refreshServiceList
 from Components.SystemInfo import BoxInfo
 
+MODULE_NAME = __name__.split(".")[-1]
+DEFAULTKEYMAP = eEnv.resolve("${datadir}/enigma2/keymap.xml")
+
 
 originalAudioTracks = "orj dos ory org esl qaa qaf und qae mis mul ORY ORJ Audio_ORJ oth"
 visuallyImpairedCommentary = "NAR qad"
-
-MODULE_NAME = __name__.split(".")[-1]
-DEFAULTKEYMAP = eEnv.resolve("${datadir}/enigma2/keymap.xml")
 
 MODEL = BoxInfo.getItem("model")
 PLATFORM = BoxInfo.getItem("platform")
 DISPLAYTYPE = BoxInfo.getItem("displaytype")
 
 def InitUsageConfig():
-	config.usage = ConfigSubsection()
 	AvailRemotes = [splitext(x)[0] for x in glob("/usr/share/enigma2/hardware/*.xml")]
 	RemoteChoices = []
 	DefaultRemote = BoxInfo.getItem("rcname")
@@ -50,6 +49,8 @@ def InitUsageConfig():
 	config.misc.actionLeftRightToPageUpPageDown = ConfigYesNo(default=True)
 
 	config.misc.spinnerPosition = ConfigSequence(default=[50, 50], limits=[(0, 1260), (0, 700)], seperator=",")
+
+	config.usage = ConfigSubsection()
 
 	# "UserInterface" settings.
 	#
@@ -105,6 +106,40 @@ def InitUsageConfig():
 	config.usage.informationExtraSpacing = ConfigYesNo(False)
 	config.usage.movieSelectionInMenu = ConfigYesNo(False)
 
+	# Settings for servicemp3 and handling from cue sheet file.
+	config.usage.useVideoCuesheet = ConfigYesNo(default=True)  # Use marker for video media file.
+	config.usage.useAudioCuesheet = ConfigYesNo(default=True)  # Use marker for audio media file.
+	config.usage.useChapterInfo = ConfigYesNo(default=True)  # Show chapter positions (gst >= 1 and supported media files).
+
+	choices = [
+		("dhcp-router", _("Router / Gateway")),
+		("custom", _("Static IP / Custom"))
+	]
+	fileDom = fileReadXML(resolveFilename(SCOPE_SKIN, "dnsservers.xml"), source=MODULE_NAME)
+	for dns in fileDom.findall("dnsserver"):
+		if dns.get("key", ""):
+			choices.append((dns.get("key"), _(dns.get("title"))))
+
+	config.usage.dns = ConfigSelection(default="dhcp-router", choices=choices)
+	config.usage.dnsMode = ConfigSelection(default=0, choices=[
+		(0, _("Prefer IPv4")),
+		(1, _("Prefer IPv6")),
+		(2, _("IPv4 only")),
+		(3, _("IPv6 only"))
+	])
+	config.usage.dnsSuffix = ConfigText(default="", fixed_size=False)
+	config.usage.dnsRotate = ConfigYesNo(default=False)
+	config.usage.subnetwork = ConfigYesNo(default=True)
+	config.usage.subnetwork_cable = ConfigYesNo(default=True)
+	config.usage.subnetwork_terrestrial = ConfigYesNo(default=True)
+	config.usage.showdish = ConfigYesNo(default=True)
+	config.usage.multibouquet = ConfigYesNo(default=True)
+	config.usage.show_servicelist = ConfigYesNo(default=True)
+	config.usage.servicelist_mode = ConfigSelection(default="standard", choices=[
+		("standard", _("Standard")),
+		("simple", _("Simple"))
+	])
+	config.usage.servicelistpreview_mode = ConfigYesNo(default=False)
 	def setNumberModeChange(configElement):
 		eDVBDB.getInstance().setNumberingMode(configElement.value)
 		config.usage.alternative_number_mode.value = config.usage.numberMode.value != 0
@@ -143,37 +178,6 @@ def InitUsageConfig():
 		("3", _("Red colored"))
 	])
 	config.usage.record_indicator_mode.addNotifier(refreshServiceList)
-
-	config.network = ConfigSubsection()
-	choices = [
-		("dhcp-router", _("Router / Gateway")),
-		("custom", _("Static IP / Custom"))
-	]
-	fileDom = fileReadXML(resolveFilename(SCOPE_SKIN, "dnsservers.xml"), source=MODULE_NAME)
-	for dns in fileDom.findall("dnsserver"):
-		if dns.get("key", ""):
-			choices.append((dns.get("key"), _(dns.get("title"))))
-
-	config.usage.dns = ConfigSelection(default="dhcp-router", choices=choices)
-	config.usage.dnsMode = ConfigSelection(default=0, choices=[
-		(0, _("Prefer IPv4")),
-		(1, _("Prefer IPv6")),
-		(2, _("IPv4 only")),
-		(3, _("IPv6 only"))
-	])
-	config.usage.dnsSuffix = ConfigText(default="", fixed_size=False)
-	config.usage.dnsRotate = ConfigYesNo(default=False)
-	config.usage.subnetwork = ConfigYesNo(default=True)
-	config.usage.subnetwork_cable = ConfigYesNo(default=True)
-	config.usage.subnetwork_terrestrial = ConfigYesNo(default=True)
-	config.usage.showdish = ConfigYesNo(default=True)
-	config.usage.multibouquet = ConfigYesNo(default=True)
-	config.usage.show_servicelist = ConfigYesNo(default=True)
-	config.usage.servicelist_mode = ConfigSelection(default="standard", choices=[
-		("standard", _("Standard")),
-		("simple", _("Simple"))
-	])
-	config.usage.servicelistpreview_mode = ConfigYesNo(default=False)
 
 	# Just merge note, config.usage.servicelist_column was already there.
 	config.usage.servicelist_column = ConfigSelection(default="-1", choices=[
@@ -1528,6 +1532,91 @@ def InitUsageConfig():
 	config.usage.keymap = ConfigSelection(default=DEFAULTKEYMAP, choices=keymapchoices)
 	config.usage.keymap_usermod = ConfigText(default=eEnv.resolve("${datadir}/enigma2/keymap_usermod.xml"))
 
+	config.network = ConfigSubsection()
+	config.network.NFS_autostart = ConfigYesNo(default=True)
+	config.network.OpenVPN_autostart = ConfigYesNo(default=False)
+	config.network.Samba_autostart = ConfigYesNo(default=True)
+	config.network.Inadyn_autostart = ConfigYesNo(default=False)
+	config.network.uShare_autostart = ConfigYesNo(default=False)
+
+	config.samba = ConfigSubsection()
+	config.samba.enableAutoShare = ConfigYesNo(default=True)
+	config.samba.autoShareAccess = ConfigSelection(default=1, choices=[
+		(0, _("Read Only")),
+		(1, _("Read/Write"))
+	])
+
+	config.seek = ConfigSubsection()
+	config.seek.baractivation = ConfigSelection(default="leftright", choices=[
+		("leftright", _("Long Left/Right")),
+		("ffrw", _("Long << / >>"))
+	])
+	config.seek.sensibilityHorizontal = ConfigSelection(default=1.0, choices=[(x, f"{x:.1f}%") for x in [0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0]])
+	config.seek.sensibilityVertical = ConfigSelection(default=2.0, choices=[(x, f"{x:.1f}%") for x in [0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0]])
+	config.seek.arrowSkipMode = ConfigSelection(default="t", choices=[
+		("t", _("Traditional")),
+		("s", _("Symmetrical skips")),
+		("d", _("Defined skips"))
+	])
+	config.seek.numberSkipMode = ConfigSelection(default="s", choices=[
+		("s", _("Symmetrical skips")),
+		("d", _("Defined skips")),
+		("p", _("Percentage skips"))
+	])
+	config.seek.defined = ConfigSubDict()
+	config.seek.defined[13] = ConfigSelectionNumber(default=15, min=1, max=300, stepwidth=1, wraparound=True)
+	config.seek.defined[46] = ConfigSelectionNumber(default=60, min=1, max=600, stepwidth=1, wraparound=True)
+	config.seek.defined[79] = ConfigSelectionNumber(default=300, min=1, max=1200, stepwidth=1, wraparound=True)
+	config.seek.defined[1] = ConfigSelectionNumber(default=-15, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined[2] = ConfigSelectionNumber(default=10, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined[3] = ConfigSelectionNumber(default=15, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined[4] = ConfigSelectionNumber(default=-60, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined[5] = ConfigSelectionNumber(default=30, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined[6] = ConfigSelectionNumber(default=60, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined[7] = ConfigSelectionNumber(default=-300, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined[8] = ConfigSelectionNumber(default=180, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined[9] = ConfigSelectionNumber(default=300, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined[0] = ConfigSelectionNumber(default=300, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined["UP"] = ConfigSelectionNumber(default=180, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined["LEFT"] = ConfigSelectionNumber(default=-10, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined["RIGHT"] = ConfigSelectionNumber(default=15, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined["DOWN"] = ConfigSelectionNumber(default=-120, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined["CUT_13"] = ConfigSelectionNumber(default=10, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined["CUT_46"] = ConfigSelectionNumber(default=30, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined["CUT_79"] = ConfigSelectionNumber(default=90, min=-1800, max=1800, stepwidth=1, wraparound=True)
+	config.seek.defined["CUT_UP"] = ConfigSelectionNumber(default=300, min=-600, max=600, stepwidth=1, wraparound=True)
+	config.seek.defined["CUT_LEFT"] = ConfigSelectionNumber(default=-1, min=-600, max=600, stepwidth=1, wraparound=True)
+	config.seek.defined["CUT_RIGHT"] = ConfigSelectionNumber(default=1, min=-600, max=600, stepwidth=1, wraparound=True)
+	config.seek.defined["CUT_DOWN"] = ConfigSelectionNumber(default=-300, min=-600, max=600, stepwidth=1, wraparound=True)
+	# The following 4 items are legacy and kept for plugin compatibility.
+	config.seek.sensibility = ConfigSelectionNumber(default=10, min=1, max=10, stepwidth=1, wraparound=True)
+	config.seek.selfdefined_13 = ConfigSelectionNumber(default=15, min=1, max=300, stepwidth=1, wraparound=True)
+	config.seek.selfdefined_46 = ConfigSelectionNumber(default=60, min=1, max=600, stepwidth=1, wraparound=True)
+	config.seek.selfdefined_79 = ConfigSelectionNumber(default=300, min=1, max=1200, stepwidth=1, wraparound=True)
+	config.seek.speeds_forward = ConfigSet(default=[2, 4, 8, 16, 32, 64, 128], choices=[2, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128])
+	config.seek.speeds_backward = ConfigSet(default=[2, 4, 8, 16, 32, 64, 128], choices=[1, 2, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128])
+	config.seek.speeds_slowmotion = ConfigSet(default=[2, 4, 8], choices=[2, 4, 6, 8, 12, 16, 25])
+	config.seek.enter_forward = ConfigSelection(default="2", choices=["2", "4", "6", "8", "12", "16", "24", "32", "48", "64", "96", "128"])
+	config.seek.enter_backward = ConfigSelection(default="1", choices=["1", "2", "4", "6", "8", "12", "16", "24", "32", "48", "64", "96", "128"])
+	config.seek.on_pause = ConfigSelection(default="play", choices=[
+		("play", _("Play")),
+		("step", _("Single step (GOP)")),
+		("last", _("Last speed"))
+	])
+	config.seek.withjumps = ConfigYesNo(default=True)
+	config.seek.withjumps_after_ff_speed = ConfigSelection(default="4", choices=[
+		("1", _("Never")),
+		("2", _("2x")),
+		("4", _("2x, 4x")),
+		("6", _("2x, 4x, 6x")),
+		("8", _("2x, 4x, 6x, 8x"))
+	])
+	choiceList = [(str(x), _("%2.1f Seconds") % (x / 1000.0)) for x in range(200, 1100, 100)] + [(str(int(x * 1000)), _("%2.1f Seconds") % x) for x in (1.2, 1.5, 1.7, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0)]
+	config.seek.withjumps_forwards_ms = ConfigSelection(default="700", choices=choiceList)
+	config.seek.withjumps_backwards_ms = ConfigSelection(default="700", choices=choiceList)
+	config.seek.withjumps_repeat_ms = ConfigSelection(default="200", choices=choiceList[:9])
+	config.seek.withjumps_avoid_zero = ConfigYesNo(default=True)
+
 	# This is already in StartEniga.py.
 	# config.crash = ConfigSubsection()
 
@@ -1621,83 +1710,19 @@ def InitUsageConfig():
 		("end", _("At end"))
 	])
 
-	config.samba = ConfigSubsection()
-	config.samba.enableAutoShare = ConfigYesNo(default=True)
-	config.samba.autoShareAccess = ConfigSelection(default=1, choices=[
-		(0, _("Read Only")),
-		(1, _("Read/Write"))
-	])
+	def updateEnterForward(configElement):
+		if not configElement.value:
+			configElement.value = [2]
+		updateChoices(config.seek.enter_forward, configElement.value)
 
-	config.seek = ConfigSubsection()
-	config.seek.baractivation = ConfigSelection(default="leftright", choices=[
-		("leftright", _("Long Left/Right")),
-		("ffrw", _("Long << / >>"))
-	])
-	config.seek.sensibilityHorizontal = ConfigSelection(default=1.0, choices=[(x, f"{x:.1f}%") for x in [0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0]])
-	config.seek.sensibilityVertical = ConfigSelection(default=2.0, choices=[(x, f"{x:.1f}%") for x in [0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0]])
-	config.seek.arrowSkipMode = ConfigSelection(default="t", choices=[
-		("t", _("Traditional")),
-		("s", _("Symmetrical skips")),
-		("d", _("Defined skips"))
-	])
-	config.seek.numberSkipMode = ConfigSelection(default="s", choices=[
-		("s", _("Symmetrical skips")),
-		("d", _("Defined skips")),
-		("p", _("Percentage skips"))
-	])
-	config.seek.defined = ConfigSubDict()
-	config.seek.defined[13] = ConfigSelectionNumber(default=15, min=1, max=300, stepwidth=1, wraparound=True)
-	config.seek.defined[46] = ConfigSelectionNumber(default=60, min=1, max=600, stepwidth=1, wraparound=True)
-	config.seek.defined[79] = ConfigSelectionNumber(default=300, min=1, max=1200, stepwidth=1, wraparound=True)
-	config.seek.defined[1] = ConfigSelectionNumber(default=-15, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined[2] = ConfigSelectionNumber(default=10, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined[3] = ConfigSelectionNumber(default=15, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined[4] = ConfigSelectionNumber(default=-60, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined[5] = ConfigSelectionNumber(default=30, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined[6] = ConfigSelectionNumber(default=60, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined[7] = ConfigSelectionNumber(default=-300, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined[8] = ConfigSelectionNumber(default=180, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined[9] = ConfigSelectionNumber(default=300, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined[0] = ConfigSelectionNumber(default=300, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined["UP"] = ConfigSelectionNumber(default=180, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined["LEFT"] = ConfigSelectionNumber(default=-10, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined["RIGHT"] = ConfigSelectionNumber(default=15, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined["DOWN"] = ConfigSelectionNumber(default=-120, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined["CUT_13"] = ConfigSelectionNumber(default=10, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined["CUT_46"] = ConfigSelectionNumber(default=30, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined["CUT_79"] = ConfigSelectionNumber(default=90, min=-1800, max=1800, stepwidth=1, wraparound=True)
-	config.seek.defined["CUT_UP"] = ConfigSelectionNumber(default=300, min=-600, max=600, stepwidth=1, wraparound=True)
-	config.seek.defined["CUT_LEFT"] = ConfigSelectionNumber(default=-1, min=-600, max=600, stepwidth=1, wraparound=True)
-	config.seek.defined["CUT_RIGHT"] = ConfigSelectionNumber(default=1, min=-600, max=600, stepwidth=1, wraparound=True)
-	config.seek.defined["CUT_DOWN"] = ConfigSelectionNumber(default=-300, min=-600, max=600, stepwidth=1, wraparound=True)
-	# The following 4 items are legacy and kept for plugin compatibility.
-	config.seek.sensibility = ConfigSelectionNumber(default=10, min=1, max=10, stepwidth=1, wraparound=True)
-	config.seek.selfdefined_13 = ConfigSelectionNumber(default=15, min=1, max=300, stepwidth=1, wraparound=True)
-	config.seek.selfdefined_46 = ConfigSelectionNumber(default=60, min=1, max=600, stepwidth=1, wraparound=True)
-	config.seek.selfdefined_79 = ConfigSelectionNumber(default=300, min=1, max=1200, stepwidth=1, wraparound=True)
-	config.seek.speeds_forward = ConfigSet(default=[2, 4, 8, 16, 32, 64, 128], choices=[2, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128])
-	config.seek.speeds_backward = ConfigSet(default=[2, 4, 8, 16, 32, 64, 128], choices=[1, 2, 4, 6, 8, 12, 16, 24, 32, 48, 64, 96, 128])
-	config.seek.speeds_slowmotion = ConfigSet(default=[2, 4, 8], choices=[2, 4, 6, 8, 12, 16, 25])
-	config.seek.enter_forward = ConfigSelection(default="2", choices=["2", "4", "6", "8", "12", "16", "24", "32", "48", "64", "96", "128"])
-	config.seek.enter_backward = ConfigSelection(default="1", choices=["1", "2", "4", "6", "8", "12", "16", "24", "32", "48", "64", "96", "128"])
-	config.seek.on_pause = ConfigSelection(default="play", choices=[
-		("play", _("Play")),
-		("step", _("Single step (GOP)")),
-		("last", _("Last speed"))
-	])
-	config.seek.withjumps = ConfigYesNo(default=True)
-	config.seek.withjumps_after_ff_speed = ConfigSelection(default="4", choices=[
-		("1", _("Never")),
-		("2", _("2x")),
-		("4", _("2x, 4x")),
-		("6", _("2x, 4x, 6x")),
-		("8", _("2x, 4x, 6x, 8x"))
-	])
-	choiceList = [(str(x), _("%2.1f Seconds") % (x / 1000.0)) for x in range(200, 1100, 100)] + [(str(int(x * 1000)), _("%2.1f Seconds") % x) for x in (1.2, 1.5, 1.7, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0)]
-	config.seek.withjumps_forwards_ms = ConfigSelection(default="700", choices=choiceList)
-	config.seek.withjumps_backwards_ms = ConfigSelection(default="700", choices=choiceList)
-	config.seek.withjumps_repeat_ms = ConfigSelection(default="200", choices=choiceList[:9])
-	config.seek.withjumps_avoid_zero = ConfigYesNo(default=True)
+	config.seek.speeds_forward.addNotifier(updateEnterForward, immediate_feedback=False)
+
+	def updateEnterBackward(configElement):
+		if not configElement.value:
+			configElement.value = [2]
+		updateChoices(config.seek.enter_backward, configElement.value)
+
+	config.seek.speeds_backward.addNotifier(updateEnterBackward, immediate_feedback=False)
 
 	def updateEraseSpeed(el):
 		eBackgroundFileEraser.getInstance().setEraseSpeed(int(el.value))
