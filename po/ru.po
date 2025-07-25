@@ -4854,8 +4854,8 @@ msgstr "Клон ТВ экрана на LCD режим"
 msgid "Close"
 msgstr "Закрыть"
 
-msgid "Close the Seekbar after returning to the starting point"
-msgstr "Закройте Seekbar после возвращения в исходную точку"
+msgid "Close the SeekBar after returning to the starting point"
+msgstr "Закройте SeekBar после возвращения в исходную точку"
 
 msgid "Close CA device at programm end"
 msgstr "Закройте устройство CA по завершении программы"
@@ -15596,10 +15596,10 @@ msgstr "Действия SeekBar"
 msgid "SeekBar activation"
 msgstr "Вызов панели перемотки"
 
-msgid "Seekbar"
+msgid "SeekBar"
 msgstr "Панель перемотки"
 
-msgid "Seekbar sensibility"
+msgid "SeekBar sensibility"
 msgstr "Точность перемотки"
 
 msgid "Seems a background update check is in progress, please try again later."
@@ -16588,7 +16588,7 @@ msgstr "Установите время задержки между повтор
 msgid "Set the global sort method"
 msgstr "Выбор способа сортировки"
 
-msgid "Set the jump-size of the seekbar."
+msgid "Set the jump-size of the SeekBar."
 msgstr "Задайте шаг перехода для панели перемотки."
 
 msgid "Set the password of the OpenWebif from your fallback tuner"
