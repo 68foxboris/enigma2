@@ -4197,7 +4197,7 @@ msgstr "Отменить запись истории обслуживания"
 msgid "Cancel save time shift as movie"
 msgstr "Отменить сохранение таймшифта в виде записи"
 
-msgid "Cancel selection"
+msgid "Cancel the selection"
 msgstr "Отменить выбор"
 
 msgid "Cancel selection and exit"
