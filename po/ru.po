@@ -4182,9 +4182,6 @@ msgstr "Отменить все изменения текста и выйти"
 msgid "Cancel execution?"
 msgstr "Отменить выполнение?"
 
-msgid "Cancel the selection"
-msgstr "Отменить выбор"
-
 msgid "Cancel the scan and exit all menus"
 msgstr "Прервать поиск и закрыть все меню"
 
@@ -4856,6 +4853,9 @@ msgstr "Клон ТВ экрана на LCD режим"
 
 msgid "Close"
 msgstr "Закрыть"
+
+msgid "Close the Seekbar after returning to the starting point"
+msgstr "Закройте Seekbar после возвращения в исходную точку"
 
 msgid "Close CA device at programm end"
 msgstr "Закройте устройство CA по завершении программы"
@@ -15575,8 +15575,8 @@ msgstr "Искать"
 msgid "Seek Actions"
 msgstr "Поиск действий"
 
-msgid "Seek back short"
-msgstr "Перемотка назад"
+msgid "Seek Bar"
+msgstr "Панель поиска"
 
 msgid "Seek backward"
 msgstr "Перемотка назад"
@@ -15587,14 +15587,11 @@ msgstr "Перемотать назад (введите время)"
 msgid "Seek forward"
 msgstr "Перемотка вперёд"
 
-msgid "Seek forward  short"
-msgstr "Перемотка вперёд  короткая"
-
 msgid "Seek forward (enter time)"
 msgstr "Перемотать вперёд (Введите время)"
 
-msgid "Seek forward long"
-msgstr "Перемотка вперёд длинная"
+msgid "SeekBar Actions"
+msgstr "Действия SeekBar"
 
 msgid "SeekBar activation"
 msgstr "Вызов панели перемотки"
@@ -17705,8 +17702,35 @@ msgstr "Перейти назад"
 msgid "Skip empty services"
 msgstr "Пропускать пустые каналы"
 
+#, python-format
+msgid "Skip for '%s' is disabled"
+msgstr "Пропустить для '%s' отключено"
+
 msgid "Skip forward"
 msgstr "Перейти вперёд"
+
+#, python-format
+msgid "Skip forward %d second"
+msgid_plural "Skip forward %d seconds"
+msgstr[0] "Перейти вперед на %d секунду"
+msgstr[1] "Перейти вперед на %d секунд"
+
+#, python-format
+msgid "Skip forward %s%%"
+msgstr "Перейти вперед %s%%"
+
+msgid "Skip backward"
+msgstr "Перейти назад"
+
+#, python-format
+msgid "Skip backward %d second"
+msgid_plural "Skip backward %d seconds"
+msgstr[0] "Перейти назад на %d секунду"
+msgstr[1] "Перейти назад на %d секунд"
+
+#, python-format
+msgid "Skip backward %s%%"
+msgstr "Перейти назад %s%%"
 
 msgid "Skip jumping to live while timeshifting with plugins"
 msgstr "Игнорировать живое вещание во время таймшифта потока от плагинов"
@@ -17725,6 +17749,13 @@ msgstr "Пропустить время для кнопки '%s'"
 
 msgid "Skip time for '%s'/'%s' buttons"
 msgstr "Пропустить время для кнопок '%s'/'%s'"
+
+#, python-format
+msgid "Skip to %s0%% position (Add %s%% on second press)"
+msgstr "Перейти к позиции %s0%% (Добавить %s%% при втором нажатии)"
+
+msgid "Skip to 0% (start) position"
+msgstr "Перейти к позиции 0% (старт)"
 
 msgid "Skip jumping to live TV while timeshifting with plugins"
 msgstr "Пропускайте переходы, чтобы быть во время сдвига во времени с помощью плагинов"
