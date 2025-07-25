@@ -15590,14 +15590,14 @@ msgstr "Перемотка вперёд"
 msgid "Seek forward (enter time)"
 msgstr "Перемотать вперёд (Введите время)"
 
+msgid "SeekBar"
+msgstr "SeekBar"
+
 msgid "SeekBar Actions"
 msgstr "Действия SeekBar"
 
 msgid "SeekBar activation"
-msgstr "Вызов панели перемотки"
-
-msgid "SeekBar"
-msgstr "Панель перемотки"
+msgstr "Активация SeekBar"
 
 msgid "SeekBar sensibility"
 msgstr "Точность перемотки"
