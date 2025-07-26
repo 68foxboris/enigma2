@@ -122,6 +122,10 @@
 		<item level="1" text="check for firmware updates every" description="Choose the time to check for update avilable every...">config.updatecheck.check_update_notifier</item>
 		<item level="1" text="check for firmware updates on start" description="Enable/Disable check for update after reboot or restart box.">config.updatecheck.check_update_on_boot</item>
 	</setup>
+	<setup key="ChkrootSlotManager" title="Slot Manager">
+		<item level="0" text="Target location" description="Choose the target device for the slots.">self.ChkrootSlotManagerLocation</item>
+		<item level="0" text="Slot count" description="Choose the amount of additional slots." conditional="self.ChkrootSlotManagerLocation.value">self.ChkrootSlotManagerSlots</item>
+	</setup>
 	<setup key="DNS" title="DNS Settings">
 		<item level="0" text="DNS mode" description="Select the mode of the DNS.">config.usage.dnsMode</item>
 		<item level="0" text="DNS suffix" description="Define the DNS suffix.">config.usage.dnsSuffix</item>
