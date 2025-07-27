@@ -161,20 +161,20 @@ def InitUsageConfig():
 
 	config.usage.servicetype_icon_mode = ConfigSelection(default="0", choices=[
 		("0", _("None")),
-		("1", _("Left from service name")),
-		("2", _("Right from service name"))
+		("1", _("Left of service name")),
+		("2", _("Right of service name"))
 	])
 	config.usage.servicetype_icon_mode.addNotifier(refreshServiceList)
 	config.usage.crypto_icon_mode = ConfigSelection(default="0", choices=[
 		("0", _("None")),
-		("1", _("Left from service name")),
-		("2", _("Right from service name"))
+		("1", _("Left of service name")),
+		("2", _("Right of service name"))
 	])
 	config.usage.crypto_icon_mode.addNotifier(refreshServiceList)
 	config.usage.record_indicator_mode = ConfigSelection(default="3", choices=[
 		("0", _("None")),
-		("1", _("Left from service name")),
-		("2", _("Right from service name")),
+		("1", _("Left of service name")),
+		("2", _("Right of service name")),
 		("3", _("Red colored"))
 	])
 	config.usage.record_indicator_mode.addNotifier(refreshServiceList)
@@ -277,8 +277,8 @@ def InitUsageConfig():
 	config.channelSelection.showCryptoIcon = ConfigYesNo(default=False)
 	config.channelSelection.recordIndicatorMode = ConfigSelection(default=2, choices=[
 		(0, _("None")),
-		(1, _("Record Icon")),
-		(2, _("Colored Text"))
+		(1, _("Record icon")),
+		(2, _("Colored text"))
 	])
 	config.channelSelection.piconRatio = ConfigSelection(default=167, choices=[
 		(167, _("XPicon, ZZZPicon")),
@@ -545,8 +545,8 @@ def InitUsageConfig():
 	config.usage.movielist_trashcan_days = ConfigNumber(default=8)
 	config.usage.movielist_trashcan_reserve = ConfigNumber(default=40)
 	config.usage.on_movie_start = ConfigSelection(default="resume", choices=[
-		("ask yes", _("Ask user (with default as 'Yes')")),
-		("ask no", _("Ask user (with default as 'No')")),
+		("ask yes", _("Ask user (with default of 'Yes')")),
+		("ask no", _("Ask user (with default of 'No')")),
 		("resume", _("Resume from last position")),
 		("beginning", _("Start from the beginning"))
 	])
@@ -812,7 +812,7 @@ def InitUsageConfig():
 
 	config.usage.show_in_operation = ConfigSelection(default="time", choices=[
 		("time", _("Time")),
-		("number", _("Channel Number")),
+		("number", _("Channel number")),
 		("nothing", _("Nothing"))
 	])
 
@@ -829,7 +829,7 @@ def InitUsageConfig():
 
 	config.usage.swap_snr_on_osd = ConfigYesNo(default=False)
 	choiceList = [
-		("0", _("Skin Setting")),
+		("0", _("Skin setting")),
 		("1", _("Minutes")),
 		("2", _("Minutes Seconds")),
 		("3", _("Hours Minutes")),
@@ -1475,7 +1475,7 @@ def InitUsageConfig():
 	harddiskmanager.on_partition_list_change.append(partitionListChanged)
 
 	choiceList = [
-		("", _("Auto Detect")),
+		("", _("Auto detect")),
 		("ETSI", _("Generic")),
 		("AUS", _("Australia"))
 	]
@@ -1553,8 +1553,8 @@ def InitUsageConfig():
 
 	config.seek = ConfigSubsection()
 	config.seek.baractivation = ConfigSelection(default="leftright", choices=[
-		("leftright", _("Long Left/Right")),
-		("ffrw", _("Long << / >>"))
+		("leftright", _("Long LEFT/RIGHT")),
+		("ffrw", _("Long <</>>"))
 	])
 	config.seek.sensibilityHorizontal = ConfigSelection(default=1.0, choices=[(x, f"{x:.1f}%") for x in [0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0]])
 	config.seek.sensibilityVertical = ConfigSelection(default=2.0, choices=[(x, f"{x:.1f}%") for x in [0.1, 0.2, 0.5, 1.0, 2.0, 5.0, 10.0]])
@@ -1743,7 +1743,7 @@ def InitUsageConfig():
 	config.misc.erase_speed.addNotifier(updateEraseSpeed, immediate_feedback=False)
 	config.misc.erase_flags = ConfigSelection(default="1", choices=[
 		("0", _("Disable")),
-		("1", _("Internal hdd only")),
+		("1", _("Internal disk only")),
 		("3", _("Everywhere"))
 	])
 	config.misc.erase_flags.addNotifier(updateEraseFlags, immediate_feedback=False)

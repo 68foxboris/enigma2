@@ -2507,6 +2507,9 @@ msgstr "Все каналы оператора"
 msgid "All slots"
 msgstr "Все слоты"
 
+msgid "All up/down"
+msgstr "Все вверх/вниз"
+
 msgid "Allocate"
 msgstr "Выделить"
 
@@ -2808,6 +2811,9 @@ msgid ""
 msgstr ""
 "Уверены, что хотите удалить\n"
 "следующие копии\n"
+
+msgid "Are you sure you want to disable Chkroot Multiboot?"
+msgstr "Вы уверены, что хотите отключить Chkroot Multiboot?"
 
 msgid "Are you sure you want to delete all selected logs:\n"
 msgstr "Действительно удалить все выбранные журналы:\n"
@@ -3116,6 +3122,9 @@ msgstr "Авто"
 
 msgid "Auto flesh"
 msgstr "Авто-флеш"
+
+msgid "Auto detect"
+msgstr "Автоматическое определение"
 
 msgid "Auto focus"
 msgstr "Автофокусировка"
@@ -3539,9 +3548,6 @@ msgstr "Битрейт:"
 
 msgid "Black"
 msgstr "Чёрный"
-
-msgid "Black Screen"
-msgstr "Чёрный экран"
 
 msgid "Black screen"
 msgstr "Чёрный экран"
@@ -4455,6 +4461,9 @@ msgstr "Показывать МиниТВ в списке каналов*"
 
 msgid "Channel list type"
 msgstr "Тип списка каналов"
+
+msgid "Channel number"
+msgstr "Номер канала"
 
 msgid "Channel not in services list"
 msgstr "Канал не в списке каналов"
@@ -6838,12 +6847,14 @@ msgstr "Отключено"
 msgid "Disable Chkroot"
 msgstr "Отключить Chkroot"
 
+msgid "Disabling Chkroot failed!"
+msgstr "Отключение Chkroot не удалось!"
+
 msgid "Disable FCC during recordings"
 msgstr "Отключить FCC во время записи"
 
 msgid "Disable Fast Channel Change"
 msgstr "Отключить быструю смену каналов"
-
 
 msgid "Disable Animations"
 msgstr "Отключить анимацию"
@@ -10367,6 +10378,9 @@ msgstr "Чересстрочная:"
 msgid "Internal"
 msgstr "Внутренний"
 
+msgid "Internal disk only"
+msgstr "Только внутренний диск"
+
 msgid "Internal Flash"
 msgstr "Встроенная флеш-память"
 
@@ -12367,6 +12381,9 @@ msgstr "Ничего"
 msgid "None:"
 msgstr "Нет:"
 
+msgid "Non-flashing"
+msgstr ""
+
 msgid "Nonlinear"
 msgstr "Нелинейный"
 
@@ -12374,7 +12391,7 @@ msgid "Norfolk Island"
 msgstr "Остров Норфолк"
 
 msgid "Normal"
-msgstr "Нормальный (Декодирование)"
+msgstr "Нормальный"
 
 msgid "Normal mode"
 msgstr "Нормальный режим"
@@ -14022,7 +14039,10 @@ msgid "Press OK to use this locale.  [%s]"
 msgstr "Нажмите OK, чтобы использовать эту локаль.  [%s]"
 
 msgid "Press the UP/DOWN buttons to select a slot and press OK or GREEN to reboot to that image. If available, YELLOW will either delete or wipe the image. A deleted image can be restored with the BLUE button. A wiped image is completely removed and cannot be restored!"
-msgstr "Нажимайте кнопки ВВЕРХ/ВНИЗ, для выбора слота, и нажмите OK или ЗЕЛЁНУЮ кнопку для перезагрузки и запуска этого образа. ЖЁЛТАЯ кнопка, если активна, удалит или сотрёт образ. Удалённый образ можно восстановить СИНЕЙ кнопкой. Стёртый образ удаляется окончательно и восстановить его невозможно!"
+msgstr "С помощью кнопок «ВВЕРХ»/«ВНИЗ» выберите слот и нажмите кнопку «OK» или ЗЕЛЁНУЮ кнопку, чтобы перезагрузить устройство с этого образа. Если образ доступен, ЖЁЛТАЯ кнопка удалит или сотрёт его. Удалённый образ можно восстановить с помощью СИНЕЙ кнопки. Удалённый образ полностью удаляется и не подлежит восстановлению!"
+
+msgid "Press the UP/DOWN buttons to select a slot, then press OK or GREEN to reboot into that image. If available, YELLOW will disable Multiboot, delete, or wipe the selected image. Press BLUE to add more slots."
+msgstr "Press the UP/DOWN buttons to select a slot, then press OK or GREEN to reboot into that image. If available, YELLOW will disable Multiboot, delete, or wipe the selected image. Press BLUE to add more slots."
 
 msgid "Press OK, save and exit..."
 msgstr "Нажмите ОК, сохранить и выйти..."
@@ -14443,6 +14463,9 @@ msgstr "Перезагрузить %s %s сейчас?"
 
 msgid "Rec"
 msgstr "Запись"
+
+msgid "REC symbol"
+msgstr "символ REC"
 
 msgid "Recall to previous service"
 msgstr "Возврат на предыдущий канал"
@@ -15494,6 +15517,9 @@ msgstr "Перейти назад (введите время)"
 msgid "Skip forward (enter time)"
 msgstr "Перейти вперед (введите время)"
 
+msgid "Scheduler standby"
+msgstr "Планировщик в режиме ожидания"
+
 msgid "Schedule EPG and channel list import"
 msgstr "Расписание импорта ТВ-гида и списка каналов"
 
@@ -16343,6 +16369,12 @@ msgstr "Информация о канале"
 
 msgid "Service Name"
 msgstr "Название канала"
+
+msgid "Service number and service name"
+msgstr "Номер канала и название канала"
+
+msgid "Service number, picon and service name"
+msgstr "Номер канала, пиктограмма и название канала"
 
 msgid "Service Title mode"
 msgstr "Режим названия канала"
@@ -17675,7 +17707,7 @@ msgstr "Пакеты скинов"
 msgid "Skin"
 msgstr "Скин"
 
-msgid "Skin Setting"
+msgid "Skin setting"
 msgstr "Настройки скина"
 
 msgid "Skin Settings"
@@ -17683,9 +17715,6 @@ msgstr "Выбор скина"
 
 msgid "SkinSelection"
 msgstr "Выбор скина"
-
-msgid "Skin setting"
-msgstr "Настройки скина"
 
 msgid "Skin Setup"
 msgstr "Выбор скина"
@@ -17714,6 +17743,7 @@ msgid "Skip forward %d second"
 msgid_plural "Skip forward %d seconds"
 msgstr[0] "Перейти вперед на %d секунду"
 msgstr[1] "Перейти вперед на %d секунд"
+msgstr[2] "Перейти вперед на %d секунд"
 
 #, python-format
 msgid "Skip forward %s%%"
@@ -17727,6 +17757,7 @@ msgid "Skip backward %d second"
 msgid_plural "Skip backward %d seconds"
 msgstr[0] "Перейти назад на %d секунду"
 msgstr[1] "Перейти назад на %d секунд"
+msgstr[2] "Перейти назад на %d секунд"
 
 #, python-format
 msgid "Skip backward %s%%"
@@ -17856,6 +17887,10 @@ msgstr "Слот '%s' %s"
 #, python-format
 msgid "Slot '%s' %s: %s%s"
 msgstr "Слот '%s' %s: %s%s"
+
+#, python-format
+msgid "Slots have been extended by %d..\n"
+msgstr "Слоты были расширены на %d..\n"
 
 msgid "Slot Manager"
 msgstr "Менеджер слотов"
@@ -18259,6 +18294,9 @@ msgstr "Старт через несколько секунд"
 
 msgid "Startup the set top box in standby"
 msgstr "Переход в режим ожидания при включении ресивера"
+
+msgid "Startup device not found!"
+msgstr "Устройство запуска не найдено!"
 
 msgid "Startup to Standby"
 msgstr "Режим ожидания при старте"
@@ -20241,6 +20279,9 @@ msgstr ""
 "Турбо: Одна перезагрузка после прошивки\n"
 "Быстро: Одна перезагрузка после прошивки, одна перезагрузка после восстановления\n"
 "Медленно: Одна перезагрузка после прошивки, одна перезагрузка после восстановления в GUI"
+
+msgid "Turbo"
+msgstr "Турбо"
 
 msgid "Turkey"
 msgstr "Турция"
