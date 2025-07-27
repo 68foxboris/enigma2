@@ -8,13 +8,13 @@ from Components.Harddisk import harddiskmanager
 from Components.International import international
 from Components.Console import Console
 from Components.config import ConfigBoolean, ConfigClock, ConfigDictionarySet, ConfigDirectory, ConfigFloat, ConfigInteger, ConfigIP, ConfigLocations, ConfigNumber, ConfigPassword, ConfigSelection, ConfigSelectionNumber, ConfigSequence, ConfigSet, ConfigSlider, ConfigSubDict, ConfigSubsection, ConfigText, ConfigYesNo, ConfigEnableDisable, NoSave, config, configfile
-from Tools.Directories import SCOPE_HDD, SCOPE_TIMESHIFT, defaultRecordingLocation, resolveFilename, fileWriteLine, fileReadXML, SCOPE_SKIN
 from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eSubtitleSettings, eSettings, eDVBLocalTimeHandler, eEPGCache
 from Components.About import GetIPsFromNetworkInterfaces
 from Components.NimManager import nimmanager
 from Components.Renderer.FrontpanelLed import ledPatterns, PATTERN_ON, PATTERN_OFF, PATTERN_BLINK
 from Components.ServiceList import refreshServiceList
 from Components.SystemInfo import BoxInfo
+from Tools.Directories import SCOPE_HDD, SCOPE_SKIN, SCOPE_TIMESHIFT, defaultRecordingLocation, fileReadLines, fileReadXML, fileWriteLine, fileWriteLines, resolveFilename
 
 MODULE_NAME = __name__.split(".")[-1]
 DEFAULTKEYMAP = eEnv.resolve("${datadir}/enigma2/keymap.xml")
@@ -35,7 +35,7 @@ def InitUsageConfig():
 	remoteSelectable = False
 	if AvailRemotes is not None:
 		for remote in AvailRemotes:
-			pngfile = "%s.png" % remote
+			pngfile = f"{remote}.png"
 			if isfile(pngfile):
 				RemoteChoices.append(remote.split("/")[-1])
 
@@ -243,7 +243,7 @@ def InitUsageConfig():
 		("standard", _("Standard")),
 		("keep", _("Keep service")),
 		("reverseB", _("Reverse bouquet buttons")),
-		("keep reverseB", "%s + %s" % (_("Keep service"), _("Reverse bouquet buttons")))
+		("keep reverseB", f"{_("Keep service")} + {_("Reverse bouquet buttons")}")
 	])
 
 	config.usage.shutdownOK = ConfigBoolean(default=True)
@@ -409,7 +409,7 @@ def InitUsageConfig():
 	config.usage.tuxtxt_TTFShiftX.addNotifier(patchTuxtxtConfFile, initial_call=False, immediate_feedback=False)
 	config.usage.tuxtxt_TTFWidthFactor16.addNotifier(patchTuxtxtConfFile, initial_call=False, immediate_feedback=False)
 	config.usage.tuxtxt_TTFHeightFactor16.addNotifier(patchTuxtxtConfFile, initial_call=False, immediate_feedback=False)
-	config.usage.tuxtxt_CleanAlgo.addNotifier(patchTuxtxtConfFile, initial_call=False, immediate_feedback=False)
+	config.usage.tuxtxt_CleanAlgo.addNotifier(patchTuxtxtConfFile, initial_call=True, immediate_feedback=False)
 
 	config.usage.sort_settings = ConfigYesNo(default=False)
 	choiceList = [
@@ -461,17 +461,17 @@ def InitUsageConfig():
 			config.usage.default_path.value = savedPath
 	config.usage.default_path.save()
 	currentPath = config.usage.default_path.value
-	print("[UsageConfig] Checking/Creating current movie directory '%s'." % currentPath)
+	print(f"[UsageConfig] Checking/Creating current movie directory '{currentPath}'.")
 	try:
 		makedirs(currentPath, 0o755, exist_ok=True)
 	except OSError as err:
-		print("[UsageConfig] Error %d: Unable to create current movie directory '%s'!  (%s)" % (err.errno, currentPath, err.strerror))
+		print(f"[UsageConfig] Error {err.errno}: Unable to create current movie directory '{currentPath}'!  ({err.strerror})")
 		if defaultPath != currentPath:
-			print("[UsageConfig] Checking/Creating default movie directory '%s'." % defaultPath)
+			print(f"[UsageConfig] Checking/Creating default movie directory '{defaultPath}'.")
 			try:
 				makedirs(defaultPath, 0o755, exist_ok=True)
 			except OSError as err:
-				print("[UsageConfig] Error %d: Unable to create default movie directory '%s'!  (%s)" % (err.errno, defaultPath, err.strerror))
+				print(f"[UsageConfig] Error {err.errno}: Unable to create default movie directory '{defaultPath}'!  ({err.strerror})")
 
 	choiceList = [
 		("<default>", "<Default>"),
@@ -711,8 +711,8 @@ def InitUsageConfig():
 
 	def remote_fallback_changed(configElement):
 		if configElement.value:
-			configElement.value = "%s%s" % (not configElement.value.startswith("http://") and "http://" or "", configElement.value)
-			configElement.value = "%s%s" % (configElement.value, configElement.value.count(":") == 1 and ":8001" or "")
+			configElement.value = f"{not configElement.value.startswith("http://") and "http://" or ""}{configElement.value}"
+			configElement.value = f"{configElement.value}{configElement.value.count(":") == 1 and ":8001" or ""}"
 	config.usage.remote_fallback = ConfigText(default="", fixed_size=False)
 	config.usage.remote_fallback.addNotifier(remote_fallback_changed, immediate_feedback=False)
 	config.usage.remote_fallback_import_url = ConfigText(default="", fixed_size=False)
@@ -724,7 +724,12 @@ def InitUsageConfig():
 	config.usage.remote_fallback_dvb_c.addNotifier(remote_fallback_changed, immediate_feedback=False)
 	config.usage.remote_fallback_atsc = ConfigText(default="", fixed_size=False)
 	config.usage.remote_fallback_atsc.addNotifier(remote_fallback_changed, immediate_feedback=False)
-	config.usage.remote_fallback_import = ConfigSelection(default="", choices=[("", _("No")), ("channels", _("Channels only")), ("channels_epg", _("Channels and EPG")), ("epg", _("EPG only"))])
+	config.usage.remote_fallback_import = ConfigSelection(default="", choices=[
+		("", _("No")),
+		("channels", _("Channels only")),
+		("channels_epg", _("Channels and EPG")),
+		("epg", _("EPG only"))
+	])
 	config.usage.remote_fallback_import_restart = ConfigYesNo(default=False)
 	config.usage.remote_fallback_import_standby = ConfigYesNo(default=False)
 	config.usage.remote_fallback_ok = ConfigYesNo(default=False)
@@ -736,7 +741,7 @@ def InitUsageConfig():
 	config.usage.remote_fallback_openwebif_userid = ConfigText(default="root")
 	config.usage.remote_fallback_openwebif_password = ConfigPassword(default="default")
 	config.usage.remote_fallback_openwebif_port = ConfigInteger(default=80, limits=(0, 65535))
-	config.usage.remote_fallback_dvbt_region = ConfigText(default="fallback DVB-T/T2 Europe")
+	config.usage.remote_fallback_dvbt_region = ConfigText(default="Fallback DVB-T/T2 Europe")
 
 	def setHttpStartDelay(configElement):
 		eSettings.setHttpStartDelay(configElement.value)
@@ -1070,7 +1075,7 @@ def InitUsageConfig():
 	try:
 		dateEnabled, timeEnabled = parameters.get("AllowUserDatesAndTimes", (0, 0))
 	except Exception as error:
-		print("[UsageConfig] Error loading 'AllowUserDatesAndTimes' skin parameter! (%s)" % error)
+		print(f"[UsageConfig] Error loading 'AllowUserDatesAndTimes' skin parameter! ({error})")
 		dateEnabled, timeEnabled = (0, 0)
 	if dateEnabled:
 		config.usage.date.enabled.value = True
@@ -1193,7 +1198,7 @@ def InitUsageConfig():
 	try:
 		dateDisplayEnabled, timeDisplayEnabled = parameters.get("AllowUserDatesAndTimesDisplay", (0, 0))
 	except Exception as error:
-		print("[UsageConfig] Error loading 'AllowUserDatesAndTimesDisplay' display skin parameter! (%s)" % error)
+		print(f"[UsageConfig] Error loading 'AllowUserDatesAndTimesDisplay' display skin parameter! ({error})")
 		dateDisplayEnabled, timeDisplayEnabled = (0, 0)
 	if dateDisplayEnabled:
 		config.usage.date.enabled_display.value = True
@@ -1438,7 +1443,7 @@ def InitUsageConfig():
 				hddChoices.append((partition.mountpoint, path))
 	config.misc.epgcachepath = ConfigSelection(default="/etc/enigma2/", choices=hddChoices)
 	config.misc.epgcachefilename = ConfigText(default="epg", fixed_size=False)
-	epgCacheFilename = "%s.dat" % config.misc.epgcachefilename.value.replace(".dat", "")
+	epgCacheFilename = f"{config.misc.epgcachefilename.value.replace(".dat", "")}.dat"
 	config.misc.epgcache_filename = ConfigText(default=pathjoin(config.misc.epgcachepath.value, epgCacheFilename))
 
 	def EpgCacheChanged(configElement):
@@ -1522,7 +1527,7 @@ def InitUsageConfig():
 
 	keymapchoices = []
 	for kmap in KM.keys():
-		kmfile = eEnv.resolve("${datadir}/enigma2/keymap.%s" % kmap)
+		kmfile = eEnv.resolve("${datadir}/enigma2/keymap." + kmap)
 		if isfile(kmfile):
 			keymapchoices.append((kmfile, KM.get(kmap)))
 
@@ -1682,7 +1687,7 @@ def InitUsageConfig():
 		try:
 			makedirs(debugPath, 0o755, exist_ok=True)
 		except OSError as err:
-			print("[UsageConfig] Error %d: Unable to create log directory '%s'!  (%s)" % (err.errno, debugPath, err.strerror))
+			print(f"[UsageConfig] Error {err.errno}: Unable to create log directory '{debugPath}'!  ({err.strerror})")
 
 	choiceList = [("/home/root/logs/", "/home/root/")]
 	for partition in harddiskmanager.getMountedPartitions():
@@ -2066,7 +2071,13 @@ def InitUsageConfig():
 	def setDVBSubtitleColor(configElement):
 		eSubtitleSettings.setDVBSubtitleColor(configElement.value)
 
-	config.subtitles.dvb_subtitles_color = ConfigSelection(default=0, choices=[(0, _("Original")), (1, _("Yellow")), (2, _("Green")), (3, _("Magenta")), (4, _("Cyan"))])
+	config.subtitles.dvb_subtitles_color = ConfigSelection(default=0, choices=[
+		(0, _("Original")),
+		(1, _("Yellow")),
+		(2, _("Green")),
+		(3, _("Magenta")),
+		(4, _("Cyan"))
+	])
 	config.subtitles.dvb_subtitles_color.addNotifier(setDVBSubtitleColor)
 
 	def setDVBSubtitleOriginalPosition(configElement):
@@ -2522,7 +2533,6 @@ def preferredTunerChoicesUpdate(update=False):
 
 
 def patchTuxtxtConfFile(dummyConfigElement):
-	print("[UsageConfig] TuxTxt: Patching tuxtxt2.conf.")
 	if config.usage.tuxtxt_font_and_res.value == "X11_SD":
 		tuxtxt2 = [
 			["UseTTF", 0],
@@ -2596,21 +2606,25 @@ def patchTuxtxtConfFile(dummyConfigElement):
 	tuxtxt2.append(["CleanAlgo", config.usage.tuxtxt_CleanAlgo.value])
 
 	TUXTXT_CFG_FILE = "/etc/tuxtxt/tuxtxt2.conf"
-	command = "sed -i -r '"
-	for f in tuxtxt2:
-		# Replace keyword (%s) followed by any value ([-0-9]+) by that keyword \1 and the new value %d.
-		command += r"s|(%s)\s+([-0-9]+)|\\1 %d|;" % (f[0], f[1])
-	command += "' %s" % TUXTXT_CFG_FILE
-	for f in tuxtxt2:
-		# If keyword is not found in file, append keyword and value.
-		command += " ; if ! grep -q '%s' %s ; then echo '%s %d' >> %s ; fi" % (f[0], TUXTXT_CFG_FILE, f[0], f[1], TUXTXT_CFG_FILE)
-	try:
-		Console().ePopen(command)
-	except:
-		print("[UsageConfig] TuxTxt Error: Failed to patch %s!" % TUXTXT_CFG_FILE)
-	print("[UsageConfig] TuxTxt: Patched tuxtxt2.conf.")
+	oldLines = fileReadLines(TUXTXT_CFG_FILE, [], source=MODULE_NAME)
+	oldLines.sort()
+	lines = [line.split() for line in oldLines if line]
+	keys = [f[0] for f in tuxtxt2]
 
-	config.usage.tuxtxt_ConfFileHasBeenPatched.setValue(True)
+	newLines = []
+	for line in lines:
+		if line[0] not in keys:
+			newLines.append(f"{line[0]} {line[1]}")
+
+	for line in tuxtxt2:
+		newLines.append(f"{line[0]} {line[1]}")
+
+	newLines.sort()
+	if oldLines != newLines:  # Only write if there are changes.
+		fileWriteLines(TUXTXT_CFG_FILE, newLines, source=MODULE_NAME)
+		print(f"[UsageConfig] TuxTxt: Patched {TUXTXT_CFG_FILE}.")
+
+	config.usage.tuxtxt_ConfFileHasBeenPatched.setValue(True)  # If False then patchTuxtxtConfFile will be called from the tutxt plugin.
 
 
 def dropEPGNewLines(text):
