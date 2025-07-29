@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-07-23 14:05+0300\n"
+"PO-Revision-Date: 2025-07-29 21:18+0300\n"
 "Last-Translator: kvinto\n"
 "Language-Team: kvinto\n"
 "Language: uk_UA\n"
@@ -799,11 +799,23 @@ msgstr "Додати"
 msgid "Add Current"
 msgstr "Додати поточний"
 
+msgid "Add Service"
+msgstr "Додати Канал"
+
+msgid "Add a RADIO service to the Volume Offset list"
+msgstr "Додати Радіо-канал до списку зміщення гучності"
+
+msgid "Add a TV service to the Volume Offset list"
+msgstr "Додати ТВ-канал до списку зміщення гучності"
+
 msgid "Add a mark"
 msgstr "Додати маркер"
 
 msgid "Add a new title"
 msgstr "Додати нову назву"
+
+msgid "Add a service to the Volume Offset list"
+msgstr "Додайте службу до списку зміщення гучності"
 
 msgid "Add alternatives"
 msgstr "Додати альтернативу"
@@ -871,7 +883,7 @@ msgstr "Додати канал в цей фаворит?"
 msgid "Add timer"
 msgstr "Додати таймер"
 
-msgid "Add the current service to the Volume Offsets list"
+msgid "Add the current/active service to the Volume Offset list"
 msgstr "Додайте поточну службу до списку зміщення гучності"
 
 msgid "Add title"
@@ -888,6 +900,9 @@ msgstr "Додати/Видалити виділений плагін до/зі 
 
 msgid "Add/Remove highlighted plugin to/from remove list"
 msgstr "Додати/Видалити виділений плагін до/із списку видалення"
+
+msgid "Add/Remove the current service to/from the Volume Offset list"
+msgstr "Додати/видалити поточний канал до/із списку зміщення звуку"
 
 msgid "Add to parental protection"
 msgstr "Додати до батьківського контролю"
@@ -987,6 +1002,9 @@ msgstr "Всі канали провайдера"
 
 msgid "All slots"
 msgstr "Всі слоти"
+
+msgid "All up/down"
+msgstr "Всі вверх/вниз"
 
 msgid "Allocate"
 msgstr "Призначити"
@@ -1152,6 +1170,9 @@ msgstr "Арабська"
 
 msgid "Are you sure to delete image:"
 msgstr "Ви впевнені, що хочете видалити цей запис:"
+
+msgid "Are you sure you want to disable Chkroot Multiboot?"
+msgstr "Ви впевнені, що хочете вимкнути Chkroot Multiboot?"
 
 msgid "Are you sure to purge all deleted user bouquets?"
 msgstr "Дійсно хочете остаточно видалити ці фаворити?"
@@ -1367,6 +1388,9 @@ msgstr "Авто DiSEqC"
 msgid "Auto EXIF Orientation rotation/flipping"
 msgstr "Авто EXIF обертання орієнтація/гортати"
 
+msgid "Auto Language Settings"
+msgstr "Автовибір мови"
+
 msgid "AutoRefresh"
 msgstr "Авто Оновлення"
 
@@ -1385,14 +1409,14 @@ msgstr "Автофокусування почалося..."
 msgid "Auto language selection"
 msgstr "Автоматичний вибір мови"
 
-msgid "Auto Language Settings"
-msgstr "Автовибір мови"
-
 msgid "Auto play last service in radio mode"
 msgstr "Автоматичне відтворення останнього каналу в Радіо режимі"
 
 msgid "Auto scart switching"
 msgstr "Авто переключення на скарт"
+
+msgid "Auto show volume level"
+msgstr "Автоматичне відображення рівня гучності"
 
 msgid "Autoinstalling %s"
 msgstr "Автовстановлення %s"
@@ -1462,6 +1486,9 @@ msgstr "Доступні регіони:"
 
 msgid "Axas E4HD Ultra"
 msgstr "Axas E4HD Ultra"
+
+msgid "Avoid getting stuck (at the expense of some stuttering) when the jump time is smaller than the time between I-frames."
+msgstr "Дозволяє уникнути гальмування кадру (за рахунок деякого застигання), коли час переходу коротше часу між I-фреймами."
 
 msgid "Azerbaijan"
 msgstr "Азербайджан"
@@ -2111,6 +2138,9 @@ msgstr "Тільки канали"
 msgid "Channel name"
 msgstr "Назва каналу"
 
+msgid "Channel number"
+msgstr "Номер каналу"
+
 msgid "Chap."
 msgstr "Розд."
 
@@ -2613,7 +2643,7 @@ msgstr "Налаштування тривалості в годинах, кол�
 msgid "Configure the duration in minutes for the screensaver."
 msgstr "Через якийсь час показувати заставку."
 
-msgid "Configure the duration in minutes for the sleeptimer. Select this entry and press blue to start/restar the sleeptimer or use yellow for stop active sleeptimer."
+msgid "Configure the duration in minutes for the sleeptimer. Select this entry and press blue to start/restart the sleeptimer or use yellow for stop active sleeptimer."
 msgstr "Налаштуйте тривалість таймера сну в хвилинах. Виберіть цей запис і натисніть синю, щоб запустити/перезапустити таймер сну, або скористайтеся жовтою, щоб зупинити активний таймер сну."
 
 msgid "Configure the duration when the receiver should go to shut down in case the receiver is in standby mode."
@@ -2885,6 +2915,9 @@ msgstr "Зверніться до специфікації Вашого двиг
 
 msgid "Content does not fit on DVD!"
 msgstr "Інформація не поміститься на DVD!!"
+
+msgid "Context Menu"
+msgstr "Контекстне меню"
 
 msgid "Continue"
 msgstr "Продовжити"
@@ -3235,6 +3268,147 @@ msgstr "Ввести дата/час"
 msgid "Date style"
 msgstr "Стиль дати"
 
+msgid "Day D Mon"
+msgstr "День Д Міс"
+
+msgid "Day D-Mon"
+msgstr "День Д-Міс"
+
+msgid "Day D/M"
+msgstr "День Д/М"
+
+msgid "Day D/MM"
+msgstr "День Д/ММ"
+
+msgid "Day DD Mon"
+msgstr "День ДД ММ"
+
+msgid "Day DD-Mon"
+msgstr "День ДД-ММ"
+
+msgid "Day DD/M"
+msgstr "День ДД/М"
+
+msgid "Day DD/MM"
+msgstr "День ДД/ММ"
+
+msgid "Day M/D"
+msgstr "День М/Д"
+
+msgid "Day M/DD"
+msgstr "День М/ДД"
+
+msgid "Day MM/D"
+msgstr "День ММ/Д"
+
+msgid "Day MM/DD"
+msgstr "День ММ/ДД"
+
+msgid "Day Mon D"
+msgstr "День Міс Д"
+
+msgid "Day Mon DD"
+msgstr "День Міс ДД"
+
+msgid "Day Mon-D"
+msgstr "День Мшс-Д"
+
+msgid "Day Mon-DD"
+msgstr "День Міс-ДД"
+
+msgid "Day of week"
+msgstr "День тижня"
+
+msgid "Dayname D Month Year"
+msgstr "Субота 1 2 2020"
+
+msgid "Dayname D-Month-Year"
+msgstr "Субота 1-2-2020"
+
+msgid "Dayname D. Month Year"
+msgstr "Субота 1. 2 2020"
+
+msgid "Dayname D.M.Year"
+msgstr "Субота 1.2.2020"
+
+msgid "Dayname D.MM.Year"
+msgstr "Субота 1.02.2020"
+
+msgid "Dayname D/M/Year"
+msgstr "Субота 1/2/2020"
+
+msgid "Dayname D/MM/Year"
+msgstr "Субота 1/02/2020"
+
+msgid "Dayname DD Month Year"
+msgstr "Субота 01 02 2020"
+
+msgid "Dayname DD-Month-Year"
+msgstr "Субота 01-02-2020"
+
+msgid "Dayname DD. Month Year"
+msgstr "Субота 01. 2 2020"
+
+msgid "Dayname DD.M.Year"
+msgstr "Субота 01.2.2020"
+
+msgid "Dayname DD.MM.Year"
+msgstr "Субота 01.02.2020"
+
+msgid "Dayname DD/M/Year"
+msgstr "Субота 01/2/2020"
+
+msgid "Dayname DD/MM/Year"
+msgstr "Субота 01/02/2020"
+
+msgid "Dayname M/D/Year"
+msgstr "Субота 2/1/2020"
+
+msgid "Dayname M/DD/Year"
+msgstr "Субота 2/01/2020"
+
+msgid "Dayname MM/D/Year"
+msgstr "Субота 02/1/2020"
+
+msgid "Dayname MM/DD/Year"
+msgstr "Субота 02/01/2020"
+
+msgid "Dayname Month D Year"
+msgstr "Субота 2 1 2020"
+
+msgid "Dayname Month DD Year"
+msgstr "Субота 2 01 2020"
+
+msgid "Dayname Month-D-Year"
+msgstr "Субота 2-1-2020"
+
+msgid "Dayname Month-DD-Year"
+msgstr "Субота 2-01-2020"
+
+msgid "Dayname Year Month D"
+msgstr "Субота 2020 2 1"
+
+msgid "Dayname Year Month DD"
+msgstr "Субота 2020 2 01"
+
+msgid "Dayname Year-Month-D"
+msgstr "Субота 2020-2-1"
+
+msgid "Dayname Year-Month-DD"
+msgstr "Субота 2020-2-01"
+
+msgid "Dayname Year/M/D"
+msgstr "Субота 2020/2/1"
+
+msgid "Dayname Year/M/DD"
+msgstr "Субота 2020/2/01"
+
+msgid "Dayname Year/MM/D"
+msgstr "Субота 2020/02/1"
+
+msgid "Dayname Year/MM/DD"
+msgstr "Субота 2020/02/01"
+
 msgid "Deactivate Expander"
 msgstr "Деактивувати Розширювач"
 
@@ -3318,6 +3492,18 @@ msgstr "Визначені пропуски"
 
 msgid "Defined volume offset"
 msgstr "Визначений зсув звуку"
+
+msgid "Defines how fast the time jumps are repeated. Values lower than 500ms may be problematic with NAS."
+msgstr "Визначає час повторного запиту. Значення нижче 500 мс можуть бути проблематичними з NAS."
+
+msgid "Defines the jump distance for backward jumps. The value is multiplied by the rewind speed, e.g. -4x. Values significantly lower than 2s may not work with all media files."
+msgstr "Визначає часовий інтервал зворотного перемотування. Значення множаться на швидкість зворотного перемотування, наприклад -4х. Значення нижче 2s можуть працювати не з усіма медіафайлами."
+
+msgid "Defines the jump distance for forward jumps. The value is multiplied by the wind speed, e.g. 4x. Values significantly lower than 4s may not work with all media files."
+msgstr "Визначає часовий інтервал перемотування вперед. Значення множаться на швидкість перемотування вперед, наприклад -4х. Значення нижче 4s можуть працювати не з усіма медіафайлами."
+
+msgid "Defines which fast forward speeds are using normal cueing. All other forward speeds and all rewind speeds use time jumps."
+msgstr "Визначає швидкість перемотування вперед в нормальному режимі. Решта швидкості (вперед і назад) будуть використовувати тимчасові інтервали."
 
 msgid "Delay after change voltage before switch command"
 msgstr "Затримка після зміни напруги перед командою перемикання"
@@ -3610,6 +3796,9 @@ msgstr "Вимкнути таймер"
 msgid "Disabled"
 msgstr "Вимкнуто"
 
+msgid "Disabling Chkroot failed!"
+msgstr "Не вдалося вимкнути Chkroot!"
+
 msgid "Disk space to reserve for recordings (in GB)"
 msgstr "Зарезервувати дисковий простір для записів (у ГБ)"
 
@@ -3654,6 +3843,9 @@ msgstr "Показати події зараз/далі з EIT в Інфобар
 
 msgid "Display the base locales or all locales for a language."
 msgstr "Відображення базових регіонів, або всіх регіонів для мови."
+
+msgid "Display the virtual keyboard for data entry"
+msgstr "Відобразити віртуальну клавіатуру для введення даних"
 
 msgid "Display type"
 msgstr "Тип дисплею"
@@ -3915,6 +4107,9 @@ msgstr "Завантаження Іміджа"
 
 msgid "Downloading latest update list. Please wait..."
 msgstr "Завантаження списку останніх оновлень. Будь ласка, зачекайте..."
+
+msgid "Downloading a new packet list. Please wait..."
+msgstr "Завантаження нового списку пакетів. Зачекайте..."
 
 msgid "Downloading plugin information. Please wait..."
 msgstr "Завантаження інформації про додатки. Зачекайте..."
@@ -6030,6 +6225,9 @@ msgstr "Інтерфейс: "
 msgid "Internal"
 msgstr "Внутрішній"
 
+msgid "Internal disk only"
+msgstr "Тільки внутрішній диск"
+
 msgid "Internal flash"
 msgstr "Внутрішня пам’ять"
 
@@ -6631,8 +6829,8 @@ msgstr "Пурпуровий"
 msgid "Main menu"
 msgstr "Головне меню"
 
-msgid "Maintain old EPG data for"
-msgstr "Зберігати старі дані ЕПГ"
+msgid "Maintain your multi boot device."
+msgstr "Підтимка Вашим пристроєм мультизавантаження."
 
 msgid "Make it possible to manually initiate the channels import and/or EPG via the extension menu"
 msgstr "Зробити можливим вручну ініціювати імпорт каналів та/або EPG через меню розширень"
@@ -7304,6 +7502,9 @@ msgstr "Мережеві служби"
 msgid "Network Settings"
 msgstr "Налаштування Мережі"
 
+msgid "Network Setup Actions"
+msgstr "Дії кнопок в Меню налаштування мережі"
+
 msgid "Network information"
 msgstr "Інформація про мережу"
 
@@ -7710,8 +7911,8 @@ msgstr "Один"
 msgid "One line"
 msgstr "Одна лінія"
 
-msgid "Online update of your %s %s software."
-msgstr "Онлайн оновлення ПЗ Вашого %s %s."
+msgid "Online update of your receiver software."
+msgstr "Онлайн оновлення ПЗ Вашого приймача."
 
 msgid "Only change this setting if you are using a SCR device that has been reprogrammed with a custom programmer. For further information check with the person that reprogrammed the device."
 msgstr "Змінюйте це налаштування лише у тому випадку, якщо ви використовуєте пристрій SCR, який було перепрограмовано за допомогою спеціального програміста. Для отримання додаткової інформації зверніться до особи, яка перепрограмувала пристрій."
@@ -8855,6 +9056,9 @@ msgstr "REC в Режимі очікування"
 msgid "REC Symbol in use"
 msgstr "Використовується символ REC"
 
+msgid "Radio mode"
+msgstr "Режим радіо"
+
 msgid "Random"
 msgstr "Випадково"
 
@@ -9665,6 +9869,9 @@ msgstr "Затримка прокрутки"
 msgid "Scroll repeats"
 msgstr "Повтор прокрутки"
 
+msgid "Scheduler standby"
+msgstr "Таймер живлення в режимі очікування"
+
 msgid "Scope"
 msgstr "Межі"
 
@@ -9728,7 +9935,7 @@ msgstr "У Вашому приймачі виявлено проблему з П
 msgid "SeekBar activation"
 msgstr "Активація Seekbar"
 
-msgid "Seekbar sensibility"
+msgid "SeekBar sensibility"
 msgstr "Крок Seekbar"
 
 msgid "Select"
@@ -9857,6 +10064,9 @@ msgstr "Виберіть 'Так', щоб відобразити запис 'В�
 msgid "Select 'Yes' to show web link packages in the Download Plugins screen."
 msgstr "Виберіть 'Так', щоб відобразити пакети веб-посилань на екрані завантаження плагінів."
 
+msgid "Select 'Yes' to show the volume level on any automated changes of volume level."
+msgstr "Виберіть 'Так', щоб відображати рівень гучності під час будь-яких автоматичних змін рівня гучності."
+
 msgid "Select 'Yes' to use alternate GitHub feed IP addresses. This can be helpful if you use a VPN and the normal feeds can't be accessed via the published DNS names."
 msgstr "Виберіть 'Так', щоб використовувати альтернативні IP-адреси GitHub фіду. Це може бути корисним, якщо ви використовуєте VPN і до звичайних фідів не можна отримати доступ через опубліковані імена DNS."
 
@@ -9905,8 +10115,8 @@ msgstr "Вибрати фаворит"
 msgid "Select a debug log file to view:"
 msgstr "Виберіть файл журналу налагодження для перегляду:"
 
-msgid "Select a device to use as the flash expander (Configurable)"
-msgstr "Виберіть пристрій, який буду використовувати, як розширювач флеш-пам’яті (Налаштовується)"
+msgid "Select a device to use as the flash expander"
+msgstr "Виберіть пристрій, який буду використовувати, як розширювач флеш-пам’яті"
 
 msgid "Select a distribution from where images are to be obtained"
 msgstr "Виберіть дистрибутив, з якого потрібно отримати імідж"
@@ -10043,8 +10253,8 @@ msgstr "Виберіть супутники"
 msgid "Select service information to view:"
 msgstr "Виберіть інформацію каналу для перегляду:"
 
-msgid "Select service name"
-msgstr "Вибрати назва каналу"
+msgid "Select service"
+msgstr "Вибрати канал"
 
 msgid "Select service to add..."
 msgstr "Виберіть канал, щоб додати..."
@@ -10366,6 +10576,12 @@ msgstr "Дії кнопок в Інформації про канал"
 msgid "Service Name"
 msgstr "Назва Каналу"
 
+msgid "Service number and service name"
+msgstr "Номер каналу і Назва каналу"
+
+msgid "Service number, picon and service name"
+msgstr "Номер каналу, Пікон і Назва каналу"
+
 msgid "Service Type"
 msgstr "Тип Каналу"
 
@@ -10558,7 +10774,7 @@ msgstr "Призначте розташування для файлів тайм
 msgid "Set the delay time between repeated loops, this is used by software renderer in some skins."
 msgstr "Встановіть час затримки між повтореннями, використовується програмний рендеринг в деяких скінах."
 
-msgid "Set the jump-size of the seekbar."
+msgid "Set the jump-size of the SeekBar."
 msgstr "Встановити крок переходу для Seekbar."
 
 msgid "Set the password of the OpenWebif from your fallback tuner"
@@ -11344,6 +11560,9 @@ msgstr "Слот '%s' %s"
 msgid "Slot '%s' %s: %s%s"
 msgstr "Слот '%s' %s: %s%s"
 
+msgid "Slots have been extended by %d..\n"
+msgstr "Слоти було расширено на %d..\n"
+
 msgid "Slovak"
 msgstr "Словацька"
 
@@ -11643,6 +11862,9 @@ msgstr "Початок часового інтервалу, протягом я�
 msgid "Start offline decode"
 msgstr "Запуск декодування оффлайн"
 
+msgid "Start or Stop service"
+msgstr "Запуск або зупинка каналу"
+
 msgid "Start recording current event"
 msgstr "Почати запис поточної передачі"
 
@@ -11684,6 +11906,9 @@ msgstr "Ініціювання тюнера в режимі очікування
 
 msgid "Startup to Standby"
 msgstr "Запуск з режиму очікування"
+
+msgid "Startup device not found!"
+msgstr "Пристрій запуску не знайдено!"
 
 msgid "State"
 msgstr "Регіон"
@@ -12143,7 +12368,7 @@ msgid "TEXT"
 msgstr "ТЕКСТ"
 
 msgid "TRANSLATOR_INFO"
-msgstr "Переклад:  kvinto - 23.07.25"
+msgstr "Переклад:  kvinto - 29.07.2025"
 
 msgid "TS file is too large for ISO9660 level 1!"
 msgstr "TS файл занадто великий для ISO9660 рівень 1!"
@@ -12156,6 +12381,9 @@ msgstr "ТЮНЕР:"
 
 msgid "TUNING"
 msgstr "НАЛАШТУВАННЯ"
+
+msgid "TV mode"
+msgstr "Режим TВ"
 
 msgid "TV physical address report"
 msgstr "Звіт про фізичний адрес ТВ"
@@ -12767,6 +12995,9 @@ msgstr ""
 "Буде (пере-)обчислено всі позиції Вашого позиціонера і може видалити раніше збережені позиції!\n"
 "Ви впевнені?"
 
+msgid "This will go fast forward/backward with time frames of x secs."
+msgstr "Тут задаєте час x для швидкого перемотування вперед і назад."
+
 msgid "Three"
 msgstr "Три"
 
@@ -12799,6 +13030,21 @@ msgstr "Формат часу"
 
 msgid "Time synchronization method"
 msgstr "Метод синхронізації часу"
+
+msgid "Time jump avoid zero step size"
+msgstr "Інтервал збільшення часу, уникає нульового розміру кроку"
+
+msgid "Time jump multiplier for fast backward"
+msgstr "Інтервал збільшення для швидкого перемотування назад"
+
+msgid "Time jump multiplier for fast forward"
+msgstr "Інтервал збільшення для швидкого перемотування вперед"
+
+msgid "Time jump repeat interval for fast forward/backward"
+msgstr "Інтервал повторення для швидкого перемотування вперед/назад"
+
+msgid "Time jump: Use normal fast forward for speeds"
+msgstr "Нормальні швидкості для швидкого перемотування вперед"
 
 msgid "Time shift buffer location"
 msgstr "Розміщення таймшифт"
@@ -13145,6 +13391,9 @@ msgstr "Пошук каналів"
 
 msgid "Tunisia"
 msgstr "Туніс"
+
+msgid "Turbo"
+msgstr "Турбо"
 
 msgid "Turkey"
 msgstr "Туреччина"
@@ -13542,6 +13791,9 @@ msgstr "Використовувати ці налаштування?"
 msgid "Use this video enhancement settings?"
 msgstr "Використати ці налаштування для покращення відео?"
 
+msgid "Use time jumps for fast forward/backward"
+msgstr "Кроки для швидкого перемотування вперед/назад"
+
 msgid "Use trash can in movielist"
 msgstr "Використання кошика в списку фільмів"
 
@@ -13637,6 +13889,9 @@ msgstr "Різні"
 
 msgid "Venezuela (Bolivarian Republic of)"
 msgstr "Венесуела (Болівійська Республіка)"
+
+msgid "Verify WebIf SSL certificate"
+msgstr "Перевірте сертифікат WebIf SSL"
 
 msgid "Vertical"
 msgstr "Вертикальна"
