@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2025-05-14 06:49+0300\n"
+"PO-Revision-Date: 2025-07-31 21:06+0300\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>=14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.4.4\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid ""
 "\n"
@@ -116,8 +116,8 @@ msgstr " обновлено"
 msgid "!! Boot loader Upgrade !!"
 msgstr "!! Обновление загрузчика !!"
 
-msgid "# = Reboot Required"
-msgstr "# = Требуется перезагрузка"
+msgid "# = Reboot required if this item is changed."
+msgstr "# = Требуется перезагрузка."
 
 msgid "%-H:%M"
 msgstr "%-H:%M"
@@ -1446,8 +1446,8 @@ msgstr "(Показать дополнительное аудио-меню DVD)"
 msgid "(unknown)"
 msgstr "(неизвестно)"
 
-msgid "* = Restart Required"
-msgstr "* = Требуется перезагрузка"
+msgid "* = Restart required if this item is changed."
+msgstr "* = Требуется перезагрузка."
 
 msgid "* Only available if more than one interface is active."
 msgstr "* Доступно, если активно более одного интерфейса."
@@ -13218,7 +13218,6 @@ msgstr "Окончательно удалить все записи в корз�
 
 msgid "Permanently disable the MultiBoot option?"
 msgstr "Навсегда отключить опцию MultiBoot?"
-
 
 msgid "Permanently remove all deleted items"
 msgstr "Окончательное удаление всех файлов"
