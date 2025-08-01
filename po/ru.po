@@ -9801,7 +9801,7 @@ msgstr "Оттенки"
 
 #, python-format
 msgid "Humidity: %s %%"
-msgstr "Влажность: %% %s"
+msgstr "Влажность: %s %%"
 
 msgid "Humidity :"
 msgstr "Влажность :"
