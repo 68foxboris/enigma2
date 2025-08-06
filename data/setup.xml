@@ -415,6 +415,7 @@
 		<item level="2" text="Background delete option" description="Configure on which devices the background delete option should be used.">config.misc.erase_flags</item>
 		<item level="2" text="Background delete speed" description="Configure the speed of the background deletion process. Lower speed will consume less hard disk drive performance.">config.misc.erase_speed</item>
 		<item level="2" text="Quit Movie Player with EXIT button" description="When enabled, it is possible to leave the Movie Player with exit.">config.usage.leave_movieplayer_onExit</item>
+		<item level="2" text="Disable ServiceHiSilicon" description="Select 'Yes' to disable the ServiceHiSilicon plugin to allow use of the default internal media player code." requires="servicehisilicon" restart="gui">config.misc.disableServiceHiSilicon</item>
 	</setup>
 	<setup key="PluginBrowser" title="Plugin Browser Settings">
 		<item level="0" text="Plugin Browser layout" description="Select the layout of the installed plugins in the Plugin Browser screen. NOTE: The change is not immediate but will be seen when Plugin Browser is restarted!">config.usage.pluginListLayout</item>

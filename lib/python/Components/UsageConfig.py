@@ -50,6 +50,8 @@ def InitUsageConfig():
 
 	config.misc.spinnerPosition = ConfigSequence(default=[50, 50], limits=[(0, 1260), (0, 700)], seperator=",")
 
+	config.misc.disableServiceHiSilicon = ConfigYesNo(default=False)
+
 	config.usage = ConfigSubsection()
 
 	# "UserInterface" settings.
