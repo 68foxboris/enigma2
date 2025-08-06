@@ -130,6 +130,9 @@ msgstr " мс"
 msgid " unicable LNB input of rotor"
 msgstr " одноканальний LNB-вхід для двигуна"
 
+msgid "# = Reboot required if this item is changed."
+msgstr "# = Потрібне перезавантаження."
+
 msgid "%(freespace)s %(percent)s free disk space"
 msgstr "%(freespace)s %(percent)s вільне місце на диску"
 
@@ -526,8 +529,8 @@ msgstr "(показати додаткове DVD аудіо меню)"
 msgid "(unknown)"
 msgstr "(невідомий)"
 
-msgid "* = Restart Required"
-msgstr "* = Потрібне перезавантаження"
+msgid "* = Restart required if this item is changed."
+msgstr "* = Потрібне перезавантаження."
 
 msgid "* Only available if more than one interface is active."
 msgstr "* Доступно, якщо більше ніж один інтерфейс активний."
@@ -7341,7 +7344,7 @@ msgid "MultiBoot Manager Actions"
 msgstr "Дії кнопок в менеджері MultiBoot"
 
 msgid "Multiboot image selector"
-msgstr "Селектор Іміджів MultiBoot"
+msgstr "Вибір Іміджів MultiBoot"
 
 msgid "MultiBoot startup file"
 msgstr "Файл запуску MultiBoot"
@@ -12368,7 +12371,7 @@ msgid "TEXT"
 msgstr "ТЕКСТ"
 
 msgid "TRANSLATOR_INFO"
-msgstr "Переклад:  kvinto - 29.07.2025"
+msgstr "Переклад:  kvinto - 06.08.2025"
 
 msgid "TS file is too large for ISO9660 level 1!"
 msgstr "TS файл занадто великий для ISO9660 рівень 1!"
