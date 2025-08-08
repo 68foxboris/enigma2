@@ -16,43 +16,6 @@ PACKAGER_CONFIG_FILE = join(PACKAGER_CONFIG_DIR, "opkg.conf")
 PACKAGER_LISTS_DIR = "/var/lib/opkg/lists/"
 PACKAGER_STATUS_FILE = "/var/lib/opkg/status"
 
-opkgDestinations = []
-opkgStatusPath = ''
-
-
-def opkgExtraDestinations():
-	global opkgDestinations
-	return ''.join([" --add-dest %s:%s" % (i, i) for i in opkgDestinations])
-
-
-def opkgAddDestination(mountpoint):
-	global opkgDestinations
-	if mountpoint not in opkgDestinations:
-		opkgDestinations.append(mountpoint)
-		print("[Opkg] Added to OPKG destinations:", mountpoint)
-
-
-def onPartitionChange(why, part):
-	global opkgDestinations
-	global opkgStatusPath
-	mountpoint = os.path.normpath(part.mountpoint)
-	if mountpoint and mountpoint != '/':
-		if why == 'add':
-			if opkgStatusPath == '':
-				# recent opkg versions
-				opkgStatusPath = 'var/lib/opkg/status'
-				if not os.path.exists(os.path.join('/', opkgStatusPath)):
-					# older opkg versions
-					opkgStatusPath = resolveFilename(SCOPE_LIBDIR, 'opkg/status')
-			if os.path.exists(os.path.join(mountpoint, opkgStatusPath)):
-				opkgAddDestination(mountpoint)
-		elif why == 'remove':
-			try:
-				opkgDestinations.remove(mountpoint)
-				print("[Opkg] Removed from OPKG destinations:", mountpoint)
-			except:
-				pass
-
 
 class OpkgComponent:
 	CMD_CLEAN_REFRESH = 0
