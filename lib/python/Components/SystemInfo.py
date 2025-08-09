@@ -8,7 +8,7 @@ from subprocess import PIPE, Popen
 from enigma import Misc_Options, eAVControl, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl
 
 from process import ProcessList
-from Tools.Directories import SCOPE_LIBDIR, SCOPE_SKIN, fileCheck, fileReadLine, fileReadLines, fileExists, fileHas, pathExists, resolveFilename
+from Tools.Directories import SCOPE_LIBDIR, SCOPE_SKIN, isPluginInstalled, fileCheck, fileReadLine, fileReadLines, fileExists, fileHas, pathExists, resolveFilename
 from Tools.MultiBoot import MultiBoot
 from Tools.StbHardware import getBoxProc
 
