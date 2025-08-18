@@ -1008,23 +1008,23 @@ msgstr[2] "%d пакетов установлено."
 #, python-format
 msgid "%d package marked for install."
 msgid_plural "%d packages marked for install."
-msgstr[0] "%d пакет помечен для установки."
-msgstr[1] "%d пакета помечено для установки."
-msgstr[2] "%d пакетов помечено для установки."
+msgstr[0] "%d пакет отмечен для установки."
+msgstr[1] "%d пакета отмечено для установки."
+msgstr[2] "%d пакетов отмечено для установки."
 
 #, python-format
 msgid "%d package marked for remove."
 msgid_plural "%d packages marked for remove."
-msgstr[0] "%d пакет помечен для удаления."
-msgstr[1] "%d пакета помечено для удаления."
-msgstr[2] "%d пакетов помечено для удаления."
+msgstr[0] "%d пакет отмечен для удаления."
+msgstr[1] "%d пакета отмечено для удаления."
+msgstr[2] "%d пакетов отмечено для удаления."
 
 #, python-format
 msgid "%d package marked for update."
 msgid_plural "%d packages marked for update."
-msgstr[0] "%d пакет помечен для обновления."
-msgstr[1] "%d пакета помечено для обновления."
-msgstr[2] "%d пакетов помечено для обновления."
+msgstr[0] "%d пакет отмечен для обновления."
+msgstr[1] "%d пакета отмечено для обновления."
+msgstr[2] "%d пакетов отмечено для обновления."
 
 #, python-format
 msgid "%d package upgraded."
