@@ -603,7 +603,7 @@ class AudioSelection(ConfigListScreen, Screen):
 			if self.settings.menupage.value == PAGE_AUDIO and cur[0] is not None:
 				self.changeAudio(cur[0])
 				self.__updatedInfo()
-                                self.runHooks(self.TYPE_AUDIO)
+				self.runHooks(self.TYPE_AUDIO)
 			ref = self.session.nav.getCurrentlyPlayingServiceReference()
 			#ref = ref and eServiceReference(ref.toString())
 			if self.settings.menupage.value == PAGE_SUBTITLES and cur[0] is not None:
