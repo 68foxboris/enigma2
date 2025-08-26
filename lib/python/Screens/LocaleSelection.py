@@ -272,7 +272,7 @@ class LocaleSelection(Screen):
 		config.osd.language.save()
 		international.activateLocale(self.currentLocale, runCallbacks=True)
 		if not self.inWizard and self.currentLocale != self.initialLocale:
-			self.session.openWithCallback(keySaveCallback, MessageBox, _("Restart GUI now to start using the new locale/language?"), default=True, type=MessageBox.TYPE_YESNO, title=self.getTitle())
+			self.session.openWithCallback(keySaveCallback, MessageBox, _("Restart GUI now to start using the new locale/language?"), default=True, type=MessageBox.TYPE_YESNO, windowTitle=self.getTitle())
 		else:
 			self.close()
 
@@ -341,7 +341,7 @@ class LocaleSelection(Screen):
 
 		current = self["locales"].getCurrent()
 		if current[self.LIST_LOCALE] == self.currentLocale:
-			self.session.openWithCallback(processPurge, MessageBox, _("Do you want to purge all locales/languages except %s?") % ", ".join(sorted(international.getPermanentLocales(self.currentLocale))), default=False, title=self.getTitle())
+			self.session.openWithCallback(processPurge, MessageBox, _("Do you want to purge all locales/languages except %s?") % ", ".join(sorted(international.getPermanentLocales(self.currentLocale))), default=False, windowTitle=self.getTitle())
 		else:
 			status = current[self.LIST_STATUS]
 			name = current[self.LIST_NAME]

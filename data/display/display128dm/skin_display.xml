@@ -2,6 +2,15 @@
 <!--suppress XmlUnboundNsPrefix, XmlUnboundNsPrefix -->
 <!--  Skin: LCD -->
 <skin>
+	<colors>
+		<color name="oled1" value="#00adff2f" /> <!--Schriftfarbe Menue gelbgruen-->
+		<color name="oled2" value="#00ffffff" /> <!--Schriftfarbe Textroller-->
+		<color name="oled3" value="#00adff2f" /> <!--Schriftfarbe Uhrzeit usw.-->
+		<color name="oled4" value="#00adff2f" /> <!--Schriftfarbe Sender-->
+		<color name="oled5" value="#00ffffff" /> <!--Schriftfarbe Sendung-->
+		<color name="oled6" value="#00adff2f" /> <!--Schriftfarbe Sender Kanalliste-->
+		<color name="oled7" value="#00ff2525" /> <!--Schriftfarbe Uhr Standby-->
+	</colors>
 	<windowstyle id="2" type="skinned">
 		<color color="#000000" name="Background"/>
 		<color color="#ffffff" name="LabelForeground"/>
@@ -129,29 +138,11 @@
 		</panel>
 	</screen>
 
-<!-- setup-->
-	<screen name="SetupSummary" position="2,0" size="128,64">
-		<widget source="SetupTitle" render="Label" position="top" size="*,12" font="FdLcD;12" />
-		<widget source="SetupEntry" render="Label" position="top" size="*,40" font="FdLcD;12" />
-		<widget source="SetupValue" render="Label" position="top" size="*,12" font="FdLcD;12" />
-	</screen>
 
 <!-- misc-->
 	<screen name="SimpleSummary" position="2,0" size="128,64">
 		<widget source="parent.Title" render="Label" position="top" size="*,40" font="FdLcD;16" horizontalAlignment="center" verticalAlignment="center" />
 		<panel position="bottom" size="*,24" name="SummaryClockPanel" />
-	</screen>
-	<screen name="WizardSummary" position="2,0" size="128,64">
-		<widget source="text" render="Label" position="top" size="*,16" font="FdLcD;16"/>
-		<widget source="parent.list" render="Label" position="fill" font="FdLcD;12">
-			<convert type="StringListSelection" />
-		</widget>
-	</screen>
-	<screen name="VideoWizardSummary" position="2,0" size="128,64">
-		<widget name="text" position="top" size="*,40" font="FdLcD;12" transparent="1" />
-		<widget source="parent.list" render="Label" position="fill" font="FdLcD;14">
-			<convert type="StringListSelection" />
-		</widget>
 	</screen>
 
 <!-- standby -->
@@ -176,13 +167,6 @@
 		<panel name="SummaryClockPanel" />
 	</screen>
 
-<!-- Plugin browser -->
-	<screen name="PluginBrowserSummary" position="2,0" size="128,64">
-		<widget source="parent.Title" render="Label" position="top" size="*,16" font="FdLcD;12"  noWrap="1" />
-		<widget source="entry" render="Label" position="top" size="*,20" font="FdLcD;18" noWrap="1" />
-		<widget source="desc" render="Label" position="fill" font="FdLcD;12" verticalAlignment="top" />
-	</screen>
-
 <!-- JobView Summary -->
 	<screen name="JobViewSummary" position="2,0" size="128,64">
 		<widget source="parent.summary_job_name" render="Label" position="6,4" size="120,42" font="FdLcD;16" />
@@ -191,17 +175,6 @@
 		<widget source="parent.summary_job_progress" render="Label" position="66,50" size="50,12" font="FdLcD;12" zPosition="2" horizontalAlignment="center" transparent="1">
 			<convert type="ProgressToText" />
 		</widget>
-	</screen>
-	<screen name="ChoiceBoxSummary" position="2,0" size="128,64">
-		<widget source="parent.summary_list" render="Label" position="fill" font="FdLcD;11" />
-	</screen>
-	<screen name="MessageBoxSummary" position="2,0" size="128,64">
-		<widget source="parent.Text" render="Label" position="top" size="*,52" font="FdLcD;11" horizontalAlignment="center" verticalAlignment="center" />
-		<widget source="parent.selectedChoice" conditional="parent.selectedChoice" render="Label" position="bottom" size="*,14" font="FdLcD;14" horizontalAlignment="center" verticalAlignment="center" />
-	</screen>
-	<screen name="MessageBoxSimpleSummary" position="2,0" size="128,64">
-		<widget source="parent.Text" render="Label" position="top" size="*,52" font="FdLcD;11" horizontalAlignment="center" verticalAlignment="center" />
-		<widget source="parent.selectedChoice" conditional="parent.selectedChoice" render="Label" position="bottom" size="*,14" font="FdLcD;14" horizontalAlignment="center" verticalAlignment="center" />
 	</screen>
 
 <!-- EMC -->
