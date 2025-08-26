@@ -281,12 +281,6 @@ class PowerKey:
 						break
 
 
-if enigma.eAVControl.getInstance().hasScartSwitch():
-	enigma.eProfileWrite("Scart")
-	print("[StartEnigma] Initialising Scart module")
-	from Screens.Scart import Scart
-
-
 class AutoScartControl:
 	def __init__(self, session):
 		self.hasScart = BoxInfo.getItem("SCART")
@@ -300,7 +294,7 @@ class AutoScartControl:
 			config.av.vcrswitch.addNotifier(self.recheckVCRSb)
 			enigma.eAVControl.getInstance().vcr_sb_notifier.get().append(self.VCRSbChanged)
 
-	def recheckVCRSb(self, configElement):
+	def recheckVCRSb(self, configelement):
 		self.VCRSbChanged(self.current_vcr_sb)
 
 	def VCRSbChanged(self, value):
@@ -312,9 +306,10 @@ class AutoScartControl:
 					self.scartDialog.showMessageBox()
 				else:
 					self.scartDialog.switchToTV()
+
+
 def runScreenTest():
 	config.misc.startCounter.value += 1
-	config.misc.startCounter.save()
 	enigma.eProfileWrite("ReadPluginList")
 	enigma.pauseInit()
 	plugins.readPluginList(resolveFilename(SCOPE_PLUGINS))
@@ -331,6 +326,7 @@ def runScreenTest():
 	screensToRun += wizardManager.getWizards()
 	screensToRun.append((100, InfoBar.InfoBar))
 	screensToRun.sort(key=lambda x: x[0])  # works in both Pythons but let's not use sort method here first we must see if we have work network in the wizard.
+	print(screensToRun)
 	enigma.ePythonConfigQuery.setQueryFunc(configfile.getResolvedKey)
 
 	def runNextScreen(session, screensToRun, *result):
@@ -344,7 +340,7 @@ def runScreenTest():
 		else:
 			session.open(screen, *args)
 	runNextScreen(session, screensToRun)
-	enigma.eProfileWrite("VolumeControl")
+	enigma.eProfileWrite("VolumeControl Screen")
 	vol = VolumeControl(session)
 	enigma.eProfileWrite("VolumeAdjust")
 	vol = VolumeAdjust(session)
@@ -358,8 +354,9 @@ def runScreenTest():
 		enigma.eProfileWrite("VFDSymbolsCheck")
 		from Components.VfdSymbols import SymbolsCheck
 		SymbolsCheck(session)
-	# we need session.scart to access it from within menu.xml
-	session.scart = AutoScartControl(session) if enigma.eAVControl.getInstance().hasScartSwitch() else None
+	# We need session.scart to access it from within menu.xml.
+	session.scart = AutoScartControl(session)
+
 	enigma.eProfileWrite("Trashcan")
 	import Tools.Trashcan
 	Tools.Trashcan.init(session)
@@ -370,6 +367,7 @@ def runScreenTest():
 	session.shutdown = True
 	FrontPanelLed.shutdown()
 	print("[StartEnigma] Normal shutdown.")
+	config.misc.startCounter.save()
 	from Screens.SleepTimerEdit import isNextWakeupTime
 	# get currentTime
 	nowTime = time()
@@ -530,7 +528,7 @@ if BoxInfo.getItem("architecture") in ("aarch64"):
 	get_backend(find_library=lambda x: "/lib64/libusb-1.0.so.0")
 
 from traceback import print_exc
-from Components.config import config, configfile, ConfigText, ConfigYesNo, ConfigInteger, ConfigSelection, ConfigSubsection, NoSave
+from Components.config import config, configfile, ConfigText, ConfigYesNo, ConfigInteger, ConfigSelection, ConfigSubsection, ConfigOnOff, NoSave
 
 config.misc.locale = ConfigText(default="en_US")
 config.misc.locale.addNotifier(localeNotifier)
@@ -560,14 +558,24 @@ config.crash.debugStorage = ConfigYesNo(default=False)
 config.misc.menu_show_numbers = ConfigYesNo(default=False)
 
 
-# config.plugins needs to be defined before InputDevice < HelpMenu < MessageBox < InfoBar
+# config.plugins needs to be defined before InputDevice < HelpMenu < MessageBox < InfoBar.
 config.plugins = ConfigSubsection()
 config.plugins.remotecontroltype = ConfigSubsection()
 config.plugins.remotecontroltype.rctype = ConfigInteger(default=0)
 
-enigma.eProfileWrite("InitSetupDevices")
-import Components.SetupDevices
-Components.SetupDevices.InitSetupDevices()
+config.parental = ConfigSubsection()
+config.parental.lock = ConfigOnOff(default=False)
+config.parental.setuplock = ConfigOnOff(default=False)
+
+config.expert = ConfigSubsection()
+config.expert.satpos = ConfigOnOff(default=True)
+config.expert.fastzap = ConfigOnOff(default=True)
+config.expert.skipconfirm = ConfigOnOff(default=False)
+config.expert.hideerrors = ConfigOnOff(default=False)
+config.expert.autoinfo = ConfigOnOff(default=True)
+
+enigma.eProfileWrite("Keyboard")
+from Components.InputDevice import keyboard
 
 enigma.eProfileWrite("InfoBar")
 from Screens import InfoBar
@@ -602,9 +610,6 @@ InitFallbackFiles()
 enigma.eProfileWrite("ConfigMisc")
 config.misc.radiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "radio.mvi"))
 config.misc.blackradiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "black.mvi"))
-config.misc.startCounter = ConfigInteger(default=0)  # number of e2 starts...
-config.misc.standbyCounter = NoSave(ConfigInteger(default=0))  # number of standby
-config.misc.DeepStandby = NoSave(ConfigYesNo(default=False))  # detect deepstandby
 config.misc.RestartUI = ConfigYesNo(default=False)  # detect user interface restart
 config.misc.prev_wakeup_time = ConfigInteger(default=0)
 # config.misc.prev_wakeup_time_type is only valid when wakeup_time is not 0
@@ -617,12 +622,15 @@ config.misc.SyncTimeUsing = ConfigSelection(default="0", choices=[
 ])
 config.misc.NTPserver = ConfigText(default="pool.ntp.org", fixed_size=False)
 
+config.misc.startCounter = ConfigInteger(default=0)  # Number of e2 starts.
+config.misc.standbyCounter = NoSave(ConfigInteger(default=0))  # Number of standby.
+config.misc.DeepStandby = NoSave(ConfigYesNo(default=False))  # Detect deep standby.
+
 enigma.eProfileWrite("AutoRunPlugins")
 # Initialize autorun plugins and plugin menu entries.
 from Components.PluginComponent import plugins
 
 enigma.eProfileWrite("StartWizard")
-from Screens.Wizard import wizardManager
 from Screens.StartWizard import *
 from Tools.BoundFunction import boundFunction
 from Plugins.Plugin import PluginDescriptor
