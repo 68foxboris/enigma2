@@ -38,6 +38,10 @@
 
 #include <lib/dvb/fcc.h>
 
+#include <iostream>
+#include <fstream>
+using namespace std;
+
 #ifndef BYTE_ORDER
 #error no byte order defined!
 #endif
@@ -45,6 +49,10 @@
 #include <ios>
 #include <sstream>
 #include <iomanip>
+
+#ifndef SUBT_TXT_ABNORMAL_PTS_DIFFS
+#define SUBT_TXT_ABNORMAL_PTS_DIFFS 1800000
+#endif
 
 class eStaticServiceDVBInformation: public iStaticServiceInformation
 {
@@ -435,7 +443,7 @@ int eStaticServiceDVBPVRInformation::getLength(const eServiceReference &ref)
 
 			/* check if cached data is still valid */
 	if (m_parser.m_data_ok && (s.st_size == m_parser.m_filesize) && (m_parser.m_length))
-		return m_parser.m_length / 90000;
+		return (int)(m_parser.m_length / 90000);
 
 			/* open again, this time with stream info */
 	if (tstools.openFile(ref.path.c_str()))
@@ -455,7 +463,7 @@ int eStaticServiceDVBPVRInformation::getLength(const eServiceReference &ref)
  	m_parser.m_length = len;
 	m_parser.m_filesize = s.st_size;
 	m_parser.updateMeta(ref.path);
-	return m_parser.m_length / 90000;
+	return (int)(m_parser.m_length / 90000);
 }
 
 int eStaticServiceDVBPVRInformation::getInfo(const eServiceReference &ref, int w)
@@ -607,7 +615,7 @@ RESULT eDVBPVRServiceOfflineOperations::getListOfFilenames(std::list<std::string
 	res.push_back(m_ref.path);
 
 // handling for old splitted recordings (enigma 1)
-	char buf[255] = {};
+	char buf[255];
 	int slice=1;
 	while(true)
 	{
@@ -1083,7 +1091,7 @@ RESULT eServiceFactoryDVB::lookupService(ePtr<eDVBService> &service, const eServ
 	}
 	else
 	{
-		// TODO: handle the listing itself
+			// TODO: handle the listing itself
 		// if (ref.... == -1) .. return "... bouquets ...";
 		// could be also done in another serviceFactory (with seperate ID) to seperate actual services and lists
 			// TODO: cache
@@ -1454,10 +1462,7 @@ RESULT eDVBServicePlay::start()
 			scrambled = meta.m_scrambled;
 		}
 		else
-		{
-			/* when there is no meta file we need to handle ts/m2ts as descrambled */
-			scrambled = false;
-		}
+			scrambled = false; // Set scrambled to false if meta not exists
 		m_cue = new eCueSheet();
 		type = eDVBServicePMTHandler::playback;
 	}
@@ -1874,14 +1879,13 @@ RESULT eDVBServicePlay::subServices(ePtr<iSubserviceList> &ptr)
 
 RESULT eDVBServicePlay::timeshift(ePtr<iTimeshiftService> &ptr)
 {
-	ptr = nullptr;
-	eDebug("[eDVBServicePlay] timeshift");
+	ptr = 0;
 	if (m_timeshift_enabled || !m_is_pvr)
 	{
 		if (!m_timeshift_enabled)
 		{
 			/* query config path */
-			std::string tspath = eConfigManager::getConfigValue("config.usage.timeshift_path");
+			std::string tspath = eSettings::timeshift_path;
 			if(tspath == "")
 			{
 				eDebug("[eDVBServicePlay] timeshift could not query ts path from config");
@@ -1896,15 +1900,17 @@ RESULT eDVBServicePlay::timeshift(ePtr<iTimeshiftService> &ptr)
 				return -2;
 			}
 
-			if (((off_t)fs.f_bavail) * ((off_t)fs.f_bsize) < 200*1024*1024LL)
+			if (((off_t)fs.f_bavail) * ((off_t)fs.f_bsize) < 1024*1024*1024LL)
 			{
 				eDebug("[eDVBServicePlay] timeshift not enough diskspace for timeshift! (less than 200MB)");
 				return -3;
 			}
 		}
 		ptr = this;
+		eTrace("[eDVBServicePlay] time shift return 0");
 		return 0;
 	}
+	eTrace("[eDVBServicePlay] time shift return -1");
 	return -1;
 }
 
@@ -2582,7 +2588,8 @@ bool eDVBServiceBase::tryFallbackTuner(eServiceReferenceDVB &service, bool &is_s
 		return false;
 	service.getChannelID(chid); 						// this sets chid
 	eServiceReferenceDVB().getChannelID(chid_ignore);	// this sets chid_ignore
-	if(res_mgr->canAllocateChannel(chid, chid_ignore, system))	// this sets system
+
+	if(res_mgr->canAllocateChannel(chid, eDVBChannelID(), system))	// this sets system
 		return false;
 
 	if (eConfigManager::getConfigBoolValue("config.usage.remote_fallback_alternative", false) && !(system == iDVBFrontend::feSatellite))
@@ -2744,7 +2751,7 @@ RESULT eDVBServicePlay::startTimeshift()
 	if (!m_record)
 		return -3;
 
-	std::string tspath = eConfigManager::getConfigValue("config.usage.timeshift_path");
+	std::string tspath = eSettings::timeshift_path;
 	if (tspath == "")
 	{
 		eDebug("[eDVBServicePlay] could not query timeshift path");
@@ -2763,6 +2770,20 @@ RESULT eDVBServicePlay::startTimeshift()
 	m_timeshift_fd = mkstemp(templ);
 	m_timeshift_file = std::string(templ);
 	eDebug("[eDVBServicePlay] timeshift recording to %s", templ);
+
+	ofstream fileout;
+	fileout.open("/proc/stb/lcd/symbol_timeshift");
+	if(fileout.is_open())
+	{
+		fileout << "1";
+	}
+
+	fileout.open("/proc/stb/lcd/symbol_record");
+	if(fileout.is_open())
+	{
+		fileout << "1";
+	}
+
 	delete [] templ;
 
 	if (m_timeshift_fd < 0)
@@ -2799,6 +2820,19 @@ RESULT eDVBServicePlay::stopTimeshift(bool swToLive)
 	{
 		close(m_timeshift_fd);
 		m_timeshift_fd = -1;
+	}
+
+	ofstream fileout;
+	fileout.open("/proc/stb/lcd/symbol_timeshift");
+	if(fileout.is_open())
+	{
+		fileout << "0";
+	}
+
+	fileout.open("/proc/stb/lcd/symbol_record");
+	if(fileout.is_open())
+	{
+		fileout << "0";
 	}
 
 	if (!m_save_timeshift)
@@ -3233,7 +3267,6 @@ void eDVBServicePlay::updateDecoder(bool sendSeekableStateChanged)
 					}
 				}
 			}
-
 			setAC3Delay(ac3_delay == -1 ? 0 : ac3_delay);
 			setPCMDelay(pcm_delay == -1 ? 0 : pcm_delay);
 		}
@@ -3506,9 +3539,8 @@ RESULT eDVBServicePlay::enableSubtitles(iSubtitleUser *user, SubtitleTrack &trac
 
 		m_subtitle_widget = user;
 		m_subtitle_parser->start(pid, composition_page_id, ancillary_page_id);
-		if (m_dvb_service){
+		if (m_dvb_service)
 			m_dvb_service->setCacheEntry(eDVBService::cSUBTITLE, ((pid&0xFFFF)<<16)|((composition_page_id&0xFF)<<8)|(ancillary_page_id&0xFF));
-		}
 	}
 	else
 		goto error_out;
@@ -3534,9 +3566,8 @@ RESULT eDVBServicePlay::disableSubtitles()
 		m_teletext_parser->setPageAndMagazine(-1, -1, "und");
 		m_subtitle_pages.clear();
 	}
-	if (m_dvb_service){
+	if (m_dvb_service)
 		m_dvb_service->setCacheEntry(eDVBService::cSUBTITLE, 0);
-	}
 	return 0;
 }
 
@@ -3759,10 +3790,8 @@ void eDVBServicePlay::checkSubtitleTiming()
 				m_subtitle_widget->setPage(dvb_page);
 				m_dvb_subtitle_pages.pop_front();
 			}
-		}
-		else
+		} else
 		{
-			//eDebug("[eDVBServicePlay] Delay early subtitle by %.03fs. Page stack size %d", diff / 90000.0f, m_dvb_subtitle_pages.size());
 			m_subtitle_sync_timer->start(diff / 90, 1);
 			break;
 		}
@@ -3776,11 +3805,10 @@ void eDVBServicePlay::newDVBSubtitlePage(const eDVBSubtitlePage &p)
 		pts_t pos = 0;
 		if (m_decoder)
 			m_decoder->getPTS(0, pos);
-
-		// Where subtitles are delivered out of sync with video, only treat subtitles in the past as having bad timing.
-		// Those that are delivered too early are cached for displaying at the appropriate later time
-		// Note that this can be due to buggy drivers, as well as problems with the broadcast 
-		if (pos-p.m_show_time > 1800000 && (m_is_pvr || m_timeshift_enabled))
+		if ( pos-p.m_show_time > SUBT_TXT_ABNORMAL_PTS_DIFFS && (m_is_pvr || m_timeshift_enabled))
+			// Where subtitles are delivered out of sync with video, only treat subtitles in the past as having bad timing.
+			// Those that are delivered too early are cached for displaying at the appropriate later time
+			// Note that this can be due to buggy drivers, as well as problems with the broadcast
 		{
 			// Subtitles delivered over 20 seconds too late
 			eDebug("[eDVBServicePlay] Video pts:%lld, subtitle show_time:%lld, diff:%.02fs BAD TIMING", pos, p.m_show_time, (p.m_show_time - pos) / 90000.0f);
