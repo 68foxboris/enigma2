@@ -20,6 +20,7 @@ dist_install_DATA = \
 	fr_FR.png \
 	fy_NL.png \
 	zh_HK.png \
+	he_IL.png \
 	hr_HR.png \
 	hu_HU.png \
 	id_ID.png \
@@ -107,6 +108,7 @@ dist_install_DATA = \
 	et.png \
 	fi.png \
 	fj.png \
+	fo.png \
 	fm.png \
 	fr.png \
 	ga.png \
@@ -114,6 +116,7 @@ dist_install_DATA = \
 	gd.png \
 	ge.png \
 	gh.png \
+	gl.png \
 	gm.png \
 	gn.png \
 	gq.png \
@@ -128,6 +131,7 @@ dist_install_DATA = \
 	hu.png \
 	id.png \
 	ie.png \
+	il.png \
 	in.png \
 	iq.png \
 	ir.png \
@@ -166,6 +170,7 @@ dist_install_DATA = \
 	mh.png \
 	mk.png \
 	ml.png \
+	mo.png \
 	mm.png \
 	mn.png \
 	mq.png \
