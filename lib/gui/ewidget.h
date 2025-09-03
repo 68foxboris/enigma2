@@ -52,19 +52,19 @@ public:
 	virtual void setBorderWidth(int width) { setWidgetBorderWidth(width); }
 	virtual void setBorderColor(const gRGB &color) { setWidgetBorderColor(color); }
 
-	virtual void setWidgetBorderWidth(int width) { 
-			m_border_width = width; 
-			invalidate(); 
+	virtual void setWidgetBorderWidth(int width) {
+			m_border_width = width;
+			invalidate();
 		}
-	virtual void setWidgetBorderColor(const gRGB &color) { 
+	virtual void setWidgetBorderColor(const gRGB &color) {
 			m_border_color = color;
 			m_have_border_color = true;
-			invalidate(); 
+			invalidate();
 		}
 
-	virtual void setWidgetAlphaBlend(bool blend) { 
+	virtual void setWidgetAlphaBlend(bool blend) {
 			m_alphaBlend = blend;
-			invalidate(); 
+			invalidate();
 		}
 
 	virtual void setPadding(const eRect &padding) { m_padding = padding; }
@@ -137,7 +137,7 @@ protected:
 	int m_border_width;
 	gRGB m_border_color;
 	eRect m_padding;
-	bool m_alphaBlend = false; 
+	bool m_alphaBlend = false;
 
 public:
 

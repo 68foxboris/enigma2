@@ -2629,7 +2629,7 @@ void gPixmap::line(const gRegion &clip, ePoint start, ePoint dst, unsigned int c
 				lasthit = a = 0;
 			else
 				goto fail;
-		} 
+		}
 		else if (!clip.rects[a].contains(x, y))
 		{
 			do
