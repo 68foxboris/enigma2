@@ -3,8 +3,8 @@ import struct
 import RecordTimer
 import Components.ParentalControl
 import Components.RecordingConfig
-from Screens.Screen import Screen
-from Screens.MessageBox import MessageBox
+from Screens.Screen import Screen, ScreenSummary
+from Screens.MessageBox import MessageBox, MessageBoxSummary
 from Components.ActionMap import ActionMap
 from Components.config import config
 from Components.AVSwitch import AVSwitch
@@ -331,7 +331,7 @@ class StandbySummary(Screen):
 class QuitMainloopScreen(Screen):
 	def __init__(self, session, retvalue=QUIT_SHUTDOWN):
 		self.skin = """<screen name="QuitMainloopScreen" position="fill" flags="wfNoBorder">
-				<ePixmap pixmap="icons/input_info.png" position="c-27,c-60" size="53,53" alphatest="on" />
+				<ePixmap pixmap="icons/input_info.png" position="c-27,c-60" size="53,53" alphaTest="on" />
 				<widget name="text" position="center,c+5" size="720,100" font="Regular;22" halign="center" />
 			</screen>"""
 		Screen.__init__(self, session)
@@ -421,13 +421,15 @@ class TryQuitMainloop(MessageBox):
 				QUIT_MANUFACTURER_RESET: _("Really perform a manufacturer reset now?")
 			}.get(retvalue, None)
 			if text:
-				MessageBox.__init__(self, session, reason + text, type=MessageBox.TYPE_YESNO, timeout=timeout, default=default_yes)
+				MessageBox.__init__(self, session, "%s\n%s" % (reason, text), type=MessageBox.TYPE_YESNO, timeout=timeout, default=default_yes)
 				self.skinName = "MessageBoxSimple"
 				session.nav.record_event.append(self.getRecordEvent)
 				self.connected = True
 				self.onShow.append(self.__onShow)
 				self.onHide.append(self.__onHide)
+				self.isMessageBox = True
 				return
+		self.isMessageBox = False
 		self.skin = """<screen position="0,0" size="0,0"/>"""
 		Screen.__init__(self, session)
 		self.close(True)
@@ -505,8 +507,8 @@ class TryQuitMainloop(MessageBox):
 		global inTryQuitMainloop
 		inTryQuitMainloop = False
 
-	def createSummary(self):  # Suppress the normal MessageBox MessageBoxSummary screen.
-		return None
+	def createSummary(self):
+		return MessageBoxSummary if self.isMessageBox else ScreenSummary
 
 
 class SwitchToAndroid(Screen):
