@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import netifaces as ni
 from os import listdir, remove, system as os_system
 from os.path import basename, exists, isdir, realpath
@@ -111,7 +110,7 @@ class Network:
 				break
 		newlines = []
 		for line in lines:
-			if line and line[0] == "#":
+			if line and line[0] == "#" and "inet6 dhcp" not in line:
 				newlines.append(line[1:])
 			else:
 				newlines.append(line)
@@ -177,7 +176,7 @@ class Network:
 			data["bcast"] = self.convertIP(nit[ni.AF_INET][0]["broadcast"])
 			data["mac"] = nit[ni.AF_LINK][0]["addr"]  # MAC address.
 			data["gateway"] = self.convertIP(ni.gateways()["default"][ni.AF_INET][0])  # Default gateway address.
-		except:
+		except Exception:
 			data["dhcp"] = True
 			data["ip"] = [0, 0, 0, 0]
 			data["netmask"] = [0, 0, 0, 0]
@@ -527,7 +526,7 @@ class Network:
 		if callback is not None:
 			try:
 				callback(True)
-			except:
+			except Exception:
 				pass
 
 	def getLinkState(self, iface, callback):
@@ -652,7 +651,7 @@ class Network:
 				if callback is not None:
 					try:
 						callback(True)
-					except:
+					except Exception:
 						pass
 
 	def sysfsPath(self, iface):
@@ -701,7 +700,7 @@ class Network:
 			moduledir = "%s/driver" % devicedir
 			if isdir(moduledir):
 				return moduledir
-		except:
+		except Exception:
 			pass
 		return None
 

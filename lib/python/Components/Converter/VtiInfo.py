@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from Components.config import config
 from Components.Converter.Converter import Converter
 from enigma import iServiceInformation, iPlayableService
@@ -117,15 +116,13 @@ class VtiInfo(Poll, Converter):
             if frontendInfo:
                 try:
                     ecmpath = '/tmp/ecm%s.info' % frontendInfo.getAll(False).get('tuner_number')
-                    ecmopenfile = open(ecmpath, 'rb')
-                    ecm = ecmopenfile.readlines()
-                    ecmopenfile.close()
-                except:
+                    with open(ecmpath, 'rb') as fd:
+                        ecm = fd.readlines()
+                except Exception:
                     try:
-                        ecmopenfile = open('/tmp/ecm.info', 'rb')
-                        ecm = ecmopenfile.readlines()
-                        ecmopenfile.close()
-                    except:
+                        with open('/tmp/ecm.info', 'rb') as fd:
+                            ecm = fd.readlines()
+                    except OSError:
                         pass
 
             if ecm:
@@ -144,7 +141,7 @@ class VtiInfo(Poll, Converter):
                                 if y != -1:
                                     info['caid'] = line[x + 5:y]
 
-                if info and info.get("from") and config.misc.softcam_hideServerName.value:
+                if info and info.get("from") and config.softcam.hideServerName.value:
                     info["from"] = "".join(["\u2022"] * len(info.get("from")))
         return info
 
@@ -152,35 +149,31 @@ class VtiInfo(Poll, Converter):
         temp = ''
         unit = ''
         try:
-            f = open('/proc/stb/sensors/temp0/value', 'rb')
-            temp = f.readline().strip()
-            f.close()
-            f = open('/proc/stb/sensors/temp0/unit', 'rb')
-            unit = f.readline().strip()
-            f.close()
+            with open('/proc/stb/sensors/temp0/value', 'rb') as fd:
+                temp = fd.readline().strip()
+            with open('/proc/stb/sensors/temp0/unit', 'rb') as fd:
+                unit = fd.readline().strip()
             tempinfo = 'TEMP: %s %s%s' % (str(temp), "\u00B0", str(unit))
             return tempinfo
-        except:
+        except Exception:
             pass
 
     def fanfile(self):
         fan = ''
         try:
-            f = open('/proc/stb/fp/fan_speed', 'rb')
-            fan = f.readline().strip()
-            f.close()
-            faninfo = 'FAN: ' + str(fan)
+            with open('/proc/stb/fp/fan_speed', 'rb') as fd:
+                fan = fd.readline().strip()
+            faninfo = f'FAN: {fan}'
             return faninfo
-        except:
+        except OSError:
             pass
 
     def pingtest(self):
         pingpath = '/tmp/.pingtest.info'
         try:
-            pingfile = open(pingpath, 'rb')
-            pingtestresult = pingfile.readlines()
-            pingfile.close()
-        except:
+            with open(pingpath, 'rb') as fd:
+                pingtestresult = fd.readlines()
+        except OSError:
             pingtestresult = None
 
         if pingtestresult is not None:
