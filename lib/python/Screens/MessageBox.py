@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
-from Screens.Screen import Screen, ScreenSummary
+from enigma import eTimer, eSize
 from Components.ActionMap import ActionMap
 from Components.Label import Label
+from Components.MenuList import MenuList
 from Components.Pixmap import Pixmap, MultiPixmap
 from Components.Sources.StaticText import StaticText
-from Components.MenuList import MenuList
-from enigma import eTimer, eSize
+from Screens.Screen import Screen, ScreenSummary
 
 
 class MessageBox(Screen):
+	skin = """
+	<screen name="MessageBox" position="center,center" size="520,225" resolution="1280,720">
+		<widget name="icon" pixmaps="icons/input_question.png,icons/input_info.png,icons/input_warning.png,icons/input_error.png,icons/input_message.png" position="10,10" size="53,53" alphatest="blend" conditional="icon" scale="1" transparent="1" />
+		<widget name="text" position="75,10" size="435,120" font="Regular;22" transparent="1" />
+		<widget name="list" position="10,e-80" size="500,70" conditional="list" enableWrapAround="1" font="Regular;25" itemHeight="35" scrollbarMode="showOnDemand" transparent="1" />
+	</screen>"""
+
 	TYPE_NOICON = 0
 	TYPE_YESNO = 1
 	TYPE_INFO = 2
@@ -23,22 +30,27 @@ class MessageBox(Screen):
 		TYPE_MESSAGE: _("Message")
 	}
 
-	def __init__(self, session, text, type=TYPE_YESNO, timeout=-1, close_on_any_key=False, default=True, enable_input=True, enableInput=True, msgBoxID=None, picon=None, simple=False, list=[], timeout_default=None, windowTitle=None, skinName=None, skin_name=None, title=None, showYESNO=False, closeOnAnyKey=False, typeIcon=None, timeoutDefault=None):
+	def __init__(self, session, text, type=TYPE_YESNO, timeout=-1, list=None, close_on_any_key=False, default=True, enable_input=True, enableInput=True, msgBoxID=None, picon=None, simple=False, timeout_default=None, windowTitle=None, skinName=None, skin_name=None, title=None, showYESNO=False, closeOnAnyKey=False, typeIcon=None, timeoutDefault=None):
 		self.type = type
-		Screen.__init__(self, session)
-
-		self.msgBoxID = msgBoxID
-
+		Screen.__init__(self, session, enableHelp=True)
+		self.text = text
+		if type == self.TYPE_YESNO:
+			self.list = [(_("Yes"), True), (_("No"), False)] if list is None else list
+			self["list"] = MenuList(self.list)
+			if isinstance(default, bool):
+				self.startIndex = 0 if default else 1
+			elif isinstance(default, int):
+				self.startIndex = default
+			else:
+				print(f"[MessageBox] Error: The context of the default ({default}) can't be determined!")
+		else:
+			self["list"] = MenuList([])
+			self["list"].hide()
+			self.list = None
 		self["text"] = Label(text)
 		self["Text"] = StaticText(text)
 		self["selectedChoice"] = StaticText()
-
 		self["key_help"] = StaticText(_("HELP"))
-
-		self.text = text
-		self.close_on_any_key = close_on_any_key
-		self.timeout_default = timeout_default
-
 		self["ErrorPixmap"] = Pixmap()
 		self["QuestionPixmap"] = Pixmap()
 		self["InfoPixmap"] = Pixmap()
@@ -50,6 +62,7 @@ class MessageBox(Screen):
 			enableInput = False
 		if enableInput:
 			self.createActionMap(0)
+		self.msgBoxID = msgBoxID
 		picon = picon or type
 		if picon != self.TYPE_ERROR:
 			self["ErrorPixmap"].hide()
@@ -88,21 +101,6 @@ class MessageBox(Screen):
 		self.windowTitle = windowTitle or self.TYPE_PREFIX.get(type, _("Message"))
 		self.baseTitle = self.windowTitle
 		self.activeTitle = self.windowTitle
-		if type == self.TYPE_YESNO or showYESNO:
-			if list:
-				self.list = list
-			elif default:
-				self.list = [(_("yes"), True), (_("no"), False)]
-			else:
-				self.list = [(_("no"), False), (_("yes"), True)]
-		else:
-			self.list = []
-
-		self["list"] = MenuList(self.list)
-		if self.list:
-			self["selectedChoice"].setText(self.list[0][0])
-		else:
-			self["list"].hide()
 		self.onLayoutFinish.append(self.layoutFinished)
 
 	def __repr__(self):
@@ -131,16 +129,16 @@ class MessageBox(Screen):
 		self["actions"] = ActionMap(["MsgBoxActions", "DirectionActions"],
 			{
 				"cancel": self.cancel,
-				"ok": self.ok,
-				"alwaysOK": self.alwaysOK,
+				"select": self.select,
+				"selectOk": self.selectOk,
 				"up": self.up,
 				"down": self.down,
-				"left": self.left,
-				"right": self.right,
+				"left": self.pageUp,
+				"right": self.pageDown,
 				"upRepeated": self.up,
 				"downRepeated": self.down,
-				"leftRepeated": self.left,
-				"rightRepeated": self.right
+				"leftRepeated": self.pageUp,
+				"rightRepeated": self.pageDown
 			}, -1)
 
 	def initTimeout(self, timeout):
@@ -184,22 +182,25 @@ class MessageBox(Screen):
 				self.timeoutCallback()
 
 	def timeoutCallback(self):
-		if self.timeout_default is not None:
-			self.close(self.timeout_default)
+		if self.timeoutDefault is not None:
+			self.close(self.timeoutDefault)
 		else:
-			self.ok()
+			self.selectOk()
 
 	def cancel(self):
 		self.close(False)
 
-	def ok(self):
+	def select(self):
 		if self.list:
 			self.close(self["list"].getCurrent()[1])
 		else:
 			self.close(True)
 
-	def alwaysOK(self):
+	def selectOk(self):
 		self.close(True)
+
+	def top(self):
+		self.move(self["list"].instance.moveTop)
 
 	def up(self):
 		self.move(self["list"].instance.moveUp)
@@ -207,14 +208,17 @@ class MessageBox(Screen):
 	def down(self):
 		self.move(self["list"].instance.moveDown)
 
-	def left(self):
+	def pageUp(self):
 		self.move(self["list"].instance.pageUp)
 
-	def right(self):
+	def pageDown(self):
 		self.move(self["list"].instance.pageDown)
 
+	def bottom(self):
+		self.move(self["list"].instance.moveEnd)
+
 	def move(self, direction):
-		if self.close_on_any_key:
+		if self.closeOnAnyKey:
 			self.close(True)
 		self["list"].instance.moveSelection(direction)
 		if self.list:
@@ -242,10 +246,9 @@ class MessageBox(Screen):
 class MessageBoxSummary(ScreenSummary):
 	def __init__(self, session, parent):
 		ScreenSummary.__init__(self, session, parent=parent)
-		text = getattr(parent, "text", _(""))  # Use empty string if .text is missing
-		self["text"] = StaticText(text)
+		self["text"] = StaticText(parent.text)
 		self["option"] = StaticText("")
-		if getattr(parent, "list", None):
+		if parent.list:
 			if self.addWatcher not in self.onShow:
 				self.onShow.append(self.addWatcher)
 			if self.removeWatcher not in self.onHide:
@@ -275,7 +278,7 @@ class ModalMessageBox:
 			self.dialog = session.instantiateDialog(MessageBox, "", enableInput=False, skinName="MessageBoxModal")
 			self.dialog.setAnimationMode(0)
 
-	def showMessageBox(self, text=None, timeout=-1, list=None, default=True, closeOnAnyKey=False, timeoutDefault=None, windowTitle=None, msgBoxID=None, typeIcon=MessageBox.TYPE_YESNO, enableInput=True, callback=None):
+	def showMessageBox(self, text=None, timeout=-1, list=None, default=True, closeOnAnyKey=False, windowTitle=None, msgBoxID=None, typeIcon=MessageBox.TYPE_YESNO, enableInput=True, callback=None):
 		self.dialog.text = text
 		self.dialog["text"].setText(text)
 		self.dialog.typeIcon = typeIcon

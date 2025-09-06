@@ -914,12 +914,14 @@
 	</map>
 
 	<map context="MsgBoxActions">
-		<key id="KEY_GREEN" mapto="alwaysOK" flags="m" />
-		<key id="KEY_OK" mapto="ok" flags="m" />
-		<key id="KEY_ENTER" mapto="ok" flags="m" />
-		<key id="KEY_RED" mapto="cancel" flags="m" />
+		<!-- Also uses NavigationActions -->
 		<key id="KEY_EXIT" mapto="cancel" flags="m" />
+		<key id="KEY_OK" mapto="select" flags="m" />
+		<key id="KEY_RED" mapto="cancel" flags="m" />
+		<key id="KEY_GREEN" mapto="selectOk" flags="m" />
+		<!-- Keyboard specific buttons -->
 		<key id="KEY_ESC" mapto="cancel" flags="m" />
+		<key id="KEY_ENTER" mapto="select" flags="m" />
 	</map>
 
 	<map context="WindowActions">
@@ -1071,7 +1073,7 @@
 		<key id="KEY_FASTFORWARD" mapto="fastforward" flags="m" />
 		<key id="KEY_PREVIOUSSONG" mapto="skip_back" flags="m" />
 		<key id="KEY_NEXTSONG" mapto="skip_forward" flags="m" />
-		<key id="KEY_SCREEN" mapto="activatePiP" flags="b" />
+		<key id="KEY_SCREEN" mapto="activatePiP" flags="m" />
 		<key id="KEY_SCREEN" mapto="activatePiP_long" flags="l" />
 		<key id="KEY_PROGRAM" mapto="timer" flags="b" />
 		<key id="KEY_PROGRAM" mapto="timer_long" flags="l" />
