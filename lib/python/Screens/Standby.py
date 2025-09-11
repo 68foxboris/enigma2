@@ -392,7 +392,7 @@ def getReasons(session, retvalue=QUIT_SHUTDOWN):
 			_("The process will take approximately %d minutes to complete.") % min(int(duration // 60), 2),
 			 _("Select 'Yes' to shut down immediately instead of starting the descramble.")
 		]
-		reasons.append("\n".join(reason))
+		reasons.append("\n".join(reasons))
 		descramble = True
 
 	# Гарантируем возврат кортежа из двух элементов
@@ -407,9 +407,8 @@ class TryQuitMainloop(MessageBox):
 		self.connected = False
 		self.descramble = False  # Добавляем атрибут класса
 
-		if check_reasons:
-			reasons, self.descramble = getReasons(session, retvalue)  # Получаем оба значения
-		if reasons:
+		reason = check_reasons and getReasons(session, retvalue)
+		if reason:
 			text = {
 				QUIT_SHUTDOWN: _("Really shutdown now?"),
 				QUIT_REBOOT: _("Really reboot now?"),
