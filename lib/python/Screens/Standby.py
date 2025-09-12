@@ -380,36 +380,37 @@ def getReasons(session, retvalue=QUIT_SHUTDOWN):
 		reasons.append(_("Client is streaming from this box!"))
 	if not reasons and mediaFilesInUse(session) and retvalue in (QUIT_SHUTDOWN, QUIT_REBOOT, QUIT_KODI, QUIT_UPGRADE_FP, QUIT_UPGRADE_PROGRAM):
 		reasons.append(_("A file from media is in use!"))
+	return "\n".join(reasons)
 	if jobs and retvalue in (QUIT_SHUTDOWN, QUIT_REBOOT, QUIT_KODI):
 		reasons.append(_('%d jobs are running in the background!'))
-	if len(scrambledList) and retvalue == QUIT_SHUTDOWN and config.recording.standbyDescrambleShutdown.value:
-		duration = 0
-		for scrambledListItem in scrambledList:
-			duration += scrambledListItem[1]
-		count = len(scrambledList)
-		reasons = [
-			ngettext("There is %d scrambled recording, which will be unscrambled during Standby.", "There are %d scrambled recordings, which will be unscrambled during Standby.", count) % count,
-			_("The process will take approximately %d minutes to complete.") % min(int(duration // 60), 2),
-			 _("Select 'Yes' to shut down immediately instead of starting the descramble.")
-		]
-		reasons.append("\n".join(reason))
-		descramble = True
-
-	# Гарантируем возврат кортежа из двух элементов
-	if reasons:
-		return "\n".join(reasons), descramble
-	return "", descramble  # Возвращаем пустую строку и descramble
-
 
 class TryQuitMainloop(MessageBox):
 	def __init__(self, session, retvalue=QUIT_SHUTDOWN, timeout=-1, default_yes=False, check_reasons=True):
 		self.retval = retvalue
 		self.connected = False
-		self.descramble = False  # Добавляем атрибут класса
-
-		if check_reasons:
-			reasons, self.descramble = getReasons(session, retvalue)  # Получаем оба значения
-		if reasons:
+		self.descramble = False
+		if BoxInfo.getItem("CanDescrambleInStandby"):
+			scrambledRecordings = ScrambledRecordings()
+			scrambledList = scrambledRecordings.readList(returnLength=True)
+		else:
+			scrambledList = []
+		if len(scrambledList) and retvalue == QUIT_SHUTDOWN and config.recording.standbyDescrambleShutdown.value:
+			duration = 0
+			for scrambledListItem in scrambledList:
+				duration += scrambledListItem[1]
+			count = len(scrambledList)
+			reason = [
+				ngettext("There is %d scrambled recording, which will be unscrambled during Standby.", "There are %d scrambled recordings, which will be unscrambled during Standby.", count) % count,
+				_("The process will take approximately %d minutes to complete.") % min(int(duration // 60), 2),
+				_("Select 'Yes' to shut down immediately instead of starting the descramble.")
+			]
+			reason = f"{reason[0]} {reason[1]}\n\n{reason[2]}"
+			default_yes = False
+			self.descramble = True
+			timeout = 30
+		else:
+			reason = check_reasons and getReasons(session, retvalue)
+		if reason:
 			text = {
 				QUIT_SHUTDOWN: _("Really shutdown now?"),
 				QUIT_REBOOT: _("Really reboot now?"),
@@ -421,7 +422,7 @@ class TryQuitMainloop(MessageBox):
 				QUIT_MANUFACTURER_RESET: _("Really perform a manufacturer reset now?")
 			}.get(retvalue, None)
 			if text:
-				MessageBox.__init__(self, session, "%s\n%s" % (reason, text), type=MessageBox.TYPE_YESNO, timeout=timeout, default=default_yes)
+				MessageBox.__init__(self, session, reason + text, type=MessageBox.TYPE_YESNO, timeout=timeout, default=default_yes)
 				self.skinName = "MessageBoxSimple"
 				session.nav.record_event.append(self.getRecordEvent)
 				self.connected = True
