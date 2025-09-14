@@ -396,7 +396,6 @@ BoxInfo.setItem("PowerOffDisplay", MODEL not in "formuler1" and fileCheck("/proc
 BoxInfo.setItem("RecoveryMode", fileCheck("/proc/stb/fp/boot_mode") or MODEL in ("dreamone", "dreamtwo"))
 BoxInfo.setItem("RcTypeChangable", not (MODEL in ("gbue4k", "gbquad4k", "gbquad4kpro", "et8500") or MODEL in "et7") and pathExists("/proc/stb/ir/rc/type"))
 BoxInfo.setItem("ScalerSharpness", fileCheck("/proc/stb/vmpeg/0/pep_scaler_sharpness"))
-BoxInfo.setItem("SCART", BoxInfo.getItem("scart") and procModel != "ultra")
 BoxInfo.setItem("VideoDestinationConfigurable", fileExists("/proc/stb/vmpeg/0/dst_left"))
 BoxInfo.setItem("WakeOnLAN", not MODEL.startswith("et8000") and fileCheck("/proc/stb/power/wol") or fileCheck("/proc/stb/fp/wol"))
 BoxInfo.setItem("ZapMode", fileCheck("/proc/stb/video/zapmode") or fileCheck("/proc/stb/video/zapping_mode"))

@@ -16,14 +16,19 @@ if [ -e /usr/bin/ciplushelper ]; then
 	sleep 3
 fi
 
-# hook to execute dhcp wait script
-if [ -x /usr/bin/enigma2_dhcp_wait.sh ]; then
-	/usr/bin/enigma2_dhcp_wait.sh
+#Workaround for aspect ratio issue
+if [ -e /proc/stb/video/avshutdown ]; then
+	echo "down" > /proc/stb/video/avshutdown && echo "up" > /proc/stb/video/avshutdown
 fi
 
-# hook to execute scripts always before enigma2 start
-if [ -x /usr/bin/enigma2_pre_start.sh ]; then
-	/usr/bin/enigma2_pre_start.sh
+if [ -e /proc/stb/info/boxtype ]; then
+	stbcheck=`cat /proc/stb/info/boxtype`
+	if [ $stbcheck == "sf8008" ] || [ $stbcheck == "sf8008m" ] || [ $stbcheck == "sx988" ] || [ $stbcheck == "ip8" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "ustym4kottpremium" ] || [ $stbcheck == "ustym4ks2ottx" ] || [ $stbcheck == "trio4k" ] || [ $stbcheck == "gbip4k" ] || [ $stbcheck == "gbmv200" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "viper4k" ] || [ $stbcheck == "og2ott4k" ] || [ $stbcheck == "og2s4k" ] || [ $stbcheck == "sfx6008" ] || [ $stbcheck == "sx88v2" ]; then
+		count=`ps -ef |grep libreader |grep -v "grep" |wc -l`
+		if [ 0 == $count ];then
+			libreader 720P_50
+		fi
+	fi
 fi
 
 if [ -d /home/root ]; then
@@ -64,6 +69,22 @@ if [ -f /proc/stb/fp/led_color ]; then
 	echo "00ffffff" > /proc/stb/fp/led_color
 elif [ -f /proc/stb/fp/led_brightness ]; then
 	echo "000000ff" > /proc/stb/fp/led_brightness
+fi
+
+if [ -f /proc/stb/fp/nec_ir ]; then
+	/sbin/insmod /lib/modules/4.9/extra/lcd/lcd.ko
+	echo "1" > /proc/stb/fp/nec_ir
+	[ -f /sys/class/remote/amremote/protocol ] && echo "2" > /sys/class/remote/amremote/protocol
+fi
+
+# hook to execute dhcp wait script
+if [ -x /usr/bin/enigma2_dhcp_wait.sh ]; then
+	/usr/bin/enigma2_dhcp_wait.sh
+fi
+
+# hook to execute scripts always before enigma2 start
+if [ -x /usr/bin/enigma2_pre_start.sh ]; then
+	/usr/bin/enigma2_pre_start.sh
 fi
 
 # Show backdrop on enigma2 start.
@@ -185,6 +206,19 @@ wait ${enigma2pid}
 # >128 signal
 
 ret=$?
+if [ "$ret" -ne "1" ]; then
+	if [ -e /proc/stb/info/boxtype ]; then
+		stbcheck=`cat /proc/stb/info/boxtype | cut -c1-2`
+		if [ $stbcheck == "u5" ] || [ $stbcheck == "u4" ]; then
+			killall -9 showiframe; sleep 5
+		fi
+		stbcheck=`cat /proc/stb/info/boxtype`
+		if [ $stbcheck == "sf8008" ] || [ $stbcheck == "sf8008m" ] || [ $stbcheck == "sx988" ] || [ $stbcheck == "ip8" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "ustym4kottpremium" ] || [ $stbcheck == "ustym4ks2ottx" ] || [ $stbcheck == "trio4k" ] || [ $stbcheck == "gbip4k" ] || [ $stbcheck == "gbmv200" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "viper4k" ] || [ $stbcheck == "og2ott4k" ] || [ $stbcheck == "og2s4k" ] || [ $stbcheck == "sfx6008" ] || [ $stbcheck == "sx88v2" ]; then
+			killall -9 libreader; sleep 5
+		fi
+	fi
+fi
+
 case $ret in
 	1)
 		if [ -f /proc/stb/fp/led_color ]; then

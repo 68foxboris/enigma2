@@ -1,3 +1,5 @@
+from errno import ENOENT
+from os import remove
 from os.path import isdir, islink, join, exists
 import sys  # This is needed for the twisted redirection access to stderr and stdout.
 from time import time
@@ -259,8 +261,6 @@ class PowerKey:
 	def standby(self):
 		if not Screens.Standby.inStandby and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND and self.session.in_exec:
 			self.session.open(Screens.Standby.Standby)
-		else:
-			return 0
 
 	def doAction(self, selected):
 		if selected:
@@ -283,7 +283,7 @@ class PowerKey:
 
 class AutoScartControl:
 	def __init__(self, session):
-		self.hasScart = BoxInfo.getItem("SCART")
+		self.hasScart = BoxInfo.getItem("HasScart")
 		if self.hasScart:
 			self.force = False
 			self.current_vcr_sb = enigma.eAVControl.getInstance().getVCRSlowBlanking()
