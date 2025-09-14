@@ -32,10 +32,11 @@ class Screen(dict):
 		self.session = session
 		self.parent = parent
 		self.mandatoryWidgets = mandatoryWidgets
-		self.onClose = []
+		self.handledWidgets = []
 		self.onFirstExecBegin = []
 		self.onExecBegin = []
 		self.onExecEnd = []
+		self.onClose = []
 		self.onLayoutFinish = []
 		self.onContentChanged = []
 		self.onShown = []
@@ -56,12 +57,13 @@ class Screen(dict):
 		self.desktop = None
 		self.instance = None
 		self.summaries = CList()
-		self["Title"] = StaticText()
-		self["ScreenPath"] = StaticText()
 		self.screenPath = ""  # This is the current screen path without the title.
 		self.screenTitle = ""  # This is the current screen title without the path.
-		self.handledWidgets = []
-		self.setImage(className)
+		self["ScreenPath"] = StaticText()
+		self["Title"] = StaticText()
+		self.screenImage = self.checkImage(className)  # This is the current screen image name.
+		if self.screenImage:
+			self["Image"] = Pixmap()
 		if enableHelp:
 			self["helpActions"] = ActionMap(["HelpActions"], {
 				"displayHelp": self.showHelp
@@ -163,9 +165,6 @@ class Screen(dict):
 	def setStandAlone(self, value):  # Stand alone screens (for example web screens) don't care about having or not having focus.
 		self.standAlone = value
 
-	def getScreenPath(self):
-		return self.screenPath
-
 	def setTitle(self, title, showPath=True):
 		try:  # This protects against calls to setTitle() before being fully initialised like self.session is accessed *before* being defined.
 			self.screenPath = ""
@@ -183,20 +182,43 @@ class Screen(dict):
 		self.screenTitle = title
 		if showPath and config.usage.showScreenPath.value == "large" and title:
 			screenPath = ""
-			screenTitle = "%s > %s" % (self.screenPath, title) if self.screenPath else title
+			screenTitle = f"{self.screenPath} > {title}" if self.screenPath else title
 		elif showPath and config.usage.showScreenPath.value == "small":
-			screenPath = "%s >" % self.screenPath if self.screenPath else ""
+			screenPath = f"{self.screenPath} >" if self.screenPath else ""
 			screenTitle = title
 		else:
 			screenPath = ""
 			screenTitle = title
-		self["ScreenPath"].text = screenPath
-		self["Title"].text = screenTitle
+		self["ScreenPath"].setText(screenPath)
+		self["Title"].setText(screenTitle)
 
 	def getTitle(self):
 		return self.screenTitle
 
 	title = property(getTitle, setTitle)
+
+	def getScreenPath(self):
+		return self.screenPath
+
+	def checkImage(self, image, source=None):
+		screenImage = None
+		if image:
+			images = {
+				# "screen": screens,
+				"menu": menus,
+				"setup": setups
+			}.get(source, screens)
+			defaultImage = images.get("default", "")
+			screenImage = images.get(image, defaultImage)
+			if screenImage:
+				screenImage = resolveFilename(SCOPE_GUISKIN, screenImage)
+				msg = f"{'Default' if screenImage == defaultImage and image != 'default' else 'Specified'} {source if source else 'screen'} image for '{image}' is '{screenImage}'"
+				if isfile(screenImage):
+					print(f"[Screen] {msg}.")
+				else:
+					print(f"[Screen] Error: {msg} but this is not a file!")
+					screenImage = None
+		return screenImage
 
 	def setImage(self, image, source=None):
 		self.screenImage = None
@@ -206,8 +228,10 @@ class Screen(dict):
 				if self.screenImage and "Image" not in self:
 					self["Image"] = Pixmap()
 
-	def setFocus(self, o):
-		self.instance.setFocus(o.instance)
+	def getImage(self):
+		return self.screenImage
+
+	image = property(getImage, setImage)
 
 	def callHelpAction(self, *args):
 		if args:
@@ -221,6 +245,9 @@ class Screen(dict):
 				self.secondInfoBarScreen.hide()
 		self.session.openWithCallback(self.callHelpAction, HelpMenu, self.helpList)
 
+	def setFocus(self, o):
+		self.instance.setFocus(o.instance)
+
 	def setKeyboardModeNone(self):
 		rcinput = eRCInput.getInstance()
 		rcinput.setKeyboardMode(rcinput.kmNone)
@@ -229,14 +256,14 @@ class Screen(dict):
 		rcinput = eRCInput.getInstance()
 		rcinput.setKeyboardMode(rcinput.kmAscii)
 
+	def saveKeyboardMode(self):
+		rcinput = eRCInput.getInstance()
+		self.keyboardMode = rcinput.getKeyboardMode()
+
 	def restoreKeyboardMode(self):
 		rcinput = eRCInput.getInstance()
 		if self.keyboardMode is not None:
 			rcinput.setKeyboardMode(self.keyboardMode)
-
-	def saveKeyboardMode(self):
-		rcinput = eRCInput.getInstance()
-		self.keyboardMode = rcinput.getKeyboardMode()
 
 	def setDesktop(self, desktop):
 		self.desktop = desktop
@@ -313,6 +340,7 @@ class Screen(dict):
 				# w.instance.thisown = 0
 			applyAllAttributes(w.instance, desktop, w.skinAttributes, self.scale)
 		if self.screenImage:
+			screenImage = LoadPixmap(self.screenImage)
 			self["Image"].setPixmap(LoadPixmap(self.screenImage))
 		for f in self.onLayoutFinish:
 			if not isinstance(f, type(self.close)):
