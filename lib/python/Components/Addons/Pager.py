@@ -219,10 +219,10 @@ class Pager(GUIAddon):
 
 	def initPager(self):
 		if self.source.__class__.__name__ == "ScrollLabel":
-			currentPageIndex = self.source.curPos // self.source.pageHeight
-			if not ((self.source.TotalTextHeight - self.source.curPos) % self.source.pageHeight):
+			currentPageIndex = self.source.currentPosition // self.source.pageHeight
+			if not ((self.source.totalTextHeight - self.source.currentPosition) % self.source.pageHeight):
 				currentPageIndex += 1
-			pagesCount = -(-self.source.TotalTextHeight // self.source.pageHeight) - 1
+			pagesCount = -(-self.source.totalTextHeight // self.source.pageHeight) - 1
 			self.selChange(currentPageIndex, pagesCount)
 		else:
 			l_orientation = self.getSourceOrientation()
