@@ -142,6 +142,29 @@ class InputDeviceSelection(Screen):
 		self.updateList()
 
 
+class KeyboardSelection(Setup):
+	def __init__(self, session):
+		Setup.__init__(self, session, "Keyboard")
+		self.initialKeyboardsIndex = config.inputDevices.keyboardsIndex.value
+
+	def keySave(self):
+		def keySaveCallback(answer):
+			if answer:
+				return Setup.keySave(self)
+			config.inputDevices.keyboardsIndex.value = self.initialKeyboardsIndex
+			print("[InputDeviceSetup] Keyboard selection rejected by user, returning to initial selection.")
+			keyboard.loadKeyboard(self.initialKeyboardsIndex)
+			for item in self["config"].getList():
+				self["config"].invalidate(item)
+
+		index = config.inputDevices.keyboardsIndex.value
+		if index == self.initialKeyboardsIndex:
+			self.close()  # Use 'Setup.keySave(self)' if there are other settings to be saved.
+		else:
+			keyboard.loadKeyboard(index)
+			self.session.openWithCallback(keySaveCallback, MessageBox, _("Is the keyboard working?"), MessageBox.TYPE_YESNO, timeout=30, default=True, timeout_default=False, windowTitle=self.getTitle())
+
+
 class InputDeviceSetup(ConfigListScreen, Screen):
 
 	skin = """

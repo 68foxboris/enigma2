@@ -151,7 +151,7 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 						<item key="netsamba_setup" level="2" text="Samba Settings" weight="60" requires="samba"><screen module="NetworkSetup" screen="NetworkSambaSetup" /></item>
 					</menu>
 					<item key="input_device_setup" level="1" text="Input devices"><screen module="InputDeviceSetup" screen="InputDeviceSelection"/></item>
-					<item key="keyboard_setup" text="Keyboard Settings"><setup setupKey="Keyboard"/></item>
+					<item key="keyboard" level="1" text="Keyboard Settings" weight="60"><screen module="InputDeviceSetup" screen="KeyboardSelection" /></item>
 					<item key="hotkey_setup" level="1" text="Hotkey"><screen module="Hotkey" screen="HotkeySetup"/></item>
 				</menu>
 			</menu>
