@@ -29,9 +29,8 @@
 		<item level="1" text="Multichannel PCM" description="Configure whether multi channel PCM sound should be enabled." requires="CanPcmMultichannel">config.av.multichannel_pcm</item>
 		<item level="1" text="Audio Auto Volume Level" description="This option configures you can set Auto Volume Level." requires="HasAutoVolume">config.av.autovolume</item>
 		<item level="1" text="Audio Auto Volume Level" description="This option configures you can set Auto Volume Level." requires="HasAutoVolumeLevel">config.av.autovolumelevel</item>
-		<item level="1" text="3D Surround" description="This option allows you to enable 3D Surround Sound." requires="Has3DSurround">config.av.surround_3d</item>
-		<item level="1" text="3D Surround Speaker Position" description="This option allows you to change the virtual loudspeaker position." requires="Has3DSpeaker" conditional="config.av.surround_3d.value != 'none'">config.av.speaker_3d</item>
-		<item level="1" text="3D surround speaker position" description="This option allows you to change the virtual loudspeaker position." requires="Has3DSurroundSpeaker" conditional="config.av.surround_3d.value != 'none'">config.av.surround_3d_speaker</item>
+		<item level="1" text="3D Surround" description="This option allows you to enable 3D Surround Sound." requires="Can3DSurround">config.av.surround_3d</item>
+		<item level="1" text="3D Surround Speaker Position" description="This option allows you to change the virtual loudspeaker position." requires="Can3DSpeaker" conditional="config.av.surround_3d.value != 'none'">config.av.surround_3d_speaker</item>
 		<item level="1" text="3D surround softlimiter" description="This option allows you to enable 3D surround softlimiter." requires="Has3DSurroundSoftLimiter" conditional="config.av.surround_3d_speaker.value != 'none'">config.av.surround_softlimiter_3d</item>
 		<item level="1" text="General audio delay" description="This option configures the general audio delay." requires="CanAudioDelay">config.av.audiodelay</item>
 		<item level="1" text="Enable BT audio" description="This option allows you to switch audio to BT speakers." requires="CanBTAudio">config.av.btaudio</item>
