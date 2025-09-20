@@ -186,7 +186,7 @@ class EPGSelection(Screen, HelpableScreen):
 				eventname = eventname.replace('', '')
 				try:
 					tmbdsearch = config.plugins.tmbd.profile.value
-				except:
+				except Exception:
 					tmbdsearch = None
 				if tmbdsearch is not None:
 					if config.plugins.tmbd.profile.value == "0":
@@ -195,7 +195,7 @@ class EPGSelection(Screen, HelpableScreen):
 						try:
 							from Plugins.Extensions.TMBD.plugin import KinoRu
 							self.session.open(KinoRu, eventname, False)
-						except:
+						except Exception:
 							pass
 				else:
 					self.session.open(TMBD, eventname, False)

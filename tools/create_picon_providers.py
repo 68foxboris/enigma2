@@ -62,12 +62,12 @@ while len(f) > 2:
 
 	try:
 		makedirs(f"{sat}/{servicetype}/{provider}")
-	except:
+	except OSError:
 		pass
 
 	try:
 		symlink(filename, f"{sat}/{servicetype}/{provider}/{linkname}")
-	except:
+	except OSError:
 		pass
 
 	f = f[3:]

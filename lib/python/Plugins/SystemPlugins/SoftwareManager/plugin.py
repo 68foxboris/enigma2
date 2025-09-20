@@ -279,7 +279,7 @@ class UpdatePluginMenu(Screen):
 					try:
 						from Plugins.Extensions.MediaScanner.plugin import main
 						main(self.session)
-					except:
+					except ImportError:
 						self.session.open(MessageBox, _("Sorry, %s has not been installed!") % ("MediaScanner"), MessageBox.TYPE_INFO, timeout=10)
 				elif (currentEntry == "default-plugin"):
 					self.extended = current[3]

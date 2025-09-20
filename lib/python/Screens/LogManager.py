@@ -107,7 +107,7 @@ class LogManagerPoller:
 					fh.write(data)
 					fh.truncate()
 					fh.close()
-			except:
+			except OSError:
 				pass
 		self.TrimTimer.startLongTimer(3600)  # once an hour
 
@@ -161,7 +161,7 @@ class LogManagerPoller:
 					for name in dirs:
 						try:
 							rmdir(join(root, name))
-						except:
+						except OSError:
 							pass
 					candidates.sort()
 					# Now we have a list of ctime, candidates, size. Sorted by ctime (=deletion time)
@@ -280,7 +280,7 @@ class LogManager(Screen):
 	def changeSelectionState(self):
 		try:
 			self.sel = self["list"].getCurrent()[0]
-		except:
+		except Exception:
 			self.sel = None
 		if self.sel:
 			self["list"].changeSelectionState()
@@ -303,7 +303,7 @@ class LogManager(Screen):
 		if self.logs:
 			try:
 				self.sel = self["list"].getCurrent()[0]
-			except:
+			except Exception:
 				self.sel = None
 			if self.sel and self["list"].getPath():
 				self.session.open(LogManagerViewLog, self.sel[0])
@@ -314,7 +314,7 @@ class LogManager(Screen):
 		try:
 			path = self["list"].getPath()
 			self.sel = self["list"].getCurrent()[0]
-		except:
+		except Exception:
 			self.sel = None
 		if path:
 			self.selectedFiles = self["list"].getSelectedList()
@@ -460,7 +460,7 @@ class LogInfo(VariableText, GUIComponent):
 					self.setText(_("Exist are debug files. Space used:") + " " + total_size) if not glob(config.crash.debug_path.value + '*crash*') and glob(config.crash.debug_path.value + '*enigma2-debug*') else self.setText(_("Space used:") + " " + total_size)
 				else:
 					self.setText(_("Exist are no debug files or crash."))
-			except:
+			except Exception:
 				# occurs when f_blocks is 0 or a similar error
 				self.setText("-?-")
 

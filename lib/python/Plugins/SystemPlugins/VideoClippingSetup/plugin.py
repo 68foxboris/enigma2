@@ -108,7 +108,7 @@ def setPosition(clip_left, clip_width, clip_top, clip_height):
 		open("/proc/stb/vmpeg/0/clip_top", "w").write('%X' % clip_top)
 		print("[VideoClippingSetup] Write to /proc/stb/vmpeg/0/clip_height")
 		open("/proc/stb/vmpeg/0/clip_height", "w").write('%X' % clip_height)
-	except:
+	except OSError:
 		print("[VideoClippingSetup] Write to /proc/stb/vmpeg/0/clip_left failed.")
 		print("[VideoClippingSetup] Write to /proc/stb/vmpeg/0/clip_width failed.")
 		print("[VideoClippingSetup] Write to /proc/stb/vmpeg/0/clip_top failed.")
