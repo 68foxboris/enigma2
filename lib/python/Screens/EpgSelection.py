@@ -121,7 +121,6 @@ class EPGSelection(Screen, HelpableScreen):
 				"yellow": self.yellowButtonPressed,
 				"blue": self.blueButtonPressed,
 				"info": self.infoKeyPressed,
-				"red": self.zapTo,
 				"menu": self.furtherOptions,
 				"nextBouquet": self.nextBouquet,  # just used in multi epg yet
 				"prevBouquet": self.prevBouquet,  # just used in multi epg yet
@@ -137,6 +136,11 @@ class EPGSelection(Screen, HelpableScreen):
 				"endDown": (self.filterEndDown, _("End time") + " -"),
 				"endUp": (self.filterEndUp, _("End time") + " +"),
 				"saveTimes": (self.saveFilterValues, _("Use current filter values as default")),
+			})
+
+		self['colouractions'] = HelpableActionMap(self, ["ColorActions"],
+			{
+				"red": (self.GoToTmbd, _("Search event in TMBD"))
 			})
 
 		self.isTMBD = isPluginInstalled("TMBD")
@@ -166,7 +170,7 @@ class EPGSelection(Screen, HelpableScreen):
 		else:
 			self.fallbackTimer = FallbackTimerList(self, self.onCreate)
 
-	def goToTmbd(self):
+	def GoToTmbd(self):
 		if isPluginInstalled("TMBD"):
 			self.runTMBD()
 		else:
@@ -298,9 +302,15 @@ class EPGSelection(Screen, HelpableScreen):
 		service = cur[1]
 		if event is not None:
 			if self.type != EPG_TYPE_SIMILAR:
-				self.session.open(EventViewSimple, event, service, self.eventViewCallback, self.openSimilarList, parent=self.parent)
+				try:
+					self.session.open(EventViewSimple, event, service, self.eventViewCallback, self.openSimilarList, parent=self.parent)
+				except:
+					self.session.open(EventViewSimple, event, service, self.eventViewCallback, self.openSimilarList)
 			else:
-				self.session.open(EventViewSimple, event, service, self.eventViewCallback, parent=self.parent)
+				try:
+					self.session.open(EventViewSimple, event, service, self.eventViewCallback, parent=self.parent)
+				except:
+					self.session.open(EventViewSimple, event, service, self.eventViewCallback)
 
 	def openSimilarList(self, eventid, refstr):
 		self.session.open(EPGSelection, refstr, None, eventid)
@@ -434,16 +444,23 @@ class EPGSelection(Screen, HelpableScreen):
 
 	def getTimespanText(self):
 		begin, end = config.epg.filter_start.value, config.epg.filter_end.value
-		return  "(%02d:%02d - %02d:%02d)" % ((*begin, *end) if self.filtering == 1 else (*end, *begin))
+		return "(%02d:%02d - %02d:%02d)" % ((*begin, *end) if self.filtering == 1 else (*end, *begin))
 
 	def filterStartDown(self):
-		if self.filtering: self.filterShiftTimespan('start', -1)
+		if self.filtering:
+			self.filterShiftTimespan('start', -1)
+
 	def filterStartUp(self):
-		if self.filtering: self.filterShiftTimespan('start', 1)
+		if self.filtering:
+			self.filterShiftTimespan('start', 1)
+
 	def filterEndDown(self):
-		if self.filtering: self.filterShiftTimespan('end', -1)
+		if self.filtering:
+			self.filterShiftTimespan('end', -1)
+
 	def filterEndUp(self):
-		if self.filtering: self.filterShiftTimespan('end', 1)
+		if self.filtering:
+			self.filterShiftTimespan('end', 1)
 
 	def yellowButtonPressed(self):
 		if self.type == EPG_TYPE_MULTI:
@@ -727,9 +744,6 @@ class EPGSelection(Screen, HelpableScreen):
 			if self.key_green_choice != self.EMPTY:
 				self["key_green"].setText("")
 				self.key_green_choice = self.EMPTY
-			if self.key_red_choice != self.EMPTY:
-				self["key_red"].setText("")
-				self.key_red_choice = self.EMPTY
 			return
 		event = cur[0]
 		self["Event"].newEvent(event)
@@ -763,13 +777,7 @@ class EPGSelection(Screen, HelpableScreen):
 			if self.key_green_choice != self.EMPTY:
 				self["key_green"].setText("")
 				self.key_green_choice = self.EMPTY
-			if self.key_red_choice != self.EMPTY:
-				self["key_red"].setText("")
-				self.key_red_choice = self.EMPTY
 			return
-		elif self.key_red_choice != self.ZAP and self.zapFunc is not None:
-			self["key_red"].setText(_("Zap"))
-			self.key_red_choice = self.ZAP
 
 		if event is None:
 			if self.key_green_choice != self.EMPTY:

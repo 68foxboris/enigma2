@@ -1567,6 +1567,9 @@ class InfoBarEPG:
 			epglist[1] = tmp
 			setEvent(epglist[0])
 
+	def openSimilarList(self, eventid, refstr):
+		self.session.open(EPGSelection, refstr, eventid=eventid)
+
 
 class InfoBarRdsDecoder:
 	"""provides RDS and Rass support/display"""
