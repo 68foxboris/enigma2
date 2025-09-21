@@ -1390,7 +1390,7 @@ int ePicLoad::getData(ePtr<gPixmap>& result) {
 
 	eTrace("[getData] ox=%d oy=%d max_x=%d max_y=%d bits=%d", m_filepara->ox, m_filepara->oy, scrx, scry,
 		   m_filepara->bits);
-	
+
 	if (m_filepara->ox == scrx && m_filepara->oy == scry && (m_filepara->bits == 24 || m_filepara->bits == 32)) {
 		unsigned char* origin = m_filepara->pic_buffer;
 		unsigned char* tmp_buffer = ((unsigned char*)(surface->data));
