@@ -32,12 +32,7 @@
 
 fontRenderClass *fontRenderClass::instance;
 
-static pthread_mutex_t ftlock=
-#ifdef __GLIBC__
-	PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
-#else
-	PTHREAD_MUTEX_INITIALIZER;
-#endif
+static pthread_mutex_t ftlock=PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
 
 struct fntColorCacheKey
 {
@@ -198,11 +193,8 @@ fontRenderClass::fontRenderClass(): fb(fbClass::getInstance())
 	eDebug("[Font] Loading fonts.");
 	fflush(stdout);
 	font=0;
-#if HAVE_ARCH_ARM
-	int maxbytes=8*1024*1024;
-#else
+
 	int maxbytes=4*1024*1024;
-#endif
 	eDebug("[Font] Intializing font cache, using max. %dMB.", maxbytes/1024/1024);
 	fflush(stdout);
 	{
@@ -1071,9 +1063,6 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 			}
 			else
 			{
-#if HAVE_HISIAPI
-				if (surface->bpp != 0)
-#endif
 				eWarning("[eTextPara] Can't render to %dbpp!", surface->bpp);
 				return;
 			}

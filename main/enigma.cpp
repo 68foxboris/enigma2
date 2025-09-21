@@ -499,17 +499,8 @@ bool checkLogin(const char *user, const char *password)
 
 void dump_malloc_stats(void)
 {
-#ifdef __GLIBC__
-#if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 33)
 	struct mallinfo2 mi = mallinfo2();
-	eDebug("[Enigma] MALLOC %u total.", mi.uordblks);
-#else
-	struct mallinfo mi = mallinfo();
-	eDebug("[Enigma] MALLOC %d total.", mi.uordblks);
-#endif
-#else
-	eDebug("[Enigma] MALLOC info not exposed");
-#endif
+	eDebug("[Enigma] Malloc %zu total.", mi.uordblks);
 }
 
 #ifdef USE_LIBVUGLES2

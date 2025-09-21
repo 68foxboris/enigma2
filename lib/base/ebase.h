@@ -4,11 +4,7 @@
 #ifndef SWIG
 #include <vector>
 #include <map>
-#ifdef __GLIBC__
 #include <sys/poll.h>
-#else
-#include <poll.h>
-#endif
 #include <sys/time.h>
 #include <asm/types.h>
 #include <time.h>

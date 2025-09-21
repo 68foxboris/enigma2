@@ -4,9 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
-#ifdef __GLIBC__
 #include <execinfo.h>
-#endif
 #include <dlfcn.h>
 #include <lib/base/eenv.h>
 #include <lib/base/eerror.h>
@@ -430,7 +428,6 @@ void oops(const mcontext_t &context)
  */
 void print_backtrace()
 {
-#ifdef __GLIBC__
 	void *array[15];
 	size_t size;
 	size_t cnt;
@@ -447,7 +444,6 @@ void print_backtrace()
 			eLog(lvlFatal, "%s(%s) [0x%lX]", info.dli_fname, info.dli_sname != NULL ? info.dli_sname : "n/a", (unsigned long int) array[cnt]);
 		}
 	}
-#endif
 }
 
 void handleFatalSignal(int signum, siginfo_t *si, void *ctx)

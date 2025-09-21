@@ -7,18 +7,8 @@
 
 
 eEPGTransponderDataReader* eEPGTransponderDataReader::instance;
-pthread_mutex_t eEPGTransponderDataReader::known_channel_lock =
-#ifdef __GLIBC__
-	PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
-#else
-	{{PTHREAD_MUTEX_RECURSIVE}};
-#endif
-pthread_mutex_t eEPGTransponderDataReader::last_channel_update_lock =
-#ifdef __GLIBC__
-	PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
-#else
-	{{PTHREAD_MUTEX_RECURSIVE}};
-#endif
+pthread_mutex_t eEPGTransponderDataReader::known_channel_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+pthread_mutex_t eEPGTransponderDataReader::last_channel_update_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 DEFINE_REF(eEPGTransponderDataReader)
 

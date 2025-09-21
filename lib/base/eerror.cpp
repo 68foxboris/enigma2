@@ -13,11 +13,7 @@
 #ifdef MEMLEAK_CHECK
 AllocList *allocList;
 pthread_mutex_t memLock =
-#ifdef __GLIBC__
 	PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
-#else
-	{{PTHREAD_MUTEX_RECURSIVE}};
-#endif
 
 void DumpUnfreed()
 {
@@ -83,13 +79,7 @@ void DumpUnfreed()
 int debugLvl = lvlDebug;
 static int debugTime = 2; // Bitmap: 0 = none, 1 = secs since boot, 2 = local time, 3 = boot and local, 6 = local date/time, 7 = boot and date/time
 
-static pthread_mutex_t DebugLock =
-#ifdef __GLIBC__
-    PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
-#else
-    PTHREAD_MUTEX_INITIALIZER;
-#endif
-
+static pthread_mutex_t DebugLock = PTHREAD_ADAPTIVE_MUTEX_INITIALIZER_NP;
 #define RINGBUFFER_SIZE 16384
 static char ringbuffer[RINGBUFFER_SIZE];
 static unsigned int ringbuffer_head;
