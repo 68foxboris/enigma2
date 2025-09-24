@@ -7841,6 +7841,9 @@ msgstr "Включите настройку временного интерва�
 msgid "Enable teletext caching"
 msgstr "Включить кэширование телетекста"
 
+msgid "Enable this option to add bouquet information detected during system boot to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить информацию о букете, обнаруженную во время загрузки системы, в файл журнала отладки."
+
 msgid "Enable this option to add MultiBoot information detected during system boot to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить информацию о мультизагрузке, обнаруженную во время загрузки системы, в файл лога отладки."
 
@@ -10127,6 +10130,9 @@ msgstr "Включить SDT, BAT в потоки http"
 
 msgid "Include action map data"
 msgstr "Включить данные карты действий"
+
+msgid "Include bouquet data"
+msgstr "Включить данные о букете"
 
 msgid "Include international data *"
 msgstr "Включить международные данные *"

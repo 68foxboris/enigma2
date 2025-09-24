@@ -552,6 +552,7 @@ config.crash.debugDVB = ConfigYesNo(default=False)
 config.crash.debugTimers = ConfigYesNo(default=False)
 config.crash.debugTeletext = ConfigYesNo(default=False)
 config.crash.debugStorage = ConfigYesNo(default=False)
+config.crash.debugDVBDB = ConfigYesNo(default=False)
 
 
 # Enable numbers in Plugin Browser (Do not move it to other file)
