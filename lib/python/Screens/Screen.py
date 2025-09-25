@@ -316,7 +316,6 @@ class Screen(dict):
 		self.createGUIScreen(self.instance, self.desktop)
 
 	def createGUIScreen(self, parent, desktop, updateonly=False):
-
 		def addToStack(widget):
 			if hasattr(widget, "stackIndex") and widget.stackIndex != -1:
 				stack = self.stacks[widget.stackIndex]
@@ -326,7 +325,6 @@ class Screen(dict):
 			widget.instance = widget.widget(parent, widget.layout)
 			applyAllAttributes(widget.instance, desktop, widget.skinAttributes, self.scale)
 			addToStack(widget)
-
 		for val in self.renderer:
 			if isinstance(val, GUIComponent):
 				if not updateonly:
@@ -353,7 +351,6 @@ class Screen(dict):
 				# w.instance.thisown = 0
 			applyAllAttributes(w.instance, desktop, w.skinAttributes, self.scale)
 			addToStack(widget)
-
 		if self.screenImage:
 			screenImage = LoadPixmap(self.screenImage)
 			self["Image"].setPixmap(LoadPixmap(self.screenImage))
