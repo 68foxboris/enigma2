@@ -2311,10 +2311,11 @@ def readSkin(screen, skin, names, desktop):
 		# widgets (source->renderer).
 		widgetName = widget.attrib.get("name")
 		widgetSource = widget.attrib.get("source")
-		wconnection = widget.attrib.get("connection")
-		wclass = widget.attrib.get("addon")
-		if widgetName is None and widgetSource is None and wclass is None:
-			raise SkinError("The widget has no name and no source")
+		widgetConnection = widget.attrib.get("connection")
+		widgetClass = widget.attrib.get("addon")
+		source = None
+		if widgetName is None and widgetSource is None and widgetClass is None:
+			raise SkinError("The widget has no addon, name or source")
 		if widgetName:
 			# print(f"[Skin] DEBUG: Widget name='{widgetName}'.")
 			usedComponents.add(widgetName)
@@ -2355,9 +2356,9 @@ def readSkin(screen, skin, names, desktop):
 			widgetRenderer = widget.attrib.get("render")
 			if not widgetRenderer:
 				if widgetSource:
-					raise SkinError(f"For source '%s' a renderer must be defined with a 'render=' attribute" % widgetSource)
-				elif wconnection:
-					raise SkinError(f"For connection '%s' a renderer must be defined with a 'render=' attribute" % wconnection)
+					raise SkinError(f"For source '{widgetSource}' a renderer must be defined with a 'render=' attribute")
+				elif widgetConnection:
+					raise SkinError(f"For connection '{widgetConnection}' a renderer must be defined with a 'render=' attribute")
 			for widgetTemplates in widget.findall("templates"):
 				try:
 					converterClass = my_import(".".join(("Components", "Converter", "XmlMultiContent"))).__dict__.get("XmlMultiContent")
@@ -2405,32 +2406,29 @@ def readSkin(screen, skin, names, desktop):
 			except ImportError:
 				raise SkinError(f"Renderer '{widgetRenderer}' not found")
 			renderer = rendererClass()  # Instantiate renderer.
-			renderer.connect(source)  # Connect to source.
-			renderer.label_name = widgetSource or widgetName #allows that it can be checked a label exists in the skin
+			if source:
+				renderer.connect(source)  # Connect to source.
 			attributes = renderer.skinAttributes = []
 			collectAttributes(attributes, widget, context, skinPath, ignore=("render", "source"))
 			renderer = proccesStackAddition(widget, stack, renderer)
 			screen.renderer.append(renderer)
-		elif wclass:
+		elif widgetClass:
 			try:
-				addonClass = my_import(".".join(("Components", "Addons", wclass))).__dict__.get(wclass)
+				addonClass = my_import(".".join(("Components", "Addons", widgetClass))).__dict__.get(widgetClass)
 			except ImportError:
-				raise SkinError("GUI Addon '%s' not found" % wclass)
+				raise SkinError(f"GUI Addon '{widgetClass}' not found")
 
-			if not wconnection:
-				raise SkinError("The widget is from addon type: %s , but no connection is specified." % wclass)
-
+			if not widgetConnection:
+				raise SkinError(f"The widget is from addon type: {widgetClass} , but no connection is specified.")
 			i = 0
-			wclassname_base = name + "_" + wclass + "_" + wconnection + "_"
-			while wclassname_base + str(i) in usedComponents:
+			widgetClassNameBase = f"{name}_{widgetClass}_{widgetConnection}_"
+			while f"{widgetClassNameBase}{i}" in usedComponents:
 				i += 1
-			wclassname = wclassname_base + str(i)
-
-			usedComponents.add(wclassname)
-
-			screen[wclassname] = addonClass() #init the addon
-			screen[wclassname].connectRelatedElement(wconnection, screen) #connect it to related ellement
-			attributes = screen[wclassname].skinAttributes = []
+			widgetClassName = f"{widgetClassNameBase}{i}"
+			usedComponents.add(widgetClassName)
+			screen[widgetClassName] = addonClass()
+			screen[widgetClassName].connectRelatedElement(widgetConnection, screen)
+			attributes = screen[widgetClassName].skinAttributes = []
 			collectAttributes(attributes, widget, context, skinPath, ignore=("addon",))
 
 	def processApplet(widget, context, stack=None):
@@ -2593,6 +2591,28 @@ def readSkin(screen, skin, names, desktop):
 	usedComponents = None
 
 
+# Search the domScreens dictionary to see if any of the screen names provided
+# have a skin based screen.  This will allow coders to know if the named
+# screen will be skinned by the skin code.  A return of None implies that the
+# code must provide its own skin for the screen to be displayed to the user.
+#
+def findSkinScreen(names):
+	if not isinstance(names, list):
+		names = [names]
+	for name in names:  # Try all names given, the first one found is the one that will be used by the skin engine.
+		screen, path = domScreens.get(name, (None, None))
+		if screen:  # is not None:
+			return name
+	return None
+def dump(x, i=0):
+	print(" " * i + str(x))
+	try:
+		for node in x.childNodes:
+			dump(node, i + 1)
+	except Exception:
+		pass
+
+
 # Return a set of all the widgets found in a screen. Panels will be expanded
 # recursively until all referenced widgets are captured. This code only performs
 # a simple scan of the XML and no skin processing is performed.
@@ -2604,21 +2624,21 @@ def findWidgets(name):
 		widgets = element.findall("widget")
 		if widgets is not None:
 			for widget in widgets:
-				name = widget.get("name", None)
+				name = widget.get("name")
 				if name is not None:
 					widgetSet.add(name)
-				source = widget.get("source", None)
+				source = widget.get("source")
 				if source is not None:
 					widgetSet.add(source)
-				addonConnection = widget.get("connection", None)
+				addonConnection = widget.get("connection")
 				if addonConnection is not None:
 					for x in addonConnection.split(","):
 						widgetSet.add(x)
 		panels = element.findall("panel")
 		if panels is not None:
 			for panel in panels:
-				name = panel.get("name", None)
-				if name:
+				name = panel.get("name")
+				if name is not None:
 					widgetSet.update(findWidgets(name))
 	return widgetSet
 
@@ -2656,23 +2676,11 @@ def getSkinFactor(screen=GUI_SKIN_ID):
 	return skinfactor
 
 
-# Search the domScreens dictionary to see if any of the screen names provided
-# have a skin based screen.  This will allow coders to know if the named
-# screen will be skinned by the skin code.  A return of None implies that the
-# code must provide its own skin for the screen to be displayed to the user.
-#
-def findSkinScreen(names):
-	if not isinstance(names, list):
-		names = [names]
-	for name in names:  # Try all names given, the first one found is the one that will be used by the skin engine.
-		screen, path = domScreens.get(name, (None, None))
-		if screen is not None:
-			return name
-	return None
-def dump(x, i=0):
-	print(" " * i + str(x))
-	try:
-		for node in x.childNodes:
-			dump(node, i + 1)
-	except Exception:
-		pass
+def applySkinFactor(*d):
+	"""
+	Multiply the numeric input by the skin factor
+	and return the result as an integer.
+	"""
+	if len(d) == 1:
+		return int(d[0] * getSkinFactor())
+	return tuple([int(value * getSkinFactor()) if isinstance(value, (int, float)) else value for value in d])
