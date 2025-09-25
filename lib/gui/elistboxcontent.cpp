@@ -603,8 +603,7 @@ static eSize calculateTextSize(gFont* font, const std::string& string, eSize tar
 void eListboxPythonStringContent::updateTextSize(std::string &text, gFont* font, int flags, gRGB &border_color, int border_size) {
 	m_scroll_text = false;
 
-	if(m_listbox)
-	{
+	if (m_listbox) {
 		int scroll_text_direction = m_listbox->m_scroll_config.direction;
 
 		if (scroll_text_direction == eScrollConfig::scrollLeft || scroll_text_direction == eScrollConfig::scrollRight) {
@@ -683,7 +682,7 @@ void eListboxPythonStringContent::createScrollPixmap(std::string &text, gFont* f
 	p.setFont(font);
 	p.resetClip(eRect(ePoint(0, 0), s));
 
-	eListboxStyle *local_style = m_listbox->getLocalStyle();
+	const eListboxStyle* local_style = m_listbox->getLocalStyle();
 
 	int posX = 0;
 	int posY = 0;
@@ -691,8 +690,7 @@ void eListboxPythonStringContent::createScrollPixmap(std::string &text, gFont* f
 
 	eRect position = eRect(posX, posY, s.width(), s.height());
 
-	if(local_style)
-	{
+	if (local_style) {
 		if (local_style->is_set.background_color_selected)
 			p.setBackgroundColor(local_style->m_background_color_selected);
 		if (local_style->is_set.foreground_color_selected)
@@ -704,7 +702,6 @@ void eListboxPythonStringContent::createScrollPixmap(std::string &text, gFont* f
 		int paddingh = local_style->m_text_padding.height();
 
 		position = eRect(paddingx, paddingy, s.width() - (paddingx * 2) - paddingw, s.height() - (paddingy * 2) - paddingh);
-
 	}
 	p.clear();
 
@@ -723,9 +720,7 @@ void eListboxPythonStringContent::createScrollPixmap(std::string &text, gFont* f
 }
 
 void eListboxPythonStringContent::updateScrollPosition() {
-
-	if (m_listbox)
-	{
+	if (m_listbox) {
 		int scroll_text_direction = m_listbox->m_scroll_config.direction;
 		int repeat = m_listbox->m_scroll_config.repeat;
 		int end_delay = m_listbox->m_scroll_config.endDelay;
