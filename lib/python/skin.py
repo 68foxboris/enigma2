@@ -2683,4 +2683,4 @@ def applySkinFactor(*d):
 	"""
 	if len(d) == 1:
 		return int(d[0] * getSkinFactor())
-	return tuple([int(value * getSkinFactor()) if isinstance(value, (int, float)) else value for value in d])
+	return tuple(int(value * getSkinFactor()) if isinstance(value, (int, float)) else value for value in d)
