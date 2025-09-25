@@ -2,7 +2,7 @@ from Components.Addons.GUIAddon import GUIAddon
 
 from enigma import eListbox, eListboxPythonMultiContent, BT_ALIGN_CENTER, BT_VALIGN_CENTER, RT_BLEND, gFont, eSize, getDesktop, RT_HALIGN_CENTER, RT_VALIGN_CENTER
 
-from skin import parseScale, parseFont, parseColor
+from skin import parseScale, applySkinFactor, parseFont, parseColor
 
 from Components.MultiContent import MultiContentEntryPixmapAlphaBlend, MultiContentEntryText
 from Components.Sources.List import List
@@ -20,7 +20,7 @@ class Pager(GUIAddon):
 		self.l.setBuildFunc(self.buildEntry)
 		self.l.setItemHeight(25)  # 25 is the height of the default images. For other images set the height in the skin.
 		self.l.setItemWidth(25)  # 25 is the width of the default images. For other images set the width in the skin.
-		self.spacing = 5
+		self.spacing = applySkinFactor(5)
 		self.font = gFont("Regular", 16)
 		self.picDotPage = LoadPixmap(resolveFilename(SCOPE_GUISKIN, "icons/dot.png"))
 		self.picDotCurPage = LoadPixmap(resolveFilename(SCOPE_GUISKIN, "icons/dotfull.png"))
@@ -32,9 +32,9 @@ class Pager(GUIAddon):
 		self.orientations = {"orHorizontal": eListbox.orHorizontal, "orVertical": eListbox.orVertical}
 		self.orientation = eListbox.orHorizontal
 		self.max_pages = 10
-		self.current_page_style = "bubbletext" # possible is bubbletext and graphic
+		self.current_page_style = "bubbletext"  # possible is bubbletext and graphic
 		self.textRenderer = Label("")
-		self.bubbletext_corner_radius = 12
+		self.bubbletext_cornerRadius = 12
 		self.bubbletext_bk_color = 0x02444444
 		self.bubbletext_padding = 10
 
@@ -42,9 +42,6 @@ class Pager(GUIAddon):
 		# disable listboxes default scrollbars
 		if hasattr(self.source, "instance") and hasattr(self.source.instance, "setScrollbarMode"):
 			self.source.instance.setScrollbarMode(eListbox.showNever)
-
-		if self.source and hasattr(self.source, "onVisibilityChange"):
-			self.source.onVisibilityChange.append(self.onSourceVisibleChanged)
 
 		onSelectionChanged = x if (x := getattr(self.source, "onSelectionChanged", None)) is not None else getattr(self.source, "onSelChanged", None)
 
@@ -89,21 +86,21 @@ class Pager(GUIAddon):
 						backcolor=None, backcolor_sel=None, flags=BT_ALIGN_CENTER))
 					xPos += pixd_width + self.spacing
 				if self.current_page_style == "bubbletext":
-					textBubble = f"{currentPage+1} / {pageCount+1}"
+					textBubble = f"{currentPage + 1} / {pageCount + 1}"
 					textWidth = self._calcTextWidth(textBubble, font=self.font, size=eSize(self.getDesktopWith() // 3, 0))
 					res.append(MultiContentEntryText(
 						pos=(xPos, 0),
-						size=(textWidth + self.bubbletext_padding*2, height),
+						size=(textWidth + self.bubbletext_padding * 2, height),
 						font=0, flags=RT_HALIGN_CENTER | RT_VALIGN_CENTER,
 						text=" ",
-						corner_radius=self.bubbletext_corner_radius,
+						cornerRadius=self.bubbletext_cornerRadius,
 						backcolor=self.bubbletext_bk_color, backcolor_sel=self.bubbletext_bk_color))
 					res.append(MultiContentEntryText(
 							pos=(xPos + self.bubbletext_padding - 1, 0), size=(textWidth + 2, height),
 							font=0, flags=RT_HALIGN_CENTER | RT_VALIGN_CENTER | RT_BLEND,
 							text=textBubble, color=self.foreColor, color_sel=self.foreColor,
 							textBWidth=1, textBColor=0x010101))
-					xPos += textWidth + self.bubbletext_padding*2 + self.spacing
+					xPos += textWidth + self.bubbletext_padding * 2 + self.spacing
 				else:
 					res.append(MultiContentEntryPixmapAlphaBlend(
 						pos=(xPos, 0),
@@ -219,14 +216,14 @@ class Pager(GUIAddon):
 
 	def initPager(self):
 		if self.source.__class__.__name__ == "ScrollLabel":
-			currentPageIndex = self.source.currentPosition // self.source.pageHeight
-			if not ((self.source.totalTextHeight - self.source.currentPosition) % self.source.pageHeight):
+			currentPageIndex = self.source.curPos // self.source.pageHeight
+			if not ((self.source.TotalTextHeight - self.source.curPos) % self.source.pageHeight):
 				currentPageIndex += 1
-			pagesCount = -(-self.source.totalTextHeight // self.source.pageHeight) - 1
+			pagesCount = -(-self.source.TotalTextHeight // self.source.pageHeight) - 1
 			self.selChange(currentPageIndex, pagesCount)
 		else:
 			l_orientation = self.getSourceOrientation()
-			if l_orientation == eListbox.orVertical:
+			if l_orientation == eListbox.orVertical or l_orientation == eListbox.orGrid:
 				listControledlSize = self.getSourceSize().height()
 			else:
 				listControledlSize = self.getSourceSize().width()
@@ -235,6 +232,8 @@ class Pager(GUIAddon):
 				current_index = self.getCurrentIndex()
 				listCount = self.getListCount()
 				if l_orientation == eListbox.orVertical:
+					itemControlledSizeParam = self.getListItemSize().height()
+				elif l_orientation == eListbox.orGrid:
 					itemControlledSizeParam = self.getListItemSize().height()
 				else:
 					itemControlledSizeParam = self.getListItemSize().width()
@@ -304,7 +303,7 @@ class Pager(GUIAddon):
 		self.skinAttributes = attribs
 		self.l.setFont(0, self.font)
 		return GUIAddon.applySkin(self, desktop, parent)
-	
+
 	def _calcTextWidth(self, text, font=None, size=None):
 		if size:
 			self.textRenderer.instance.resize(size)
@@ -312,6 +311,6 @@ class Pager(GUIAddon):
 			self.textRenderer.instance.setFont(font)
 		self.textRenderer.text = text
 		return self.textRenderer.instance.calculateSize().width()
-	
+
 	def getDesktopWith(self):
 		return getDesktop(0).size().width()
