@@ -45,8 +45,12 @@ class ScreenButtonsBar(GUIAddon):
 				self.colorButtonSources[x] = val
 			else:
 				self.actionButtonSources[x] = val
-			if self.constructButtonSequence not in val.onChanged:
-				val.onChanged.append(self.constructButtonSequence)
+			# Fix: check if val has 'onChanged' attribute
+			if hasattr(val, 'onChanged'):
+				if self.constructButtonSequence not in val.onChanged:
+					val.onChanged.append(self.constructButtonSequence)
+			else:
+				print(f"[ScreenButtonsBar] Warning: Source '{x}' does not have 'onChanged' attribute: {type(val)}")
 		self.textRenderer.GUIcreate(self.relatedScreen.instance)
 		self.l.setItemHeight(self.instance.size().height())
 		self.l.setItemWidth(self.instance.size().width())
