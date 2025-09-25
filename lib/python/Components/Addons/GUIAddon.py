@@ -15,6 +15,8 @@ class GUIAddon(GUIComponent):
 				self.source = container.session
 			else:
 				self.source = container[relatedElementName]
+				if self.source and hasattr(self.source, "onVisibilityChange"):
+					self.source.onVisibilityChange.append(self.onSourceVisibleChanged)
 		elif len(relatedElementNames) > 1:
 			for x in relatedElementNames:
 				if x in container:
@@ -25,5 +27,8 @@ class GUIAddon(GUIComponent):
 		container.onShow.append(self.onContainerShown)
 		self.relatedScreen = container
 
-	def onContainerShown(self):
+	def onContainerShown(self):  # This will be overwritten by subclass
+		pass
+
+	def onSourceVisibleChanged(self):  # This will be overwritten by subclass
 		pass
