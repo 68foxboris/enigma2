@@ -329,7 +329,7 @@ class Screen(dict):
 			if isinstance(val, GUIComponent):
 				if not updateonly:
 					val.GUIcreate(parent)
-					addToStack(value)
+					addToStack(val)
 				if not val.applySkin(desktop, self):
 					print("[Screen] Warning: Skin is missing renderer '%s' in %s." % (val, str(self)))
 		for key in self:
@@ -337,7 +337,7 @@ class Screen(dict):
 			if isinstance(val, GUIComponent):
 				if not updateonly:
 					val.GUIcreate(parent)
-					addToStack(value)
+					addToStack(val)
 				depr = val.deprecationInfo
 				if val.applySkin(desktop, self):
 					if depr:
@@ -350,7 +350,7 @@ class Screen(dict):
 				w.instance = w.widget(parent)
 				# w.instance.thisown = 0
 			applyAllAttributes(w.instance, desktop, w.skinAttributes, self.scale)
-			addToStack(widget)
+			addToStack(w)
 		if self.screenImage:
 			screenImage = LoadPixmap(self.screenImage)
 			self["Image"].setPixmap(LoadPixmap(self.screenImage))

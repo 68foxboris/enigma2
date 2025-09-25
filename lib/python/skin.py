@@ -2222,9 +2222,7 @@ def readSkin(screen, skin, names, desktop):
 				myName = name  # Use this name for debug output.
 				break
 			else:
-				widgetList = "', '".join(screen.mandatoryWidgets)
-				print(f"[Skin] Warning: Skin screen '{name}' rejected as it does not offer all the mandatory widgets '{widgetList}'!")
-				# print(f"[Skin] Warning: Skin screen '{name}' rejected as it does not offer all the mandatory widgets '{"', '".join(screen.mandatoryWidgets)}'!")
+				print(f"[Skin] Warning: Skin screen '{name}' rejected as it does not offer all the mandatory widgets '{"', '".join(screen.mandatoryWidgets)}'!")
 				myScreen = None
 	else:
 		myName = f"<embedded-in-{screen.__class__.__name__}>"
@@ -2302,7 +2300,7 @@ def readSkin(screen, skin, names, desktop):
 		except ValueError:
 			pass
 
-	def processNone(widget, context, stack=None):
+	def processNone(widget, context, stack=None):  # This is a dummy method for the parser.
 		pass
 
 	def proccesStackAddition(widget, stack, target):
