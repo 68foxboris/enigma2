@@ -270,7 +270,7 @@ class DiseqcTester(Screen, TuneTest, ResultParser):
 		self.clearTransponder()
 		print("----------- fillTransponderList")
 		print("[DiseqcTester] index:", self.currentlyTestedIndex)
-		keys = self.indexlist.keys()
+		keys = self.indexlist.keys()  # noqa F841
 		if self.getContinueScanning():
 			print("[DiseqcTester] index:", self.getTextualIndexRepresentation(self.currentlyTestedIndex))
 			for transponder in self.indexlist[self.currentlyTestedIndex]:

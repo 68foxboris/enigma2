@@ -3920,7 +3920,7 @@ class InfoBarRedButton:
 		for x in self.onReadyForAIT:
 			try:
 				x(orgId)
-			except Exception as ErrMsg:
+			except Exception as err:
 				print("[InfoBarGenerics] updateAIT error", ErrMsg)
 				# self.onReadyForAIT.remove(x)
 
@@ -3928,7 +3928,7 @@ class InfoBarRedButton:
 		try:
 			self["HbbtvApplication"].setApplicationName("")
 			self.updateAIT()
-		except Exception as ErrMsg:
+		except Exception:
 			pass
 
 	def detectedHbbtvApplication(self):
@@ -3941,7 +3941,7 @@ class InfoBarRedButton:
 					self.updateAIT(x[3])
 					self["HbbtvApplication"].setApplicationName(x[1])
 					break
-		except Exception as ErrMsg:
+		except Exception:
 			pass
 
 	def activateRedButton(self):
@@ -4320,9 +4320,9 @@ class InfoBarCueSheetSupport:
 			print("[InfoBarGenerics] seekable.getLength() returns:", length)
 			if (last > 900000) and (not length[1] or last < length[1] - 900000):
 				self.resume_point = last
-				l = last // 90000
+				last = last // 90000
 				if "ask" in config.usage.on_movie_start.value:
-					AddNotificationWithCallback(self.playLastCB, MessageBox, _("Do you want to resume this playback?") + "\n" + (_("Resume position at %s") % ("%d:%02d:%02d" % (l / 3600, l % 3600 / 60, l % 60))), timeout=10, default="yes" in config.usage.on_movie_start.value)
+					AddNotificationWithCallback(self.playLastCB, MessageBox, _("Do you want to resume this playback?") + "\n" + (_("Resume position at %s") % ("%d:%02d:%02d" % (last / 3600, last % 3600 / 60, last % 60))), timeout=10, default="yes" in config.usage.on_movie_start.value)
 				elif config.usage.on_movie_start.value == "resume":
 					# TRANSLATORS: The string "Resuming playback" flashes for a moment
 					# TRANSLATORS: at the start of a movie, when the user has selected

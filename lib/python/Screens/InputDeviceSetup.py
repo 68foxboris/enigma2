@@ -87,7 +87,7 @@ class InputDeviceSelection(Screen):
 
 	def buildInterfaceList(self, device, description, type, isinputdevice=True):
 		divpng = LoadPixmap(cached=True, path=resolveFilename(SCOPE_CURRENT_SKIN, "div-h.png"))
-		activepng = None
+		# activepng = None
 		devicepng = None
 		enabled = inputDevices.getDeviceAttribute(device, "enabled")
 

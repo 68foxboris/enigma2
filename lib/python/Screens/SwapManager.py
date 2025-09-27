@@ -45,7 +45,7 @@ class StartSwap:
 				if "sd" in line or "mmcblk" in line:
 					parts = line.strip().split()
 					swapPlace = parts[0]
-					open("/etc/fstab.tmp", "w").writelines([l for l in open("/etc/fstab").readlines() if swapPlace not in l])
+					open("/etc/fstab.tmp", "w").writelines([x for x in open("/etc/fstab").readlines() if swapPlace not in x])
 					rename("/etc/fstab.tmp", "/etc/fstab")
 					print(f"[SwapManager] Found a swap partition:{swapPlace}")
 		else:
@@ -227,12 +227,12 @@ class Swap(Screen):
 			self["inactive"].hide()
 			self["active"].show()
 			self["key_red"].setText(_("Deactivate"))
-			self["swapactive_summary"].setText(f"{_("Current Status: ")} {_("Active")}")
+			self["swapactive_summary"].setText(f"{_("Current Status:")} {_("Active")}")
 		else:
 			self["inactive"].show()
 			self["active"].hide()
 			self["key_red"].setText(_("Activate"))
-			self["swapactive_summary"].setText(f"{_("Current Status: ")} {_("Inactive")}")
+			self["swapactive_summary"].setText(f"{_("Current Status:")} {_("Inactive")}")
 
 		scanning = _("Enable Swap at startup")
 		self["lab1"].setText(scanning)

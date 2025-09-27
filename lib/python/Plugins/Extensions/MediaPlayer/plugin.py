@@ -62,7 +62,7 @@ class MediaPixmap(Pixmap):
 
 	def onShow(self):
 		Pixmap.onShow(self)
-		#0=Width 1=Height 2=Aspect 3=use_cache 4=resize_type 5=Background(#AARRGGBB)
+		# 0=Width 1=Height 2=Aspect 3=use_cache 4=resize_type 5=Background(#AARRGGBB)
 		self.picload.setPara((self.instance.size().width(), self.instance.size().height(), 1, 1, False, 1, "#00000000"))
 
 	def paintCoverArtPixmapCB(self, picInfo=None):
@@ -126,7 +126,7 @@ class MediaPlayer(Screen, InfoBarBase, InfoBarScreenSaver, InfoBarSeek, InfoBarA
 		# 'None' is magic to start at the list of mountpoints
 		try:
 			defaultDir = config.mediaplayer.defaultDir.value
-		except:
+		except Exception:
 			Load_defaults()
 			defaultDir = config.mediaplayer.defaultDir.value
 		if defaultDir == "None":
@@ -312,7 +312,7 @@ class MediaPlayer(Screen, InfoBarBase, InfoBarScreenSaver, InfoBarSeek, InfoBarA
 			try:
 				from Plugins.SystemPlugins.Hotplug.plugin import hotplugNotifier
 				hotplugNotifier.remove(self.hotplugCB)
-			except:
+			except Exception:
 				pass
 			del self["coverArt"].picload
 			self.close()
@@ -1131,7 +1131,7 @@ def menu(menuid, **kwargs):
 	try:
 		if menuid == "mainmenu" and config.mediaplayer.onMainMenu.value:
 			return [(_("Media Player"), main, "media_player", 45)]
-	except:
+	except Exception:
 		pass
 	return []
 

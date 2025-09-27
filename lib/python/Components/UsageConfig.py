@@ -30,9 +30,9 @@ DISPLAYTYPE = BoxInfo.getItem("displaytype")
 def InitUsageConfig():
 	AvailRemotes = [splitext(x)[0] for x in glob("/usr/share/enigma2/hardware/*.xml")]
 	RemoteChoices = []
-	DefaultRemote = BoxInfo.getItem("rcname")
+	DefaultRemote = BoxInfo.getItem("rcname")  # noqa F841
 
-	remoteSelectable = False
+	remoteSelectable = False  # noqa F841
 	if AvailRemotes is not None:
 		for remote in AvailRemotes:
 			pngfile = f"{remote}.png"

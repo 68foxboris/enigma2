@@ -204,7 +204,7 @@ def setAudioTrack(service):
 			if matchedAc3:
 				return
 			tracks.selectTrack(0)    # fallback to track 1(0)
-	except Exception as e:
+	except Exception:
 		print("[MoviePlayer] audioTrack exception:\n" + str(e))
 
 
@@ -395,7 +395,7 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 						else:
 							self.movielistAgain()
 						return
-					except Exception as e:
+					except Exception:
 						print("[InfoBar] Failed to move to .Trash folder:", e)
 						msg = _("Cannot move to trash can") + "\n" + str(e) + "\n"
 				info = serviceHandler.info(ref)

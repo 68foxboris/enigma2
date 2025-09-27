@@ -105,7 +105,7 @@ class DVDToolbox(Screen):
 			if line.find("Free Blocks:") > -1:
 				try:
 					size = eval(line[14:].replace("KB", "*1024"))
-				except:
+				except Exception:
 					size = 0
 				if size > 0:
 					capacity = size / 1048576

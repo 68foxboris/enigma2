@@ -62,7 +62,7 @@ class Session:
 		for plugin in plugins.getPlugins(PluginDescriptor.WHERE_SESSIONSTART):
 			try:
 				plugin(reason=0, session=self)
-			except:
+			except Exception:
 				print("[StartEnigma] Error: Plugin raised exception at WHERE_SESSIONSTART!")
 				from traceback import print_exc
 				print_exc()
@@ -341,15 +341,15 @@ def runScreenTest():
 			session.open(screen, *args)
 	runNextScreen(session, screensToRun)
 	enigma.eProfileWrite("VolumeControl Screen")
-	vol = VolumeControl(session)
+	vol = VolumeControl(session)  # noqa F841
 	enigma.eProfileWrite("VolumeAdjust")
-	vol = VolumeAdjust(session)
+	vol = VolumeAdjust(session)  # noqa F841
 	enigma.eProfileWrite("Processing Screen")
-	processing = Processing(session)
+	processing = Processing(session)  # noqa F841
 	enigma.eProfileWrite("Global MessageBox Screen")
-	modalmessagebox = ModalMessageBox(session)
+	modalmessagebox = ModalMessageBox(session)  # noqa F841
 	enigma.eProfileWrite("PowerKey")
-	power = PowerKey(session)
+	power = PowerKey(session)  # noqa F841
 	if enigma.getVFDSymbolsPoll():
 		enigma.eProfileWrite("VFDSymbolsCheck")
 		from Components.VfdSymbols import SymbolsCheck
