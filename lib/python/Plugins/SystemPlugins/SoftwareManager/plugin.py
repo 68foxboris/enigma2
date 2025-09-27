@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from os import mkdir, stat, access, F_OK, R_OK, W_OK, makedirs, listdir, unlink
+from os import mkdir, stat, access, F_OK, R_OK, W_OK, makedirs, listdir, unlink  # noqa F401
 from os.path import exists, isfile, dirname, isdir
 import time
 from stat import ST_MTIME
@@ -21,12 +21,12 @@ from Components.SystemInfo import BoxInfo
 from Components.Pixmap import Pixmap
 from Components.MenuList import MenuList
 from Components.Sources.List import List
-from Components.Harddisk import harddiskmanager
+from Components.Harddisk import harddiskmanager  # noqa F401
 from Components.config import config, ConfigSubsection, ConfigText, ConfigLocations, ConfigYesNo, ConfigSelection
 from Components.ConfigList import ConfigListScreen
 from Components.Console import Console
 from Components.SelectionList import SelectionList
-from Components.PluginComponent import plugins
+from Components.PluginComponent import plugins  # noqa F401
 from Components.PackageInfo import PackageInfoHandler
 from Components.Language import language
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_CURRENT_PLUGIN, SCOPE_CURRENT_SKIN, SCOPE_METADIR

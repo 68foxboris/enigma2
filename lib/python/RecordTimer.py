@@ -21,6 +21,8 @@ from Tools.Notifications import AddNotification, AddNotificationWithCallback, Ad
 from Tools.XMLTools import stringToXML
 from Tools.Trashcan import instance as trashcan_instance
 
+# flake8: noqa E402
+
 import timer
 import xml.etree.ElementTree
 import NavigationInstance

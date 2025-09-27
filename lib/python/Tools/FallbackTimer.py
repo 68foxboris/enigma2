@@ -4,7 +4,6 @@ from Components.config import config
 from Screens.MessageBox import MessageBox
 from timer import TimerEntry as TimerObject
 from urllib.parse import quote
-from xml.etree.ElementTree import fromstring
 from json import loads
 from base64 import encodebytes
 

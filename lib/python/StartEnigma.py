@@ -3,6 +3,9 @@ from os import remove
 from os.path import isdir, islink, join, exists
 import sys  # This is needed for the twisted redirection access to stderr and stdout.
 from time import time
+
+# flake8: noqa F401, E402
+
 import Tools.RedirectOutput
 
 import enigma  # Establish enigma2 connections to processing methods.

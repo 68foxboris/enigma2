@@ -638,10 +638,10 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 		tPreview = _("Preview")
 		tFwd = f"{_("skip forward")} ({tPreview})"
 		tBack = f"{_("skip backward")} ({tPreview})"
-		sfwd = lambda: self.seekRelative(1, config.seek.selfdefined_46.value * 90000)
-		ssfwd = lambda: self.seekRelative(1, config.seek.selfdefined_79.value * 90000)
-		sback = lambda: self.seekRelative(-1, config.seek.selfdefined_46.value * 90000)
-		ssback = lambda: self.seekRelative(-1, config.seek.selfdefined_79.value * 90000)
+		sfwd = lambda: self.seekRelative(1, config.seek.selfdefined_46.value * 90000)  # noqa E731
+		ssfwd = lambda: self.seekRelative(1, config.seek.selfdefined_79.value * 90000)  # noqa E731
+		sback = lambda: self.seekRelative(-1, config.seek.selfdefined_46.value * 90000)  # noqa E731
+		ssback = lambda: self.seekRelative(-1, config.seek.selfdefined_79.value * 90000)  # noqa E731
 		self["SeekActions"] = HelpableActionMap(self, ["InfobarSeekActions"],
 			{
 				"playpauseService": (self.preview, _("Preview")),

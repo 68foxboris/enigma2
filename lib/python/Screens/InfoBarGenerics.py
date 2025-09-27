@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# flake8: noqa F401, E402
+
 from Screens.ChannelSelection import ChannelSelection, BouquetSelector, SilentBouquetSelector
 
 from Components.ActionMap import ActionMap, HelpableActionMap, HelpableNumberActionMap, NumberActionMap

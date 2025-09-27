@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# flake8: noqa: F401
+
 from os import stat
 from os.path import join, normpath, realpath, split, splitext
 from struct import Struct

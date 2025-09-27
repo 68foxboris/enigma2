@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+# flake8: noqa E402
+
 from enigma import eServiceReference, eProfileWrite
 from Tools.StbHardware import getBoxProc
 from os.path import splitext
