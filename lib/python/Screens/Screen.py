@@ -344,7 +344,10 @@ class Screen(dict):
 						print("[Screen] WARNING: OBSOLETE COMPONENT '%s' USED IN SKIN. USE '%s' INSTEAD!" % (key, depr[0]))
 						print("[Screen] OBSOLETE COMPONENT WILL BE REMOVED %s, PLEASE UPDATE!" % depr[1])
 				elif not depr and key not in self.handledWidgets:
-					print("[Screen] Warning: Skin is missing element '%s' in %s." % (key, str(self)))
+					try:
+						print(f"[Screen] Warning: Skin is missing element '{key}' in {str(self)} item {str(self[key])}.")
+					except Exception:
+						print(f"[Screen] Warning: Skin is missing element '{key}'.")
 		for w in self.additionalWidgets:
 			if not updateonly:
 				w.instance = w.widget(parent)
@@ -353,7 +356,7 @@ class Screen(dict):
 			addToStack(w)
 		if self.screenImage:
 			screenImage = LoadPixmap(self.screenImage)
-			self["Image"].setPixmap(LoadPixmap(self.screenImage))
+			self["Image"].instance.setPixmap(screenImage)
 		for f in self.onLayoutFinish:
 			if not isinstance(f, type(self.close)):
 				# exec f in globals(), locals()  # Python 2
