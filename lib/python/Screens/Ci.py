@@ -37,7 +37,7 @@ def setRelevantPidsRouting(configElement):
 def InitCiConfig():
 	config.ci = ConfigSubList()
 	config.cimisc = ConfigSubsection()
-	config.cimisc.cihelperenabled = ConfigEnableDisable(default=True)
+	config.cimisc.cihelperenabled = ConfigEnableDisable(default=False)
 	if BoxInfo.getItem("CommonInterface"):
 		for slot in range(BoxInfo.getItem("CommonInterface")):
 			config.ci.append(ConfigSubsection())
@@ -72,7 +72,10 @@ def InitCiConfig():
 		if BoxInfo.getItem("CommonInterfaceCIDelay"):
 			config.cimisc.dvbCiDelay = ConfigSelection(default="256", choices=[("16", "16"), ("32", "32"), ("64", "64"), ("128", "128"), ("256", "256")])
 			config.cimisc.dvbCiDelay.addNotifier(setdvbCiDelay)
-		config.cimisc.bootDelay = ConfigSelection(default=5, choices=[(x, _("%d Seconds") % x) for x in range(16)])
+		bootDelayChoices = [(0, _("No timeout"))]
+		for i in range(1, 16):
+			bootDelayChoices.append((i, ngettext("%d second", "%d seconds", i) % i))
+		config.cimisc.bootDelay = ConfigSelection(default=5, choices=bootDelayChoices)
 
 
 class MMIDialog(Screen):
@@ -80,6 +83,8 @@ class MMIDialog(Screen):
 		Screen.__init__(self, session)
 
 		print(f"[CI] MMIDialog with action {str(action)}")
+
+		self["key_menu"] = StaticText(_("MENU"))
 
 		self.mmiclosed = False
 		self.tag = None
@@ -92,7 +97,6 @@ class MMIDialog(Screen):
 		self["title"] = Label("")
 		self["subtitle"] = Label("")
 		self["bottom"] = Label("")
-		self["key_menu"] = StaticText(_("MENU"))
 		self["entries"] = ConfigList([])
 
 		self["actions"] = NumberActionMap(["SetupActions", "MenuActions"],
@@ -372,7 +376,7 @@ class CiMessageHandler:
 							elif ci_tag == 'CLOSE' and self.auto_close:
 								show_ui = False
 								self.auto_close = False
-					if show_ui and not forceNotShowCiMessages and not Screens.Standby.inStandby and not config.misc.firstrun.value:
+					if show_ui and not forceNotShowCiMessages and not Screens.Standby.inStandby:
 						try:
 							self.dlgs[slot] = self.session.openWithCallback(self.dlgClosed, MMIDialog, slot, 3, screen_data=screen_data)
 						except Exception:
@@ -447,7 +451,7 @@ class CiSelection(Screen):
 		try:
 			self["entries"].handleKey(key)
 			self["entries"].getCurrent()[1].save()
-		except:
+		except Exception:
 			pass
 
 	def keyLeft(self):
