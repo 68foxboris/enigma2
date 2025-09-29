@@ -1474,7 +1474,12 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 					parameters["VirtualKeyBoardShiftColors"] = (0x00ffffff, 0x00ffffff, 0x0000ffff, 0x00ff00ff)
 	for tag in domSkin.findall("include"):
 		filename = tag.attrib.get("filename")
-		if filename:
+		try:
+			conditional = not (x := tag.attrib.get("conditional")) or eval(x)
+		except Exception as err:
+			skinError(f"Tag 'include' with 'conditional' attribute '{conditional}' resulted in error '{err}'")
+			conditional = False
+		if filename and conditional:
 			resolved = resolveFilename(scope, filename, path_prefix=pathSkin)
 			if isfile(resolved):
 				loadSkin(resolved, scope=scope, desktop=desktop, screenID=screenID)
