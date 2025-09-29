@@ -119,7 +119,6 @@ int eMMI_UI::processMMIData(int slot_id, const unsigned char *tag, const void *d
 			eDebug("[eMMI_UI] %s", converted_str.c_str());
 			d += textlen;
 		}
-
 		mmiScreenFinish(slot_id);
 		break;
 	}
@@ -280,13 +279,13 @@ int eMMI_UI::mmiScreenAddText(int slot, int type, char *value)
 	ePyObject tuple = PyTuple_New(3);
 
 	if (type == 0)					//title
-		PyTuple_SET_ITEM(tuple, 0, PyUnicode_FromString("TITLE"));
+	 	PyTuple_SET_ITEM(tuple, 0, PyUnicode_FromString("TITLE"));
 	else if (type == 1)				//subtitle
-		PyTuple_SET_ITEM(tuple, 0, PyUnicode_FromString("SUBTITLE"));
+	 	PyTuple_SET_ITEM(tuple, 0, PyUnicode_FromString("SUBTITLE"));
 	else if (type == 2)				//bottom
-		PyTuple_SET_ITEM(tuple, 0, PyUnicode_FromString("BOTTOM"));
+	 	PyTuple_SET_ITEM(tuple, 0, PyUnicode_FromString("BOTTOM"));
 	else
-		PyTuple_SET_ITEM(tuple, 0, PyUnicode_FromString("TEXT"));
+	 	PyTuple_SET_ITEM(tuple, 0, PyUnicode_FromString("TEXT"));
 
 	eDebug("[eMMI_UI] addText %s with id %d", value, type);
 
