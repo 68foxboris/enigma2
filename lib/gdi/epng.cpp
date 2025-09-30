@@ -7,6 +7,7 @@
 #include <lib/gdi/epng.h>
 #include <lib/gdi/pixmapcache.h>
 #include <unistd.h>
+#include <lib/base/estring.h>
 
 #include <map>
 #include <string>
@@ -19,61 +20,6 @@ extern "C" {
 
 #include <nanosvg.h>
 #include <nanosvgrast.h>
-
-/* Keep a table of already-loaded pixmaps, and return the old one when
- * needed. The "dispose" method isn't very efficient, but not having
- * to load the same pixmap twice will probably make up for that.
- * There is a race condition, when two threads load the same image,
- * the worst case scenario is then that the pixmap is loaded twice. This
- * isn't any worse than before, and all the UI pixmaps will be loaded
- * from the same thread anyway. */
-
-typedef std::map<std::string, gPixmap*> NameToPixmap;
-static eSingleLock pixmapTableLock;
-static NameToPixmap pixmapTable;
-
-static void pixmapDisposed(gPixmap* pixmap)
-{
-	eSingleLocker lock(pixmapTableLock);
-	for (NameToPixmap::iterator it = pixmapTable.begin();
-		 it != pixmapTable.end();
-		 ++it)
-	{
-		 if (it->second == pixmap)
-		 {
-			 pixmapTable.erase(it);
-			 break;
-		 }
-
-	}
-}
-
-static int pixmapFromTable(ePtr<gPixmap> &result, const char *filename)
-{
-	/* Prevent a deadlock: assigning a pixmap to result may cause the
-	 * previous to be destroyed, which would call pixmapDisposed which
-	 * in turn would aquire the lock a second time. */
-	ePtr<gPixmap> disposeMeOutsideTheLock(result);
-	{
-		eSingleLocker lock(pixmapTableLock);
-		NameToPixmap::iterator it = pixmapTable.find(filename);
-		if (it != pixmapTable.end())
-		{
-			result = it->second; /* Yay, re-use the pixmap */
-			return 0;
-		}
-		else
-		{
-			return -1;
-		}
-	}
-}
-
-static void pixmapToTable(ePtr<gPixmap> &result, const char *filename)
-{
-	eSingleLocker lock(pixmapTableLock);
-	pixmapTable[filename] = result;
-}
 
 /* TODO: I wonder why this function ALWAYS returns 0 */
 int loadPNG(ePtr<gPixmap> &result, const char *filename, int accel, int cached)
@@ -320,7 +266,7 @@ int loadJPG(ePtr<gPixmap> &result, const char *filename, ePtr<gPixmap> alpha, in
 		}
 		if (grayscale)
 		{
-			eWarning("[loadJPG] no support for grayscale + alpha at the moment");
+			eWarning("[loadJPG] we don't support grayscale + alpha at the moment");
 			alpha = 0;
 		}
 	}
@@ -544,16 +490,16 @@ int loadSVG(ePtr<gPixmap> &result, const char *filename, int cached, int width, 
 	return 0;
 }
 
-int loadImage(ePtr<gPixmap> &result, const char *filename, int accel, int width, int height)
+int loadImage(ePtr<gPixmap> &result, const char *filename, int accel, int width, int height, int cached, float scale, int keepAspect, int align)
 {
 	if (endsWith(filename, ".png"))
-		return loadPNG(result, filename, accel, 1);
+		return loadPNG(result, filename, accel, cached == -1 ? 1 : cached);
 	else if (endsWith(filename, ".svg"))
-		return loadSVG(result, filename, 1, width, height, 0);
+		return loadSVG(result, filename, cached == -1 ? 1 : cached, width, height, scale, keepAspect, align);
 	else if (endsWith(filename, ".jpg"))
-		return loadJPG(result, filename, 0);
+		return loadJPG(result, filename, cached == -1 ? 0 : cached);
 	else if (endsWith(filename, ".gif"))
-		return loadGIF(result, filename, accel, 0);
+		return loadGIF(result, filename, accel, cached == -1 ? 0 : cached);
 	return 0;
 }
 
@@ -672,7 +618,7 @@ static void loadGIFFile(GifFile* filepara)
 #endif
 	return;
 ERROR_R:
-	eTrace("[loadGIFFile] <Error gif>");
+	eDebug("[loadGIFFile] <Error gif>");
 #if !defined(GIFLIB_MAJOR) || ( GIFLIB_MAJOR < 5) || (GIFLIB_MAJOR == 5 && GIFLIB_MINOR == 0)
 	DGifCloseFile(gft);
 #else
@@ -706,7 +652,6 @@ int loadGIF(ePtr<gPixmap> &result, const char *filename, int accel,int cached)
 	surface->clut.data = m_filepara->palette;
 	surface->clut.colors = m_filepara->palette_size;
 	m_filepara->palette = NULL; // transfer ownership
-	int o_y=0, u_y=0, v_x=0, h_x=0;
 	int extra_stride = surface->stride - surface->x;
 
 	unsigned char *tmp_buffer=((unsigned char *)(surface->data));
