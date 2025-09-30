@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Components.Element import cached
 from Components.Sources.Source import Source
 
@@ -27,9 +26,9 @@ to generate HTML."""
 		self.onSelectionChanged = []
 		self.onListUpdated = []
 		self.disableCallbacks = False
-		self.__current = None
-		self.__index = None
-		self.connectedGuiElement = None
+		self.__current = None # current element set from connected GUI element
+		self.__index = None # current index set from connected GUI element
+		self.connectedGuiElement = None # manuallyconnected GUI element
 
 	def enableAutoNavigation(self, enabled):
 		try:
@@ -60,13 +59,6 @@ to generate HTML."""
 		self.index = oldIndex
 		self.disableCallbacks = False
 
-	def setConnectedGuiElement(self, guiElement):
-		self.connectedGuiElement = guiElement
-		index = guiElement.instance.getCurrentIndex()
-		self.__current = self.list[index]
-		self.__index = index
-		self.changed((self.CHANGED_ALL,))
-
 	def updateEntry(self, index, data):
 		self.listData[index] = data
 		self.entryChanged(index)
@@ -77,6 +69,15 @@ to generate HTML."""
 			instance.setSelectionEnable(enabled)
 		except AttributeError:
 			pass
+
+	# this is for manually set which is the GUI element connected with the list
+	# For use in case of addons where there is no source so to rely on the master
+	def setConnectedGuiElement(self, guiElement):
+		self.connectedGuiElement = guiElement
+		index = guiElement.instance.getCurrentIndex()
+		self.__current = self.listData[index]
+		self.__index = index
+		self.changed((self.CHANGED_ALL,))
 
 	def selectionChanged(self, index):
 		if not self.disableCallbacks:
@@ -92,19 +93,13 @@ to generate HTML."""
 
 	@cached
 	def getCurrent(self):
-		if self.master:
-			if hasattr(self.master, "current"):
-				return self.master.current
-		return self.__current
+		return self.master.current if self.master and hasattr(self.master, "current") else self.__current
 
 	current = property(getCurrent)
 
 	@cached
 	def getCurrentIndex(self):
-		try:
-			return self.master.index if self.master is not None else 0  # None - The 0 is a hack to avoid badly written code from crashing!
-		except AttributeError:
-			return self.master.index if self.master is not None and hasattr(self.master, "index") else self.__index
+		return self.master.index if self.master is not None and hasattr(self.master, "index") else self.__index
 
 	def setCurrentIndex(self, index):
 		if self.master is not None:
@@ -185,10 +180,6 @@ to generate HTML."""
 		return result
 
 	visible = property(getVisible, setVisible)
-
-	def listUpdated(self):
-		for x in self.onListUpdated:
-			x()
 
 	def show(self):
 		try:
@@ -273,6 +264,10 @@ to generate HTML."""
 			instance.goBottom()
 		except AttributeError:
 			pass
+
+	def listUpdated(self):
+		for method in self.onListUpdated:
+			method()
 
 	# These hacks protect code that was modified to use the previous up/down hack!   These methods should be found and removed from all code.
 	#
