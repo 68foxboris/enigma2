@@ -44,14 +44,14 @@ def createCurrentCaidLabel(info, currentCaid=None, currentDevice=None):
 		if info and info.getInfo(iServiceInformation.sIsCrypted) == 1 or exists("/tmp/ecm.info"):
 			data = ecmdata.getEcmData()
 		else:
-			data = ("", "0", "0", "0", "")
+			data = ("", "0", "0", "0")
 		# source, caid, provid, ecmpid, device
-		return data[0], data[1], data[2], data[3], data[4]
+		return data[0], data[1], data[2], data[3]
 
 	if not currentCaid:
 		cryptoInfo = getCryptoInfo()
 		currentCaid = cryptoInfo[1]
-		currentDevice = cryptoInfo[4]
+		currentDevice = cryptoInfo[3]
 	result = ""
 	decodingCiSlot = -1
 	NUM_CI = BoxInfo.getItem("CommonInterface")
@@ -71,7 +71,7 @@ def createCurrentCaidLabel(info, currentCaid=None, currentDevice=None):
 
 	for caidData in getCaidData():
 		if int(caidData[0], 16) <= int(currentCaid, 16) <= int(caidData[1], 16):
-			result = caidData[4]
+			result = caidData[3]
 	if decodingCiSlot > -1:
 		return f"CI{decodingCiSlot}{result}"
 	deviceName = ecmdata.createCurrentDevice(currentDevice, False)
@@ -124,10 +124,6 @@ class GetEcmInfo:
 	def getInfo(self, member, ifempty=""):
 		self.pollEcmData()
 		return str(info.get(member, ifempty))
-
-	def getInfoRaw(self):
-		self.pollEcmData()
-		return info
 
 	def getText(self):
 		global ecm
