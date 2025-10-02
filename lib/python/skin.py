@@ -39,10 +39,10 @@ fonts = {  # Dictionary of predefined and skin defined font aliases.
 	"Body": ("Regular", 18, 22, 16),
 	"ChoiceList": ("Regular", 20, 24, 18)
 }
-menus = {}  # Dictionary of images associated with menu entries.
-menuicons = {}  # Dictionary of icons associated with menu items.
 parameters = {}  # Dictionary of skin parameters used to modify code behavior.
 screens = {}  # Dictionary of images associated with screen entries.
+menus = {}  # Dictionary of images associated with menu entries.
+menuicons = {}  # Dictionary of icons associated with menu items.
 setups = {}  # Dictionary of images associated with setup menus.
 switchPixmap = {}  # Dictionary of switch images.
 windowStyles = {}  # Dictionary of window styles for each screen ID.
@@ -1015,6 +1015,9 @@ class AttributeParser:
 	def conditional(self, value):
 		pass
 
+	def connection(self, value):  # This is only used for Addons.
+		pass
+
 	def cornerRadius(self, value):
 		radius, edgeValue = parseRadius(value)
 		self.guiObject.setCornerRadius(radius, edgeValue)
@@ -1074,7 +1077,7 @@ class AttributeParser:
 	def horizontalAlignment(self, value):
 		self.guiObject.setHAlign(parseHorizontalAlignment(value))
 
-	def handledWidgets(self, value):  # This is only used for Screens to ignore optional widgets.
+	def ignoreWidgets(self, value):  # This is only used for Screens to ignore optional widgets.
 		pass
 
 	def includes(self, value):  # Same as conditional.  Created to partner new "excludes" attribute.
@@ -1124,10 +1127,10 @@ class AttributeParser:
 		# print(f"[Skin] DEBUG: Scale itemWidth {int(value)} -> {self.applyHorizontalScale(value)}.")
 		self.guiObject.setItemWidth(self.applyHorizontalScale(value))
 
-	def label(self, value):
+	def label(self, value):  # This is a dummy method for the parser.
 		pass
 
-	def layout(self, value):
+	def layout(self, value):  # This is a dummy method for the parser.
 		pass
 
 	def listOrientation(self, value):  # Used by eListBox.
@@ -1137,7 +1140,7 @@ class AttributeParser:
 		self.wrap("0" if parseBoolean("nowrap", value) else "1")
 		# attribDeprecationWarning("noWrap", "wrap")
 
-	def objectTypes(self, value):
+	def objectTypes(self, value):  # This is a dummy method for the parser.
 		pass
 
 	def orientation(self, value):  # Used by eSlider.
@@ -1166,7 +1169,7 @@ class AttributeParser:
 	def position(self, value):
 		self.guiObject.move(ePoint(*value) if isinstance(value, tuple) else parsePosition(value, self.scaleTuple, self.guiObject, self.desktop, self.guiObject.csize()))
 
-	def resolution(self, value):
+	def resolution(self, value):  # This is a dummy method for the parser.
 		pass
 
 	def scale(self, value):
@@ -1291,11 +1294,11 @@ class AttributeParser:
 		mode = parseZoom(data[2], "selectionZoomSize") if len(data) == 3 else eListbox.zoomContentZoom
 		self.guiObject.setSelectionZoomSize(size[0], size[1], mode)
 
-	def separatorSize(self, value):
-		self.guiObject.setSeparatorSize(eRect(*parseSeparator("separatorSize", value)))
-
-	def separatorColor(self, value):
+	def separatorLineColor(self, value):
 		self.guiObject.setSeparatorColor(parseColor(value, 0x00000000))
+
+	def separatorLineSize(self, value):
+		self.guiObject.setSeparatorSize(eRect(*parseSeparator("separatorLineSize", value)))
 
 	def shadowColor(self, value):
 		self.guiObject.setShadowColor(parseColor(value, 0x00000000))
@@ -1316,7 +1319,7 @@ class AttributeParser:
 	def spacingColor(self, value):
 		self.guiObject.setSpacingColor(parseColor(value, 0x00000000))
 
-	def stack(self, value):
+	def stack(self, value):  # This is a dummy method for the parser.
 		pass
 
 	def tabWidth(self, value):
@@ -1389,7 +1392,7 @@ def applyAllAttributes(guiObject, desktop, attributes, scale=((1, 1), (1, 1))):
 def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN):
 	"""Loads skin data like colors, windowstyle etc."""
 	assert domSkin.tag == "skin", "root element in skin must be 'skin'!"
-	global colors, fonts, menus, parameters, setups, screens, switchPixmap, resolutions, scrollLabelStyle, subtitleFonts
+	global colors, fonts, menus, menuicons, parameters, setups, screens, switchPixmap, resolutions, scrollLabelStyle, subtitleFonts
 	for tag in domSkin.findall("output"):
 		scrnID = parseInteger(tag.attrib.get("id", GUI_SKIN_ID), GUI_SKIN_ID)
 		if scrnID == GUI_SKIN_ID:
@@ -1550,9 +1553,9 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 			image = menuicon.attrib.get("image")
 			if key and image is not None:
 				menuicons[key] = image
-				# print("[Skin] DEBUG: Menu key='{key}', image='{image}'.")
+				# print(f"[Skin] DEBUG: Menuicon key='{key}', image='{image}'.")
 			else:
-				raise SkinError("Tag 'menuicon' needs key and image, got key='{key}' and image='{image}'")
+				skinError(f"Tag 'menuicon' needs key and image, got key='{key}' and image='{image}'")
 	for tag in domSkin.findall("setups"):
 		for setup in tag.findall("setup"):
 			key = setup.attrib.get("key")

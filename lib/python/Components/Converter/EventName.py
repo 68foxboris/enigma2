@@ -175,7 +175,7 @@ class EventName(Converter):
 	FORMAT_STRING = 14
 	RAWRATING = 15
 
-	RAWRATINGANDCOUNTRY = 30
+	RATINGTEXTANDCOLOR = 30
 
 	RATSHORT = 0
 	RATLONG = 1
@@ -220,8 +220,8 @@ class EventName(Converter):
 				self.type = self.ISRUNNINGSTATUS
 			elif type == "RawRating":
 				self.type = self.RAWRATING
-			elif type == "RawRatingAndCountry":
-				self.type = self.RAWRATINGANDCOUNTRY
+			elif type == "RatingTextAndColor":
+				self.type = self.RATINGTEXTANDCOLOR
 			else:
 				self.type = self.NAME
 
@@ -332,7 +332,7 @@ class EventName(Converter):
 			rating = event.getParentalData()
 			if rating:
 				return "%d" % rating.getRating()
-		elif self.type == self.RAWRATINGANDCOUNTRY:
+		elif self.type == self.RATINGTEXTANDCOLOR:
 			rating = event.getParentalData()
 			if rating:
 				age = rating.getRating()

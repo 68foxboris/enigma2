@@ -53,11 +53,14 @@ class RatingIconLabel(Renderer):
 						ageText = split_text[0]
 						color = int(split_text[1], 16)
 					else:
-						age = int(self.source.text.replace("+", ""))
-						if age <= 15:
-							age += 3
-						ageText = str(age)
-						color = self.colors.get(age, 0x10000000)
+						try:
+							age = int(self.source.text.replace("+", ""))
+							if age <= 15:
+								age += 3
+							ageText = str(age)
+							color = self.colors.get(age, 0x10000000)
+						except:
+							pass
 
 					size = self.instance.size()
 					pos = self.instance.position()

@@ -2,10 +2,22 @@ from Components.Addons.GUIAddon import GUIAddon
 
 from enigma import eListbox, eListboxPythonMultiContent, gFont, RT_BLEND, RT_HALIGN_LEFT, RT_VALIGN_CENTER, getDesktop, eSize
 
-from skin import applySkinFactor, parseFont, parseColor, parseScale
+from skin import applySkinFactor, parseFont, parseColor, parameters, menuicons
 
 from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaBlend
 from Components.Label import Label
+from Tools.LoadPixmap import LoadPixmap
+from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN
+
+
+def MenuEntryPixmap(key):
+	if not menuicons:
+		return None
+	w, h = parameters.get("MenuIconSize", (50, 50))
+	pngPath = menuicons.get(key, menuicons.get("default", ""))
+	if pngPath:
+		png = LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, pngPath), cached=True, width=w, height=0 if pngPath.endswith(".svg") else h)
+	return png
 
 
 class MainMenu(GUIAddon):
@@ -48,7 +60,7 @@ class MainMenu(GUIAddon):
 
 	def buildEntry(self, *args):
 		item_text = args[0]
-		menupng = args[5] if len(args) >= 6 else None
+		menupng = MenuEntryPixmap(args[5]) if len(args) >= 6 else None
 		xPos = 17
 		yPos = 5
 
@@ -81,13 +93,13 @@ class MainMenu(GUIAddon):
 			self.source.setConnectedGuiElement(self)
 
 	def setMinWidth(self, value):
-		self.minWidth = parseScale(value)
+		self.minWidth = self.parseScale(value)
 
 	def setMaxWidth(self, value):
-		self.maxWidth = parseScale(value)
+		self.maxWidth = self.parseScale(value)
 
 	def setIconSize(self, value):
-		self.iconSize = parseScale(value)
+		self.iconSize = self.parseScale(value)
 
 	def setForegroundColor(self, value):
 		self.foregroundColor = parseColor(value).argb()
@@ -99,11 +111,11 @@ class MainMenu(GUIAddon):
 		self.backgroundColor = parseColor(value).argb()
 
 	def setItemWidth(self, value):
-		self.itemWidth = parseScale(value)
+		self.itemWidth = self.parseScale(value)
 		self.l.setItemWidth(self.itemWidth)
 
 	def setItemHeight(self, value):
-		self.itemHeight = parseScale(value)
+		self.itemHeight = self.parseScale(value)
 		self.l.setItemHeight(self.itemHeight)
 
 	def postWidgetCreate(self, instance):
@@ -126,6 +138,9 @@ class MainMenu(GUIAddon):
 			self.instance.resize(eSize(destWidth, curSize.height()))
 			self.relatedScreen.screenContentChanged()
 		self.l.setList(self.source.list)
+		if self.relatedScreen is not None:
+			self.relatedScreen["navigationActions"].setEnabled(False)
+			self.relatedScreen["menu"].enableAutoNavigation(True)
 
 	def applySkin(self, desktop, parent):
 		attribs = []
@@ -139,15 +154,15 @@ class MainMenu(GUIAddon):
 			elif attrib == "backgroundColor":
 				self.backgroundColor = parseColor(value).argb()
 			elif attrib == "iconSize":
-				self.iconSize = parseScale(value)
+				self.iconSize = self.parseScale(value)
 			elif attrib == "minWidth":
-				self.minWidth = parseScale(value)
+				self.minWidth = self.parseScale(value)
 			elif attrib == "maxWidth":
-				self.maxWidth = parseScale(value)
+				self.maxWidth = self.parseScale(value)
 			elif attrib == "itemWidth":
-				self.itemWidth = parseScale(value)
+				self.itemWidth = self.parseScale(value)
 			elif attrib == "itemHeight":
-				self.itemHeight = parseScale(value)
+				self.itemHeight = self.parseScale(value)
 			else:
 				attribs.append((attrib, value))
 		self.skinAttributes = attribs

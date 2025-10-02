@@ -2,7 +2,7 @@ from Components.Addons.GUIAddon import GUIAddon
 
 from enigma import eListbox, eListboxPythonMultiContent, BT_ALIGN_CENTER, RT_VALIGN_CENTER, RT_HALIGN_LEFT, RT_HALIGN_CENTER, RT_BLEND, BT_SCALE, eSize, getDesktop, gFont
 
-from skin import parseScale, parseColor, parseFont, applySkinFactor
+from skin import parseColor, parseFont, applySkinFactor
 
 from Components.MultiContent import MultiContentEntryPixmapAlphaBlend, MultiContentEntryText
 from Components.Label import Label
@@ -45,12 +45,8 @@ class ScreenButtonsBar(GUIAddon):
 				self.colorButtonSources[x] = val
 			else:
 				self.actionButtonSources[x] = val
-			# Fix: check if val has 'onChanged' attribute
-			if hasattr(val, 'onChanged'):
-				if self.constructButtonSequence not in val.onChanged:
-					val.onChanged.append(self.constructButtonSequence)
-			else:
-				print(f"[ScreenButtonsBar] Warning: Source '{x}' does not have 'onChanged' attribute: {type(val)}")
+			if self.constructButtonSequence not in val.onChanged:
+				val.onChanged.append(self.constructButtonSequence)
 		self.textRenderer.GUIcreate(self.relatedScreen.instance)
 		self.l.setItemHeight(self.instance.size().height())
 		self.l.setItemWidth(self.instance.size().width())
@@ -216,15 +212,15 @@ class ScreenButtonsBar(GUIAddon):
 			elif attrib == "pixmaps":
 				self.pixmaps = {k: v for k, v in (item.split(':') for item in value.split(','))}
 			elif attrib == "spacingColor":
-				self.spacingButtons = parseScale(value)
+				self.spacingButtons = self.parseScale(value)
 			elif attrib == "spacingColorTight":
-				self.spacingButtonsTight = parseScale(value)
+				self.spacingButtonsTight = self.parseScale(value)
 			elif attrib == "spacingAction":
-				self.spacing = parseScale(value)
+				self.spacing = self.parseScale(value)
 			elif attrib == "spacingPixmapText":
-				self.spacingPixmapText = parseScale(value)
+				self.spacingPixmapText = self.parseScale(value)
 			elif attrib == "spacingActionColorGroups":
-				self.spacingBetweenActionAndColorGroups = parseScale(value)
+				self.spacingBetweenActionAndColorGroups = self.parseScale(value)
 			elif attrib == "layoutStyle":
 				self.layoutStyle = value
 			elif attrib == "alignment":
@@ -244,7 +240,7 @@ class ScreenButtonsBar(GUIAddon):
 			elif attrib == "textColors":
 				self.colors = {k: v for k, v in (item.split(':') for item in value.split(','))}
 			elif attrib == "buttonCornerRadius":
-				self.cornerRadius = parseScale(value)
+				self.cornerRadius = self.parseScale(value)
 			elif attrib == "renderType":
 				self.renderType = value
 			else:

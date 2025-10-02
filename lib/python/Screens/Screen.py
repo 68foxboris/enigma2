@@ -32,7 +32,7 @@ class Screen(dict):
 		self.session = session
 		self.parent = parent
 		self.mandatoryWidgets = mandatoryWidgets
-		self.handledWidgets = []
+		self.ignoreWidgets = []
 		self.onFirstExecBegin = []
 		self.onExecBegin = []
 		self.onExecEnd = []
@@ -297,8 +297,8 @@ class Screen(dict):
 		resolution = bounds
 		zPosition = 0
 		for (key, value) in self.skinAttributes:
-			if key == "handledWidgets":
-				self.handledWidgets = [x.strip() for x in value.split(",")]
+			if key == "ignoreWidgets":
+				self.ignoreWidgets = [x.strip() for x in value.split(",")]
 			elif key == "resolution":
 				resolution = tuple([int(x.strip()) for x in value.split(",")])
 			elif key == "zPosition":
@@ -343,7 +343,7 @@ class Screen(dict):
 					if depr:
 						print("[Screen] WARNING: OBSOLETE COMPONENT '%s' USED IN SKIN. USE '%s' INSTEAD!" % (key, depr[0]))
 						print("[Screen] OBSOLETE COMPONENT WILL BE REMOVED %s, PLEASE UPDATE!" % depr[1])
-				elif not depr and key not in self.handledWidgets:
+				elif not depr and key not in self.ignoreWidgets:
 					try:
 						print(f"[Screen] Warning: Skin is missing element '{key}' in {str(self)} item {str(self[key])}.")
 					except Exception:

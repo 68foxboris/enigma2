@@ -110,7 +110,7 @@ class ScreenHeader(GUIAddon):
 
 	def applySkin(self, desktop, parent):
 		attribs = []
-		for (attrib, value) in self.skinAttributes[:]:
+		for (attrib, value) in self.skinAttributes:
 			if attrib == "titleFont":
 				self.titleFont = parseFont(value, parent.scale)
 			elif attrib == "titleSingleFont":
