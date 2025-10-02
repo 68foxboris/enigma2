@@ -60,8 +60,8 @@ class Element:
 		self.cache = {}
 		self.downstream_elements.changed(*args, **kwargs)
 		self.cache = None
-		for x in self.onChanged:
- 			x()
+		for method in self.onChanged:
+ 			method()
 
 	def setSuspend(self, suspended):
 		changed = self.__suspended != suspended

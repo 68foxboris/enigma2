@@ -11,8 +11,8 @@ class VariableText:
 		self.message = text
 		if self.instance:
 			self.instance.setText(str(self.message) or "")
-		for x in self.onChanged:
-			x()
+		for method in self.onChanged:
+			method()
 
 	def setMarkedPos(self, pos):
 		if self.instance:
