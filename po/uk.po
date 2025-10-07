@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-07-29 21:18+0300\n"
+"PO-Revision-Date: 2025-10-07 14:15+0300\n"
 "Last-Translator: kvinto\n"
 "Language-Team: kvinto\n"
 "Language: uk_UA\n"
@@ -202,8 +202,8 @@ msgstr "%d fps"
 msgid "%d GB"
 msgstr "%d ГБ"
 
-msgid "%d Hour"
-msgid_plural "%d Hours"
+msgid "%d hour"
+msgid_plural "%d hours"
 msgstr[0] "%d Година"
 msgstr[1] "%d Години"
 msgstr[2] "%d Годин"
@@ -1163,7 +1163,7 @@ msgid "Any activity"
 msgstr "Будь-яка активність"
 
 msgid "Any recordings"
-msgstr "будь-які записи"
+msgstr "Будь-які записи"
 
 msgid "Apply any changes to the active locale/language and exit"
 msgstr "Застосувати зміни до активної локалі/мови і вийти"
@@ -2214,6 +2214,9 @@ msgstr "Виберіть країну для визначення рейтинг
 msgid "Choose style of main menus"
 msgstr "Зміна вигляду Головного меню"
 
+msgid "Choose the amount of additional slots."
+msgstr "Виберіть кількість додаткових слотів."
+
 msgid "Choose the fallback font."
 msgstr "Вибрати резервний шрифт."
 
@@ -2391,7 +2394,7 @@ msgstr "Колір"
 msgid "Color format"
 msgstr "Формат кольору"
 
-msgid "Colored Text"
+msgid "Colored text"
 msgstr "Кольоровий текст"
 
 msgid "Combined"
@@ -3778,6 +3781,9 @@ msgstr "Вимкнути FCC під час запису"
 msgid "Disable Picture in Picture"
 msgstr "Вимкнути РіР"
 
+msgid "Disable ServiceHiSilicon"
+msgstr "Вимкнути службу HiSilicon"
+
 msgid "Disable background scanning"
 msgstr "Вимкнути сканування у фоні"
 
@@ -4439,7 +4445,10 @@ msgid "Enable this option to add MultiBoot information detected during system bo
 msgstr "Увімкніть цей параметр, щоб додати інформацію MultiBoot, виявлену під час завантаження системи, до файлу журналу налагодження."
 
 msgid "Enable this option to add action map / remote control mapping data to the debug log file."
-msgstr "Увімкніть цю опцію, щоб додати дані відображення карти дій/віддаленого керування до файлу журналу налагодження."
+msgstr "Увімкніть цей параметр, щоб додати дані відображення карти дій/віддаленого керування до файлу журналу налагодження."
+
+msgid "Enable this option to add bouquet database information to the debug log file."
+msgstr "Увімкніть цей параметр, щоб додати інформацію про базу даних фаворитів до файлу журналу налагодження."
 
 msgid "Enable this option to add extra DVB details to the debug log file."
 msgstr "Увімкніть цей параметр, щоб додати додаткові відомості про DVB до файлу журналу налагодження."
@@ -4457,16 +4466,16 @@ msgid "Enable this option to add international language and country load informa
 msgstr "Увімкніть цей параметр, щоб додати інформацію про завантаження міжнародної мови та країни, виявлену під час завантаження системи, до файлу журналу налагодження."
 
 msgid "Enable this option to add keyboard key map data to the debug log file."
-msgstr "Увімкніть цю опцію, щоб додати дані розкладки клавіатури до файлу журналу налагодження."
+msgstr "Увімкніть цей параметр, щоб додати дані розкладки клавіатури до файлу журналу налагодження."
 
 msgid "Enable this option to add opkg output data to the debug log file."
 msgstr "Увімкніть цей параметр, щоб додати вихідні дані opkg до файлу журналу налагодження."
 
 msgid "Enable this option to add remote control data to the debug log file."
-msgstr "Увімкніть цю опцію, щоб додати дані дистанційного керування до файлу журналу налагодження."
+msgstr "Увімкніть цей параметр, щоб додати дані дистанційного керування до файлу журналу налагодження."
 
 msgid "Enable this option to add screen names and resolution data to the debug log file."
-msgstr "Увімкніть цю опцію, щоб додати до файлу журналу налагодження екранні імена та дані роздільної здатності."
+msgstr "Увімкніть цей параметр, щоб додати до файлу журналу налагодження екранні імена та дані роздільної здатності."
 
 msgid "Enable this option to add storage device information detected during system boot and hot plug events to the debug log file."
 msgstr "Увімкніть цей параметр, щоб додати інформацію про накопичувач, виявлену під час завантаження системи та подій гарячого підключення, до файлу журналу налагодження."
@@ -5897,6 +5906,9 @@ msgstr "Якщо включено, буде використано вікно ч
 msgid "If logs are using the set maximum space used the eldest will be deleted."
 msgstr "Якщо логи займають занадто багато пам'яті, будуть видалятися найстаріші файли."
 
+msgid "If set to 'yes', allows you to use the SeekBar to jump to a point within the event."
+msgstr "Якщо встановлено значення 'так', дозволяє використовувати SeekBar для переходу до точки в межах події."
+
 msgid "If set to 'yes', allows you to use timeshift with alternative audio plugins."
 msgstr "Якщо встановлено значення 'так', Ви можете використовувати зміщення часу з альтернативними аудіоплагінами."
 
@@ -6038,6 +6050,9 @@ msgstr "Додати дані MultiBoot *"
 
 msgid "Include action map data"
 msgstr "Включити дані карти дій"
+
+msgid "Include bouquet DB data"
+msgstr "Включити дані бази даних фаворитів"
 
 msgid "Include international data *"
 msgstr "Додати міжнародні дані *"
@@ -6553,7 +6568,7 @@ msgstr "Ліван"
 msgid "Left"
 msgstr "Вліво"
 
-msgid "Left from service name"
+msgid "Left of service name"
 msgstr "Ліворуч назви каналу"
 
 msgid "Legacy mode"
@@ -6831,6 +6846,9 @@ msgstr "Пурпуровий"
 
 msgid "Main menu"
 msgstr "Головне меню"
+
+msgid "Maintain old EPG data for"
+msgstr "Зберігати старі дані EPG"
 
 msgid "Maintain your multi boot device."
 msgstr "Підтимка Вашим пристроєм мультизавантаження."
@@ -9090,13 +9108,13 @@ msgid "Ready to remove \"%s\"?"
 msgstr "Готові до видалення \"%s\"?"
 
 msgid "Real or pseudo recordings"
-msgstr "реальні, або псевдо записи"
+msgstr "Реальні, або псевдо записи"
 
 msgid "Real recordings"
-msgstr "реальні записи"
+msgstr "Реальні записи"
 
 msgid "Real recordings or streaming"
-msgstr "реальні записи, або потокове мовлення"
+msgstr "Реальні записи, або потокове мовлення"
 
 msgid "Really close without saving settings?"
 msgstr "Вийти без збереження налаштувань?"
@@ -9168,7 +9186,7 @@ msgstr "Параметри прийому"
 msgid "Record"
 msgstr "Запис"
 
-msgid "Record Icon"
+msgid "Record icon"
 msgstr "Значок Запису"
 
 msgid "Record time limited due to conflicting timer %s"
@@ -9577,7 +9595,7 @@ msgstr "Перезапускати субтитри"
 msgid "Right"
 msgstr "Вправо"
 
-msgid "Right from service name"
+msgid "Right of service name"
 msgstr "Праворуч назви каналу"
 
 msgid "Roll-off"
@@ -9982,6 +10000,9 @@ msgstr "Виберіть 'Так', якщо налаштування гучно�
 
 msgid "Select 'yes' to choose what bands or step sizes will be scanned."
 msgstr "Виберіть 'Так', щоб вибрати, які діапазони, або розміри кроків будуть скановані."
+
+msgid "Select 'Yes' to disable the ServiceHiSilicon plugin to allow use of the default internal media player code."
+msgstr "Виберіть 'Так', щоб вимкнути плагін ServiceHiSilicon та дозволити використання вбудованого кодека медіаплеєра за замовчуванням."
 
 msgid "Select 'Yes, to display the InfoBar when fast forwarding or rewinding during media playback."
 msgstr "Виберіть 'Так', щоб відображати інформаційну панель під час швидкого перемотування вперед або назад під час відтворення медіафайлів."
@@ -11563,6 +11584,9 @@ msgstr "Слот '%s' %s"
 msgid "Slot '%s' %s: %s%s"
 msgstr "Слот '%s' %s: %s%s"
 
+msgid "Slot count"
+msgstr "Кількість слотів"
+
 msgid "Slots have been extended by %d..\n"
 msgstr "Слоти було расширено на %d..\n"
 
@@ -12371,7 +12395,7 @@ msgid "TEXT"
 msgstr "ТЕКСТ"
 
 msgid "TRANSLATOR_INFO"
-msgstr "Переклад:  kvinto - 06.08.2025"
+msgstr "Переклад:  kvinto - 07.10.2025"
 
 msgid "TS file is too large for ISO9660 level 1!"
 msgstr "TS файл занадто великий для ISO9660 рівень 1!"
@@ -13796,6 +13820,9 @@ msgstr "Використати ці налаштування для покращ
 
 msgid "Use time jumps for fast forward/backward"
 msgstr "Кроки для швидкого перемотування вперед/назад"
+
+msgid "Use timeshift SeekBar while timeshifting?"
+msgstr "Використовувати панель пошуку Timeshift під час Timeshifting?"
 
 msgid "Use trash can in movielist"
 msgstr "Використання кошика в списку фільмів"
