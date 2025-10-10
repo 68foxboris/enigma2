@@ -7,10 +7,13 @@ dist_install_DATA =     ask.png \
     blank.png \
     bullet.png \
     clock.png \
+    catchup.png \
     default.png \
     dmm_logo.png \
     dish_scan.png \
     dish.png \
+    dot.png \
+    dotfull.png \
     dev_usbstick.png \
     dev_mmc.png \
     dev_hdd.png \
@@ -159,6 +162,10 @@ dist_install_DATA =     ask.png \
     scan-t.png \
     Scart-YPbPr.png \
     Scart.png \
+    shevrondown.png \
+    shevronleft.png \
+    shevronright.png \
+    shevronup.png \
     shuffle.png \
     slow_large.png \
     slow.png \
