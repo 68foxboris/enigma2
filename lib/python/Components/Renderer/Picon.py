@@ -2,11 +2,10 @@
 from os import listdir
 from os.path import exists, getsize, isdir, join
 from re import sub
-from enigma import ePixmap
+from enigma import ePixmap, ePicLoad, eServiceReference
 from Components.config import config, ConfigSubsection, ConfigSelection
 from Components.Harddisk import harddiskmanager
 from Components.Renderer.Renderer import Renderer
-from ServiceReference import ServiceReference
 from Tools.Alternatives import GetWithAlternative
 from Tools.Directories import SCOPE_SKIN_IMAGE, SCOPE_CURRENT_SKIN, resolveFilename, sanitizeFilename
 
@@ -66,15 +65,15 @@ class PiconLocator:
 		elif why == "remove":
 			self.onMountpointRemoved(part.mountpoint)
 
-	def findPicon(self, serviceName):
+	def findPicon(self, service):
 		if self.activePiconPath is not None:
 			for ext in (".png", ".svg"):
-				pngname = f"{self.activePiconPath}{serviceName}{ext}"
+				pngname = f"{self.activePiconPath}{service}{ext}"
 				return pngname if exists(pngname) else ""
 		else:
 			for path in self.searchPaths:
 				for ext in (".png", ".svg"):
-					pngname = f"{path}{serviceName}{ext}"
+					pngname = f"{path}{service}{ext}"
 					if exists(pngname):
 						self.activePiconPath = path
 						return pngname
@@ -87,9 +86,9 @@ class PiconLocator:
 			if not value.startswith("/media/net") and not value.startswith("/media/autofs") and value not in self.searchPaths:
 				self.searchPaths.append(value)
 
-	def getPiconName(self, serviceName):
-		#remove the path and name fields, and replace ":" by "_"
-		fields = GetWithAlternative(serviceName).split(":", 10)[:10]
+	def getPiconName(self, serviceRef):
+		# remove the path and name fields, and replace ":" by "_"
+		fields = GetWithAlternative(serviceRef).split(":", 10)[:10]
 		if not fields or len(fields) < 10:
 			return ""
 		pngname = self.findPicon("_".join(fields))
@@ -106,7 +105,7 @@ class PiconLocator:
 			fields[2] = "1"
 			pngname = self.findPicon("_".join(fields))
 		if not pngname:  # picon by channel name
-			if (sname := ServiceReference(serviceName).getServiceName()) and "SID 0x" not in sname and (utf8_name := sanitizeFilename(sname).lower()) and utf8_name != "__":  # avoid lookups on zero length service names
+			if (sname := eServiceReference(serviceRef).getServiceName()) and "SID 0x" not in sname and (utf8_name := sanitizeFilename(sname).lower()) and utf8_name != "__":  # avoid lookups on zero length service names
 				legacy_name = sub("[^a-z0-9]", "", utf8_name.replace("&", "and").replace("+", "plus").replace("*", "star"))  # legacy ascii service name picons
 				pngname = self.findPicon(utf8_name) or legacy_name and self.findPicon(legacy_name) or self.findPicon(sub(r"(fhd|uhd|hd|sd|4k)$", "", utf8_name).strip()) or legacy_name and self.findPicon(sub(r"(fhd|uhd|hd|sd|4k)$", "", legacy_name).strip())
 				if not pngname and len(legacy_name) > 6:
@@ -136,8 +135,8 @@ def initPiconPaths():
 initPiconPaths()
 
 
-def getPiconName(serviceName):
-	return piconLocator.getPiconName(serviceName)
+def getPiconName(serviceRef):
+	return piconLocator.getPiconName(serviceRef)
 
 
 class Picon(Renderer):
@@ -145,36 +144,74 @@ class Picon(Renderer):
 		Renderer.__init__(self)
 		self.pngname = None
 		self.defaultpngname = resolveFilename(SCOPE_CURRENT_SKIN, "picon_default.png")
+		self.usePicLoad = False
+		self.PicLoad = ePicLoad()
+		self.PicLoad.PictureData.get().append(self.updatePicon)
+		self.piconsize = (0, 0)
+		self.service_text = ""
+		self.lastPath = None
+		self.showPicon = True
+
+	def addPath(self, value):
+		if pathExists(value):
+			if not value.endswith('/'):
+				value += '/'
+			if value not in piconLocator.searchPaths:
+				piconLocator.searchPaths.append(value)
 
 	def applySkin(self, desktop, parent):
 		attribs = self.skinAttributes[:]
 		for (attrib, value) in self.skinAttributes:
 			if attrib == "path":
-				piconLocator.addSearchPath(value)
+				self.addPath(value)
 				attribs.remove((attrib, value))
+			elif attrib == "isFrontDisplayPicon":
+				self.showPicon = value == "0"
+				attribs.remove((attrib, value))
+			elif attrib == "usePicLoad":
+				self.usePicLoad = value == "1"
+				attribs.remove((attrib, value))
+			elif attrib == "size":
+				self.piconsize = value
 		self.skinAttributes = attribs
-		rc = Renderer.applySkin(self, desktop, parent)
-		self.changed((self.CHANGED_DEFAULT,))
-		return rc
+		return Renderer.applySkin(self, desktop, parent)
 
 	GUI_WIDGET = ePixmap
 
+	def updatePicon(self, picInfo=None):
+		ptr = self.PicLoad.getData()
+		if ptr is not None and self.instance:
+			self.instance.setPixmap(ptr.__deref__())
+			self.instance.show()
+
 	def changed(self, what):
 		if self.instance:
-			if what[0] in (self.CHANGED_DEFAULT, self.CHANGED_ALL, self.CHANGED_SPECIFIC):
-				pngname = piconLocator.getPiconName(self.source.text)
-				if not exists(pngname):  # no picon for service found
-					pngname = self.defaultpngname
-				if not config.usage.showpicon.value:  # disabe picon on infobar
+			if self.showPicon or config.usage.show_picon_in_display.value:
+				pngname = ""
+				if what[0] in (self.CHANGED_ALL, self.CHANGED_SPECIFIC):
+					if self.usePicLoad and self.source.text and self.service_text and self.source.text == self.service_text:
+						return
+					self.service_text = self.source.text
+					pngname = piconLocator.getPiconName(self.source.text)
+				else:
+					if what[0] == self.CHANGED_CLEAR:
+						self.service_text = self.pngname = ""
+						if self.visible:
+							self.instance.hide()
+					return
+				if not pngname:  # no picon for service found
 					pngname = self.defaultpngname
 				if self.pngname != pngname:
 					if pngname:
-						self.instance.setScale(1)
-						self.instance.setPixmapFromFile(pngname)
-						self.instance.show()
+						if self.usePicLoad:
+							self.PicLoad.setPara((self.piconsize[0], self.piconsize[1], 0, 0, 1, 1, "#FF000000"))
+							self.PicLoad.startDecode(pngname)
+						else:
+							self.instance.setScale(1)
+							self.instance.setPixmapFromFile(pngname)
+							self.instance.show()
 					else:
 						self.instance.hide()
 					self.pngname = pngname
-			elif what[0] == self.CHANGED_CLEAR:
-				self.pngname = None
+			elif self.visible:
 				self.instance.hide()
