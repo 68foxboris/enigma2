@@ -3585,6 +3585,9 @@ msgstr "Синяя кнопка"
 msgid "Blue long"
 msgstr "Синяя долгая"
 
+msgid "Bluetooth Audio"
+msgstr "Bluetooth Аудио"
+
 msgid "Bluetooth Setup"
 msgstr "Настройки Bluetooth"
 
@@ -7744,9 +7747,6 @@ msgstr "Включите функцию мигания для некоторых
 
 msgid "Enable blinking REC symbol on the LCD display"
 msgstr "Включить мигание значка на дисплее во время записи"
-
-msgid "Enable BT audio"
-msgstr "Включить BT-аудио"
 
 msgid "Enable bluetooth audio"
 msgstr "Включить BT-аудио"
