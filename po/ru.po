@@ -6838,6 +6838,9 @@ msgstr "Каталог '%s' не существует!"
 msgid "Directory '%s' not writable!"
 msgstr "Каталог '%s' недоступен для записи!"
 
+msgid "Disable ServiceHiSilicon"
+msgstr "Отключить ServiceHiSilicon"
+
 msgid "Directory browser"
 msgstr "Обозреватель каталогов"
 
@@ -7840,6 +7843,9 @@ msgstr "Включите настройку временного интерва�
 
 msgid "Enable teletext caching"
 msgstr "Включить кэширование телетекста"
+
+msgid "Enable this option to add bouquet database information to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить информацию о базе данных букета в файл журнала отладки."
 
 msgid "Enable this option to add bouquet information detected during system boot to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить информацию о букете, обнаруженную во время загрузки системы, в файл журнала отладки."
@@ -10133,6 +10139,9 @@ msgstr "Включить данные карты действий"
 
 msgid "Include bouquet data"
 msgstr "Включить данные о букете"
+
+msgid "Include bouquet DB data"
+msgstr "Включить данные букетной базы данных"
 
 msgid "Include international data *"
 msgstr "Включить международные данные *"
@@ -16268,6 +16277,9 @@ msgstr "Выберите «Да», если вы хотите вывести т�
 
 msgid "Select 'Yes' if you want to wake the TV for a 'Zap' recording timer is starting."
 msgstr "Выберите «Да», если вы хотите вывести телевизор из спящего режима для запуска таймера записи «Zap»."
+
+msgid "Select 'Yes' to disable the ServiceHiSilicon plugin to allow use of the default internal media player code."
+msgstr "Выберите «Да», чтобы отключить плагин ServiceHiSilicon и разрешить использование внутреннего кода медиаплеера по умолчанию."
 
 msgid "Select 'Yes, to display the InfoBar when fast forwarding or rewinding during media playback."
 msgstr "Выберите «Да», чтобы отображать информационную панель при быстрой перемотке вперед или назад во время воспроизведения мультимедиа."
