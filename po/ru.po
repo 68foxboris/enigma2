@@ -18530,6 +18530,9 @@ msgstr "Информация о клиентах стриминга"
 msgid "Streaming recording ended"
 msgstr "Потоковая запись завершена"
 
+msgid "Streaming recovery delay"
+msgstr "Задержка восстановления потоковой передачи"
+
 #, python-format
 msgid "Streaming tuner information for %s %s"
 msgstr "Сведения о передаваемых %s %s в сеть потоках"

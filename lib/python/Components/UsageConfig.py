@@ -542,6 +542,7 @@ def InitUsageConfig():
 
 	config.timeshift.path.addNotifier(setTimeshiftPath)
 	config.timeshift.skipReturnToLive = ConfigYesNo(default=False)
+	config.timeshift.recoveryBufferDelay = ConfigSelection(default=300, choices=[(x, _("%d ms") % x) for x in range(100, 1500, 100)])
 
 	config.usage.movielist_trashcan = ConfigYesNo(default=True)
 	config.usage.movielist_trashcan_days = ConfigNumber(default=8)
