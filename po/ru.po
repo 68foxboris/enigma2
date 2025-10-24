@@ -8052,6 +8052,9 @@ msgstr "Введите IP-адрес хост-получателя."
 msgid "Enter the domain of the host receiver. Do not include 'http://' or port number."
 msgstr "Введите домен принимающего хоста. Не включайте «http: //» или номер порта."
 
+msgid "Enter the duration to be added to the streaming buffer after a streaming error. This extra buffer can help to avoid further streaming issues due to a lack of buffer space."
+msgstr "Введите длительность, которая будет добавлена ​​в буфер потоковой передачи после ошибки потоковой передачи. Этот дополнительный буфер поможет избежать дальнейших проблем с потоковой передачей из-за нехватки места в буфере."
+
 msgid "Enter the frequency at which you LNB switches between low band and high band. For more information consult the spec sheet of your LNB."
 msgstr "Введите частоту, с которой LNB переключается между низкими и высокими частотами диапазона. Для получения дополнительной информации смотрите спецификацию вашего LNB."
 
