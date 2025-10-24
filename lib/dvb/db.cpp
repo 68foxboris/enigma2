@@ -192,7 +192,7 @@ const eDVBService::cacheID eDVBService::audioCacheTags[] = {
 const int eDVBService::nAudioCacheTags = sizeof(eDVBService::audioCacheTags) / sizeof(eDVBService::audioCacheTags[0]);
 
 eDVBService::eDVBService()
-	:m_cache(0), m_flags(0), m_lcn(0)
+	:m_cache(0), m_lcn(0), m_flags(0)
 {
 }
 

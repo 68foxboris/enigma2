@@ -243,7 +243,7 @@ int eDVBAdapterLinux::getNumDemux()
 
 RESULT eDVBAdapterLinux::getDemux(ePtr<eDVBDemux> &demux, int nr)
 {
-	eTrace("[eDVBAdapterLinux] get demux %d", nr);
+	eDebug("[eDVBAdapterLinux] get demux %d", nr);
 
 	eSmartPtrList<eDVBDemux>::iterator i(m_demux.begin());
 	while (nr && (i != m_demux.end()))
@@ -1712,8 +1712,8 @@ bool eDVBResourceManager::canMeasureFrontendInputPower()
 class eDVBChannelFilePush: public eFilePushThread
 {
 public:
-	eDVBChannelFilePush(int packetsize = 188):
-		eFilePushThread(packetsize, packetsize * 512),
+	eDVBChannelFilePush(int packetsize = 188, int flags = 0):
+		eFilePushThread(IOPRIO_CLASS_BE, 0, packetsize, packetsize * 512, flags),
 		m_iframe_search(0),
 		m_iframe_state(0),
 		m_pid(0),
@@ -2387,7 +2387,7 @@ RESULT eDVBChannel::playFile(const char *file)
 
 	if (f->open(file) < 0)
 	{
-		eDebug("[eDVBChannel] can't open PVR file %s: %m", file);
+		eDebug("[eDVBChannel] can't open PVR file %s (%m)", file);
 		return -ENOENT;
 	}
 
@@ -2431,7 +2431,14 @@ RESULT eDVBChannel::playSource(ePtr<iTsSource> &source, const char *streaminfo_f
 		}
 	}
 
-	m_pvr_thread = new eDVBChannelFilePush(m_source->getPacketSize());
+	int flags = 0;
+	if (streaminfo_file && strstr(streaminfo_file, "timeshift"))
+	{
+		eDebug("[eDVBChannel] playsource timeshift mode");
+		flags = 1;
+	}
+
+	m_pvr_thread = new eDVBChannelFilePush(m_source->getPacketSize(), flags);
 	m_pvr_thread->enablePVRCommit(1);
 	m_pvr_thread->setStreamMode(m_source->isStream());
 	m_pvr_thread->setScatterGather(this);
