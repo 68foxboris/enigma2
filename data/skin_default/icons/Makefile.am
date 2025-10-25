@@ -2,6 +2,10 @@ installdir = $(datadir)/enigma2/skin_default/icons
 
 dist_install_DATA =     ask.png \
     az.png \
+    agreen.png \
+    aoff.png \
+    ared.png \
+    ayellow.png \
     backward_large.png \
     backward.png \
     blank.png \
@@ -43,6 +47,7 @@ dist_install_DATA =     ask.png \
     hdd.png \
     hdd24.png \
     HDMI.png \
+    ico_catchup.png \
     ico_dvb-c.png \
     ico_dvb-s.png \
     ico_dvb-t.png \
