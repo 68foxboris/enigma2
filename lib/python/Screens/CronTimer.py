@@ -1,18 +1,23 @@
-from os import system, listdir, rename, path, mkdir
+from os import listdir, mkdir, rename
 from os.path import exists
 from time import sleep
+
 from Components.ActionMap import ActionMap
-from Components.config import config, ConfigSubsection, ConfigText, ConfigSelection, ConfigInteger, ConfigClock, NoSave
+from Components.config import ConfigClock, ConfigInteger, ConfigSelection, ConfigSubsection, ConfigText, NoSave, config
 from Components.ConfigList import ConfigListScreen
 from Components.Console import Console
 from Components.Label import Label
+from Components.Pixmap import Pixmap
+from Components.Sources.Boolean import Boolean
 from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
-from Components.Sources.Boolean import Boolean
-from Components.Pixmap import Pixmap
-from Screens.Screen import Screen
+from Components.SystemInfo import getBoxDisplayName
 from Screens.MessageBox import MessageBox
+from Screens.Screen import Screen
 from Tools.Directories import fileExists
+
+OPKGCMD = "/usr/bin/opkg"
+UPDATERC = "/usr/sbin/update-rc.d"
 
 
 class CronTimers(Screen):
@@ -20,7 +25,7 @@ class CronTimers(Screen):
 		Screen.__init__(self, session)
 		if not exists("/usr/script"):
 			mkdir("/usr/script", 0o755)
-		Screen.setTitle(self, _("Cron Manager"))
+		self.setTitle(_("Cron Manager"))
 		self.onChangedEntry = []
 		self["lab1"] = Label(_("Autostart") + ":")
 		self["labactive"] = Label(_("Active"))
@@ -35,29 +40,47 @@ class CronTimers(Screen):
 		self.Console = Console()
 		self.my_crond_active = False
 		self.my_crond_run = False
-
 		self["key_red"] = Label(_("Delete"))
 		self["key_green"] = Label(_("Add"))
 		self["key_yellow"] = StaticText(_("Start"))
 		self["key_blue"] = Label(_("Autostart"))
 		self.list = []
 		self["list"] = List(self.list)
-		self["actions"] = ActionMap(["WizardActions", "ColorActions", "MenuActions"], {"ok": self.info, "back": self.uninstallCheck, "red": self.delcron, "green": self.addtocron, "yellow": self.crondStart, "blue": self.autostart})
-		if not self.selectionChanged in self["list"].onSelectionChanged:
+		self["actions"] = ActionMap(["WizardActions", "ColorActions", "MenuActions"], {
+			"ok": self.info,
+			"back": self.uninstallCheck,
+			"red": self.delcron,
+			"green": self.addtocron,
+			"yellow": self.crondStart,
+			"blue": self.autostart}
+		)
+		if self.selectionChanged not in self["list"].onSelectionChanged:
 			self["list"].onSelectionChanged.append(self.selectionChanged)
 		self.service_name = "cronie"
-		self.installCheck()
+		self.onLayoutFinish.append(self.installCheck)
+
+	def callOpkg(self, commands, callback):
+		self.Console.ePopen([OPKGCMD, OPKGCMD] + commands, callback)
 
 	def installCheck(self):
-		self.Console.ePopen("/usr/bin/opkg list_installed " + self.service_name, self.checkNetworkState)
+		self.callOpkg(["list_installed", self.service_name], self.checkNetworkState)
 
-	def checkNetworkState(self, str, retval, extra_args):
-		if "Collected errors" in str:
-			self.session.openWithCallback(self.close, MessageBox, _("Seems a background update check is in progress, please try again later."), type=MessageBox.TYPE_INFO, timeout=10, close_on_any_key=True)
-		elif not str:
-			self.session.openWithCallback(self.InstallPackage, MessageBox, _("Do you want to install \"%s\" ?") % self.service_name, MessageBox.TYPE_YESNO)
+	def checkNetworkState(self, result, retval, extra_args):
+		if not result:
+			self.feedscheck = self.session.open(MessageBox, _("Please wait whilst feeds state is checked."), MessageBox.TYPE_INFO, enable_input=False)
+			self.feedscheck.setTitle(_("Checking Feeds"))
+			self.CheckConsole = Console()
+			self.CheckConsole.ePopen([OPKGCMD, OPKGCMD, "update"], self.checkNetworkStateFinished)
 		else:
 			self.updateList()
+
+	def checkNetworkStateFinished(self, result, retval, extra_args=None):
+		if "bad address" in result:
+			self.session.openWithCallback(self.installPackageFailed, MessageBox, _("Your %s %s is not connected to the Internet, please check your network settings and try again.") % getBoxDisplayName(), type=MessageBox.TYPE_INFO, timeout=10, close_on_any_key=True)
+		elif ("wget returned 1" or "wget returned 255" or "404 Not Found") in result:
+			self.session.openWithCallback(self.installPackageFailed, MessageBox, _("Sorry feeds are down for maintenance, please try again later."), type=MessageBox.TYPE_INFO, timeout=10, close_on_any_key=True)
+		else:
+			self.session.openWithCallback(self.installPackage, MessageBox, _("Ready to install \"%s\"?") % self.service_name, MessageBox.TYPE_YESNO)
 
 	def installPackage(self, val):
 		if val:
@@ -73,7 +96,7 @@ class CronTimers(Screen):
 	def doInstall(self, callback, pkgname):
 		self.message = self.session.open(MessageBox, _("Please wait..."), MessageBox.TYPE_INFO, enable_input=False)
 		self.message.setTitle(_("Installing Service"))
-		self.Console.ePopen("/usr/bin/opkg install " + pkgname, callback)
+		self.callOpkg(["install", pkgname], callback)
 
 	def installComplete(self, result=None, retval=None, extra_args=None):
 		self.message.close()
@@ -82,13 +105,13 @@ class CronTimers(Screen):
 
 	def uninstallCheck(self):
 		if not self.my_crond_run:
-			self.Console.ePopen("/usr/bin/opkg list_installed " + self.service_name, self.removedataAvail)
+			self.callOpkg(["list_installed", self.service_name], self.removedataAvail)
 		else:
 			self.close()
 
 	def removedataAvail(self, result, retval, extra_args):
 		if result:
-			self.session.openWithCallback(self.removePackage, MessageBox, _("Ready to remove \"%s\" ?") % self.service_name)
+			self.session.openWithCallback(self.removePackage, MessageBox, _("Ready to remove \"%s\"?") % self.service_name)
 		else:
 			self.close()
 
@@ -101,7 +124,7 @@ class CronTimers(Screen):
 	def doRemove(self, callback, pkgname):
 		self.message = self.session.open(MessageBox, _("Please wait..."), MessageBox.TYPE_INFO, enable_input=False)
 		self.message.setTitle(_("Removing Service"))
-		self.Console.ePopen("/usr/bin/opkg remove " + pkgname + " --force-remove --autoremove", callback)
+		self.callOpkg(["--force-remove", "--autoremove", "remove", pkgname], callback)
 
 	def removeComplete(self, result=None, retval=None, extra_args=None):
 		self.message.close()
@@ -113,13 +136,10 @@ class CronTimers(Screen):
 
 	def selectionChanged(self):
 		try:
-			if self["list"].getCurrent():
-				name = str(self["list"].getCurrent()[0])
-			else:
-				name = ""
-		except:
+			name = str(self["list"].getCurrent()[0]) if self["list"].getCurrent() else ""
+		except Exception:
 			name = ""
-		desc = _("Current Status:") + " " + self.summary_running
+		desc = "%s %s" % (_("Current Status:"), self.summary_running)
 		for cb in self.onChangedEntry:
 			cb(name, desc)
 
@@ -135,11 +155,9 @@ class CronTimers(Screen):
 
 	def autostart(self):
 		if fileExists("/etc/rc2.d/S90crond"):
-			self.Console.ePopen("update-rc.d -f crond remove")
+			self.Console.ePopen([UPDATERC, UPDATERC, "-f", "crond", "remove"], self.startStopCallback)
 		else:
-			self.Console.ePopen("update-rc.d -f crond defaults 90 60")
-		sleep(3)
-		self.updateList()
+			self.Console.ePopen([UPDATERC, UPDATERC, "-f", "crond", "defaults", "90", "60"], self.startStopCallback)
 
 	def addtocron(self):
 		self.session.openWithCallback(self.updateList, CronTimersConfig)
@@ -207,6 +225,7 @@ class CronTimers(Screen):
 							day += "Fri "
 						if str(parts[4]).find("6") >= 0:
 							day += "Sat "
+
 						if day:
 							line2 = header + day + parts[1].zfill(2) + ":" + parts[0].zfill(2) + "\t" + parts[5]
 						res = (line2, line)
@@ -220,9 +239,8 @@ class CronTimers(Screen):
 		if self.sel:
 			parts = self.sel[0]
 			parts = parts.split("\t")
-			message = _("Are you sure you want to delete this:\n ") + parts[1]
-			ybox = self.session.openWithCallback(self.doDelCron, MessageBox, message, MessageBox.TYPE_YESNO)
-			ybox.setTitle(_("Remove Confirmation"))
+			message = "%s\n\n%s" % (_("Are you sure you want to delete this?"), parts[1])
+			self.session.openWithCallback(self.doDelCron, MessageBox, message, MessageBox.TYPE_YESNO, windowTitle=_("Remove Confirmation"))
 
 	def doDelCron(self, answer):
 		if answer:
@@ -231,14 +249,17 @@ class CronTimers(Screen):
 				myline = mysel[1]
 				open("/etc/cron/crontabs/root.tmp", "w").writelines([x for x in open("/etc/cron/crontabs/root").readlines() if myline not in x])
 				rename("/etc/cron/crontabs/root.tmp", "/etc/cron/crontabs/root")
-				rc = system("crontab /etc/cron/crontabs/root -c /etc/cron/crontabs")
-				self.updateList()
+				Console().ePopen(["/usr/bin/crontab", "/usr/bin/crontab", "/etc/cron/crontabs/root", "-c", "/etc/cron/crontabs"], self.doDelCronResult)
+
+	def doDelCronResult(self, data=None, retVal=None, extraArgs=None):
+		self.updateList()
 
 	def info(self):
 		mysel = self["list"].getCurrent()
 		if mysel:
 			myline = mysel[1]
 			self.session.open(MessageBox, _(myline), MessageBox.TYPE_INFO)
+
 
 config.crontimers = ConfigSubsection()
 config.crontimers.commandtype = NoSave(ConfigSelection(choices=[
@@ -273,10 +294,15 @@ class CronTimersConfig(ConfigListScreen, Screen):
 		self.skinName = "Setup"
 		self.onChangedEntry = []
 		self.list = []
-		ConfigListScreen.__init__(self, self.list, session=self.session, on_change=self.changedEntry)
+		ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
 		self["key_red"] = StaticText(_("Close"))
 		self["key_green"] = StaticText(_("Save"))
-		self["actions"] = ActionMap(["WizardActions", "ColorActions", "VirtualKeyboardActions", "MenuActions"], {"red": self.close, "green": self.checkentry, "back": self.close, "showVirtualKeyboard": self.keyText})
+		self["actions"] = ActionMap(["WizardActions", "ColorActions", "VirtualKeyboardActions", "MenuActions"], {
+			"red": self.close,
+			"green": self.checkentry,
+			"back": self.close,
+			"showVirtualKeyboard": self.keyText
+		})
 		self["VKeyIcon"] = Boolean(False)
 		self["HelpWindow"] = Pixmap()
 		self["HelpWindow"].hide()
@@ -296,9 +322,10 @@ class CronTimersConfig(ConfigListScreen, Screen):
 				if pkg.find(".sh") >= 0:
 					predefinedlist.append((description, pkg))
 			predefinedlist.sort()
+		if not predefinedlist:
+			predefinedlist.append(("", ""))
 		config.crontimers.predefined_command = NoSave(ConfigSelection(choices=predefinedlist))
 		self.editListEntry = None
-
 		self.list = []
 		self.list.append((_("Run how often?"), config.crontimers.runwhen))
 		if config.crontimers.runwhen.value != "Hourly":
@@ -339,11 +366,8 @@ class CronTimersConfig(ConfigListScreen, Screen):
 			self["config"].invalidate(self["config"].getCurrent())
 
 	def checkentry(self):
-		msg = ""
 		if (config.crontimers.commandtype.value == "predefined" and config.crontimers.predefined_command.value == "") or config.crontimers.commandtype.value == "custom" and config.crontimers.user_command.value == "":
-			msg = _("You must set at least one command!")
-		if msg:
-			self.session.open(MessageBox, msg, MessageBox.TYPE_ERROR)
+			self.session.open(MessageBox, _("You must set at least one command!"), MessageBox.TYPE_ERROR)
 		else:
 			self.saveMycron()
 
@@ -377,15 +401,13 @@ class CronTimersConfig(ConfigListScreen, Screen):
 			newcron = "%s %s %s * * %s\n" % (minutes, hour, str(config.crontimers.dayofmonth.value), command.strip())
 		else:
 			command = config.crontimers.user_command.value
-
-		out = open("/etc/cron/crontabs/root", "a")
-		out.write(newcron)
-		out.close()
-		rc = system("crontab /etc/cron/crontabs/root -c /etc/cron/crontabs")
+		with open("/etc/cron/crontabs/root", "a") as fd:
+			fd.write(newcron)
+		Console().ePopen(["/usr/bin/crontab", "/usr/bin/crontab", "/etc/cron/crontabs/root", "-c", "/etc/cron/crontabs"])
 		config.crontimers.predefined_command.value = "None"
 		config.crontimers.user_command.value = "None"
 		config.crontimers.runwhen.value = "Daily"
 		config.crontimers.dayofweek.value = "Monday"
 		config.crontimers.dayofmonth.value = 1
-		config.crontimers.cmdtime.value, mytmpt = ([0, 0], [0, 0])
+		config.crontimers.cmdtime.value, mytmpt = ([0, 0], [0, 0])  # noqa F841
 		self.close()
