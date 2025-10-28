@@ -158,7 +158,7 @@ class NetworkAdapterSelection(Screen):
 
 	def setDefaultInterface(self):
 		selection = self["list"].getCurrent()
-		# num_if = len(self.list)
+		num_if = len(self.list)
 		old_default_gw = None
 		num_configured_if = len(iNetwork.getConfiguredAdapters())
 		if exists("/etc/default_gw"):
@@ -837,7 +837,7 @@ class AdapterSetupConfiguration(Screen):
 			from wifi.exceptions import InterfaceError
 			try:
 				system(f"ifconfig {self.iface} up")
-				wlanresponse = list(Cell.all(iface))  # noqa F841
+				wlanresponse = list(Cell.all(iface))
 			except InterfaceError as ie:
 				print(f"[NetworkSetup] queryWirelessDevice InterfaceError: {str(ie)}")
 				return False
