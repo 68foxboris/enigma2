@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # PYTHON IMPORTS
 from datetime import datetime, timezone, timedelta
 from json import loads
@@ -145,8 +146,8 @@ class OSCamGlobals():
 		elif part in ["restart", "shutdown"]:
 			url = f"{proto}://{ip}:{port}/shutdown.html?action={part}"
 		elif label:
-			key = "file" if part == "files" else "label"                                            # e.g. http://127.0.0.1:8080/oscamapi.html?part=files&file=oscam.conf
-			url = f"{proto}://{ip}:{port}/{api}.{fmt}?part={part}&{key}={label}"                    # e.g. http://127.0.0.1:8080/oscamapi.json?part=entitlement&label=MyReader
+			key = "file" if part == "files" else "label"                         # e.g. http://127.0.0.1:8080/oscamapi.html?part=files&file=oscam.conf
+			url = f"{proto}://{ip}:{port}/{api}.{fmt}?part={part}&{key}={label}" # e.g. http://127.0.0.1:8080/oscamapi.json?part=entitlement&label=MyReader  # e.g. http://127.0.0.1:8080/oscamapi.json?part=entitlement&label=MyReader
 		opener = build_opener(webhandler)
 		if username and password and url:
 			pwman = HTTPPasswordMgrWithDefaultRealm()
@@ -235,7 +236,7 @@ class OSCamInfo(Screen, OSCamGlobals):
 					}
 				</convert>
 			</widget>
-			<widget name="logtext" position="15,812" size="1890,150" font="Regular;24" halign="left" valign="top" padding="10,0,10,0" foregroundColor="00000000" backgroundColor="#10ECEAF6" noWrap="0" scrollbarMode="showNever" />
+			<widget name="logtext" position="15,812" size="1890,150" font="Regular;24" halign="left" valign="top" padding="10,0,10,0" foregroundColor="#00000000" backgroundColor="#10ECEAF6" noWrap="0" scrollbarMode="showNever" />
 			<eLabel text="System Ram" position="15,964" size="171,42" font="Regular;27" halign="center" valign="center" foregroundColor="#FFFF30" backgroundColor="#105a5a5a" />
 			<widget source="total" render="Label" position="188,964" size="228,42" font="Regular;27" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#105a5a5a" />
 			<widget source="used" render="Label" position="418,964" size="228,42" font="Regular;27" halign="center" valign="center" foregroundColor="#00ffffff" backgroundColor="#105a5a5a" />
@@ -851,6 +852,7 @@ class OSCamEntitleDetails(Screen, OSCamGlobals):
 			"ok": (self.close, _("Close the screen")),
 			"cancel": (self.close, _("Close the screen")),
 			}, prio=1, description=_("%sInfo Actions") % camname)
+		self.onLayoutFinish.append(self.onLayoutFinished)
 
 	def onLayoutFinished(self):
 		if fileExists("/tmp/.ncam/ncam.version"):
@@ -914,7 +916,7 @@ class OSCamInfoLog(Screen, OSCamGlobals):
 			<widget source="global.CurrentTime" render="Label" position="1635,15" size="260,60" font="Regular;40" halign="right" valign="center" foregroundColor="#0092CBDF" backgroundColor="#10101010">
 				<convert type="ClockToText">Format:%H:%M:%S</convert>
 			</widget>
-			<widget name="logtext" position="15,70" size="1890,995" font="Regular;24" halign="left" valign="top" padding="10,0,10,0" foregroundColor="00000000" backgroundColor="#ECEAF6" noWrap="0" scrollbarMode="showOnDemand" scrollbarForegroundColor="00000000" />
+			<widget name="logtext" position="15,70" size="1890,995" font="Regular;24" halign="left" valign="top" padding="10,0,10,0" foregroundColor="#00000000" backgroundColor="#ECEAF6" noWrap="0" scrollbarMode="showOnDemand" scrollbarForegroundColor="#00000000" />
 		</screen>
 		"""
 
