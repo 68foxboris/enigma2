@@ -298,14 +298,13 @@ class Menu(Screen, ProtectedScreen):
 					if data:
 						self.menuList.append(data)
 		if self.menuID:
-			for plugin in plugins.getPluginsForMenu(self.menuID):  # Plugins.
+			for plugin, description in plugins.getPluginsForMenuWithDescription(self.menuID):  # Plugins.
 				# print(f"[Menu] DEBUG 1: Plugin data={str(plugin)}.")
 				pluginKey = plugin[PLUGIN_KEY]  # Check if a plugin overrides an existing menu.
 				for entry in self.menuList:
 					if entry[PLUGIN_KEY] == pluginKey:
 						self.menuList.remove(entry)
 						break
-				description = plugins.getDescriptionForMenuEntryID(self.menuID, pluginKey)  # It is assumed that description is already translated by the plugin!
 				if "%s %s" in description:
 					description = description % getBoxDisplayName()
 				if not E2DarkOS():
@@ -720,7 +719,6 @@ class Menu(Screen, ProtectedScreen):
 			self.hideShowEntries()
 			self.setMenuList(self.menuList)
 
-
 	def hideShowEntries(self):
 		menuList = list(self.fullMenuList)
 		if not self.sortMode:
@@ -748,10 +746,12 @@ class AnimMain(Screen):
 		self.tlist = tlist
 		self.setTitle(menuTitle)
 		self.skinName = "Animmain"
-		self.ipage = 1
-		# nopic = len(tlist)
+		ipage = 1
+		list = []
+		nopic = len(tlist)
 		self.pos = []
 		self.index = 0
+		list = []
 		tlist = []
 		self["label1"] = StaticText()
 		self["label2"] = StaticText()
@@ -877,8 +877,9 @@ class IconMain(Screen):
 		self.tlist = tlist
 		self.setTitle(menuTitle)
 		self.skinName = "Iconmain"
-		self.ipage = 1
-		# nopic = len(self.tlist)
+		ipage = 1
+		list = []
+		nopic = len(self.tlist)
 		self.pos = []
 		self.ipage = 1
 		self.index = 0
@@ -886,6 +887,7 @@ class IconMain(Screen):
 		self.indx = []
 		n1 = len(tlist)
 		self.picnum = n1
+		list = []
 		tlist = []
 		self["label1"] = StaticText()
 		self["label2"] = StaticText()
@@ -1124,7 +1126,7 @@ class MenuSummary(ScreenSummary):
 
 
 class MainMenu(Menu):
-	#add file load functions for the xml-fil
+	# add file load functions for the xml-file
 	def __init__(self, *x):
 		self.skinName = "Menu"
 		Menu.__init__(self, *x)
