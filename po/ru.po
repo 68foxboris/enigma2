@@ -13420,8 +13420,8 @@ msgstr "Пожалуйста, выберите дополнение..."
 msgid "Please choose reader"
 msgstr "Пожалуйста, выберите ридер"
 
-msgid "Please configure the fallback tuner setup."
-msgstr "Пожалуйста настройте резервный тюнер."
+msgid "Please configure the fallback receiver setup"
+msgstr "Пожалуйста, настройте резервный приемник."
 
 msgid ""
 "Please configure your internet connection by filling out the required values.\n"
@@ -16149,6 +16149,9 @@ msgstr "Выберите источник настроек DNS по умолча
 
 msgid "Select the shifted character set for the next character only"
 msgstr "Выберите набор символов со сдвигом виртуальной клавиатуры только для следующего символа"
+
+msgid "Select the timer from the fallback receiver by default"
+msgstr "Выберите таймер из резервного приемника по умолчанию"
 
 msgid "Select the time zone within the area or region."
 msgstr "Выберите часовой пояс в пределах области или региона."
@@ -21554,8 +21557,11 @@ msgstr "Если включено, то ресивер автоматическ�
 msgid "When enabled the set top box is able to wakeup on LAN"
 msgstr "Если включено и если спецификация ресивера позволяет,то можно разбудить ресивер из глубокого ожидания по LAN подключению удаленно"
 
-msgid "When enabled the timer from the fallback tuner is imported"
-msgstr "При включении таймеры из резервного ресивера будут импортированы"
+msgid "When enabled the timer from the fallback receiver is imported"
+msgstr "При включении таймер из резервного приемника импортируется"
+
+msgid "When enabled the timer from the fallback receiver is the default timer"
+msgstr "При включении таймер от резервного приемника становится таймером по умолчанию"
 
 msgid "When enabled then when you select a new channel in the channel selection the channel selection will not close. It will only close when you select the current playing service. This is a kind of preview mode"
 msgstr "Если включено,то при выборе нового канала, список выбора каналов не закроется. Он закроется кнопкой ОК только при выборе текущего игрового сервиса. Это является своего рода режимом предварительного просмотра"
@@ -21563,8 +21569,8 @@ msgstr "Если включено,то при выборе нового кана
 msgid "When enabled you can control the volume with the arrow buttons instead of getting the channel selection list"
 msgstr "Если включено,то вы можете регулировать управление громкостью на кнопках (лево/право, вверх/вниз) около кнопки OK, вместо списка выбора каналов"
 
-msgid "When enabled you can customize the OpenWebIf settings for the fallback tuner"
-msgstr "Если включено,то Вы можете настроить параметры OpenWebIf из резервного ресивера"
+msgid "When enabled you can customize the OpenWebIf settings for the fallback receiver"
+msgstr "При включении вы можете настроить параметры OpenWebIf для резервного приемника"
 
 msgid "When enabled you can specify a timeframe to ignore the shutdown timer when the receiver is in standby mode"
 msgstr "Если включено,то установите период времени игнорирования действия выключения ресивера в режиме ожидания"
