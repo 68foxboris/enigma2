@@ -52,7 +52,6 @@ class SetupFallbacktuner(Setup):
 		self.ip = ConfigIP(default=ipDefault, auto_jump=True)
 		self.port = ConfigInteger(default=portDefault, limits=(1, 65535))
 		self.ip_seperate = ConfigIP(default=ipDefault, auto_jump=True)
-		self.port_seperate = ConfigInteger(default=portDefault, limits=(1, 65535))
 		self.ip_dvb_t = ConfigIP(default=ipDefault, auto_jump=True)
 		self.port_dvb_t = ConfigInteger(default=portDefault, limits=(1, 65535))
 		self.ip_dvb_c = ConfigIP(default=ipDefault, auto_jump=True)
@@ -89,7 +88,7 @@ class SetupFallbacktuner(Setup):
 			if self.avahiselect.value == "url":
 				self.list.append(("  %s" % _("Fallback remote receiver URL"),
 					config.usage.remote_fallback,
-					_("URL of fallback remote receiver")))
+					_("URL of remote receiver for imports")))
 		if config.usage.remote_fallback_import.value:
 			self.list.append((_("Import remote receiver URL"),
 				self.avahiselect_seperate,
@@ -98,9 +97,6 @@ class SetupFallbacktuner(Setup):
 				self.list.append(("  %s" % _("Fallback remote receiver IP"),
 					self.ip_seperate,
 					_("IP of fallback remote receiver")))
-				self.list.append(("  %s" % _("Fallback remote receiver Port"),
-					self.port_seperate,
-					_("Port of fallback remote receiver")))
 			if self.avahiselect_seperate.value == "url":
 				self.list.append(("  %s" % _("Fallback remote receiver URL"),
 					config.usage.remote_fallback_import_url,
@@ -189,7 +185,7 @@ class SetupFallbacktuner(Setup):
 		elif self.avahiselect.value != "url":
 			config.usage.remote_fallback.value = self.avahiselect.value
 		if self.avahiselect_seperate.value == "ip":
-			config.usage.remote_fallback_import_url.value = "http://%d.%d.%d.%d:%d" % (tuple(self.ip_seperate.value) + (self.port_seperate.value,))
+			config.usage.remote_fallback_import_url.value = "http://%d.%d.%d.%d:%d" % (tuple(self.ip_seperate.value) + (80,))
 		elif self.avahiselect_seperate.value == "same":
 			config.usage.remote_fallback_import_url.value = ""
 		elif self.avahiselect_seperate.value != "url":

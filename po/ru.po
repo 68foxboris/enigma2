@@ -20373,8 +20373,8 @@ msgstr "НЕИЗВЕСТНО"
 msgid "URL"
 msgstr "URL"
 
-msgid "URL of fallback remote receiver"
-msgstr "Впишите URL запасного удаленного ресивера"
+msgid "URL of remote receiver for imports"
+msgstr "URL удаленного приемника для импорта"
 
 msgid "USALS automatically moves a motorised dish to the correct satellite based on the coordinates entered by the user. Without USALS each satellite will need to be setup and saved individually."
 msgstr "USALS автоматически перемещает мотоподвес с антенной на правильный спутник на основе координат, введенных пользователем. Без USALS каждый спутник необходимо будет настроить и сохранить отдельно."
