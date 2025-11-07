@@ -1,11 +1,11 @@
 #ifndef __dvb_fbc_h
 #define __dvb_fbc_h
 
-/* FBC Manager */
 #include <lib/base/ebase.h>
 #include <lib/base/object.h>
 #include <lib/base/eptrlist.h>
 #include <lib/dvb/idvb.h>
+
 #include <map>
 #include <bitset>
 
@@ -20,12 +20,12 @@ private:
 
 	typedef struct
 	{
-		int					set_id;
-		bool				is_root;
-		int					id;
-		int					default_id;
+		int			set_id;
+		bool			is_root;
+		int			id;
+		int			default_id;
 		connect_choices_t	connect_choices;
-		std::string			input_choices;
+		std::string		input_choices;
 	} tuner_t;
 
 	typedef std::map<int, tuner_t> tuners_t;
@@ -52,7 +52,7 @@ private:
 	static void SetProcFBCID(int, int, bool);
 	static int FESlotID(eDVBRegisteredFrontend *);
 	static bool IsLinked(eDVBRegisteredFrontend *);
- 	static bool IsSCR(eDVBRegisteredFrontend *);
+	static bool IsSCR(eDVBRegisteredFrontend *);
 	static eDVBRegisteredFrontend* FrontendGetLinkPtr(eDVBFrontend *, link_ptr_t);
 	static eDVBRegisteredFrontend* FrontendGetLinkPtr(eDVBRegisteredFrontend *, link_ptr_t);
 	static void FrontendSetLinkPtr(eDVBRegisteredFrontend *, link_ptr_t, eDVBRegisteredFrontend *);
@@ -61,6 +61,7 @@ private:
 	static eDVBRegisteredFrontend *GetHead(eDVBRegisteredFrontend *);
 	static eDVBRegisteredFrontend *GetTail(eDVBRegisteredFrontend *);
 	static void UpdateLNBSlotMask(int, int, bool);
+
 	bool IsSameFBCSet(int, int) const;
 	bool IsRootFE(eDVBRegisteredFrontend *) const;
 	bool IsFEUsed(eDVBRegisteredFrontend *, bool) const;
@@ -71,12 +72,14 @@ private:
 
 	void ConnectLink(eDVBRegisteredFrontend *, eDVBRegisteredFrontend *, eDVBRegisteredFrontend *, bool) const;
 	void DisconnectLink(eDVBRegisteredFrontend *, eDVBRegisteredFrontend *, eDVBRegisteredFrontend *, bool) const;
+
 	void PrintLinks(eDVBRegisteredFrontend *fe) const;
 
 public:
 	static eFBCTunerManager* getInstance();
 	eFBCTunerManager(ePtr<eDVBResourceManager> res_mgr);
 	virtual ~eFBCTunerManager();
+
 	int GetFBCSetID(int) const;
 	int getLinkedSlotID(int feid) const;
 	void SetDefaultFBCID(eDVBRegisteredFrontend *) const;
@@ -88,5 +91,4 @@ public:
 	bool IsFBCLink(int fe_id) const;
 };
 
-#endif /* __dvb_fbc_h */
-
+#endif
