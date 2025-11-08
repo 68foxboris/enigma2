@@ -1,7 +1,6 @@
 # flake8: noqa E402
 
 from enigma import eServiceReference, eProfileWrite
-from Tools.StbHardware import getBoxProc
 from os.path import splitext
 from glob import glob
 # workaround for required config entry dependencies.
@@ -12,8 +11,8 @@ from Screens.MessageBox import MessageBox
 from Components.Label import Label
 from Components.Pixmap import MultiPixmap
 
-import enigma
 eProfileWrite("LOAD:enigma")
+import enigma
 
 eProfileWrite("LOAD:InfoBarGenerics")
 from Screens.InfoBarGenerics import InfoBarShowHide, \
@@ -205,7 +204,7 @@ def setAudioTrack(service):
 			if matchedAc3:
 				return
 			tracks.selectTrack(0)    # fallback to track 1(0)
-	except Exception:
+	except Exception as e:
 		print("[MoviePlayer] audioTrack exception:\n" + str(e))
 
 
@@ -396,7 +395,7 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 						else:
 							self.movielistAgain()
 						return
-					except Exception:
+					except Exception as e:
 						print("[InfoBar] Failed to move to .Trash folder:", e)
 						msg = _("Cannot move to trash can") + "\n" + str(e) + "\n"
 				info = serviceHandler.info(ref)
@@ -557,6 +556,32 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 			else:
 				slist.moveDown()
 			slist.zap(enable_pipzap=True)
+
+	def showPiP(self):
+		slist = self.servicelist
+		if self.session.pipshown:
+			if slist and slist.dopipzap:
+				slist.togglePipzap()
+			if self.session.pipshown:
+				del self.session.pip
+				self.session.pipshown = False
+		elif slist:
+			from Screens.PictureInPicture import PictureInPicture
+			self.session.pip = self.session.instantiateDialog(PictureInPicture)
+			self.session.pip.show()
+			if self.session.pip.playService(slist.getCurrentSelection()):
+				self.session.pipshown = True
+				self.session.pip.servicePath = slist.getCurrentServicePath()
+			else:
+				self.session.pipshown = False
+				del self.session.pip
+
+	def movePiP(self):
+		if self.session.pipshown:
+			InfoBarPiP.movePiP(self)
+
+	def swapPiP(self):
+		pass
 
 	def showDefaultEPG(self):
 		self.infobar and self.infobar.showMultiEPG()
