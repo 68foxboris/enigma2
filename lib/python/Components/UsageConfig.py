@@ -1354,17 +1354,6 @@ def InitUsageConfig():
 		eEPGCache.getInstance().setEpgmaxdays(config.epg.maxdays.getValue())
 	config.epg.maxdays.addNotifier(EpgmaxdaysChanged)
 
-	config.misc.epgratingcountry = ConfigSelection(default="", choices=[
-		("", _("Auto detect")),
-		("ETSI", _("Generic")),
-		("AUS", _("Australia"))
-	])
-	config.misc.epggenrecountry = ConfigSelection(default="", choices=[
-		("", _("Auto detect")),
-		("ETSI", _("Generic")),
-		("AUS", _("Australia"))
-	])
-
 	def EpgSettingsChanged(configElement):
 		from enigma import eEPGCache
 		mask = 0xffffffff
@@ -1482,8 +1471,12 @@ def InitUsageConfig():
 		("ETSI", _("Generic")),
 		("AUS", _("Australia"))
 	]
-	config.misc.epgratingcountry = ConfigSelection(default="", choices=choiceList)
 	config.misc.epggenrecountry = ConfigSelection(default="", choices=choiceList)
+	choiceList.extend([
+		("GBR", _("United Kingdom")),
+		("ITA", _("Italy"))
+	])
+	config.misc.epgratingcountry = ConfigSelection(default="", choices=choiceList)
 
 	config.misc.showradiopic = ConfigYesNo(default=True)
 
