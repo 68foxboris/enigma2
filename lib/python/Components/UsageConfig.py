@@ -504,6 +504,7 @@ def InitUsageConfig():
 			pass
 	config.timeshift = ConfigSubsection()
 	defaultPath = resolveFilename(SCOPE_TIMESHIFT)
+	config.timeshift.preciseRecovery = ConfigYesNo(default=True)
 	config.timeshift.allowedPaths = ConfigLocations(default=[defaultPath])
 	config.usage.timeshift_path = ConfigText(default="")
 	if config.usage.timeshift_path.value:
