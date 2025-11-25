@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.ServicePosition import ServicePositionGauge
@@ -9,8 +8,9 @@ from Components.VideoWindow import VideoWindow
 from Components.Label import Label
 from Components.config import config, ConfigSubsection, ConfigYesNo
 from Screens.InfoBarGenerics import InfoBarSeek, InfoBarCueSheetSupport
-from enigma import getDesktop, gFont, iPlayableService, RT_horizontalAlignment_RIGHT
+from enigma import getDesktop, gFont, iPlayableService, RT_HALIGN_RIGHT
 from Screens.FixedMenu import FixedMenu
+from Screens.HelpMenu import HelpableScreen
 from ServiceReference import ServiceReference
 from Components.Sources.List import List
 from Components.Console import Console
@@ -68,7 +68,7 @@ class CutListContextMenu(FixedMenu):
 	SHOW_DELETECUT = 2
 
 	def __init__(self, session, state, nearmark):
-		menu = [(_("back"), self.close)]  #, (None, )]
+		menu = [(_("back"), self.close)] #, (None, )]
 
 		if state == self.SHOW_STARTCUT:
 			menu.append((_("start cut here"), self.startCut))
@@ -145,22 +145,22 @@ class CutListContextMenu(FixedMenu):
 		self.close(self.RET_MOVIECUT)
 
 
-class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport):
+class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, HelpableScreen):
 	skin = """
 	<screen position="0,0" size="720,576" title="Cutlist editor" flags="wfNoBorder">
 		<eLabel text="Cutlist editor" position="65,60" size="300,25" font="Regular;20" />
-		<widget source="global.CurrentTime" render="Label" position="268,60" size="394,20" font="Regular;20" horizontalAlignment="right">
+		<widget source="global.CurrentTime" render="Label" position="268,60" size="394,20" font="Regular;20" halign="right">
 			<convert type="ClockToText">Format:%A %B %d, %H:%M</convert>
 		</widget>
 		<eLabel position="268,98" size="394,304" backgroundColor="#505555" />
 		<widget name="Video" position="270,100" zPosition="1" size="390,300" backgroundColor="transparent" />
-		<widget source="session.CurrentService" render="Label" position="135,405" size="450,50" font="Regular;22" horizontalAlignment="center" verticalAlignment="center">
+		<widget source="session.CurrentService" render="Label" position="135,405" size="450,50" font="Regular;22" halign="center" valign="center">
 			<convert type="ServiceName">Name</convert>
 		</widget>
-		<widget source="session.CurrentService" render="Label" position="320,450" zPosition="1" size="420,25" font="Regular;20" horizontalAlignment="left" verticalAlignment="center">
+		<widget source="session.CurrentService" render="Label" position="320,450" zPosition="1" size="420,25" font="Regular;20" halign="left" valign="center">
 			<convert type="ServicePosition">Position,Detailed</convert>
 		</widget>
-		<widget name="SeekState" position="210,450" zPosition="1" size="100,25" horizontalAlignment="right" font="Regular;20" verticalAlignment="center" />
+		<widget name="SeekState" position="210,450" zPosition="1" size="100,25" halign="right" font="Regular;20" valign="center" />
 		<eLabel position="48,98" size="204,274" backgroundColor="#505555" />
 		<eLabel position="50,100" size="200,270" backgroundColor="#000000" />
 		<widget source="cutlist" position="50,100" zPosition="1" size="200,270" scrollbarMode="showOnDemand" transparent="1" render="Listbox" >
@@ -168,7 +168,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport):
 				{
 					"template": [
 						MultiContentEntryText(size=(125, 20), text = 1, backcolor = MultiContentTemplateColor(3)),
-						MultiContentEntryText(pos=(125,0), size=(50, 20), text = 2, flags = RT_horizontalAlignment_RIGHT, backcolor = MultiContentTemplateColor(3))
+						MultiContentEntryText(pos=(125,0), size=(50, 20), text = 2, flags = RT_HALIGN_RIGHT, backcolor = MultiContentTemplateColor(3))
 					],
 					"fonts": [gFont("Regular", 18)],
 					"itemHeight": 20
@@ -176,18 +176,19 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport):
 			</convert>
 		</widget>
 		<widget name="Timeline" position="50,485" size="615,20" backgroundColor="#505555" pointer="position_arrow.png:3,5" foregroundColor="black" />
-		<ePixmap pixmap="icons/mp_buttons.png" position="305,515" size="109,13" alphaTest="on" />
+		<ePixmap pixmap="icons/mp_buttons.png" position="305,515" size="109,13" alphatest="on" />
 	</screen>"""
 
 	tutorial_seen = False
 
 	def __init__(self, session, service):
 		self.skin = CutListEditor.skin
-		Screen.__init__(self, session, enableHelp=True)
+		Screen.__init__(self, session)
 		self.setTitle(_("Cutlist editor"))
 		InfoBarSeek.__init__(self, actionmap="CutlistSeekActions")
 		InfoBarCueSheetSupport.__init__(self)
 		InfoBarBase.__init__(self, steal_current_service=True)
+		HelpableScreen.__init__(self)
 		self.old_service = session.nav.getCurrentlyPlayingServiceOrGroup()
 		self.cut_service = service
 		session.nav.playService(service, adjust=False)
@@ -269,7 +270,7 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport):
 		self.uploadCuesheet()
 
 	def __addMark(self):
-		self.toggleMark(onlyadd=True, tolerance=90000)  # do not allow two marks in <1s
+		self.toggleMark(onlyadd=True, tolerance=90000) # do not allow two marks in <1s
 
 	def __removeMark(self):
 		m = self["cutlist"].getCurrent()
@@ -380,9 +381,9 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport):
 			in_after = None
 
 			for (where, what) in self.cut_list:
-				if what == 1 and where <= self.context_position:  # out
+				if what == 1 and where <= self.context_position: # out
 					out_before = (where, what)
-				elif what == 0 and where < self.context_position:  # in, before out
+				elif what == 0 and where < self.context_position: # in, before out
 					out_before = None
 				elif what == 0 and where >= self.context_position and in_after is None:
 					in_after = (where, what)
