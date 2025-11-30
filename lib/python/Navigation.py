@@ -8,7 +8,7 @@ import NavigationInstance
 import RecordTimer
 import Scheduler
 import ServiceReference
-from Components.config import config
+from Components.config import config, configfile
 from Components.ImportChannels import ImportChannels  # noqa F401
 from Components.ParentalControl import parentalControl
 from Components.PluginComponent import plugins
@@ -65,6 +65,36 @@ class Navigation:
 		self.skipTVWakeup = False
 		self.firstStart = True
 		self.RecordTimer = None
+
+		self.__wasTimerWakeup = getFPWasTimerWakeup()
+		self.__isRestartUI = config.misc.RestartUI.value
+		self.__prevWakeupTime = config.misc.prev_wakeup_time.value
+		startup_to_standby = config.usage.startup_to_standby.value
+		wakeup_time_type = config.misc.prev_wakeup_time_type.value
+		self.wakeup_timer_enabled = False
+		if config.usage.remote_fallback_import_restart.value:
+			ImportChannels()
+		if self.__wasTimerWakeup:
+			self.wakeup_timer_enabled = wakeup_time_type == 3 and self.__prevWakeupTime
+			if self.__prevWakeupTime and wakeup_time_type in (0, 1) and not config.misc.RestartUI.value:
+				RecordTimer.RecordTimerEntry.setWasInDeepStandby()
+		if config.misc.RestartUI.value:
+			config.misc.RestartUI.value = False
+			config.misc.RestartUI.save()
+			configfile.save()
+		else:
+			if config.usage.remote_fallback_import.value and not config.usage.remote_fallback_import_restart.value:
+				ImportChannels()
+			if startup_to_standby == "yes" or (self.__wasTimerWakeup and self.__prevWakeupTime and (wakeup_time_type in (0, 1) or (wakeup_time_type == 3 and startup_to_standby == "except"))):
+				if not Screens.Standby.inTryQuitMainloop:
+					self.standbytimer = eTimer()
+					self.standbytimer.callback.append(self.gotostandby)
+					self.standbytimer.start(15000, True) # Time increse 15 second for standby.
+		if self.__prevWakeupTime:
+			config.misc.prev_wakeup_time.value = 0
+			config.misc.prev_wakeup_time.save()
+			configfile.save()
+
 		self.isRecordTimerImageStandard = False
 		self.isCurrentServiceStreamRelay = False
 		self.skipServiceReferenceReset = False
@@ -273,10 +303,10 @@ class Navigation:
 			Screens.Standby.inStandby.Power()
 
 	def gotostandby(self):
-		if not Screens.Standby.inStandby:
+		if not Screens.Standby.inStandby and not Screens.Standby.inTryQuitMainloop:
 			import Tools.Notifications
 			print("[Navigation] Now entering standby.")
-			Tools.Notifications.AddNotification(Screens.Standby.Standby)
+			Tools.Notifications.AddNotification(Screens.Standby.Standby, self.wakeup_timer_enabled and 1 or True)
 
 	def dispatchEvent(self, i):
 		for x in self.event:
