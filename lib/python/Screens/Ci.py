@@ -72,7 +72,7 @@ def InitCiConfig():
 		if BoxInfo.getItem("CommonInterfaceCIDelay"):
 			config.cimisc.dvbCiDelay = ConfigSelection(default="256", choices=[("16", "16"), ("32", "32"), ("64", "64"), ("128", "128"), ("256", "256")])
 			config.cimisc.dvbCiDelay.addNotifier(setdvbCiDelay)
-		config.cimisc.bootDelay = ConfigSelection(default=5, choices=[(x, _("%d Seconds") % x) for x in range(16)])
+		config.cimisc.bootDelay = ConfigSelection(default=5, choices=[(x, ngettext("%d Second", "%d Seconds", x) % x) for x in range(16)])
 
 
 class MMIDialog(Screen):
@@ -128,11 +128,11 @@ class MMIDialog(Screen):
 		if action == 2:		# start MMI
 			handler.startMMI(self.slotid)
 			self.showWait()
-		elif action == 3:		# mmi already there (called from infobar)
+		elif action == 3:	# mmi already there (called from infobar)
 			self.showScreen()
 
 	def addEntry(self, list, entry):
-		if entry[0] == "TEXT":		# handle every item (text / pin only?)
+		if entry[0] == "TEXT":	# handle every item (text / pin only?)
 			list.append((entry[1], ConfigNothing(), entry[2]))
 		if entry[0] == "PIN":
 			pinlength = entry[1]
@@ -305,9 +305,9 @@ class MMIDialog(Screen):
 
 	def ciStateChanged(self):
 		do_close = False
-		if self.action == 0:			# reset
+		if self.action == 0:	# reset
 			do_close = True
-		if self.action == 1:			# init
+		if self.action == 1:	# init
 			do_close = True
 
 		# module still there ?
