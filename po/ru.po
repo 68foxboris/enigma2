@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2025-07-31 21:06+0300\n"
+"PO-Revision-Date: 2025-12-06 17:48+0200\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>=14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.8\n"
 
 msgid ""
 "\n"
@@ -117,7 +117,7 @@ msgid "!! Boot loader Upgrade !!"
 msgstr "!! Обновление загрузчика !!"
 
 msgid "# = Reboot required if this item is changed."
-msgstr "# = Требуется перезагрузка."
+msgstr "# = При изменении этого элемента требуется перезагрузка."
 
 msgid "%-H:%M"
 msgstr "%-H:%M"
@@ -955,6 +955,10 @@ msgstr[1] "Обновлено %d пакета с каталогами фидов
 msgstr[2] "Обновлено %d пакетов с каталогами фидов."
 
 #, python-format
+msgid "%d jobs are running in the background!"
+msgstr "%d заданий выполняются в фоновом режиме!"
+
+#, python-format
 msgid "%d kB"
 msgstr "%d кБ"
 
@@ -1099,6 +1103,10 @@ msgid_plural "%d services found."
 msgstr[0] "%d канал найден."
 msgstr[1] "%d канала найдено."
 msgstr[2] "%d каналов найдено."
+
+#, python-format
+msgid "%d slots have been created on the device.\n"
+msgstr "%d слотов создано на устройстве.\n"
 
 #, python-format
 msgid "%d times"
@@ -1376,10 +1384,6 @@ msgid "%sRefresh rate for UHD"
 msgstr "%sЧастота обновления для UHD"
 
 #, python-format
-msgid "%d slots have been created on the device.\n"
-msgstr "На устройстве создано %d слотов.\n"
-
-#, python-format
 msgid "%sShow 1080i as 1080p"
 msgstr "%sПоказывать 1080i как 1080p"
 
@@ -1447,7 +1451,7 @@ msgid "(unknown)"
 msgstr "(неизвестно)"
 
 msgid "* = Restart required if this item is changed."
-msgstr "* = Требуется перезагрузка."
+msgstr "* = При изменении этого элемента требуется перезагрузка."
 
 msgid "* Only available if more than one interface is active."
 msgstr "* Доступно, если активно более одного интерфейса."
@@ -3545,6 +3549,9 @@ msgstr "Битрейт"
 
 msgid "Bitrate:"
 msgstr "Битрейт:"
+
+msgid "Bitrate of the video encoder. Larger values improves quality and increases file size."
+msgstr "Битрейт видеокодера. Большие значения улучшают качество и увеличивают размер файла."
 
 msgid "Black"
 msgstr "Чёрный"
@@ -13421,7 +13428,7 @@ msgid "Please choose reader"
 msgstr "Пожалуйста, выберите ридер"
 
 msgid "Please configure the fallback receiver setup"
-msgstr "Пожалуйста, настройте резервный приемник."
+msgstr "Пожалуйста, настройте резервный приемник"
 
 msgid ""
 "Please configure your internet connection by filling out the required values.\n"
@@ -16045,8 +16052,8 @@ msgstr "Выберите частоту полосы пользователя, �
 msgid "Select the User Band to be assigned to this tuner. This is an index into the table of frequencies the SCR switch or SCR LNB uses to pass the requested transponder to the tuner."
 msgstr "Выберите пользовательский диапазон, который будет назначен данному тюнеру. Это индекс в таблице частот, который коммутатор SCR или LNB SCR использует для передачи запрошенного транспондера тюнеру."
 
-msgid "Select the delay to use when closing a Stream Relay service before reallocating the tuner for another service. Using '0' is only recommended for boxes with multiple satellite tuners."
-msgstr "Задайте время задержки требуемой для остановки внутренней ретрансляции потока перед переключением занятого тюнера на другой канал. Значение '0' рекомендуется только для устройств с несколькими спутниковыми тюнерами."
+msgid "Select the delay to use when closing a Stream Relay service before reallocating the tuner for another service. Using '0' is only recommended for receivers with multiple satellite tuners."
+msgstr "Выберите задержку, которая будет использоваться при закрытии сервиса Stream Relay перед перераспределением тюнера для другого сервиса. Значение «0» рекомендуется использовать только для ресиверов с несколькими спутниковыми тюнерами."
 
 msgid "Select the character or action under the keyboard cursor"
 msgstr "Выберите символ или действие под курсором виртуальной клавиатуры"
@@ -16323,8 +16330,8 @@ msgstr "Сенегал"
 msgid "Separate titles with a main menu"
 msgstr "Отдельные названия с главного меню"
 
-msgid "Set the top left location of the busy spinner. The coordinates are scaled such that the top left is at (0,0) and the bottom right is at (1260,700). Note that the position is the top left of the spinner and not the centre of the spinner."
-msgstr "Установите верхнее левое местоположение занятого spinner. Координаты масштабируются таким образом, что верхний левый угол равен (0,0), а нижний правый — (1260,700). Обратите внимание, что это положение находится в левом верхнем углу spinner, а не в центре spinner."
+msgid "Set the top left location of the busy spinner. The coordinates are scaled such that the top left is at 0,0 and the bottom right is at 1260,700. Note that the position is the top left of the spinner and not the centre of the spinner."
+msgstr "Задайте положение верхнего левого угла счетчика активности. Координаты масштабируются таким образом, чтобы верхний левый угол находился в точке 0,0, а нижний правый — в точке 1260,700. Обратите внимание, что положение соответствует верхнему левому углу счетчика, а не его центру."
 
 msgid "Sequence repeat"
 msgstr "Повтор всех команд дважды (без команд мотора)"
@@ -16738,8 +16745,8 @@ msgstr "Задать напряжение и 22KHz"
 msgid "Sets the root directory of movie list, to remove the '..' from being shown in that folder."
 msgstr "Устанавливает корневой каталог списка фильмов, чтобы убрать «..» из отображаемой в этой папке."
 
-msgid "Setting a password is strongly advised if your STB is open to the Internet. You must set a password in order to be able to use network services like FTP, Telnet or SSH."
-msgstr "Настоятельно рекомендуется установить пароль, если ваш ресивер открыт для доступа из Интернет. Вы должны установить пароль, чтобы иметь возможность использовать такие сетевые службы, как FTP, Telnet или SSH."
+msgid "Setting a password is strongly advised if your receiver is open to the Internet. You must set a password in order to be able to use network services like FTP, Telnet or SSH."
+msgstr "Если ваш ресивер подключен к Интернету, настоятельно рекомендуется установить пароль. Он необходим для использования сетевых служб, таких как FTP, Telnet или SSH."
 
 msgid "Settings"
 msgstr "Настройка"
@@ -17226,8 +17233,8 @@ msgstr "Показывать индикатор на экране при зан�
 msgid "Show channel numbers in channel selection"
 msgstr "Показывать номер канала в селекторе каналов"
 
-msgid "Show chapter positions for supported video files. (gstreamer version must be greather than 1)"
-msgstr "Показывает положение глав для поддерживаемых видеофайлов. (версия gstreamer должна быть больше 1)"
+msgid "Show chapter positions for supported video files."
+msgstr "Показывает положение глав для поддерживаемых видеофайлов."
 
 msgid "Show columns"
 msgstr "Показать столбцы"
@@ -18806,8 +18813,8 @@ msgstr "Скорость потока:"
 msgid "Symmetrical skips"
 msgstr "Симметричные пропуски"
 
-msgid "Sync NTP every (minutes)"
-msgstr "Синхронизировать NTP каждые (Мин)"
+msgid "Sync NTP every x minutes"
+msgstr "Синхронизировать NTP каждые x минут"
 
 msgid "Sync failure moving back to origin !"
 msgstr "Сбой синхронизации,возврат к оригиналу!"
@@ -19123,9 +19130,6 @@ msgstr "Соотношение сторон записи."
 msgid "The backup can take up to about 15 minutes to complete."
 msgstr "Резервное копирование может занять до 15 минут."
 
-msgid "The bitrate of the video encoder. Larger value improves quality and increases file size."
-msgstr "Битрейт видеокодера. Чем больше значение, тем лучше качество и тем больше размер файла."
-
 msgid ""
 "The current image might not be stable.\n"
 "For more information see %s."
@@ -19366,8 +19370,8 @@ msgstr "Это может быть полезно при использован�
 msgid "This allows you change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size"
 msgstr "Это позволяет вам изменять размер шрифта относительно размера скина, поэтому 1 увеличивается на 1 размер пункта, а -1 уменьшается на 1 размер пункта"
 
-msgid "This allows you change the number of rows shown."
-msgstr "Это позволяет изменить количество отображаемых строк."
+msgid "This allows you to change the number of rows shown."
+msgstr "Это позволяет вам изменить количество отображаемых строк."
 
 msgid "This allows you to set the maximum number of digits in a service number, up to 5."
 msgstr "Это позволяет установить максимальное количество цифр в номере услуги — до 5."
@@ -19431,11 +19435,11 @@ msgstr "Эта опция настраивает уровень автомати
 msgid "This option allows you choose if the display shows the time, channel number or nothing during operation."
 msgstr "Эта опция позволяет вам выбрать, будет ли на дисплее отображаться время, номер канала или ничего во время работы."
 
-msgid "This option allows you choose how to display elapsed time as + or -"
-msgstr "Эта опция позволяет вам выбрать как отображать прошедшее время как + или -"
+msgid "This option allows you to choose how to display elapsed time as + or -"
+msgstr "Эта опция позволяет вам выбрать способ отображения прошедшего времени в виде + или"
 
-msgid "This option allows you choose how to display remaining time, or elapsed time, or both."
-msgstr "Эта опция позволяет вам выбрать как отображать оставшееся время или прошедшее время или оба."
+msgid "This option allows you to choose how to display remaining time, or elapsed time, or both."
+msgstr "Эта опция позволяет выбрать способ отображения оставшегося времени, прошедшего времени или и того, и другого."
 
 msgid "This option allows you choose the background color of transparent picons."
 msgstr "Эта опция позволяет выбрать цвет фона для прозрачных пиконов."
@@ -23023,10 +23027,6 @@ msgstr "настоятельно рекомендуется."
 
 msgid "jazz"
 msgstr "джаз"
-
-#, python-format
-msgid "%d jobs are running in the background!"
-msgstr "%d заданий выполняются в фоновом режиме!"
 
 msgid "jump back to the previous title"
 msgstr "перейти к предыдущей главе"

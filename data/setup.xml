@@ -59,42 +59,40 @@
 	<setup key="ChannelSelection" title="Channel Selection Settings">
 		<item text="Channel Selection Screen" description="Select the screen layout, from the options provided by the skin, to be used for the ChannelSelection screen." conditional="len(config.channelSelection.screenStyle.choices) > 1">config.channelSelection.screenStyle</item>
 		<item text="Channel Selection List" description="Select the layout of the information in the services list, from the options provided by the skin, displayed within the ChannelSelection screen." conditional="config.channelSelection.screenStyle.value">config.channelSelection.widgetStyle</item>
-		<item text="AutoRefresh" description="Enable autorefresh templates." requires="CanRefreshTemplates">config.skin.autorefresh</item>
-		<item level="0" text="Include CI assignment" description="Set CI assignment for detection of available services." >config.misc.use_ci_assignment</item>
+		<item level="0" text="Include CI assignment" description="Set CI assignment for detection of available services.">config.misc.use_ci_assignment</item>
+		<item level="1" text="Numbering mode" description="Select 'Unique numbering' to assign unique numbers for every service in every bouquet. Use 'Bouquets start at 1' to start numbering each bouquet from 1. Use 'LCN numbering' to use consistent service LCNs where ever that service is used.">config.usage.numberMode</item>
 		<item level="1" text="Enable multiple bouquets" description="When enabled, services may be grouped in multiple bouquets.">config.usage.multibouquet</item>
 		<item level="1" text="Multi-EPG bouquet selection" description="Enable bouquet selection in multi-EPG">config.usage.multiepg_ask_bouquet</item>
-		<item level="0" text="Numbering mode" description="Select 'Unique numbering' to assign unique numbers for every service in every bouquet. Use 'Bouquets start at 1' to start numbering each bouquet from 1. Use 'LCN numbering' to use consistent service LCNs where ever that service is used.">config.usage.numberMode</item>
 		<if conditional="config.channelSelection.screenStyle.value == ''">
 			<item level="1" text="Channel list show MiniTV*" description="Channel list show MiniTV when Skin use.">config.usage.use_pig</item>
 			<item level="1" text="Channel list service mode*" description="This option allows you to choose from the two channel lists that are available." requires="!config.usage.use_pig">config.usage.servicelist_mode</item>
 		</if>
 		<item level="2" text="Load unlinked userbouquets" description="When enabled enigma2 will load unlinked userbouquets. This means that userbouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are updated">config.misc.load_unlinked_userbouquets</item>
+		<item level="1" text="Hide number markers" description="When enabled, number markers will be hidden.">config.usage.hide_number_markers</item>
 		<if conditional="config.channelSelection.screenStyle.value == ''">
 			<item level="0" text="Show channel numbers in channel selection" description="When enabled, show channel numbers in the channel selection screen.">config.usage.show_channel_numbers_in_servicelist</item>
-			<item level="2" text="Hide number markers" indent="    " conditional="config.usage.show_channel_numbers_in_servicelist.value" description="When enabled, number markers will be hidden.">config.usage.hide_number_markers</item>
-			<item level="1" text="Show two lines per entry" description="Show service name and event description among each other instead of side by side. After a change, an adjustment of the number of lines is required.">config.usage.servicelist_twolines</item>
-			<item level="1" text="Alignment channel number" description="Vertical alignment for the service number." requires="config.usage.servicelist_twolines">config.usage.servicelist_servicenumber_valign</item>
-			<item level="1" text="Alignment event-progress" description="Vertical alignment for the event-progress." requires="config.usage.servicelist_twolines">config.usage.servicelist_eventprogress_valign</item>
-			<item level="1" text="Show event-progress in channel selection" description="Set the type of the progress indication in the channel selection screen." requires="config.usage.servicelist_twolines">config.usage.servicelist_eventprogress_view_mode</item>
-			<item level="0" text="Show event-progress in channel selection" description="Set the type of the progress indication in the channel selection screen." requires="!config.usage.servicelist_twolines">config.usage.show_event_progress_in_servicelist</item>
-			<item level="1" text="Show columns" description="Configure if and how wide the service name column will be shown in the channel selection list." requires="!config.usage.servicelist_twolines">config.usage.servicelist_column</item>
-			<item level="1" text="Number of rows" description="This allows you change the number of rows shown." requires="config.usage.servicelist_twolines">config.usage.serviceitems_per_page_twolines</item>
-			<item level="1" text="Number of rows" description="This allows you change the number of rows shown." requires="!config.usage.servicelist_twolines">config.usage.serviceitems_per_page</item>
-			<item level="1" text="Service number font size" description="This allows you change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size">config.usage.servicenum_fontsize</item>
-			<item level="1" text="Service name font size" description="This allows you change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size">config.usage.servicename_fontsize</item>
-			<item level="1" text="Service info font size" description="This allows you change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size">config.usage.serviceinfo_fontsize</item>
-			<item level="1" text="Progress info font size" description="This allows you change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size">config.usage.progressinfo_fontsize</item>
 			<item level="1" text="Show picons in service list" description="Configure if service picons will be shown in the service list.">config.usage.service_icon_enable</item>
 			<item level="1" text="Service picons aspect ratio" description="Set the aspect ratio of the service picons." requires="config.usage.service_icon_enable">config.usage.servicelist_picon_ratio</item>
 			<item level="1" text="Service picons downsize" description="Reduce the size of the service picons for more line spacing between them." requires="config.usage.service_icon_enable">config.usage.servicelist_picon_downsize</item>
 			<item level="1" text="Show service type icons" description="Configure if and how service type icons will be shown.">config.usage.servicetype_icon_mode</item>
 			<item level="1" text="Show crypto icons" description="Configure if and how crypto icons will be shown in the channel selection list.">config.usage.crypto_icon_mode</item>
 			<item level="1" text="Show record indicator" description="Configure if and how the record indicator will be shown in the channel selection list.">config.usage.record_indicator_mode</item>
+			<item level="1" text="Show two lines per entry" description="Show service name and event description among each other instead of side by side. After a change, an adjustment of the number of lines is required.">config.usage.servicelist_twolines</item>
+			<item level="1" text="Alignment channel number" description="Vertical alignment for the service number." requires="config.usage.servicelist_twolines">config.usage.servicelist_servicenumber_valign</item>
+			<item level="1" text="Alignment event-progress" description="Vertical alignment for the event-progress." requires="config.usage.servicelist_twolines">config.usage.servicelist_eventprogress_valign</item>
+			<item level="1" text="Show event-progress in channel selection" description="Set the type of the progress indication in the channel selection screen." requires="config.usage.servicelist_twolines">config.usage.servicelist_eventprogress_view_mode</item>
+			<item level="0" text="Show event-progress in channel selection" description="Set the type of the progress indication in the channel selection screen." requires="!config.usage.servicelist_twolines">config.usage.show_event_progress_in_servicelist</item>
+			<item level="1" text="Show columns" description="Configure if and how wide the service name column will be shown in the channel selection list." requires="!config.usage.servicelist_twolines">config.usage.servicelist_column</item>
+			<item level="1" text="Number of rows" description="This allows you to change the number of rows shown." requires="config.usage.servicelist_twolines">config.usage.serviceitems_per_page_twolines</item>
+			<item level="1" text="Number of rows" description="This allows you to change the number of rows shown." requires="!config.usage.servicelist_twolines">config.usage.serviceitems_per_page</item>
+			<item level="1" text="Service number font size" description="This allows you to change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.usage.servicenum_fontsize</item>
+			<item level="1" text="Service name font size" description="This allows you to change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.usage.servicename_fontsize</item>
+			<item level="1" text="Service info font size" description="This allows you to change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.usage.serviceinfo_fontsize</item>
+			<item level="1" text="Progress info font size" description="This allows you to change the font size relative to skin size, so 1 increases by 1 point size, and -1 decreases by 1 point size.">config.usage.progressinfo_fontsize</item>
 			<item level="2" text="Customize channel list cursor behavior" description="Configure the cursor behaviour in the channel selection list. When opening the channel selection list you can keep on the current service or already select up/down and you are able to revert the B+/B- buttons.">config.usage.servicelist_cursor_behavior</item>
 			<item level="1" text="Number of channels shown in channel selection list" description="Configure how many channels are shown in the selection list.">config.usage.servicelist_number_of_services</item>
 		<else />
 			<item level="0" text="Show channel numbers in channel selection" description="When enabled, show channel numbers in the channel selection screen.">config.channelSelection.showNumber</item>
-			<item level="2" text="Hide number markers" conditional="config.channelSelection.showNumber.value" description="When enabled, number markers will be hidden.">config.usage.hide_number_markers</item>
 			<item level="1" text="Show picons in service list" description="Configure if service picons will be shown in the service list.">config.channelSelection.showPicon</item>
 			<item level="1" text="Service picons aspect ratio" description="Set the aspect ratio of the service picons." requires="config.channelSelection.showPicon">config.channelSelection.piconRatio</item>
 			<item level="1" text="Show service type icons" description="Configure if service type icons will be shown.">config.channelSelection.showServiceTypeIcon</item>
@@ -132,13 +130,13 @@
 	</setup>
 	<setup key="EPG" title="EPG Settings">
 		<item level="2" text="EPG location" description="Choose the location where the EPG data will be stored when your device is shut down. The location must be available at boot time.">config.misc.epgcachepath</item>
-		<item level="2" text="EPG filename" description="Choose the name of the file that holds the EPG data when your device is shut down. This can be handy to differentiate between several boxes.">config.misc.epgcachefilename</item>
+		<item level="2" text="EPG filename" description="Choose the name of the file that holds the EPG data when your device is shut down. This can be handy to differentiate between several receivers.">config.misc.epgcachefilename</item>
 		<item level="2" text="Automatic refresh" description="Allows your device to read the stored EPG data regularly.">config.epg.cacheloadsched</item>
-		<item level="2" text="Refresh every (in hours)" requires="config.epg.cacheloadsched" description="Your device reads the stored EPG data every (hours).">config.epg.cacheloadtimer</item>
+		<item level="2" text="Refresh every x hours" description="The %s %s reads the stored EPG data every x hours." requires="config.epg.cacheloadsched">config.epg.cacheloadtimer</item>
 		<item level="2" text="Save EPG data" description="Configure if epg.dat should be saved at all.">config.epg.saveepg</item>
 		<item level="2" text="Automatic save" description="Allows your device to store the EPG data regularly.">config.epg.cachesavesched</item>
-		<item level="2" text="Save every (in hours)" requires="config.epg.cachesavesched" description="Your device stores the EPG data every (hours).">config.epg.cachesavetimer</item>
-		<item level="2" text="Show EIT now/next in infobar" description="Display the EIT now/next eventdata in infobar.">config.usage.show_eit_nownext</item>
+		<item level="2" text="Save every x hours" description="The %s %s stores the EPG data every x hours." requires="config.epg.cachesavesched">config.epg.cachesavetimer</item>
+		<item level="2" text="Show EIT Now/Next event data in the InfoBar" description="Display the EIT Now/Next event data in the InfoBar.">config.usage.show_eit_nownext</item>
 		<item level="2" text="Enable EIT EPG" description="Use EIT EPG information when it is available.">config.epg.eit</item>
 		<item level="2" text="Enable MHW EPG" description="Use MHW EPG information when it is available.">config.epg.mhw</item>
 		<item level="2" text="Enable FreeSat EPG" description="Use FreeSat EPG information when it is available.">config.epg.freesat</item>
@@ -168,8 +166,8 @@
 	</setup>
 	<setup key="FrontDisplay" title="Display Setup" requires="FrontpanelDisplay">
 		<item level="0" text="Use separate picon pack for front panel display" description="Use piconlcd directory for picons on color LCD">config.lcd.picon_pack</item>
-		<item level="0" text="Date style" description="Choose the front panel display formatting style for dates. 'D' / 'DD' is the date and 'M' / 'MM' is the month in digits.  ('DD' and 'MM' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin." requires="config.usage.date.enabled_display">config.usage.date.display</item>
-		<item level="0" text="Time style" description="Choose the front panel display formatting style for times. 'H' / 'HH' is the hour for a 24 hour clock, 'h' / 'hh' is the hour for a 12 hour clock, 'mm' is the minutes.  ('HH' and 'hh' have leading zeros for single digit values.) The front panel display will be based on your choice but can be influenced any applicable skin." requires="config.usage.time.enabled_display">config.usage.time.display</item>
+		<item level="0" text="Date style" description="Choose the front panel display formatting style for dates. 'D'/'DD' is the date and 'M'/'MM' the month in digits ('DD' and 'MM' have leading zeros for single digit values). The screen display will be based on your choice but can be influenced by the skin." requires="config.usage.date.enabled_display">config.usage.date.display</item>
+		<item level="0" text="Time style" description="Choose the front panel display formatting style for times. 'H'/'HH' is the hour for a 24 hour clock, 'h'/'hh' is the hour for a 12 hour clock, 'mm' the minutes ('HH' and 'hh' have leading zeros for single digit values). The front panel display will be based on your choice but can be influenced any applicable skin." requires="config.usage.time.enabled_display">config.usage.time.display</item>
 		<item level="1" requires="ConfigDisplay" text="Show Time Remaining/Elapsed" description="This option allows you choose how to display remaining time, or elapsed time, or both.">config.usage.swap_time_remaining_on_vfd</item>
 		<item level="1" requires="ConfigDisplay" text="Show Transponder Remaining/Elapsed as" description="This option allows you choose how to display the remaining/elapsed time for live TV.">config.usage.swap_time_display_on_vfd</item>
 		<item level="1" requires="ConfigDisplay" text="Show Media playback Remaining/Elapsed as" description="This option allows you to choose how to display the remaining/elapsed time for Media playback.">config.usage.swap_media_time_display_on_vfd</item>
@@ -180,7 +178,6 @@
 		<item level="0" text="Dim delay" description="Dim the LCD after specified time.">config.lcd.dimdelay</item>
 		<item level="0" text="Contrast" description="Configure the contrast level of the front panel display.">config.lcd.contrast</item>
 		<item level="0" text="Standby" description="Configure the brightness level of the front panel display during standby.">config.lcd.standby</item>
-		<item level="0" text="Show during operation" description="This option allows you choose if the display shows the time, channel number or nothing during operation." requires="7segment">config.usage.show_in_operation</item>
 		<item level="0" text="Scroll repeats" description="Number of repeating text on display." requires="VFD_scroll_repeats">config.usage.vfd_scroll_repeats</item>
 		<item level="2" text="Scroll delay" description="Delay in miliseconds between scrolling characters on display." requires="VFD_scroll_delay">config.usage.vfd_scroll_delay</item>
 		<item level="2" text="Initial scroll delay" description="Delay in miliseconds before start of scrolling text on display." requires="VFD_initial_scroll_delay">config.usage.vfd_initial_scroll_delay</item>
@@ -225,7 +222,8 @@
 		<item level="0" requires="Power4x7On" text="Switch on the display during operation" description="With this option you can switch on the display during operation.">config.usage.lcd_power4x7on</item>
 		<item level="0" requires="Power4x7Standby" text="Switch on the display during Standby Mode" description="With this option you can switch on the display in Standby Mode.">config.usage.lcd_power4x7standby</item>
 		<item level="0" requires="Power4x7Suspend" text="Switch on the display during Suspend Mode" description="With this option you can switch on the display in Deep Standby Mode.">config.usage.lcd_power4x7suspend</item>
-		<item level="0" requires="7segment" text="Show in Standby" description="This option allows you choose how to display the time or nothing in Standby">config.usage.show_in_standby</item>
+		<item level="0" text="Show in Standby" description="This option allows you to choose if the display shows the time or nothing in Standby." requires="7segment">config.usage.show_in_standby</item>
+		<item level="0" text="Show during operation" description="This option allows you to choose if the display shows the time, channel number or nothing during operation." requires="7segment">config.usage.show_in_operation</item>
 	</setup>
 	<setup key="GPTSlotManager" title="Slot Manager">
 		<item level="0" text="Target location" description="Choose the target device for the slots.">self.GPTSlotManagerLocation</item>
@@ -236,16 +234,16 @@
 	</setup>
 	<setup key="HardDisk" title="Hard Disk Settings">
 		<item level="0" text="Hard disk standby after" description="Configure the hard disk drive to go to standby after the specified idle time.">config.usage.hdd_standby</item>
-		<item level="0" text="Hard disk standby in box standby after" description="Configure the hard disk drive to go to standby after the specified idle time when the box is in standby.">config.usage.hdd_standby_in_standby</item>
+		<item level="0" text="Hard disk standby in receiver standby after" description="Configure the hard disk drive to go to standby after the specified idle time when the receiver is in standby.">config.usage.hdd_standby_in_standby</item>
 		<item level="0" text="Use Harddisk Hardware Standby Timer" description="Option to enable the Hardware Standby Timer.">config.usage.hdd_timer</item>
 		<item level="2" text="Show unknown devices" description="Enable this option to show unknown storage devices in device manager.">config.usage.showUnknownDevices</item>
 	</setup>
 	<setup key="HDMIRecord" title="HDMI Recording Setup">
-		<item level="0" text="Bitrate" description="The bitrate of the video encoder. Larger value improves quality and increases file size.">config.hdmirecord.bitrate</item>
+		<item level="0" text="Bitrate" description="Bitrate of the video encoder. Larger values improves quality and increases file size.">config.hdmirecord.bitrate</item>
 		<item level="0" text="Width" description="The width of the picture. The input will be scaled to match this value.">config.hdmirecord.width</item>
 		<item level="0" text="Height" description="The height of the picture. The input will be scaled to match this value.">config.hdmirecord.height</item>
 		<item level="0" text="Frame rate" description="The frame rate of the recording. Ideally, this will match the frame rate of the source or be an integer multiple. If in doubt, set to 60, which should work with most sources.">config.hdmirecord.framerate</item>
-		<item level="2" text="Interlaced" description="In most cases this should be set to No. Only enable if you have a very specific need.">config.hdmirecord.interlaced</item>
+		<item level="2" text="Interlaced" description="In most cases, leave this disabled. Enable only if you have a very specific need.">config.hdmirecord.interlaced</item>
 		<item level="1" text="Aspect ratio" description="The aspect ratio of the recording.">config.hdmirecord.aspectratio</item>
 	</setup>
 	<setup key="KexecSlotManager" title="Slot Manager">
@@ -301,7 +299,7 @@
 		<item text="IP address" description="Configure the IP address.">config.network.ip</item>
 		<item text="Netmask" description="Configure the netmask.">config.network.netmask</item>
 		<item text="Gateway" description="Configure the gateway.">config.network.gateway</item>
-		<item text="Nameserver" description="Configure the nameserver (DNS).">config.network.dns</item>
+		<item text="Nameserver" description="Configure the name server (DNS).">config.network.dns</item>
 		<item text="Activate network settings" description="Activate the configured network settings.">config.network.activate</item>
 	</setup>
 	<setup key="NetworkSamba" title="Samba Settings" allowDefault="1">
@@ -312,8 +310,8 @@
 		<item level="0" text="Read Userdata from oscam/ncam.conf" description="Read Userdata from oscam/ncam.conf">config.oscaminfo.userDataFromConf</item>
 		<if conditional="not config.oscaminfo.userDataFromConf.value">
 			<item level="0" text="Username (httpuser)" description="Username (httpuser)">config.oscaminfo.username</item>
-			<item level="0" text="Password (httpwd)" description="Password (httpuser)">config.oscaminfo.password</item>
-			<item level="0" text="Hostname or IP address" description="DNS name or IP address">config.oscaminfo.ip</item>
+			<item level="0" text="Password (httpwd)" description="Password (httpwd)">config.oscaminfo.password</item>
+			<item level="0" text="Hostname or IP address" description="Set the hostname or IP address.">config.oscaminfo.ip</item>
 			<item level="0" text="Port" description="Port">config.oscaminfo.port</item>
 			<item level="0" text="Use HTTPS protocol" description="Use HTTPS protocol">config.oscaminfo.usessl</item>
 		</if>
@@ -346,7 +344,7 @@
 		</if>
 	</setup>
 	<setup key="Password" title="Password Settings">
-		<item level="0" text="New password" description="Setting a password is strongly advised if your STB is open to the Internet. You must set a password in order to be able to use network services like FTP, Telnet or SSH.">config.network.password</item>
+		<item level="0" text="New password" description="Setting a password is strongly advised if your receiver is open to the Internet. You must set a password in order to be able to use network services like FTP, Telnet or SSH.">config.network.password</item>
 	</setup>
 	<setup key="Playback" title="Playback Settings">
 		<item level="2" text="Show movie lengths in movielist" description="When enabled, the lenght of each recording will be shown in the movielist (this might cause some additional loading time).">config.usage.load_length_of_movies_in_moviellist</item>
@@ -358,10 +356,10 @@
 		<item level="2" text="Display message before playing next movie" description="When enabled, a popup message will be shown when a movie has finished and the next one will start.">config.usage.next_movie_msg</item>
 		<item level="1" text="Show InfoBar on skip forward/backward" description="Select 'Yes, to display the InfoBar when fast forwarding or rewinding during media playback.">config.usage.show_infobar_on_skip</item>
 		<item level="1" text="Show PVR status in MoviePlayer InfoBar" description="This option moves the PVR status display from a separate window into the MoviePlayer InfoBar.">config.usage.movieplayer_pvrstate</item>
-		<item level="1" text="Show persistent InfoBar while paused" description="Select 'Yes' the keep the InfoBar displayed, with no timeout, while media playback is paused.">config.usage.show_infobar_locked_on_pause</item>
 		<item level="2" text="Behavior of 'pause' when paused" description="Configure the behavior of the 'pause' key when movie playback is already paused.">config.seek.on_pause</item>
-		<item level="2" text="SeekBar activation" description="Select SeekBar to be activated by arrow L/R (long) or &lt;&lt; &gt;&gt; (long).">config.seek.baractivation</item>
-		<item level="2" text="Arrow skip mode" description="Select how the arrow ('UP', 'DOWN', 'LEFT', and 'RIGHT') buttons will act during seek actions.">config.seek.arrowSkipMode</item>
+		<item level="1" text="Show persistent InfoBar while paused" description="Select 'Yes' the keep the InfoBar displayed, with no timeout, while media playback is paused.">config.usage.show_infobar_locked_on_pause</item>
+		<item level="2" text="SeekBar activation" description="Select SeekBar to be activated by arrow LEFT/RIGHT (long) or &lt;&lt; &gt;&gt; (long).">config.seek.baractivation</item>
+		<item level="2" text="Arrow skip mode" description="Select how the arrow buttons 'UP', 'DOWN', 'LEFT' or 'RIGHT' will act during seek actions.">config.seek.arrowSkipMode</item>
 		<if conditional="config.seek.arrowSkipMode.value == 's'">
 			<item level="2" text="Skip sensibility (Horizontal)" description="Set the LEFT/RIGHT button skip percentage for the SeekBar.">config.seek.sensibilityHorizontal</item>
 			<item level="2" text="Skip sensibility (Vertical)" description="Set the UP/DOWN button skip percentage for the SeekBar.">config.seek.sensibilityVertical</item>
@@ -454,15 +452,15 @@
 		<item level="2" text="Default timer type" description="Configure default type for new timers.">config.recording.timer_default_type</item>
 		<item level="2" text="Show message when recording starts" description="When enabled, a popup message will be shown when a recording starts.">config.usage.show_message_when_recording_starts</item>
 		<item level="2" text="Limit character set for recording filenames" description="Limit the characters that can be used in recording filenames to (7 bit) ascii. This ensures compatibility with operating systems or file systems with limited character sets.">config.recording.ascii_filenames</item>
-		<item level="2" text="Composition of the recording filenames" description="Configure how recording filenames are constructed.">config.recording.filename_composition</item>
+		<item level="2" text="Composition of the recording filenames" description="Configure how recording filenames are constructed. Standard: Date Time - Channel - Title Very very short: Title Very short: Title - Date Time Short with time: Date Time - Title Short: Date - Title Long: Date Time - Channel - Title - Info.">config.recording.filename_composition</item>
 		<item level="1" text="Remove completed timers after (days)" description="Configure the number of days old timers are kept before they are automatically removed from the timer list.">config.recording.keep_timers</item>
 		<item level="1" text="Disk space to reserve for recordings (in GB)" description="Configure the minimum amount of disk space to be available for recordings. When the amount of space drops below this value, deleted items will be removed from the trash can.">config.usage.movielist_trashcan_reserve</item>
 		<item level="2" text="Always include ECM in recordings" description="Always include ECM messages in recordings. This overrides the individual timer settings globally. It allows recordings to be always decrypted afterwards (sometimes called offline decoding), if supported by your receiver.">config.recording.always_ecm</item>
 		<item level="2" text="Never decrypt while recording" description="Never decrypt the content while recording. This overrides the individual timer settings globally. If enabled, recordings are stored in crypted presentation and must be decrypted afterwards (sometimes called offline decoding).">config.recording.never_decrypt</item>
 		<item level="2" text="Offline decode delay (ms)" description="Configure the offline decoding delay in milliseconds. The configured delay is observed at each control word parity change." requires="CanOfflineDecode">config.recording.offline_decode_delay</item>
 		<item level="0" text="Force zap to recording service in standby" description="This can be useful when using the CI(+) module. After the end of the recording, the service will be automatically stopped.">config.recording.zap_record_service_in_standby</item>
-		<item level="2" text="Show recording symbol" description="Configure whether the 'recording' symbol (in the display skin and LCD skin) is visible for real recordings only or also for streaming and pseudo recordings (e.g. EPGrefresh).">config.recording.show_rec_symbol_for_rec_types</item>
-		<item level="2" text="Show warning before restart" description="Configure for which types of recordings a warning about active recordings is shown when attempting to restart the box or the GUI.">config.recording.warn_box_restart_rec_types</item>
+		<item level="2" text="Show recording symbol" description="Configure whether the 'recording' symbol (in the display skin and LCD skin) is visible for real recordings only or also for streaming and pseudo recordings (e.g. in EPGrefresh).">config.recording.show_rec_symbol_for_rec_types</item>
+		<item level="2" text="Show warning before restart" description="Configure for which types of recordings a warning about active recordings is shown when attempting to restart the receiver or the GUI.">config.recording.warn_box_restart_rec_types</item>
 		<if requires="CanDescrambleInStandby">
 			<item level="2" text="Descramble in Standby" description="Set to 'Enabled' to descramble queued scrambled recordings in Standby.">config.recording.standbyDescramble</item>
 			<if conditional="config.recording.standbyDescramble.value" indent="1">
@@ -494,18 +492,21 @@
 		<item text="DiSEqC" description="Configure the DiSEqC mode for this LNB.">config.sat.diseqc</item>
 		<item text="Longitude" description="Configure the longitude of your location.">config.sat.diseqca</item>
 		<item text="Latitude" description="Configure the latitude of your location.">config.sat.diseqcb</item>
-		<item text="Use power measurement" description="When enabled, measure power consumption to detect when the rotor stops turning (when supported by the tuner)." >config.sat.diseqcc</item>
+		<item text="Use power measurement" description="When enabled, measure power consumption to detect when the rotor stops turning (when supported by the tuner).">config.sat.diseqcc</item>
 	</setup>
 	<setup key="Skin" title="Skin Settings">
 		<item text="GUI Skin *" description="Choose the skin to be used for the GUI interface. Press 'GREEN' to activate the skin.">config.skin.guiSkin</item>
 		<item text="LCD/Front panel *" description="Choose the skin to be used for the LCD/front panel interface. Press 'GREEN' to activate the skin." requires="Display">config.skin.lcdSkin</item>
 		<item text="Fallback Font *" description="Choose the fallback font.">config.skin.FallbackFont</item>
+		<item text="Channel Selection Screen" description="Select the screen layout, from the options provided by the skin, to be used for the ChannelSelection screen." conditional="len(config.channelSelection.screenStyle.choices) > 1">config.channelSelection.screenStyle</item>
+		<item text="Channel Selection List" description="Select the layout of the information in the services list, from the options provided by the skin, displayed within the ChannelSelection screen." conditional="config.channelSelection.screenStyle.value">config.channelSelection.widgetStyle</item>
+		<item text="AutoRefresh" description="Enable autorefresh templates." requires="CanRefreshTemplates">config.skin.autorefresh</item>
 	</setup>
 	<setup key="StreamRelay" title="Stream Relay Settings">
 		<item level="2" text="Stream Relay URL" description="IP address of the Stream Relay server used to descramble services that can only be decrypted via Stream Relay.">config.misc.softcam_streamrelay_url</item>
 		<item level="2" text="Stream Relay port" description="Port number for the Stream Relay server used to descramble services that can only be decrypted via Stream Relay.">config.misc.softcam_streamrelay_port</item>
 		<item level="2" text="Require authentication for http streams" description="When enabled, authentication is required to watch http streams.">config.streaming.authentication</item>
-		<item level="2" text="Stream Relay switch delay" description="Select the delay to use when closing a Stream Relay service before reallocating the tuner for another service. Using '0' is only recommended for boxes with multiple satellite tuners.">config.misc.softcam_streamrelay_delay</item>
+		<item level="2" text="Stream Relay switch delay" description="Select the delay to use when closing a Stream Relay service before reallocating the tuner for another service. Using '0' is only recommended for receivers with multiple satellite tuners.">config.misc.softcam_streamrelay_delay</item>
 	</setup>
 	<setup key="Subtitle" title="Subtitle Settings">
 		<if requires="AISubs">
@@ -544,10 +545,10 @@
 		<item level="0" text="Sync time using" description="Synchronize system time using transponder or Internet.">config.misc.SyncTimeUsing</item>
 		<if conditional="config.misc.SyncTimeUsing.value == '1'">
 			<item level="0" text="NTP server" description="Configure your NTP server.">config.misc.NTPserver</item>
-			<item level="0" text="Sync NTP every (minutes)" description="Setup network time synchronization interval.">config.misc.useNTPminutes</item>
+			<item level="0" text="Sync NTP every x minutes" description="Setup network time synchronization interval.">config.misc.useNTPminutes</item>
 		</if>
-		<item level="0" text="Date style" description="Choose the display formatting style for dates. 'D' / 'DD' is the date and 'M' / 'MM' is the month in digits.  ('DD' and 'MM' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin." requires="config.usage.date.enabled">config.usage.date.dayfull</item>
-		<item level="0" text="Time style" description="Choose the display formatting style for times. 'H' / 'HH' is the hour for a 24 hour clock, 'h' / 'hh' is the hour for a 12 hour clock, 'mm' is the minutes and 'ss' is the seconds.  ('HH' and 'hh' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin." requires="config.usage.time.enabled">config.usage.time.long</item>
+		<item level="0" text="Date style" description="Choose the display formatting style for dates. 'D'/'DD' is the date and 'M'/'MM' the month in digits ('DD' and 'MM' have leading zeros for single digit values). The screen display will be based on your choice but can be influenced by the skin." requires="config.usage.date.enabled">config.usage.date.dayfull</item>
+		<item level="0" text="Time style" description="Choose the display formatting style for times. 'H'/'HH' is the hour for a 24 hour clock, 'h'/'hh' is the hour for a 12 hour clock, 'mm' is the minutes and 'ss' the seconds ('HH' and 'hh' have leading zeros for single digit values). The screen display will be based on your choice but can be influenced by the skin." requires="config.usage.time.enabled">config.usage.time.long</item>
 	</setup>
 	<setup key="Timeshift" title="Timeshift Settings">
 		<item level="0" text="Time shift buffer location" description="Set the default location to store your time shift buffer files. Press 'OK' to add new locations, press 'LEFT'/'RIGHT' to select from previously defined locations.">config.timeshift.path</item>
@@ -580,7 +581,7 @@
 		<if conditional="config.usage.tuxtxt_font_and_res.value == 'expert_mode'">
 			<item level="1" text="Teletext UseTTF (0=fixed font, 1=TrueType)" description="Configure whether a fixed font or a scalable TrueType font is used for teletext.">config.usage.tuxtxt_UseTTF</item>
 			<item level="1" text="Teletext TTFBold (0=normal, 1=bold)" description="Configure whether a bold TrueType font is used for teletext.">config.usage.tuxtxt_TTFBold</item>
-			<item level="1" text="Teletext TTFScreenResX (screen X resolution)" description="Configure the screen resolution for teletext (Not all skins support full-HD teletext).">config.usage.tuxtxt_TTFScreenResX</item>
+			<item level="1" text="Teletext TTFScreenResX (screen X resolution)" description="Configure the teletext screen resolution. Note: Full-HD teletext is not supported by all skins.">config.usage.tuxtxt_TTFScreenResX</item>
 			<item level="1" text="Teletext StartX (left border)" description="Configure the start coordinate in x of the teletext display area.">config.usage.tuxtxt_StartX</item>
 			<item level="1" text="Teletext EndX (right border)" description="Configure the end coordinate in x of the teletext display area.">config.usage.tuxtxt_EndX</item>
 			<item level="1" text="Teletext StartY (lower border)" description="Configure the start coordinate in y of the teletext display area.">config.usage.tuxtxt_StartY</item>
@@ -603,7 +604,7 @@
 		<item level="2" text="Preferred tuner DVB-T for recordings" description="When enabled, this setting has more weight than 'Preferred tuner for recordings'." requires="DVB-T_priority_tuner_available">config.usage.recording_frontend_priority_dvbt</item>
 		<item level="2" text="Preferred tuner DVB-C for recordings" description="When enabled, this setting has more weight than 'Preferred tuner for recordings'." requires="DVB-C_priority_tuner_available">config.usage.recording_frontend_priority_dvbc</item>
 		<item level="2" text="Preferred tuner ATSC for recordings" description="When enabled, this setting has more weight than 'Preferred tuner for recordings'." requires="ATSC_priority_tuner_available">config.usage.recording_frontend_priority_atsc</item>
-		<item level="2" text="Disable background scanning" description="When enabled, the receiver will no longer monitor the tuned transponder for possible changes. Do not use this option unless you know what you are doing.">config.misc.disable_background_scan</item>
+		<item level="2" text="Disable background scanning" description="When tuned to a service, the system normally scans the transponder for changes and saves them. Enable only if you know what you’re doing.">config.misc.disable_background_scan</item>
 		<item level="2" text="Include EIT in http streams" description="When enabled, EIT data will be included in http streams. This allows a client receiver to show EPG.">config.streaming.stream_eit</item>
 		<item level="2" text="Include AIT in http streams" description="When enabled, AIT data will be included in http streams. This allows a client receiver to use HbbTV.">config.streaming.stream_ait</item>
 		<item level="2" text="Include ECM in http streams" description="When enabled, ECM data will be included in http streams. This allows a client receiver to do the descrambling.">config.streaming.stream_ecm</item>
@@ -624,7 +625,7 @@
 		<item level="2" text="Ignore DVB-T namespace sub network" description="On valid ONIDs, ignore frequency sub network part">config.usage.subnetwork_terrestrial</item>
 		<item level="2" text="Enable cut file support for non *.ts files" description="Enable cut file support for non *.ts files, e.g. mp4.">config.usage.useVideoCuesheet</item>
 		<item level="2" text="Enable cut file support for audio files" description="Enable cut file support for audio files, e.g. mp3.">config.usage.useAudioCuesheet</item>
-		<item level="2" text="Enable chapter support for video files" description="Show chapter positions for supported video files. (gstreamer version must be greather than 1)">config.usage.useChapterInfo</item>
+		<item level="2" text="Enable chapter support for video files" description="Show chapter positions for supported video files.">config.usage.useChapterInfo</item>
 		<!--item level="2" text="Enable new GStreamer playback" description="If enabled, the new GStreamer playback engine will be used.">config.misc.usegstplaybin3</item-->
 	</setup>
 	<setup key="UserInterface" title="User Interface">
@@ -651,11 +652,11 @@
 		<item level="2" text="Screen saver movement" description="Select how long the screen saver image will stay in the same location on the screen before it will be moved." conditional="config.usage.screenSaverStartTimer.value">config.usage.screenSaverMoveTimer</item>
 		<item level="2" text="Show all Information screens" description="Enable this option to show all the available Information screens in the Information menu item list.">config.usage.informationShowAllMenuScreens</item>
 		<item level="2" text="Show extra spacing in Information" description="Enable to add some extra spacing to the Information screens. This can improve readability.">config.usage.informationExtraSpacing</item>
-		<item level="0" text="Show time remaining/elapsed" description="This option allows you choose how to display remaining time, or elapsed time, or both.">config.usage.swap_time_remaining_on_osd</item>
+		<item level="1" text="Show time remaining/elapsed" description="This option allows you to choose how to display remaining time, or elapsed time, or both.">config.usage.swap_time_remaining_on_vfd</item>
+		<item level="1" text="Show transponder remaining/elapsed as" description="This option allows you to choose how to display the remaining/elapsed time for live TV.">config.usage.swap_time_display_on_vfd</item>
+		<item level="1" text="Show Media playback Remaining/Elapsed as" description="This option allows you to choose how to display the remaining/elapsed time for media playback.">config.usage.swap_media_time_display_on_vfd</item>
 		<item level="0" text="Show time elapsed as positive" description="This option allows you choose how to display elapsed time as + or -">config.usage.elapsed_time_positive_osd</item>
-		<item level="0" text="Show transponder remaining/elapsed as" description="This option allows you to choose how to display the remaining/elapsed time for live TV.">config.usage.swap_time_display_on_osd</item>
-		<item level="0" text="Show subservices *" description="This option allows you choose the option for Subservice indicator or selection.">config.usage.showInfoBarSubservices</item>
-		<item level="1" text="Show Media playback Remaining/Elapsed as" description="This option allows you to choose how to display the remaining/elapsed time for media playback.">config.usage.swap_media_time_display_on_osd</item>
+		<item level="0" text="Show subservices *" description="This option allows you to choose the option for Subservice indicator or selection.">config.usage.showInfoBarSubservices</item>
 		<item level="0" text="Zap history sequence" description="Select the display sequence of previously visited services.">config.usage.zapHistorySort</item>
 		<item level="2" text="Hide zap errors" description="When enabled, error messages related to zapping will not be shown.">config.usage.hide_zap_errors</item>
 		<item level="2" text="Show crypto info in infobar" description="When enabled, encryption info will be shown in the infobar (when supported by the skin).">config.usage.show_cryptoinfo</item>
@@ -673,7 +674,7 @@
 		<item level="2" text="Show additional slider value" description="Enable to display the current value of the slider at end of the slider bar.">config.usage.show_slider_value</item>
 		<item level="0" text="Sort order for help screen" description="Choose the order in which items are displayed in Help windows">config.usage.helpSortOrder</item>
 		<item level="0" text="Animation speed of help indicators" description="Control the animation speed of the button indicators in the Help screen. 'Disabled' turns off animation so that indicators jump between buttons.">config.usage.helpAnimationSpeed</item>
-		<item level="2" text="Spinner Position" description="Set the top left location of the busy spinner. The coordinates are scaled such that the top left is at (0,0) and the bottom right is at (1260,700). Note that the position is the top left of the spinner and not the centre of the spinner.">config.misc.spinnerPosition</item>
+				<item level="2" text="Spinner Position" description="Set the top left location of the busy spinner. The coordinates are scaled such that the top left is at 0,0 and the bottom right is at 1260,700. Note that the position is the top left of the spinner and not the centre of the spinner.">config.misc.spinnerPosition</item>
 		<item text="Fallback Font *" description="Choose the fallback font.">config.skin.FallbackFont</item>
 	</setup>
 	<setup key="VolumeAdjust" title="Volume Adjust Settings">

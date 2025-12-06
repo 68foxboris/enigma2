@@ -1399,8 +1399,8 @@ def InitUsageConfig():
 		Components.EpgLoadSave.EpgCacheSaveCheck()
 	config.epg.cacheloadsched.addNotifier(EpgCacheLoadSchedChanged, immediate_feedback = False)
 	config.epg.cachesavesched.addNotifier(EpgCacheSaveSchedChanged, immediate_feedback = False)
-	config.epg.cacheloadtimer = ConfigSelectionNumber(default = 24, stepwidth = 1, min = 1, max = 24, wraparound = True)
-	config.epg.cachesavetimer = ConfigSelectionNumber(default = 24, stepwidth = 1, min = 1, max = 24, wraparound = True)
+	config.epg.cacheloadtimer = ConfigSelection(default=24, choices=[(x, ngettext("%d Hour", "%d Hours", x) % x) for x in range(1, 25)])
+	config.epg.cachesavetimer = ConfigSelection(default=24, choices=[(x, ngettext("%d Hour", "%d Hours", x) % x) for x in range(1, 25)])
 
 	def debugEPGhanged(configElement):
 		from enigma import eEPGCache
