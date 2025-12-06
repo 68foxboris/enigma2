@@ -847,14 +847,8 @@ def InitUsageConfig():
 	config.usage.swap_time_remaining_on_vfd = ConfigSelection(default="0", choices=choiceList)
 	config.usage.elapsed_time_positive_osd = ConfigYesNo(default=False)
 	config.usage.elapsed_time_positive_vfd = ConfigYesNo(default=False)
-	config.usage.lcd_scroll_delay = ConfigSelection(default="10000", choices=[
-		("10000", _("%d Seconds") % 10),
-		("20000", _("%d Seconds") % 20),
-		("30000", _("%d Seconds") % 30),
-		("60000", _("%d Minute") % 1),
-		("300000", _("%d Minutes") % 5),
-		("noscrolling", _("Off"))
-	])
+	choices = [(str(x * 1000), ngettext("%d Second", "%d Seconds", x) % x) for x in [10, 20, 30]] + [(str(x * 60000), ngettext("%d Minute", "%d Minutes", x) % x) for x in [1, 5]] + [("noscrolling", _("Off"))]
+	config.usage.lcd_scroll_delay = ConfigSelection(default="10000", choices=choices)
 	config.usage.lcd_scroll_speed = ConfigSelection(default="300", choices=[
 		("500", _("Slow")),
 		("300", _("Normal")),
@@ -2394,7 +2388,7 @@ def InitUsageConfig():
 	config.misc.softcam_streamrelay_delay = ConfigSelectionNumber(min=0, max=2000, stepwidth=50, default=0, wraparound=True)
 
 
-	config.misc.useNTPminutes = ConfigSelection(default="30", choices=[("30", _("%d Minutes") % 30), ("60", _("%d Hour") % 1), ("1440", _("%d Hours") % 24)])
+	config.misc.useNTPminutes = ConfigSelection(default=30, choices=[(30, ngettext("%d Minute", "%d Minutes", 30) % 30)] + [(x * 60, ngettext("%d Hour", "%d Hours", x) % x) for x in (1, 24)])
 
 def updateChoices(sel, choices):
 	if choices:
