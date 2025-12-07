@@ -3221,8 +3221,23 @@ msgstr "Доступные локали:"
 msgid "Axas E4HD Ultra"
 msgstr "Axas E4HD Ultra"
 
+msgid "Avaric"
+msgstr "Аварский"
+
+msgid "Avestan"
+msgstr "Авестийский"
+
+msgid "Avoid getting stuck (at the expense of some stuttering) when the jump time is smaller than the time between I-frames."
+msgstr "Позволяет избежать замирания кадра (за счёт некоторого подёргивания), когда переход короче промежутка между I-фреймами."
+
+msgid "Aymara"
+msgstr "Аймара"
+
 msgid "Azerbaijan"
 msgstr "Азербайджан"
+
+msgid "Azerbaijani"
+msgstr "Азербайджанский"
 
 msgid "B"
 msgstr "B"
@@ -4146,15 +4161,15 @@ msgid "Can't allocate program source (e.g. tuner)"
 msgstr "Невозможно выделить источник программы (например, тюнер)"
 
 msgid ""
-"Can't going to live TV!\n"
-"Switch to live TV and restart time shift ?"
+"Can't go to live TV!\n"
+"Switch to live TV and restart time shift?"
 msgstr ""
 "Невозможно вернуться на просматриваемый канал!\n"
 "Снова подключиться к каналу и перезапустить таймшифт?"
 
 msgid ""
-"Can't play the next time shift file!\n"
-"Switch to live TV and restart time shift ?"
+"Can't play the next time shift buffer file!\n"
+"Switch to live TV and restart time shift?"
 msgstr ""
 "Невозможно запустить следующий файл таймшифта!\n"
 "Снова подключиться к каналу и перезапустить таймшифт?"
@@ -4174,11 +4189,17 @@ msgstr "Отмена"
 msgid "Center"
 msgstr "Центр"
 
-msgid "Cancel any changed settings and exit"
+msgid "Cancel and exit the context menu"
+msgstr "Отменить и выйти из контекстного меню"
+
+msgid"Cancel any changed settings and exit"
 msgstr "Отменить все изменения настройки и выйти"
 
 msgid "Cancel any changed settings and exit all menus"
 msgstr "Отменить все изменения настройки и выйти из всех меню"
+
+msgid "Cancel any changed tags and exit"
+msgstr "Отменить все изменения тегов и выйти"
 
 msgid "Cancel any changes to the currently active skin"
 msgstr "Отменить любые изменения активного в данный момент скина"
@@ -4195,23 +4216,14 @@ msgstr "Отменить все изменения активной локали
 msgid "Cancel any text changes and exit"
 msgstr "Отменить все изменения текста и выйти"
 
+msgid "Cancel conflict resolution"
+msgstr "Отменить разрешение конфликта"
+
 msgid "Cancel execution?"
 msgstr "Отменить выполнение?"
 
-msgid "Cancel the scan and exit all menus"
-msgstr "Прервать поиск и закрыть все меню"
-
-msgid "Cancel the scan and exit the scanner"
-msgstr "Прервать поиск и выйти из режима поиска"
-
-msgid "Cancel the service history zap"
-msgstr "Отменить запись истории обслуживания"
-
 msgid "Cancel save time shift as movie"
 msgstr "Отменить сохранение таймшифта в виде записи"
-
-msgid "Cancel the selection"
-msgstr "Отменить выбор"
 
 msgid "Cancel selection and exit"
 msgstr "Отменить выбор и выйти"
@@ -4228,8 +4240,20 @@ msgstr "Отменить выбор образа и выйти"
 msgid "Cancel the image selection and exit all menus"
 msgstr "Отменить выбор образа и выйти из всех меню"
 
+msgid "Cancel the scan and exit all menus"
+msgstr "Прервать поиск и закрыть все меню"
+
+msgid "Cancel the scan and exit the scanner"
+msgstr "Прервать поиск и выйти из режима поиска"
+
+msgid "Cancel the selection"
+msgstr "Отменить выбор"
+
 msgid "Cancel the selection and exit"
 msgstr "Отменить выбор и выйти"
+
+msgid "Cancel the service history zap"
+msgstr "Отменить историю включений канала"
 
 msgid "Cancel the service selection"
 msgstr "Отменить выбор канала"
@@ -4436,11 +4460,17 @@ msgstr "Действия контекстного меню списка кана
 msgid "Channel Selection Context Menu Navigation Actions"
 msgstr "Действия при навигации по контекстному меню списка каналов"
 
+msgid "Channel Selection List"
+msgstr "Список выбора каналов"
+
 msgid "Channel Selection Navigation Actions"
 msgstr "Действия навигации по выбору канала"
 
+msgid "Channel Selection Screen"
+msgstr "Экран выбора канала"
+
 msgid "Channel Selection Settings"
-msgstr "Список каналов"
+msgstr "Настройки списка каналов"
 
 msgid "Channel buttons"
 msgstr "Кнопки канала"
@@ -4532,12 +4562,6 @@ msgstr "Только каналы"
 msgid "Channelselection:"
 msgstr "Выбор канала:"
 
-msgid "Channel Selection Screen"
-msgstr "Экран выбора канала"
-
-msgid "Channel Selection List"
-msgstr "Список выбора каналов"
-
 msgid "Chap."
 msgstr "Глава."
 
@@ -4552,6 +4576,9 @@ msgstr "Устройства хранения"
 
 msgid "Check"
 msgstr "Проверка"
+
+msgid "Chechen"
+msgstr "Чеченский"
 
 msgid "Check HDD"
 msgstr "Проверить HDD"
@@ -4578,7 +4605,7 @@ msgid "Check/Install online updates (you must have a working Internet connection
 msgstr "Проверка, установка обновлений (требуется соединение с интернет)"
 
 msgid "Checking Feeds"
-msgstr "Проверка фида"
+msgstr "Проверка фидов"
 
 msgid "Checking ONID/TSID"
 msgstr "Проверка ONID/TSID"
@@ -4600,14 +4627,20 @@ msgstr ""
 "Проверка тюнера %d\n"
 "DiSEqC порт %s для %s"
 
+msgid "Chichewa / Chewa / Nyanja"
+msgstr "Чичева / Чева / Ньянджа"
+
 msgid "Children"
 msgstr "Дети"
 
-msgid "Children/Youth/Education/Science"
-msgstr "Дети/Молодежь/Образование/Наука"
-
-msgid "Childrens"
+msgid "Children's"
 msgstr "Детский"
+
+msgid "Children's/Youth programs"
+msgstr "Детские/Юношеские программы (Общие)"
+
+msgid "Children/Youth"
+msgstr "Дети/Молодежь"
 
 msgid "Chile"
 msgstr "Чили"
@@ -4615,17 +4648,17 @@ msgstr "Чили"
 msgid "China"
 msgstr "Китай"
 
-msgid "Chinese - Simplified"
-msgstr "Chinese - Simplified"
+msgid "Chinese"
+msgstr "Китайский"
 
-msgid "Chinese - Traditional"
-msgstr "Chinese - Traditional"
+msgid "Chinese (Simplified)"
+msgstr "Китайский (упрощённый)"
 
 msgid "Chkroot Manager Actions"
 msgstr "Действия менеджера Chkroot"
 
 msgid "Chkroot MultiBoot Initialization in progress!"
-msgstr "Инициализация Chkroot MultiBoot идет!"
+msgstr "Выполняется инициализация Chkroot MultiBoot!"
 
 msgid "Chkroot MultiBoot Manager"
 msgstr "Менеджер Chkroot MultiBoot"
@@ -5159,11 +5192,11 @@ msgstr "Настройка режимов работы вентилятора"
 msgid "Configure if and how crypto icons will be shown in the channel selection list."
 msgstr "Нужно ли показывать значок кодирования в списке каналов и как его показывать."
 
-msgid "Configure if and how long the latest service in Picture in Picture mode will be remembered."
-msgstr "Сконфигурируйте,если и как долго будет запоминаться последняя услуга в режиме «картинка в картинке»."
+msgid "Configure if and how long the latest service in the PiP will be remembered."
+msgstr "Настройте время показа последнего выбранного канала в окошке PiP."
 
-msgid "Configure if and how service type icons will be shown in the channel selection list."
-msgstr "Настройка для показа иконок типа сервиса в списке выбора каналов."
+msgid "Configure if and how service type icons will be shown."
+msgstr "Настройка отображения значков типа канала и их расположения в списке каналов."
 
 msgid "Configure if and how the record indicator will be shown in the channel selection list."
 msgstr "Нужно ли в списке каналов показывать индикатор записи и как его показывать."
@@ -5324,8 +5357,8 @@ msgstr "Настройка функции короткого нажатия на
 msgid "Configure the function of the '0' button when Picture in Picture is active."
 msgstr "Настройка функции кнопки '0',если PiP активирован."
 
-msgid "Configure the function of the < > buttons."
-msgstr "Настройте функцию кнопок < >."
+msgid "Configure the function of the < and > buttons."
+msgstr "Настройте функции кнопок ◀ и ▶."
 
 msgid "Configure the gateway."
 msgstr "Настройка шлюза."
@@ -6453,6 +6486,18 @@ msgstr "Определенные пропуски"
 msgid "Defined volume offset"
 msgstr "Определенное смещение объема"
 
+msgid "Defines how fast the time jumps are repeated. Values lower than 500ms may be problematic with NAS."
+msgstr "Определяет время повторного запроса. Значения ниже 500 мс могут быть проблемой при использовании NAS."
+
+msgid "Defines the jump distance for backward jumps. The value is multiplied by the rewind speed, e.g. -4x. Values significantly lower than 2s may not work with all media files."
+msgstr "Определяет длину шага при обратной перемотке. Значения умножаются на скорость обратной перемотки, например 4х. Значения намного ниже 2 сек могут работать не со всеми медиафайлами."
+
+msgid "Defines the jump distance for forward jumps. The value is multiplied by the wind speed, e.g. 4x. Values significantly lower than 4s may not work with all media files."
+msgstr "Определяет длину шага при перемотке вперёд. Значения умножаются на скорость перемотки вперёд, например 4х. Значения ниже 4 сек могут работать не со всеми медиафайлами."
+
+msgid "Defines which fast forward speeds are using normal cueing. All other forward speeds and all rewind speeds use time jumps."
+msgstr "Определяет скорость перемотки вперёд в нормальном режиме. Остальные скорости перемотки (вперёд и назад) основаны на заданном интервале шага."
+
 msgid "Delay after change voltage before switch command"
 msgstr "Задержка после изменения напряжения команд перекл"
 
@@ -7470,6 +7515,21 @@ msgstr "Действия с букетами ТВ-гида"
 msgid "EPG Cache Check"
 msgstr "Проверить кэш ТВ-гида"
 
+msgid "EPG Channel/Service Selection"
+msgstr "EPG канала / Выбор канала"
+
+msgid "EPG Display Actions"
+msgstr "Действия отображения EPG"
+
+msgid "EPG Jump"
+msgstr "EPG перейти"
+
+msgid "EPG Navigation Actions"
+msgstr "Действия навигации по EPG"
+
+msgid "EPG Other Actions"
+msgstr "Другие действия EPG"
+
 msgid "EPG Search"
 msgstr "Поиск по ТВ-гиду"
 
@@ -7490,6 +7550,9 @@ msgstr "Бекап кеша ТВ-гида"
 
 msgid "EPG filename"
 msgstr "Название файла ТВ-гида"
+
+msgid "EPG history"
+msgstr "Хранить историю EPG (в минутах)"
 
 msgid ""
 "EPG key : Switch to channel list\n"
@@ -7554,7 +7617,10 @@ msgid "East limit set"
 msgstr "Включить ограничение на восток"
 
 msgid "EasyMedia"
-msgstr "EasyMedia"
+msgstr "Медиа"
+
+msgid "Economics/Social advisory"
+msgstr "Экономика/Социология"
 
 msgid "Ecuador"
 msgstr "Эквадор"
@@ -7674,7 +7740,7 @@ msgid "Enable Chkroot MultiBoot"
 msgstr "Включить Chkroot MultiBoot"
 
 msgid "Enable EIT EPG"
-msgstr "Включить EIT ТВ-гид"
+msgstr "Включить ТВ-гид EIT"
 
 msgid "Enable Fast Channel Change"
 msgstr "Включить быструю смену каналов"
@@ -7694,6 +7760,9 @@ msgstr "Включить IPv6"
 msgid "Enable InfoBar fade-out"
 msgstr "Включить затухание инфопанели"
 
+msgid "Enable Kexec MultiBoot"
+msgstr "Включить MultiBoot Kexec"
+
 msgid "Enable FreeSat EPG"
 msgstr "Включить FreeSat ТВ-гид"
 
@@ -7701,13 +7770,13 @@ msgid "Enable HDMI-CEC"
 msgstr "Включить HDMI-CEC"
 
 msgid "Enable MHW EPG"
-msgstr "Включить MHW ТВ-гид"
+msgstr "Включить ТВ-гид MHW"
 
 msgid "Enable MiniTV"
-msgstr "Включить мини-ТВ"
+msgstr "Включить МиниТВ"
 
 msgid "Enable Netmed EPG"
-msgstr "Включить Netmed ТВ-гид"
+msgstr "Включить ТВ-гид Netmed"
 
 msgid "Enable OK as preview in channel selection"
 msgstr "Включить ОК как превью, в списке выбора каналов"
@@ -7722,16 +7791,16 @@ msgid "Enable Quad PiP"
 msgstr "Включить Quad PiP"
 
 msgid "Enable ViaSat EPG"
-msgstr "Включить ViaSat ТВ-гид"
+msgstr "Включить ТВ-гид ViaSat"
 
 msgid "Enable Virgin EPG"
-msgstr "Включить Virgin ТВ-гид"
+msgstr "Включить ТВ-гид Virgin"
 
 msgid "Enable Wake On LAN"
 msgstr "Включить пробуждение по сети"
 
-msgid "Enable and set the duration of the second infobar (press OK twice) that may include more information on the current service."
-msgstr "Активация второго инфобара с дополнительной информацией (Нажмите OK дважды для отображения второго инфобара)"
+msgid "Enable and set the duration of the second InfoBar (press 'OK' twice) that may include additional information."
+msgstr "Активация второй инфопанели с дополнительной информацией (нажмите OK дважды для отображения второй инфопанели)."
 
 msgid "Enable auto cable scan"
 msgstr "Включить автопоиск кабельных каналов"
@@ -7755,8 +7824,8 @@ msgstr "Включить мигание"
 msgid "Enable blink functionality for some areas like record icon."
 msgstr "Включите функцию мигания для некоторых областей, например значка записи."
 
-msgid "Enable blinking REC symbol on the LCD display"
-msgstr "Включить мигание значка на дисплее во время записи"
+msgid "Enable blinking rec symbol on the LCD Display."
+msgstr "Включить мигание значка на дисплее во время записи."
 
 msgid "Enable bluetooth audio"
 msgstr "Включить BT-аудио"
@@ -7769,6 +7838,9 @@ msgstr "Включить выбор букетов при запуске мул�
 
 msgid "Enable chapter support for video files"
 msgstr "Включить поддержку глав для видеофайлов"
+
+msgid "Enable command line function"
+msgstr "Включить функцию командной строки"
 
 msgid "Enable core dumps *"
 msgstr "Включить дампы памяти *"
@@ -7815,14 +7887,11 @@ msgstr "Включить функцию затухания инфобара"
 msgid "Enable infobar fade-out"
 msgstr "Включить затухание инфобара"
 
-msgid "Enable Kexec MultiBoot"
-msgstr "Активировать Vu+ мультибут"
-
 msgid "Enable move mode"
 msgstr "Включить режим перемещения"
 
 msgid "Enable multiple bouquets"
-msgstr "Включить мульти-букеты"
+msgstr "Включить несколько букетов"
 
 msgid "Enable numbers"
 msgstr "Включить номера"
@@ -7845,23 +7914,23 @@ msgstr "Включить удалённый ресивер Enigma2 для поп
 msgid "Enable screenshot of LCD in /tmp"
 msgstr "Включить скриншот LCD в / tmp"
 
-msgid "Enable setting a time interval for filtering events in SingleEPG using the `Stop` button."
-msgstr "Включите настройку временного интервала для фильтрации событий в SingleEPG с помощью кнопки «Стоп»."
+msgid "Enable setting a time interval for filtering events in SingleEPG using the 'Stop' button."
+msgstr "Включите настройку временного интервала фильтрации событий в SingleEPG с помощью кнопки «Стоп»."
 
 msgid "Enable teletext caching"
 msgstr "Включить кэширование телетекста"
-
-msgid "Enable this option to add bouquet database information to the debug log file."
-msgstr "Включите эту опцию, чтобы добавить информацию о базе данных букета в файл журнала отладки."
 
 msgid "Enable this option to add bouquet information detected during system boot to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить информацию о букете, обнаруженную во время загрузки системы, в файл журнала отладки."
 
 msgid "Enable this option to add MultiBoot information detected during system boot to the debug log file."
-msgstr "Включите этот параметр, чтобы добавить информацию о мультизагрузке, обнаруженную во время загрузки системы, в файл лога отладки."
+msgstr "Включите этот параметр, чтобы добавить информацию о Multiboot, обнаруженную во время загрузки системы, в файл лога отладки."
 
 msgid "Enable this option to add action map / remote control mapping data to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить данные сопоставления карты действий / удалённого управления в файл лога отладки."
+
+msgid "Enable this option to add bouquet database information to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить информацию о базе данных букета в файл журнала отладки."
 
 msgid "Enable this option to add extra DVB details to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить дополнительные сведения о DVB в файл журнала отладки."
@@ -7922,6 +7991,9 @@ msgstr "Включить обнаружение конфликтов тайме�
 
 msgid "Enable to display all true/false, yes/no, on/off and enable/disable set up options as a graphical switch."
 msgstr "Значение для таких параметров, как 'да/нет', 'включить/выключить' и 'вкл/выкл', будет заменено графическим переключателем."
+
+msgid "Enable to display the current value of the slider at end of the slider bar."
+msgstr "Включить текущее значение ползунка в конце ползунка."
 
 msgid "Enable volume control with arrow buttons"
 msgstr "Включить управление громкостью на кнопках со стрелками"
@@ -10102,6 +10174,9 @@ msgstr "В процессе"
 msgid "In the Standby record on the LCD display"
 msgstr "В режиме ожидания запись на ЖК-дисплее в режиме ожидания"
 
+msgid "In Setup screens choose whether to show the default value of the selected item in the description field."
+msgstr "На экранах настройки выберите, следует ли отображать значение по умолчанию для выбранного элемента в поле описания."
+
 msgid "Inactive"
 msgstr "Неактивен"
 
@@ -10355,6 +10430,9 @@ msgstr "Инсталляция завершена."
 
 msgid "Installation or removal has completed."
 msgstr "Инсталляция или удаление завершено."
+
+msgid "Installed"
+msgstr "Установлен"
 
 msgid "Installing"
 msgstr "Установка"
@@ -15611,7 +15689,7 @@ msgid "Searching west..."
 msgstr "Поиск на западе..."
 
 msgid "Second cable of motorized LNB"
-msgstr "Второй кабель от LNB на моторе"
+msgstr "Второй кабель от позиционера"
 
 msgid "Secondary DNS"
 msgstr "Вторичный DNS"
@@ -16178,6 +16256,9 @@ msgstr "Выберите тип используемого LNB/устройст�
 msgid "Select the type of Single Cable Reception device you are using."
 msgstr "Выберите тип используемого устройства."
 
+msgid "Select the type of keyboard connected to the %s %s."
+msgstr "Выберите тип клавиатуры, подключённой к %s %s."
+
 msgid ""
 "Select the video mode to be used on the TV.\n"
 "\n"
@@ -16329,9 +16410,6 @@ msgstr "Сенегал"
 
 msgid "Separate titles with a main menu"
 msgstr "Отдельные названия с главного меню"
-
-msgid "Set the top left location of the busy spinner. The coordinates are scaled such that the top left is at 0,0 and the bottom right is at 1260,700. Note that the position is the top left of the spinner and not the centre of the spinner."
-msgstr "Задайте положение верхнего левого угла счетчика активности. Координаты масштабируются таким образом, чтобы верхний левый угол находился в точке 0,0, а нижний правый — в точке 1260,700. Обратите внимание, что положение соответствует верхнему левому углу счетчика, а не его центру."
 
 msgid "Sequence repeat"
 msgstr "Повтор всех команд дважды (без команд мотора)"
@@ -16680,6 +16758,9 @@ msgstr "Установите метод сортировки для этого �
 msgid "Set the time of day to perform the import."
 msgstr "Установите время суток для выполнения импорта."
 
+msgid "Set the top left location of the busy spinner. The coordinates are scaled such that the top left is at 0,0 and the bottom right is at 1260,700. Note that the position is the top left of the spinner and not the centre of the spinner."
+msgstr "Установите верхнее левое местоположение занятого счётчика. Координаты масштабируются таким образом, что верхний левый угол равен (0,0), а нижний правый — (1260,700). Обратите внимание, что это положение находится в левом верхнем углу счётчика, а не в центре счетчика."
+
 msgid "Set the type of the progress indication in the channel selection screen."
 msgstr "Выберите тип отображения прогресса в меню выбора каналов."
 
@@ -16746,7 +16827,7 @@ msgid "Sets the root directory of movie list, to remove the '..' from being show
 msgstr "Устанавливает корневой каталог списка фильмов, чтобы убрать «..» из отображаемой в этой папке."
 
 msgid "Setting a password is strongly advised if your receiver is open to the Internet. You must set a password in order to be able to use network services like FTP, Telnet or SSH."
-msgstr "Если ваш ресивер подключен к Интернету, настоятельно рекомендуется установить пароль. Он необходим для использования сетевых служб, таких как FTP, Telnet или SSH."
+msgstr "Настоятельно рекомендуется установить пароль, если ваш ресивер открыт для доступа из Интернет. Вы должны установить пароль, чтобы иметь возможность использовать такие сетевые службы, как FTP, Telnet или SSH."
 
 msgid "Settings"
 msgstr "Настройка"
@@ -19278,7 +19359,7 @@ msgstr "Пользовательский интерфейс вашего %s пе
 
 #, python-format
 msgid "The user interface of your %s %s is restarting"
-msgstr "Перезагрузка интерфейса вашего %s %s"
+msgstr "Перезапуск интерфейса вашего %s %s"
 
 #, python-format
 msgid ""
@@ -19371,16 +19452,17 @@ msgid "This allows you change the font size relative to skin size, so 1 increase
 msgstr "Это позволяет вам изменять размер шрифта относительно размера скина, поэтому 1 увеличивается на 1 размер пункта, а -1 уменьшается на 1 размер пункта"
 
 msgid "This allows you to change the number of rows shown."
-msgstr "Это позволяет вам изменить количество отображаемых строк."
+msgstr "Это позволяет изменить количество отображаемых строк."
 
 msgid "This allows you to set the maximum number of digits in a service number, up to 5."
-msgstr "Это позволяет установить максимальное количество цифр в номере услуги — до 5."
+msgstr "Здесь можно задать количество цифр 5, если у Вас более чем 9999 каналов."
 
-msgid "This bouquet is protected by a parental control PIN"
-msgstr "Этот букет защищен пин-кодом родительского контроля"
+msgid "This bouquet is protected by a parental control PIN!"
+msgstr "Этот букет защищён родительским контролем!"
 
+#, python-format
 msgid "This field allows you to search an additional symbol rate up to %s."
-msgstr "Это позволяет вам искать дополнительную скорость передачи до %s."
+msgstr "Это поле позволяет искать дополнительную скорость передачи символов до %s."
 
 #, python-format
 msgid "This is the currently selected language.  [%s]"
@@ -19438,9 +19520,6 @@ msgstr "Эта опция позволяет вам выбрать, будет �
 msgid "This option allows you to choose how to display elapsed time as + or -"
 msgstr "Эта опция позволяет вам выбрать способ отображения прошедшего времени в виде + или"
 
-msgid "This option allows you to choose how to display remaining time, or elapsed time, or both."
-msgstr "Эта опция позволяет выбрать способ отображения оставшегося времени, прошедшего времени или и того, и другого."
-
 msgid "This option allows you choose the background color of transparent picons."
 msgstr "Эта опция позволяет выбрать цвет фона для прозрачных пиконов."
 
@@ -19477,11 +19556,14 @@ msgstr "Эта опция позволяет вам увеличивать зе�
 msgid "This option allows you to change the virtuell loadspeaker position."
 msgstr "Эта опция позволяет Вам изменить позицию виртуального динамика."
 
-msgid "This option allows you to choose how to display elapsed time. As + or -"
-msgstr "Эта опция позволяет вам выбрать способ отображения прошедшего времени. Как + или -"
-
 msgid "This option allows you to choose how to display standard defintion video on your TV."
 msgstr "Позволяет выбрать, как отображать прошедшее время (как '+' или как '-')"
+
+msgid "This option allows you to choose how to display remaining time, or elapsed time, or both."
+msgstr "Эта опция позволяет выбрать способ отображения оставшегося времени, прошедшего времени или и того, и другого."
+
+msgid "This option allows you choose how to display elapsed time as + or -"
+msgstr "Эта опция позволяет вам выбрать способ отображения прошедшего времени в виде + или -"
 
 msgid "This option allows you to choose how to display the remaining/elapsed time for Media playback."
 msgstr "Этот параметр позволяет выбрать способ отображения оставшегося/прошедшего времени для воспроизведения мультимедиа."
@@ -19491,6 +19573,9 @@ msgstr "Эта опция позволяет вам выбрать,как ото
 
 msgid "This option allows you to choose how to display the remaining/elapsed time for media playback."
 msgstr "Этот параметр позволяет выбрать способ отображения оставшегося/прошедшего времени для воспроизведения мультимедиа."
+
+msgid "This option allows you to choose from the two channel lists that are available."
+msgstr "Эта опция позволяет выбрать один из двух доступных списков каналов."
 
 msgid "This option allows you to choose whether or not to display genre information for the event."
 msgstr "Эта опция позволяет вам выбрать, отображать ли информацию о жанре для события."
@@ -19605,6 +19690,9 @@ msgstr "Этот параметр устанавливает контрастн�
 
 msgid "This option sets the picture brightness."
 msgstr "Этот параметр определяет яркость изображения."
+
+msgid "This option sets the picture color space."
+msgstr "Эта опция задает цветовое пространство изображения."
 
 msgid "This option sets the picture flesh tones."
 msgstr "Этот параметр подстраивает телесные тона в изображении."
@@ -20816,6 +20904,9 @@ msgstr "Использовать эти настройки?"
 msgid "Use this video enhancement settings?"
 msgstr "Использовать эти видео настройки улучшения?"
 
+msgid "Use time jumps for fast forward/backward"
+msgstr "Быстрая перемотка вперёд/назад по шагам"
+
 msgid "Use this option to select if debug logs of internal enigma2 activities are created.  These logs can be helpful for developers in finding and fixing problems."
 msgstr "Используйте эту опцию,чтобы выбрать,будут ли создаваться журналы отладки внутренних действий enigma2.  Эти журналы могут быть полезны разработчикам при поиске и устранении проблем."
 
@@ -21736,22 +21827,22 @@ msgid "When enabled, then when changing bouquets, set the cursor on the service 
 msgstr "Если включено, то при смене букетов установить курсор на сервис из истории каналов в списке выбора каналов."
 
 msgid "When enabled, the receiver will select an AC3 track (when available)."
-msgstr "Если включено,то ресивер будет использовать аудио дорожку AC3 (если доступно)."
+msgstr "Если эта функция включена, то ресивер будет использовать AC3 дорожку (если она есть)."
 
 msgid "When enabled, the receiver will select an AC3+ track (when available)."
-msgstr "Если включено,то ресивер будет использовать аудио дорожку AC3+ (если доступно)."
+msgstr "Если эта функция включена, то ресивер будет использовать AC3+ дорожку (если она есть)."
 
 msgid "When enabled, this setting has more weight than 'Preferred tuner for recordings'."
-msgstr "Когда включен этот параметр,то он имеет большее предпочтение чем 'Приоритетный тюнер для записей'."
+msgstr "Если включено, то этот параметр значит больше чем 'Приоритетный тюнер для записи'."
 
 msgid "When enabled, this setting has more weight than 'Preferred tuner'."
-msgstr "Когда включен этот параметр,то он имеет большее предпочтение чем 'Приоритетный тюнер'."
+msgstr "Если включено, то этот параметр значит больше чем 'Приоритетный тюнер'."
 
-msgid "When enabled, timeshift starts automatically in background after the specified time."
-msgstr "Если этот параметр включен, функция временного сдвига запускается автоматически в фоновом режиме по истечении указанного времени."
+msgid "When enabled, time shift starts automatically in background after specified time."
+msgstr "При включении таймшифт автоматически будет запущен в фоновом режиме через заданное время."
 
 msgid "When enabled, use DHCP for the IP configuration."
-msgstr "Если включено,используйте DHCP для конфигурации IP."
+msgstr "Если этот параметр включен, используйте DHCP для конфигурации IP."
 
 msgid "When enabled, your %s %s will automatically use the audio track which you selected before."
 msgstr "Если этот параметр включен,ваш %s %s будет автоматически использовать звуковую дорожку,которую вы выбрали ранее."
@@ -21786,6 +21877,9 @@ msgstr "Когда ресивер выходит из режима ожидан�
 msgid "When selected this allows video modes to be selected even if they are not reported as supported."
 msgstr "Если включено, то это позволяет выбирать режим видео, даже если он является неподдерживаемым."
 
+msgid "When set to 'Yes', all locations where SNR is displayed in dB's will show an SNR percentage, and vice versa."
+msgstr "Если установлено значение «Да», во всех местах, где SNR отображается в дБ, будет отображаться процент SNR, и наоборот."
+
 msgid "When set the PIG will return to live after a movie has stopped playing."
 msgstr "После установки PIG возвращается в режим реального времени после прекращения воспроизведения фильма."
 
@@ -21800,6 +21894,9 @@ msgstr "Когда изображение на канале имеет соот�
 
 msgid "When the content has an aspect ratio of 4:3, choose whether to scale/stretch the picture."
 msgstr "Когда изображение на канале имеет соотношение сторон 4:3, выберите, следует ли масштабировать/растянуть картинку."
+
+msgid "When the input cursor reaches this point (percentage of the width, from either side) scroll the text to the cursor."
+msgstr "Когда курсор ввода достигает этой точки (процент ширины с любой стороны), прокрутите текст до курсора."
 
 msgid "When the receiver wakes from standby or deep standby, it will send a command to the TV to bring it out of standby too."
 msgstr "Когда ресивер выходит из режима ожидания или режима глубокого ожидания, он отправляет команду на ТВ, чтобы вывести его из режима ожидания."
@@ -22201,12 +22298,12 @@ msgid "Your receiver is not connected to the internet, please check your network
 msgstr "Ваш ресивер не подключен к Интернету, проверьте настройки сети и попробуйте снова."
 
 msgid ""
-"Your [BRANDMODEL] is now ready to use.\n"
+"Your %s %s is now ready to use.\n"
 "\n"
 "Your internet connection is working.\n"
 "\n"
 msgstr ""
-"Ваш [BRANDMODEL] теперь готова к использованию.\n"
+"Ваш %s %s теперь готова к использованию.\n"
 "\n"
 "Ваше интернет-соединение работает.\n"
 
@@ -22257,7 +22354,7 @@ msgstr "В Вашем ресивере обнаружена проблема с 
 
 msgid ""
 "Your receiver will be restarted after the removal of the service\n"
-"Do you want to remove the service now ?"
+"Do you want to remove the service now?"
 msgstr ""
 "Ваш ресивер будет перезагружен после нажатия кнопки OK на Вашем пульте Д/У.\n"
 "Вы хотите удалить сервис сейчас?"
@@ -22330,6 +22427,9 @@ msgstr "Переключить на просматриваемый канал?"
 msgid "Zap back to service before positioner setup?"
 msgstr "Переключить на канал, прежде чем продолжить настройку позиционера?"
 
+msgid "Zap back to service before tuner setup?"
+msgstr "Переключить на канал, прежде чем продолжить настройку тюнера?"
+
 msgid "Zap bouquets blindly on zap buttons"
 msgstr "Смена букетов без выбора канала"
 
@@ -22385,7 +22485,7 @@ msgid "Zap to next service in the history"
 msgstr "Перейти к следующему каналу в истории"
 
 msgid "Zap to previous service"
-msgstr "Перейти к предыдущему каналу"
+msgstr "Переключить на предыдущий канал"
 
 msgid "Zap to previous service in the history"
 msgstr "Перейти к предыдущему каналу в истории"
