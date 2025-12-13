@@ -59,7 +59,7 @@ class Session:
 		self.in_exec = False
 		self.screen = SessionGlobals(self)
 		from Components.FrontPanelLed import frontPanelLed
-		frontPanelLed.init(self)
+		frontPanelLed.setSession(self)
 		self.allDialogs = []
 
 		for plugin in plugins.getPlugins(PluginDescriptor.WHERE_SESSIONSTART):
@@ -365,10 +365,10 @@ def runScreenTest():
 	Tools.Trashcan.init(session)
 	enigma.eProfileWrite("RunReactor")
 	enigma.eProfileDone()
-	from Components.FrontPanelLed import FrontPanelLed
+	from Components.FrontPanelLed import frontPanelLed
 	runReactor()
 	session.shutdown = True
-	FrontPanelLed.shutdown()
+	frontPanelLed.shutdown()
 	print("[StartEnigma] Normal shutdown.")
 	config.misc.startCounter.save()
 	from Screens.SleepTimerEdit import isNextWakeupTime
