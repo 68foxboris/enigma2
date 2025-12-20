@@ -39,10 +39,10 @@ fonts = {  # Dictionary of predefined and skin defined font aliases.
 	"Body": ("Regular", 18, 22, 16),
 	"ChoiceList": ("Regular", 20, 24, 18)
 }
-parameters = {}  # Dictionary of skin parameters used to modify code behavior.
-screens = {}  # Dictionary of images associated with screen entries.
 menus = {}  # Dictionary of images associated with menu entries.
 menuicons = {}  # Dictionary of icons associated with menu items.
+parameters = {}  # Dictionary of skin parameters used to modify code behavior.
+screens = {}  # Dictionary of images associated with screen entries.
 setups = {}  # Dictionary of images associated with setup menus.
 switchPixmap = {}  # Dictionary of switch images.
 windowStyles = {}  # Dictionary of window styles for each screen ID.
@@ -1386,7 +1386,7 @@ def applyAllAttributes(guiObject, desktop, attributes, scale=((1, 1), (1, 1))):
 def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN):
 	"""Loads skin data like colors, windowstyle etc."""
 	assert domSkin.tag == "skin", "root element in skin must be 'skin'!"
-	global colors, fonts, menus, menuicons, parameters, setups, screens, switchPixmap, resolutions, scrollLabelStyle, subtitleFonts
+	global colors, fonts, menus, parameters, setups, screens, switchPixmap, resolutions, scrollLabelStyle, subtitleFonts
 	for tag in domSkin.findall("output"):
 		scrnID = parseInteger(tag.attrib.get("id", GUI_SKIN_ID), GUI_SKIN_ID)
 		if scrnID == GUI_SKIN_ID:
@@ -1396,7 +1396,54 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 				bpp = parseInteger(res.attrib.get("bpp", 32), 32)
 				resolutions[scrnID] = (xres, yres, bpp)
 				if bpp != 32:
-					pass  # Load palette. (Not yet implemented!)
+					pass  # Load palette (Not yet implemented!)
+
+				# Only add font aliases here for lists that are not part of enigma2 repo.
+				# Font aliases for modules in this repository should be dealt with directly in the corresponding py, not here.
+				fonts["ImsSelectionList"] = applySkinFactor("Regular", 22, 30)
+				fonts["PartnerBoxBouquetList0"] = applySkinFactor("Regular", 20, 30)
+				fonts["PartnerBoxBouquetList1"] = applySkinFactor("Regular", 18)
+				fonts["PartnerBoxChannelList0"] = applySkinFactor("Regular", 20, 70)
+				fonts["PartnerBoxChannelList1"] = applySkinFactor("Regular", 18)
+				fonts["PartnerBoxChannelEPGList0"] = applySkinFactor("Regular", 22, 30)
+				fonts["PartnerBoxE2TimerMenu0"] = applySkinFactor("Regular", 20, 70)
+				fonts["PartnerBoxE2TimerMenu1"] = applySkinFactor("Regular", 18)
+				fonts["PartnerBoxEntryList0"] = applySkinFactor("Regular", 20, 30)
+				fonts["PartnerBoxEntryList1"] = applySkinFactor("Regular", 18)
+
+				# Only add parameters here for lists that are not part of enigma2 repo.
+				# Parameters for modules in this repository should be dealt with directly in the corresponding py, not here.
+				parameters["AutotimerListChannels"] = applySkinFactor(2, 40, 3, 21)
+				parameters["AutotimerListDays"] = applySkinFactor(1, 26, 3, 17)
+				parameters["AutotimerListHasTimespan"] = applySkinFactor(103, 3, 100, 17)
+				parameters["AutotimerListIcon"] = applySkinFactor(2, -1, 24, 24)
+				parameters["AutotimerListRectypeicon"] = applySkinFactor(26, 3, 20, 20)
+				parameters["AutotimerListTimerName"] = applySkinFactor(50, 3, 18, 21)
+				parameters["AutotimerListTimespan"] = applySkinFactor(2, 26, 3, 17)
+				parameters["DreamexplorerIcon"] = applySkinFactor(12, 3, 20, 20)
+				parameters["DreamexplorerName"] = applySkinFactor(40, 2, 1000, 22)
+				parameters["ExpandableListCategory"] = applySkinFactor(45, 0, 655, 25)
+				parameters["ExpandableListIcon"] = applySkinFactor(5, 0, 30, 25)
+				parameters["ExpandableListItem"] = applySkinFactor(80, 3, 620, 25)
+				parameters["ExpandableListLock"] = applySkinFactor(45, 1, 25, 24)
+				parameters["PartnerBoxBouquetListName"] = applySkinFactor(0, 0, 30)
+				parameters["PartnerBoxChannelListName"] = applySkinFactor(0, 0, 30)
+				parameters["PartnerBoxChannelListTime"] = applySkinFactor(0, 50, 150, 20)
+				parameters["PartnerBoxChannelListTitle"] = applySkinFactor(0, 30, 20)
+				parameters["PartnerBoxE1TimerState"] = applySkinFactor(170, 50, 170, 20)
+				parameters["PartnerBoxE1TimerTime"] = applySkinFactor(0, 50, 170, 20)
+				parameters["PartnerBoxE2TimerIcon"] = applySkinFactor(510, 5, 20, 20)
+				parameters["PartnerBoxE2TimerIconRepeat"] = applySkinFactor(510, 30, 20, 20)
+				parameters["PartnerBoxE2TimerState"] = applySkinFactor(150, 50, 150, 20)
+				parameters["PartnerBoxE2TimerTime"] = applySkinFactor(0, 50, 150, 20)
+				parameters["PartnerBoxEntryListName"] = applySkinFactor(5, 0, 150, 25)
+				parameters["PartnerBoxEntryListIP"] = applySkinFactor(120, 0, 150, 25)
+				parameters["PartnerBoxEntryListPort"] = applySkinFactor(270, 0, 100, 25)
+				parameters["PartnerBoxEntryListType"] = applySkinFactor(410, 0, 100, 25)
+				parameters["PartnerBoxTimerName"] = applySkinFactor(0, 30, 20)
+				parameters["PartnerBoxTimerServicename"] = applySkinFactor(0, 0, 30)
+				parameters["SHOUTcastListItem"] = applySkinFactor(20, 18, 22, 69, 20, 23, 43, 22)
+
 	for tag in domSkin.findall("include"):
 		filename = tag.attrib.get("filename")
 		try:
