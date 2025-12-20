@@ -6115,8 +6115,8 @@ msgstr "Настройки DNS"
 msgid "DNS data source"
 msgstr "Источник данных DNS"
 
-msgid "DNS mode"
-msgstr "Режим DNS"
+msgid "DNS protocol mode"
+msgstr "Режим протокола DNS"
 
 msgid "DNS name or IP address"
 msgstr "DNS-имя или IP-адрес"
@@ -6461,9 +6461,6 @@ msgstr "Дефолт+Пикон"
 
 msgid "Define additional delay in milliseconds before start of http(s) streams, e.g. to connect a remote tuner, you use a complex system of DiSEqC."
 msgstr "Определите дополнительную задержку в миллисекундах перед запуском потоков http(s), например. для подключения удаленного тюнера используется сложная система DiSEqC."
-
-msgid "Define the DNS suffix."
-msgstr "Задайте DNS-суффикс."
 
 msgid "Define the custom mountpoint for the device."
 msgstr "Определите пользовательскую точку монтирования для устройства."
@@ -16172,8 +16169,8 @@ msgstr "Выберите каталог, куда будут устанавли�
 msgid "Select the method of restoring screen resolution and framebuffer when leaving teletext."
 msgstr "Выберите способ восстановления разрешения экрана и видеобуфера (framebuffer) после выхода из телетекста."
 
-msgid "Select the mode of the DNS."
-msgstr "Выберите режим DNS."
+msgid "Select whether IPv4, IPv6, or both protocols should be used. If both are enabled then which should be preferred."
+msgstr "Выберите, какой протокол следует использовать: IPv4, IPv6 или оба. Если оба протокола включены, то какой из них следует предпочесть."
 
 msgid "Select the model number of your SCR device. If the model number is not listed, set 'SCR' to 'user defined' and enter the device parameters manually according to its spec sheet."
 msgstr "Выберите номер модели вашего устройства SCR. Если номер модели отсутствует в списке, установите для параметра «SCR» значение «определено пользователем» и введите параметры устройства вручную в соответствии со спецификацией."
@@ -16229,8 +16226,8 @@ msgstr "Выберите порядок сортировки пунктов ме
 msgid "Select the sort order of the menu entries. User defined also allows the menu entries to be hidden."
 msgstr "Выберите порядок сортировки пунктов меню. Определяемый пользователем также позволяет скрывать пункты меню."
 
-msgid "Select the source of the default DNS settings."
-msgstr "Выберите источник настроек DNS по умолчанию."
+msgid "Select the the DNS server/servers that will be used to resolve host lookups."
+msgstr "Выберите DNS-сервер(ы), которые будут использоваться для разрешения запросов к хостам."
 
 msgid "Select the shifted character set for the next character only"
 msgstr "Выберите набор символов со сдвигом виртуальной клавиатуры только для следующего символа"
@@ -18270,6 +18267,9 @@ msgstr "Установите окончание экстра периода дл
 
 msgid "Specify the extra start time when the inactivity sleeptimer should be ignored"
 msgstr "Установите начало экстра периода для игнорирования действия таймера неактивности"
+
+msgid "Specify the network DNS suffix to be applied when only the host name is provided. This helps the DNS resolver find the requested host."
+msgstr "Укажите сетевой DNS-суффикс, который будет применяться, если указано только имя хоста. Это поможет DNS-резолверу найти запрошенный хост."
 
 msgid "Specify the start time to ignore the shutdown timer when the receiver is in standby mode"
 msgstr "Установите начало периода для игнорирования действия выключения ресивера в режиме ожидания"
