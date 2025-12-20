@@ -162,19 +162,14 @@ def InitSkins():
 def loadSkin(filename, scope=SCOPE_SKINS, desktop=getDesktop(GUI_SKIN_ID), screenID=GUI_SKIN_ID):
 	global windowStyles, resolutions
 	filename = resolveFilename(scope, filename)
-	lines = []
-	lines = fileReadLines(resolveFilename(SCOPE_CONFIG, "settings"), default=lines, source=MODULE_NAME)
-	debugMode = "config.crash.debugSkin=True" in lines
-	if debugMode:
-		print(f"[Skin] Loading skin file '{filename}'.")
+	print(f"[Skin] Loading skin file '{filename}'.")
 	domSkin = fileReadXML(filename, source=MODULE_NAME)
 	if domSkin is not None:
 		# For loadSingleSkinData colors, bordersets etc. are applied one after
 		# the other in order of ascending priority.
 		loadSingleSkinData(desktop, screenID, domSkin, filename, scope=scope)
 		resolution = resolutions.get(screenID, (0, 0, 0))
-		if debugMode:
-			print(f"[Skin] Skin resolution is {resolution[0]}x{resolution[1]} and color depth is {resolution[2]} bits.")
+		print(f"[Skin] Skin resolution is {resolution[0]}x{resolution[1]} and color depth is {resolution[2]} bits.")
 		for element in domSkin:
 			if element.tag == "screen":  # Process all screen elements.
 				name = element.attrib.get("name")
@@ -198,8 +193,7 @@ def loadSkin(filename, scope=SCOPE_SKINS, desktop=getDesktop(GUI_SKIN_ID), scree
 					if config.crash.debugScreens.value:
 						print(f"[Skin] This skin has a windowstyle for screen ID='{scrnID}'.")
 			# Element is not a screen or windowstyle element so no need for it any longer.
-		if debugMode:
-			print(f"[Skin] Loading skin file '{filename}' complete.")
+		print(f"[Skin] Loading skin file '{filename}' complete.")
 		if runCallbacks:
 			for method in callbacks:
 				if method:
@@ -1403,64 +1397,6 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 				resolutions[scrnID] = (xres, yres, bpp)
 				if bpp != 32:
 					pass  # Load palette. (Not yet implemented!)
-				if yres >= 1080:
-					parameters["AboutHddSplit"] = 1
-					parameters["AutotimerListChannels"] = (2, 60, 4, 32)
-					parameters["AutotimerListDays"] = (1, 40, 5, 25)
-					parameters["AutotimerListHasTimespan"] = (154, 4, 150, 25)
-					parameters["AutotimerListIcon"] = (3, -1, 36, 36)
-					parameters["AutotimerListRectypeicon"] = (39, 4, 30, 30)
-					parameters["AutotimerListTimerName"] = (76, 4, 26, 32)
-					parameters["AutotimerListTimespan"] = (2, 40, 5, 25)
-					parameters["ChoicelistDash"] = (0, 3, 1000, 30)
-					parameters["ChoicelistIcon"] = (7, 0, 52, 38)
-					parameters["ChoicelistName"] = (68, 3, 1000, 32)
-					parameters["ChoicelistNameSingle"] = (7, 3, 1000, 32)
-					parameters["ConfigListSeperator"] = 500
-					parameters["DreamexplorerIcon"] = (15, 4, 30, 30)
-					parameters["DreamexplorerName"] = (62, 0, 1200, 38)
-					parameters["FileListIcon"] = (7, 4, 52, 37)
-					parameters["FileListMultiIcon"] = (45, 4, 30, 30)
-					parameters["FileListMultiLock"] = (2, 0, 36, 36)
-					parameters["FileListMultiName"] = (90, 3, 1000, 32)
-					parameters["FileListName"] = (68, 4, 1000, 34)
-					parameters["HelpMenuListExtHlp0"] = (0, 0, 900, 39)
-					parameters["HelpMenuListExtHlp1"] = (0, 42, 900, 30)
-					parameters["HelpMenuListHlp"] = (0, 0, 900, 42)
-					parameters["PartnerBoxBouquetListName"] = (0, 0, 45)
-					parameters["PartnerBoxChannelListName"] = (0, 0, 45)
-					parameters["PartnerBoxChannelListTime"] = (0, 78, 225, 30)
-					parameters["PartnerBoxChannelListTitle"] = (0, 42, 30)
-					parameters["PartnerBoxE1TimerState"] = (255, 78, 255, 30)
-					parameters["PartnerBoxE1TimerTime"] = (0, 78, 255, 30)
-					parameters["PartnerBoxE2TimerIcon"] = (1050, 8, 20, 20)
-					parameters["PartnerBoxE2TimerIconRepeat"] = (1050, 38, 20, 20)
-					parameters["PartnerBoxE2TimerState"] = (225, 78, 225, 30)
-					parameters["PartnerBoxE2TimerTime"] = (0, 78, 225, 30)
-					parameters["PartnerBoxEntryListIP"] = (180, 2, 225, 38)
-					parameters["PartnerBoxEntryListName"] = (8, 2, 225, 38)
-					parameters["PartnerBoxEntryListPort"] = (405, 2, 150, 38)
-					parameters["PartnerBoxEntryListType"] = (615, 2, 150, 38)
-					parameters["PartnerBoxTimerName"] = (0, 42, 30)
-					parameters["PartnerBoxTimerServicename"] = (0, 0, 45)
-					parameters["PicturePlayerThumb"] = (30, 285, 45, 300, 30, 25)
-					parameters["PlayListIcon"] = (7, 7, 24, 24)
-					parameters["PlayListName"] = (38, 2, 1000, 34)
-					parameters["PluginBrowserDescr"] = (180, 42, 25)
-					parameters["PluginBrowserDownloadDescr"] = (120, 42, 25)
-					parameters["PluginBrowserDownloadIcon"] = (15, 0, 90, 76)
-					parameters["PluginBrowserDownloadName"] = (120, 8, 38)
-					parameters["PluginBrowserIcon"] = (15, 8, 150, 60)
-					parameters["PluginBrowserName"] = (180, 8, 38)
-					parameters["SHOUTcastListItem"] = (30, 27, 35, 96, 35, 33, 60, 32)
-					parameters["SelectionListDescr"] = (45, 6, 1000, 45)
-					parameters["SelectionListLock"] = (0, 2, 36, 36)
-					parameters["ServiceInfoLeft"] = (0, 0, 450, 45)
-					parameters["ServiceInfoRight"] = (450, 0, 1000, 45)
-					parameters["VirtualKeyBoard"] = (68, 68)
-					parameters["VirtualKeyBoardAlignment"] = (0, 0)
-					parameters["VirtualKeyBoardPadding"] = (7, 7)
-					parameters["VirtualKeyBoardShiftColors"] = (0x00ffffff, 0x00ffffff, 0x0000ffff, 0x00ff00ff)
 	for tag in domSkin.findall("include"):
 		filename = tag.attrib.get("filename")
 		try:
@@ -1529,15 +1465,6 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 				parameters[name] = list(map(parseParameter, [x.strip() for x in value.split(",")])) if "," in value else parseParameter(value)
 			else:
 				skinError(f"Tag 'parameter' needs a name and value, got name='{name}' and size='{value}'")
-	for tag in domSkin.findall("screens"):
-		for screen in tag.findall("screen"):
-			key = screen.attrib.get("key")
-			image = screen.attrib.get("image")
-			if key and image is not None:
-				screens[key] = image
-				# print(f"[Skin] DEBUG: Screen key='{key}', image='{image}'.")
-			else:
-				skinError(f"Tag 'screen' needs key and image, got key='{key}' and image='{image}'")
 	for tag in domSkin.findall("menus"):
 		for menu in tag.findall("menu"):
 			key = menu.attrib.get("key")
@@ -1556,6 +1483,15 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 				# print(f"[Skin] DEBUG: Menuicon key='{key}', image='{image}'.")
 			else:
 				skinError(f"Tag 'menuicon' needs key and image, got key='{key}' and image='{image}'")
+	for tag in domSkin.findall("screens"):
+		for screen in tag.findall("screen"):
+			key = screen.attrib.get("key")
+			image = screen.attrib.get("image")
+			if key and image:
+				screens[key] = image
+				# print("[Skin] DEBUG: Screen key='%s', image='%s'." % (key, image))
+			else:
+				raise SkinError("Tag 'screen' needs key and image, got key='%s' and image='%s'" % (key, image))
 	for tag in domSkin.findall("setups"):
 		for setup in tag.findall("setup"):
 			key = setup.attrib.get("key")
@@ -2324,9 +2260,9 @@ def readSkin(screen, skin, names, desktop):
 		# widgets (source->renderer).
 		widgetName = widget.attrib.get("name")
 		widgetSource = widget.attrib.get("source")
+		wconnection = widget.attrib.get("connection")
 		widgetConnection = widget.attrib.get("connection")
 		widgetClass = widget.attrib.get("addon")
-		source = None
 		if widgetName is None and widgetSource is None and widgetClass is None:
 			raise SkinError("The widget has no addon, name or source")
 		if widgetName:
@@ -2335,10 +2271,7 @@ def readSkin(screen, skin, names, desktop):
 			try:  # Get corresponding "gui" object.
 				attributes = screen[widgetName].skinAttributes = []
 			except Exception:
-				if config.crash.debugScreens.value:
-					raise SkinError(f"Component with name '{widgetName}' was not found in skin of screen '{myName}'")
-				else:
-					pass
+				raise SkinError(f"Component with name '{widgetName}' was not found in skin of screen '{myName}'")
 			# assert screen[widgetName] is not Source
 			collectAttributes(attributes, widget, context, skinPath, ignore=("name",))
 			screen[widgetName] = proccesStackAddition(widget, stack, screen[widgetName])
@@ -2421,6 +2354,7 @@ def readSkin(screen, skin, names, desktop):
 			renderer = rendererClass()  # Instantiate renderer.
 			if source:
 				renderer.connect(source)  # Connect to source.
+			renderer.label_name = widgetSource or widgetName  # allows that it can be checked a label exists in the skin
 			attributes = renderer.skinAttributes = []
 			collectAttributes(attributes, widget, context, skinPath, ignore=("render", "source"))
 			renderer = proccesStackAddition(widget, stack, renderer)
@@ -2602,28 +2536,6 @@ def readSkin(screen, skin, names, desktop):
 	usedComponents = None
 
 
-# Search the domScreens dictionary to see if any of the screen names provided
-# have a skin based screen.  This will allow coders to know if the named
-# screen will be skinned by the skin code.  A return of None implies that the
-# code must provide its own skin for the screen to be displayed to the user.
-#
-def findSkinScreen(names):
-	if not isinstance(names, list):
-		names = [names]
-	for name in names:  # Try all names given, the first one found is the one that will be used by the skin engine.
-		screen, path = domScreens.get(name, (None, None))
-		if screen:  # is not None:
-			return name
-	return None
-def dump(x, i=0):
-	print(" " * i + str(x))
-	try:
-		for node in x.childNodes:
-			dump(node, i + 1)
-	except Exception:
-		pass
-
-
 # Return a set of all the widgets found in a screen. Panels will be expanded
 # recursively until all referenced widgets are captured. This code only performs
 # a simple scan of the XML and no skin processing is performed.
@@ -2635,10 +2547,10 @@ def findWidgets(name):
 		widgets = element.findall("widget")
 		if widgets is not None:
 			for widget in widgets:
-				name = widget.get("name")
+				name = widget.get("name", None)
 				if name is not None:
 					widgetSet.add(name)
-				source = widget.get("source")
+				source = widget.get("source", None)
 				if source is not None:
 					widgetSet.add(source)
 				addonConnection = widget.get("connection")
@@ -2648,8 +2560,8 @@ def findWidgets(name):
 		panels = element.findall("panel")
 		if panels is not None:
 			for panel in panels:
-				name = panel.get("name")
-				if name is not None:
+				name = panel.get("name", None)
+				if name:
 					widgetSet.update(findWidgets(name))
 	return widgetSet
 
@@ -2678,13 +2590,35 @@ def getScrollLabelStyle(element):
 # default screen resolution of HD (720p).  That is the scale factor for a HD
 # screen will be 1.
 #
-# NOTE: This function is deprecated for openPLI!
-#
 def getSkinFactor(screen=GUI_SKIN_ID):
 	skinfactor = getDesktop(screen).size().height() / 720.0
 	# if skinfactor not in [0.8, 1, 1.5, 3, 6]:
 	# 	print(f"[Skin] Warning: Unexpected result for getSkinFactor '{skinfactor:.4f}'!")
 	return skinfactor
+
+
+# Search the domScreens dictionary to see if any of the screen names provided
+# have a skin based screen.  This will allow coders to know if the named
+# screen will be skinned by the skin code.  A return of None implies that the
+# code must provide its own skin for the screen to be displayed to the user.
+#
+def findSkinScreen(names):
+	if not isinstance(names, list):
+		names = [names]
+	for name in names:  # Try all names given, the first one found is the one that will be used by the skin engine.
+		screen, path = domScreens.get(name, (None, None))
+		if screen is not None:
+			return name
+	return None
+
+
+def dump(x, i=0):
+	print(" " * i + str(x))
+	try:
+		for node in x.childNodes:
+			dump(node, i + 1)
+	except Exception:
+		pass
 
 
 def applySkinFactor(*d):
