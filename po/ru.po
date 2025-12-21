@@ -2151,6 +2151,15 @@ msgstr "Активный"
 msgid "Active clients"
 msgstr "Активные клиенты"
 
+msgid "AdGuard DNS (Ads/Trackers)"
+msgstr "AdGuard DNS (реклама/трекеры)"
+
+msgid "AdGuard DNS (Family)"
+msgstr "AdGuard DNS (семейство)"
+
+msgid "AdGuard DNS (Unfiltered)"
+msgstr "AdGuard DNS (без фильтрации)"
+
 msgid "Adapter Settings"
 msgstr "Настройка адаптера"
 
@@ -3970,6 +3979,15 @@ msgstr "Помощник CI+"
 msgid "CI+ Helper*"
 msgstr "Помощник* CI+"
 
+msgid "CIRA Canadian Shield (Family)"
+msgstr "CIRA Canadian Shield (семейство)"
+
+msgid "CIRA Canadian Shield (Private)"
+msgstr "CIRA Canadian Shield (Частный)"
+
+msgid "CIRA Canadian Shield (Protected)"
+msgstr "CIRA Canadian Shield (защищенный)"
+
 msgid "CIFS/Samba Setup"
 msgstr "Настройки CIFS/Samba"
 
@@ -4834,6 +4852,15 @@ msgstr "Очистить и удалить все завершённые тай�
 msgid "Clean up and remove all completed timers?"
 msgstr "Очистить и удалить все завершённые таймеры?"
 
+msgid "CleanBrowsing (Adult Filter)"
+msgstr "CleanBrowsing (фильтр для взрослых)"
+
+msgid "CleanBrowsing (Family Filter)"
+msgstr "CleanBrowsing (семейный фильтр)"
+
+msgid "CleanBrowsing (Security Filter)"
+msgstr "CleanBrowsing (фильтр безопасности)"
+
 msgid "Cleaning Trashes"
 msgstr "Очистить корзину"
 
@@ -5694,6 +5721,21 @@ msgstr "Продолжить воспроизведение (в цикле)"
 msgid "Contrast"
 msgstr "Контрастность"
 
+msgid "Control D (Ads + Tracking)"
+msgstr "Control D (Реклама + отслеживание)"
+
+msgid "Control D (Family Friendly)"
+msgstr "Вариант D (подходит для семейного просмотра)"
+
+msgid "Control D (Malware)"
+msgstr "Control D (вредоносное ПО)"
+
+msgid "Control D (Uncensored)"
+msgstr "Control D (без цензуры)"
+
+msgid "Control D (Unfiltered)"
+msgstr "Control D (без фильтра)"
+
 msgid "Control LED can be turned on or off here."
 msgstr "Здесь можно включить или выключить светодиод управления."
 
@@ -6123,6 +6165,9 @@ msgstr "DNS-имя или IP-адрес"
 
 msgid "DNS suffix"
 msgstr "DNS-суффикс"
+
+msgid "DNS.WATCH (Uncensored)"
+msgstr "DNS.WATCH (без цензуры)"
 
 msgid ""
 "DO NOT POWER OFF YOUR DEVICE WHILE UPDATING!\n"
@@ -9421,8 +9466,8 @@ msgstr "Перейти вверх списка"
 msgid "Gold"
 msgstr "Золотой"
 
-msgid "Google DNS"
-msgstr "Google DNS"
+msgid "Google Public DNS"
+msgstr "Google Public DNS"
 
 msgid "Goto"
 msgstr "Переход"
@@ -12979,6 +13024,9 @@ msgstr "Настройки OpenVPN"
 msgid "OpenDNS Home"
 msgstr "Главная страница OpenDNS"
 
+msgid "OpenDNS Sandbox"
+msgstr "OpenDNS Sandbox"
+
 msgid "OpenPLi Packages"
 msgstr "Пакеты OpenPLi"
 
@@ -14352,6 +14400,15 @@ msgstr "Quad PiP недоступен."
 
 msgid "Quad PiP Channel Selection"
 msgstr "Выбор канала Quad PiP"
+
+msgid "Quad9 (Malware blocking + DNSSEC)"
+msgstr "Quad9 (блокировка вредоносных программ + DNSSEC)"
+
+msgid "Quad9 (Malware blocking + ECS)"
+msgstr "Quad9 (блокировка вредоносных программ + ECS)"
+
+msgid "Quad9 (Unsecured / no blocking)"
+msgstr "Quad9 (Незащищенный / без блокировки)"
 
 msgid "Query details from the Internet Movie Database"
 msgstr "Детали запроса из базы данных фильмов в Интернете"
@@ -16169,9 +16226,6 @@ msgstr "Выберите каталог, куда будут устанавли�
 msgid "Select the method of restoring screen resolution and framebuffer when leaving teletext."
 msgstr "Выберите способ восстановления разрешения экрана и видеобуфера (framebuffer) после выхода из телетекста."
 
-msgid "Select whether IPv4, IPv6, or both protocols should be used. If both are enabled then which should be preferred."
-msgstr "Выберите, какой протокол следует использовать: IPv4, IPv6 или оба. Если оба протокола включены, то какой из них следует предпочесть."
-
 msgid "Select the model number of your SCR device. If the model number is not listed, set 'SCR' to 'user defined' and enter the device parameters manually according to its spec sheet."
 msgstr "Выберите номер модели вашего устройства SCR. Если номер модели отсутствует в списке, установите для параметра «SCR» значение «определено пользователем» и введите параметры устройства вручную в соответствии со спецификацией."
 
@@ -16226,8 +16280,8 @@ msgstr "Выберите порядок сортировки пунктов ме
 msgid "Select the sort order of the menu entries. User defined also allows the menu entries to be hidden."
 msgstr "Выберите порядок сортировки пунктов меню. Определяемый пользователем также позволяет скрывать пункты меню."
 
-msgid "Select the the DNS server/servers that will be used to resolve host lookups."
-msgstr "Выберите DNS-сервер(ы), которые будут использоваться для разрешения запросов к хостам."
+msgid "Select the DNS server(s) that will be used to lookup the host name to resolve the IP address."
+msgstr "Выберите DNS-сервер(ы), которые будут использоваться для поиска имени хоста и разрешения IP-адреса."
 
 msgid "Select the shifted character set for the next character only"
 msgstr "Выберите набор символов со сдвигом виртуальной клавиатуры только для следующего символа"
@@ -16305,6 +16359,9 @@ msgstr "Выберите видеовход кнопками вверх/вниз
 msgid "Select whether your SCR device is externally powered."
 msgstr "Выберите, имеет ли Ваше устройство SCR внешнее питание."
 
+msgid "Select whether IPv4, IPv6, or both protocols should be used. If both are enabled then which should be preferred."
+msgstr "Выберите, какой протокол следует использовать: IPv4, IPv6 или оба. Если оба протокола включены, то какой из них следует предпочесть."
+
 msgid "Select wireless network"
 msgstr "Выберите беспроводную сеть"
 
@@ -16368,6 +16425,9 @@ msgstr "Выберите «Да», если вы хотите вывести т�
 
 msgid "Select 'Yes' if you want to wake the TV for a 'Zap' recording timer is starting."
 msgstr "Выберите «Да», если вы хотите вывести телевизор из спящего режима для запуска таймера записи «Zap»."
+
+msgid "Select 'Yes' to enable DNS entry rotation. This rotation changes the order in which the list of DNS servers is used and can avoid issues if a DNS server in the list becomes unavailable."
+msgstr "Выберите «Да», чтобы включить ротацию DNS-записей. Эта ротация изменяет порядок использования списка DNS-серверов и может предотвратить проблемы, если какой-либо DNS-сервер из списка станет недоступным."
 
 msgid "Select 'Yes' to disable the ServiceHiSilicon plugin to allow use of the default internal media player code."
 msgstr "Выберите «Да», чтобы отключить плагин ServiceHiSilicon и разрешить использование внутреннего кода медиаплеера по умолчанию."
@@ -20489,6 +20549,15 @@ msgstr "Украина"
 msgid "Ukrainian"
 msgstr "Украинский"
 
+msgid "UltraDNS Public (Family Secure)"
+msgstr "UltraDNS Public (Семейная безопасность)"
+
+msgid "UltraDNS Public (Threat Protection)"
+msgstr "UltraDNS Public (защита от угроз)"
+
+msgid "UltraDNS Public (Unfiltered)"
+msgstr "UltraDNS Public (без фильтрации)"
+
 msgid "Unable to backup settings as the AutoBackup plugin is missing, do you want to continue?"
 msgstr "Не удалось выполнить бекап настроек, так как не найден плагин 'AutoBackup', Вы хотите продолжить?"
 
@@ -20728,6 +20797,9 @@ msgstr "Использовать"
 
 msgid "Use automatic mode detection"
 msgstr "Использовать автоматическое определение режима"
+
+msgid "Use DNS rotation"
+msgstr "Используйте ротацию DNS"
 
 msgid "Use 12 characters display mode"
 msgstr "Использовать режим дисплея в 12 символов"
