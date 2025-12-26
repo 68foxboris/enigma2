@@ -32,7 +32,7 @@ from Components.Sources.List import List
 from Components.Sources.StaticText import StaticText
 from Plugins.Plugin import PluginDescriptor
 from Screens.MessageBox import MessageBox
-from Screens.RestartNetwork import RestartNetworkNew
+from Screens.RestartNetwork import RestartNetwork
 from Screens.Processing import Processing
 from Screens.Screen import Screen
 from Screens.Setup import Setup
@@ -160,7 +160,7 @@ class NetworkAdapterSelection(Screen):
 
 	def setDefaultInterface(self):
 		selection = self["list"].getCurrent()
-		# num_if = len(self.list)
+		num_if = len(self.list)
 		old_default_gw = None
 		num_configured_if = len(iNetwork.getConfiguredAdapters())
 		if exists("/etc/default_gw"):
@@ -311,19 +311,14 @@ class DNSSettings(Setup):
 
 	def keySave(self):
 		iNetwork.clearNameservers()
-		if config.usage.dns.value == "dnscrypt":
-			iNetwork.addNameserver([127, 0, 0, 1])
-		elif config.usage.dns.value != "custom":
-			for value in self.dnsServers:
-				iNetwork.addNameserver(value)
-		else:
+		if config.usage.dns.value != "custom":
 			for item in self.dnsServerItems:
 				value = item[1].value
 				if value:
 					iNetwork.addNameserver(value)
 		print(f"[NetworkSetup] DNSSettings: Saved DNS list: {str(iNetwork.getNameserverList())}.")
 		iNetwork.writeNameserverConfig()
-		if config.usage.dns.value == "dnscrypt":
+		if BoxInfo.getItem("DNSCrypt"):
 			self.writeDNSCryptToml()
 		hasChanges = False
 		for notifier in self.onSave:
@@ -335,7 +330,7 @@ class DNSSettings(Setup):
 
 		if hasChanges:
 			self.saveAll()
-			RestartNetworkNew.start(callback=self.close)
+			self.session.openWithCallback(self.close, RestartNetwork)
 		else:
 			self.close()
 
@@ -419,7 +414,8 @@ class DNSSettings(Setup):
 		tomlPath = "/etc/dnscrypt-proxy/dnscrypt-proxy.toml"
 		oldLines = fileReadLines(tomlPath, source=MODULE_NAME)
 		if not oldLines:
-			print("[NetworkSetup] DNSSettings: DNSCrypt config file is missing, cannot write settings.")
+			self.session.open(MessageBox, _("Sorry DNSCrypt Config is Missing"), MessageBox.TYPE_INFO)
+			self.close()
 			return
 		found = set()
 		newLines = []
