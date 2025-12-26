@@ -2454,6 +2454,9 @@ msgstr "После записи"
 msgid "After zap"
 msgstr "После переключения"
 
+msgid "Aggregate data only"
+msgstr "Только сводные данные"
+
 msgid "Akan"
 msgstr "Акан"
 
@@ -2733,6 +2736,9 @@ msgstr "Скорость анимации индикаторов справки"
 
 msgid "Animations"
 msgstr "Анимация"
+
+msgid "Anonymize client IPs"
+msgstr "Анонимизация IP-адресов клиентов"
 
 msgid "Anime"
 msgstr "Аниме"
@@ -6148,9 +6154,6 @@ msgstr "DMM расширенный"
 msgid "DMM normal"
 msgstr "DMM стандарт"
 
-msgid "DNS (Dynamic Name Server) Actions"
-msgstr "Действия c DNS (система доменных имён)"
-
 msgid "DNS Settings"
 msgstr "Настройки DNS"
 
@@ -6165,6 +6168,12 @@ msgstr "DNS-имя или IP-адрес"
 
 msgid "DNS suffix"
 msgstr "DNS-суффикс"
+
+msgid "DNSCrypt"
+msgstr "DNSCrypt"
+
+msgid "DNSCrypt Resolver"
+msgstr "DNSCrypt Resolver"
 
 msgid "DNS.WATCH (Uncensored)"
 msgstr "DNS.WATCH (без цензуры)"
@@ -7928,6 +7937,9 @@ msgstr "Включить функцию затухания инфобара"
 
 msgid "Enable infobar fade-out"
 msgstr "Включить затухание инфобара"
+
+msgid "Enable monitoring UI"
+msgstr "Включить мониторинг UI"
 
 msgid "Enable move mode"
 msgstr "Включить режим перемещения"
@@ -11641,6 +11653,15 @@ msgstr "Понедельник"
 msgid "Mongolia"
 msgstr "Монголия"
 
+msgid "Monitoring UI password"
+msgstr "Мониторинг пароля UI"
+
+msgid "Monitoring UI port"
+msgstr "Мониторинг порта UI"
+
+msgid "Monitoring UI username"
+msgstr "Мониторинг UI имени пользователя"
+
 msgid "Montenegro"
 msgstr "Черногория"
 
@@ -12858,6 +12879,15 @@ msgstr "Только до этого времеи быстро перемеща�
 
 msgid "Only on startup"
 msgstr "Только при включении"
+
+msgid "Only use DNS servers implementing the DNS-over-HTTPS protocol. This causes DNS lookups to be made via the encrypted HTTPS protocol."
+msgstr "Используйте только DNS-серверы, реализующие протокол DNS-over-HTTPS. Это означает, что DNS-запросы будут выполняться по зашифрованному протоколу HTTPS."
+
+msgid "Only use DNS servers implementing the DNSCrypt protocol."
+msgstr "Используйте только DNS-серверы, реализующие протокол DNSCrypt."
+
+msgid "Only use DNS servers implementing the Oblivious DNS-over-HTTPS protocol. This adds another layer of privacy by adding a proxy layer to the DNS-over-HTTPS request."
+msgstr "Используйте только DNS-серверы, реализующие протокол Oblivious DNS-over-HTTPS. Это обеспечивает дополнительный уровень конфиденциальности за счет добавления прокси-сервера к запросу DNS-over-HTTPS."
 
 msgid "Only power off"
 msgstr "Только выключение"
@@ -14241,6 +14271,9 @@ msgstr "Прайм-тайм: Минута"
 
 msgid "Priority"
 msgstr "Очерёдность"
+
+msgid "Privacy level"
+msgstr "Уровень конфиденциальности"
 
 msgid "Problem starting scan"
 msgstr "Ошибка запуска поиска"
@@ -15835,6 +15868,9 @@ msgstr "Выберите режим доступа для автоматичес
 msgid "Select 'Yes' to allow each storage device detected to be automatically exported as samba share."
 msgstr "Выберите 'Да', чтобы разрешить автоматически экспортировать каждое обнаруженное устройство хранения данных как общий ресурс Samba."
 
+msgid "Select 'Yes' to enable the monitoring UI web interface for the DNSCrypt subsystem."
+msgstr "Выберите «Да», чтобы включить веб-интерфейс мониторинга подсистемы DNSCrypt."
+
 msgid "Select 'Yes' to enable AI-Powered Translation for all teletext and DVB subtitles."
 msgstr "Выберите «Да», чтобы включить функцию перевода на базе искусственного интеллекта для всех телетекстов и субтитров DVB."
 
@@ -16661,6 +16697,15 @@ msgstr "Соотношение сторон сервисных пиконов"
 msgid "Service picons downsize"
 msgstr "Сервисные иконки уменьшены"
 
+msgid "Server must not enforce its own blocklist. Some servers may implement their own blacklists to block sites for parental control, ad blocking, etc. reasons."
+msgstr "Сервер не должен применять собственный черный список. Некоторые серверы могут использовать собственные черные списки для блокировки сайтов в целях родительского контроля, блокировки рекламы и т.д."
+
+msgid "Server must not log user queries (declarative). This can improve the privacy of DNS lookups by not not logging the request on the server providing the data."
+msgstr "Сервер не должен регистрировать запросы пользователей (декларативное правило). Это может повысить конфиденциальность DNS-запросов, поскольку запрос не будет регистрироваться на сервере, предоставляющем данные."
+
+msgid "Server must support DNS Security Extensions (DNSSEC). This is a data signing option that protects the integrity of the DNS data against compromises like cache poisoning."
+msgstr "Сервер должен поддерживать расширения безопасности DNS (DNSSEC). Это опция подписи данных, которая защищает целостность данных DNS от таких угроз, как отравление кэша."
+
 msgid "Set CI assignment for detection of available services."
 msgstr "Задать назначение CI для обнаружения доступных каналов."
 
@@ -16788,8 +16833,17 @@ msgstr "Выбор способа сортировки"
 msgid "Set the jump-size of the SeekBar."
 msgstr "Задайте шаг перехода для панели перемотки."
 
+msgid "Set the password for the monitoring UI web interface."
+msgstr "Установите пароль для веб-интерфейса мониторинга."
+
 msgid "Set the password of the OpenWebif from your fallback tuner"
 msgstr "Установить пароль OpenWebif из вашего резервного ресивера"
+
+msgid "Set the port address (8080-9999) for the monitoring UI web interface."
+msgstr "Укажите адрес порта (8080-9999) для веб-интерфейса мониторинга."
+
+msgid "Set the privacy level for the monitoring UI web interface."
+msgstr "Установите уровень конфиденциальности для веб-интерфейса мониторинга."
 
 msgid "Set the port of the OpenWebif from your fallback tuner"
 msgstr "Установить порт OpenWebif из вашего резервного ресивера"
@@ -16823,6 +16877,9 @@ msgstr "Выберите тип отображения прогресса в м�
 
 msgid "Set the vertical position of subtitles, measured from the bottom of the screen."
 msgstr "Установите вертикальное положение субтитров, измеренное от нижней части экрана."
+
+msgid "Set the username for the monitoring UI web interface."
+msgstr "Укажите имя пользователя для веб-интерфейса мониторинга."
 
 #, python-format
 msgid "Set the volume level for the '%s' service."
@@ -20806,6 +20863,30 @@ msgstr "Использовать режим дисплея в 12 символо�
 
 msgid "Use DHCP"
 msgstr "Использовать DHCP"
+
+msgid "Use DNS cache"
+msgstr "Использовать кэш DNS"
+
+msgid "Use DNSCrypt servers"
+msgstr "Используйте серверы DNSCrypt"
+
+msgid "Use DoH servers"
+msgstr "Используйте серверы DoH"
+
+msgid "Use ODoH servers"
+msgstr "Используйте серверы ODoH"
+
+msgid "Use a DNS cache to locally store recent DNS lookups to improve performance, reduce latency and outgoing traffic."
+msgstr "Используйте DNS-кэш для локального хранения последних DNS-запросов, чтобы повысить производительность, уменьшить задержку и исходящий трафик."
+
+msgid "Use only DNSSEC servers"
+msgstr "Используйте только DNSSEC-серверы"
+
+msgid "Use only no-filter servers"
+msgstr "Используйте только серверы без фильтров"
+
+msgid "Use only no-log servers"
+msgstr "Используйте только серверы, на которых не ведется логирование"
 
 msgid "Use EIT EPG information when it is available."
 msgstr "Использовать информацию ТВ-гида EIT, когда она существует."
