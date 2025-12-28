@@ -2764,6 +2764,9 @@ msgstr "Примените все изменения к активной лок�
 msgid "Apply the currently highlighted locale/language and exit"
 msgstr "Применить текущую выделенную локаль/язык и выйти"
 
+msgid "Aqua"
+msgstr "Аква"
+
 msgid "Arabic"
 msgstr "Арабский"
 
@@ -2999,6 +3002,9 @@ msgid ""
 msgstr ""
 "Внимание, это повторный таймер!\n"
 "Что вы хотите сделать?"
+
+msgid "Azure"
+msgstr "Azure"
 
 msgid "Audio"
 msgstr "Аудио"
@@ -10988,6 +10994,9 @@ msgstr "Ливия"
 msgid "Liechtenstein"
 msgstr "Лихтенштейн"
 
+msgid "Lime"
+msgstr "Лайм"
+
 msgid "Limit character set for recording filenames"
 msgstr "Ограничить набор символов в именах записей"
 
@@ -11652,15 +11661,6 @@ msgstr "Понедельник"
 
 msgid "Mongolia"
 msgstr "Монголия"
-
-msgid "Monitoring UI password"
-msgstr "Мониторинг пароля UI"
-
-msgid "Monitoring UI port"
-msgstr "Мониторинг порта UI"
-
-msgid "Monitoring UI username"
-msgstr "Мониторинг UI имени пользователя"
 
 msgid "Montenegro"
 msgstr "Черногория"
@@ -13084,6 +13084,9 @@ msgstr "Включить таймер режима ожидания HDD."
 msgid "Options disable timer"
 msgstr "Варианты отключения таймера"
 
+msgid "Orange"
+msgstr "Апельсин"
+
 msgid "Orbital position"
 msgstr "Орбититальная позиция"
 
@@ -13452,7 +13455,10 @@ msgid "Pilot"
 msgstr "Пилот"
 
 msgid "Pin Userbouquet"
-msgstr ""
+msgstr "Пин Пользовательбукет"
+
+msgid "Pink"
+msgstr "Розовый"
 
 msgid "Ping device before standby"
 msgstr "Отправьте 'пинг' на устройство перед переходом в режим ожидания"
@@ -14382,6 +14388,9 @@ msgstr "Провайдеры: "
 
 msgid "Puerto Rico"
 msgstr "Пуэрто-Рико"
+
+msgid "Purple"
+msgstr "Фиолетовый"
 
 msgid "Purge"
 msgstr "Очистка"
@@ -15325,6 +15334,9 @@ msgstr "Скорость вращения мотора"
 
 msgid "Rotor: "
 msgstr "Мотор: "
+
+msgid "Rose"
+msgstr "Rose"
 
 msgid "Rowing"
 msgstr "Гребля"
@@ -16700,7 +16712,7 @@ msgstr "Сервисные иконки уменьшены"
 msgid "Server must not enforce its own blocklist. Some servers may implement their own blacklists to block sites for parental control, ad blocking, etc. reasons."
 msgstr "Сервер не должен применять собственный черный список. Некоторые серверы могут использовать собственные черные списки для блокировки сайтов в целях родительского контроля, блокировки рекламы и т.д."
 
-msgid "Server must not log user queries (declarative). This can improve the privacy of DNS lookups by not not logging the request on the server providing the data."
+msgid "Server must not log user queries (declarative). This can improve the privacy of DNS lookups by not logging the request on the server providing the data."
 msgstr "Сервер не должен регистрировать запросы пользователей (декларативное правило). Это может повысить конфиденциальность DNS-запросов, поскольку запрос не будет регистрироваться на сервере, предоставляющем данные."
 
 msgid "Server must support DNS Security Extensions (DNSSEC). This is a data signing option that protects the integrity of the DNS data against compromises like cache poisoning."
