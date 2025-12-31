@@ -309,7 +309,6 @@
 		<item level="2" text="Enable GStreamer pipeline graphs *" description="Allows you to enable the GStreamer pipeline graphs. These are .dot files that describe the topology of your pipeline, along with the caps negotiated in each link.">config.crash.gstdot</item>
 		<item level="2" text="Enable core dumps *" description="Core dumps are helpful for developers in case of a FATAL SIGNAL crash in the C++ code. Typical core dump size is 110 MB so adjust maximum space used and choose proper location.">config.crash.coredump</item>
 	</setup>
-
 	<setup key="Network" title="Network Settings">
 		<item text="Use DHCP" description="When enabled, use DHCP for the IP configuration.">config.network.dhcp</item>
 		<item text="IP address" description="Configure the IP address.">config.network.ip</item>
@@ -589,6 +588,9 @@
 		<item level="0" text="Add legacy LEFT/RIGHT actions" description="Select 'Yes' to enable use of the LEFT/RIGHT buttons to move PageUp/PageDown when the LEFT/RIGHT buttons are otherwise undefined. This provides legacy navigation for users who prefer it.">config.misc.actionLeftRightToPageUpPageDown</item>
 		<item level="1" text="Sort Extension Menu" description="Select the sort order of the Extension Menu entries.">config.usage.sortExtensionslist</item>
 		<item level="2" text="Show softcam setup in extensions menu" description="This option allows you to add the softcam setup in the extensions menu." requires="HasSoftcamInstalled">config.misc.softcam_setup.extension_menu</item>
+		<item level="1" text="Zap key delay for channel number input" description="In live view wait this many seconds after a numeric key press before assuming the required channel number has been entered. Default: 5 seconds. Setting zero will require confirmation with 'OK'. ">config.misc.zapkey_delay</item>
+		<item level="1" text="Zap history sequence" description="Select the display sequence of previously visited services." requires="config.usage.historymode">config.usage.zapHistorySort</item>
+		<item level="1" text="History buttons mode" description="Configure the function of the &lt;  &gt; buttons.">config.usage.historymode</item>
 		<item level="1" text="Zap mode" requires="ZapMode" description="Configure the way in which the receiver changes channels.">config.misc.zapmode</item>
 		<item level="1" text="History buttons mode" description="Configure the function of the &lt;  &gt; buttons.">config.usage.historymode</item>
 		<item level="0" text="Input scroll position" description="When the input cursor reaches this point (percentage of the width, from either side) scroll the text to the cursor.">config.usage.cursorscroll</item>
