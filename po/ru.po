@@ -7224,6 +7224,9 @@ msgstr "Вы действительно хотите удалить вашу з�
 msgid "Do you really want to stop current event and delete timer %s?"
 msgstr "Вы действительно хотите остановить текущее событие и удалить таймер %s?"
 
+msgid "Do you really want to trim the file system?"
+msgstr "Вы действительно хотите уменьшить размер файловой системы?"
+
 msgid "Do you want this?"
 msgstr "Вы хотите это сделать?"
 
@@ -20414,6 +20417,9 @@ msgstr "Осталось попыток:"
 
 msgid "Trinidad and Tobago"
 msgstr "Тринидад и Тобаго"
+
+msgid "Trim File System"
+msgstr "Система файлов обрезки"
 
 msgid "Troubleshoot"
 msgstr "Решение проблем (просмотр)"
