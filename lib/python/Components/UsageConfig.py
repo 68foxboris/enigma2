@@ -113,6 +113,20 @@ def InitUsageConfig():
 	config.usage.useAudioCuesheet = ConfigYesNo(default=True)  # Use marker for audio media file.
 	config.usage.useChapterInfo = ConfigYesNo(default=True)  # Show chapter positions (gst >= 1 and supported media files).
 
+	config.usage.shutdownOK = ConfigBoolean(default=True)
+	config.usage.showdish = ConfigSelection(default="flashing", choices=[
+		("flashing", _("Flashing")),
+		("normal", _("Non-flashing")),
+		("off", _("Off"))
+	])
+	config.usage.numberZapTimeoutFirst = ConfigSelection(default=3000, choices=[(x, ngettext("%.2f Second", "%.2f Seconds", x / 1000.0) % (x / 1000.0)) for x in range(500, 5001, 250)])
+	config.usage.numberZapTimeoutOther = ConfigSelection(default=1000, choices=[(x, ngettext("%.2f Second", "%.2f Seconds", x / 1000.0) % (x / 1000.0)) for x in range(0, 5001, 250)])
+	config.usage.numberZapTimeouts = ConfigSelection(default="default", choices=[
+		("off", _("Off")),
+		("default", _("Default")),
+		("user", _("User defined"))
+	])
+	config.usage.numzappicon = ConfigYesNo(default=False)
 	choices = [
 		("dhcp-router", _("Router / Gateway")),
 		("custom", _("Static IP / Custom"))
