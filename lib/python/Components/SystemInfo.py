@@ -471,6 +471,7 @@ BoxInfo.setItem("inadyn", fileExists("/etc/init.d/inadyn-mt"))
 BoxInfo.setItem("minidlna", fileExists("/etc/init.d/minidlna"))
 BoxInfo.setItem("ushare", fileExists("/etc/init.d/ushare"))
 BoxInfo.setItem("samba", fileExists("/etc/init.d/samba"))
+BoxInfo.setItem("zerotier", exists("/etc/init.d/zerotier"))
 
 BoxInfo.setMutableItem("SeekStatePlay", False)
 BoxInfo.setMutableItem("StatePlayPause", False)
