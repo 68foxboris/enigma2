@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2025-12-06 17:48+0200\n"
+"PO-Revision-Date: 2026-01-02 21:03+0200\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -4222,9 +4222,6 @@ msgstr "Центр"
 msgid "Cancel and exit the context menu"
 msgstr "Отменить и выйти из контекстного меню"
 
-msgid"Cancel any changed settings and exit"
-msgstr "Отменить все изменения настройки и выйти"
-
 msgid "Cancel any changed settings and exit all menus"
 msgstr "Отменить все изменения настройки и выйти из всех меню"
 
@@ -8209,6 +8206,9 @@ msgstr "Введите номер, сохраненный в позиционе�
 msgid "Enter the service PIN"
 msgstr "Ввод пин-код сервиса"
 
+msgid "Enter the ZeroTier Network ID (16 chars)."
+msgstr "Введите идентификатор сети ZeroTier (16 символов)."
+
 msgid "Enter valid ONID/TSID"
 msgstr "Введите ONID/TSID транспондера"
 
@@ -8541,9 +8541,6 @@ msgstr "Выход из ТВ-гида"
 
 msgid "Exit IPv6 configuration"
 msgstr "Выход из настроек IPv6"
-
-msgid "Exit MAC address configuration"
-msgstr "Выход из настроек MAC-адреса"
 
 msgid "Exit Movie Selection"
 msgstr "Выйти из выбора фильма"
@@ -9066,9 +9063,6 @@ msgstr "Завершено"
 
 msgid "Finished configuring your network"
 msgstr "Настройка сети закончена"
-
-msgid "Finished restarting your network"
-msgstr "Перезапуск сети завершён"
 
 msgid "Finland"
 msgstr "Финляндия"
@@ -10676,6 +10670,15 @@ msgstr "Джерси"
 msgid "Job overview"
 msgstr "Просмотр задания"
 
+msgid "Join"
+msgstr "Присоединиться"
+
+msgid "Join or leave the configured ZeroTier network"
+msgstr "Присоединяйтесь к настроенной сети ZeroTier или покиньте её"
+
+msgid "Joined"
+msgstr "Присоединился"
+
 msgid "Jordan"
 msgstr "Иордания"
 
@@ -10956,6 +10959,9 @@ msgstr "Латвия"
 
 msgid "Latvian"
 msgstr "Латвийский"
+
+msgid "Leave"
+msgstr "Оставлять"
 
 msgid "Leave DVD player?"
 msgstr "Выйти из проигрывателя DVD?"
@@ -11298,12 +11304,6 @@ msgstr "Пакеты M2k"
 
 msgid "MAC address"
 msgstr "MAC адрес"
-
-msgid "MAC address settings"
-msgstr "Настройки MAC-адреса"
-
-msgid "MAC address setup"
-msgstr "Настройка MAC-адреса"
 
 msgid "MAC:"
 msgstr "MAC адрес:"
@@ -12174,8 +12174,8 @@ msgstr "Сетевой лог"
 msgid "Network Log Actions"
 msgstr "Действия с сетевым логом"
 
-msgid "Network MAC settings"
-msgstr "Настройка MAC-адреса"
+msgid "Network name"
+msgstr "Название сети"
 
 msgid "Network Speed:"
 msgstr "Скорость сети:"
@@ -12194,6 +12194,12 @@ msgstr "Настройка сети"
 
 msgid "Network Setup Actions"
 msgstr "Действия по настройке сети"
+
+msgid "Network status"
+msgstr "Состояние сети"
+
+msgid "Network-ID"
+msgstr "Идентификатор сети"
 
 msgid "Network Test"
 msgstr "Тестирование сети"
@@ -12594,6 +12600,9 @@ msgstr "Не определен"
 
 msgid "Not Installed"
 msgstr "Не установлено"
+
+msgid "Not joined. Press Yellow to join."
+msgstr "Не присоединились. Нажмите жёлтую кнопку, чтобы присоединиться."
 
 msgid "Not Required"
 msgstr "Не требуется"
@@ -13834,9 +13843,6 @@ msgstr "Подождите, пока плагин обновится."
 msgid "Please wait while we check your installed plugins..."
 msgstr "Пожалуйста, подождите, пока мы проверим установленные плагины..."
 
-msgid "Please wait while we configure your network..."
-msgstr "Подождите, пока мы настроим сеть ..."
-
 msgid "Please wait while we prepare your network interfaces..."
 msgstr "Подождите, пока мы подготовим сетевые интерфейсы ..."
 
@@ -14207,9 +14213,6 @@ msgstr "Нажмите OK, чтобы выбрать место для сохр�
 msgid "Press OK to select/deselect a CAId."
 msgstr "Нажмите OK, чтобы выбрать/отменить CAId."
 
-msgid "Press OK to set the MAC-address."
-msgstr "Нажмите OK, чтобы установить MAC-адрес."
-
 msgid "Press OK to toggle the selection"
 msgstr "Нажмите OK, чтобы переключиться на выбор"
 
@@ -14244,9 +14247,6 @@ msgstr "Нажмите красную кнопку чтобы включить b
 
 msgid "Press yellow button to set CEC address again"
 msgstr "Нажмите желтую кнопку, чтобы снова установить адрес CEC"
-
-msgid "Press yellow to set this interface as default interface."
-msgstr "Нажмите желтую кнопку для установки этого интерфейса как дефолтный."
 
 msgid "Press YELLOW button if your time zone is not set or press \"OK\" to continue wizard."
 msgstr "Нажмите ЖЕЛТУЮ кнопку, если ваш часовой пояс не установлен, или нажмите «ОК», чтобы продолжить работу мастера."
@@ -14797,6 +14797,9 @@ msgstr "Частота обновления"
 msgid "Refresh rate selection."
 msgstr "Выбор частоты обновления."
 
+msgid "Refresh ZeroTier status information"
+msgstr "Обновить информацию о статусе ZeroTier"
+
 msgid "Regard deep standby as standby"
 msgstr "Считать выключение как режим ожидания"
 
@@ -15192,9 +15195,6 @@ msgstr "Перезапустить эмулятор"
 
 msgid "Restart test"
 msgstr "Перезапустить тест"
-
-msgid "Restart your network connection and interfaces."
-msgstr "Перезапуск сетевых подключений и интерфейсов."
 
 msgid "Restore"
 msgstr "Восстановить"
@@ -16561,6 +16561,9 @@ msgstr "Порт сервера, используемый для расшифр�
 msgid "Service"
 msgstr "Канал"
 
+msgid "Service online"
+msgstr "Онлайн-сервис"
+
 msgid "Service Scan"
 msgstr "Сканирование Каналов"
 
@@ -16775,9 +16778,6 @@ msgstr "Установить частоту кадров для MiniTV"
 msgid "Set if You want see status icons, progress bars or nothing."
 msgstr "Установите если хотите видеть значки состояния индикаторы выполнения или ничего."
 
-msgid "Set interface as default Interface"
-msgstr "Установить интерфейс как интерфейс по дефолту"
-
 msgid "Set limits"
 msgstr "Установить лимиты"
 
@@ -16810,10 +16810,6 @@ msgstr "Настройка системы"
 
 msgid "Set the aspect ratio of the service picons."
 msgstr "Установите соотношение сторон пиконов сервиса."
-
-#, python-format
-msgid "Set the MAC address of your %s %s."
-msgstr "Назначение MAC-адреса своего %s %s."
 
 msgid "Set the User ID of the OpenWebif from your fallback tuner"
 msgstr "Установить ID пользователя OpenWebif из вашего резервного ресивера"
@@ -19379,13 +19375,6 @@ msgstr "Высота картины.Входные данные будут ма�
 msgid "The process will take approximately %d minutes to complete."
 msgstr "Процесс займет приблизительно %d минут."
 
-msgid ""
-"The network wizard extension is not installed!\n"
-"Please install it."
-msgstr ""
-"Дополнение мастера настройки сети не установлено!\n"
-"Пожалуйста, установите его."
-
 msgid "The number of steps to change the volume on the device the keys are forwarded to."
 msgstr "Количество шагов для изменения громкости на устройстве, на которое перенаправляются ключи."
 
@@ -20421,6 +20410,9 @@ msgstr "Тринидад и Тобаго"
 msgid "Trim File System"
 msgstr "Система файлов обрезки"
 
+msgid "Trim File System..."
+msgstr "Система файлов обрезки..."
+
 msgid "Troubleshoot"
 msgstr "Решение проблем (просмотр)"
 
@@ -20523,6 +20515,12 @@ msgstr "Тюнера и Сканирование"
 
 msgid "Tunisia"
 msgstr "Тунис"
+
+msgid "Tunnel IPv4"
+msgstr "Туннель IPv4"
+
+msgid "Tunnel IPv6"
+msgstr "Туннель IPv6"
 
 msgid ""
 "Turbo: One reboot after flash\n"
@@ -21053,12 +21051,6 @@ msgid ""
 msgstr ""
 "Используйте время удаления для сортировки Корзин.\n"
 "Последнее удалено сверху."
-
-msgid "Use the network wizard to configure selected network adapter"
-msgstr "Использовать мастер настройки сети для конфигурации выбранного сетевого адаптера"
-
-msgid "Use the network wizard to configure your network\n"
-msgstr "Использовать мастер настройки сети для конфигурации Вашей сети.\n"
 
 msgid "Use the up/down keys on your remote control to select an option. After, press OK."
 msgstr "Используйте клавиши вверх/вниз на пульте дистанционного управления, чтобы выбрать опцию. После нажмите ОК."
@@ -22670,11 +22662,17 @@ msgstr "Таймер - переключено на сервис %s!"
 msgid "ZeroTier log"
 msgstr "Лог ZeroTier"
 
-msgid "ZeroTier setup"
-msgstr "Настройка ZeroTier"
+msgid "ZeroTier Actions"
+msgstr "Действия ZeroTier"
 
-msgid "ZeroTierVPN"
-msgstr "ZeroTierVPN"
+msgid "ZeroTier version"
+msgstr "Версия ZeroTier"
+
+msgid "ZeroTier-One"
+msgstr "ZeroTier-One"
+
+msgid "Zerotier Settings"
+msgstr "Настройки ZeroTier"
 
 msgid "Zgemma H.S/H.2S/H.2H/H5/H7(old model)"
 msgstr "Zgemma H.S/H.2S/H.2H/H5/H7(старая модель)"
