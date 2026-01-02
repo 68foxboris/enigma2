@@ -263,7 +263,7 @@ class DNSSettings(Setup):
 
 		if hasChanges:
 			self.saveAll()
-			RestartNetworkNew.start(callback=self.close)
+			self.session.openWithCallback(self.close, RestartNetwork)
 		else:
 			self.close()
 
