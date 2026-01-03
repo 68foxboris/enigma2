@@ -8202,8 +8202,8 @@ msgstr "Введите номер, сохраненный в позиционе�
 msgid "Enter the service PIN"
 msgstr "Ввод пин-код сервиса"
 
-msgid "Enter the ZeroTier Network ID (16 chars)."
-msgstr "Введите идентификатор сети ZeroTier (16 символов)."
+msgid "Enter the ZeroTier Network ID. The ID should be exactly 16 characters in length."
+msgstr "Введите идентификатор сети ZeroTier. Идентификатор должен состоять ровно из 16 символов."
 
 msgid "Enter valid ONID/TSID"
 msgstr "Введите ONID/TSID транспондера"
