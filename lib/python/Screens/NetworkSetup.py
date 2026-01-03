@@ -158,7 +158,7 @@ class NetworkAdapterSelection(Screen):
 		if selection:
 			if iNetwork.isWirelessInterface(selection[0]):
 				try:
-					from Plugins.SystemPlugins.WirelessLan.plugin import WlanScan
+					from Plugins.SystemPlugins.WirelessLan.plugin import WlanScan  # noqa F401
 					if queryWirelessDevice(selection[0]):
 						self.session.openWithCallback(self.AdapterSetupClosed, AdapterSetup, selection[0])
 				except ImportError:
@@ -863,7 +863,7 @@ class AdapterSetupConfiguration(Screen):
 					self.showErrorMessage()	 # Display Wlan not available message.
 		if self["menulist"].getCurrent()[1] == "wlanstatus":
 			try:
-				from Plugins.SystemPlugins.WirelessLan.plugin import WlanStatus
+				from Plugins.SystemPlugins.WirelessLan.plugin import WlanStatus  # noqa F401
 			except ImportError:
 				self.session.open(MessageBox, self.missingwlanplugintxt, type=MessageBox.TYPE_INFO, timeout=10)
 			else:
