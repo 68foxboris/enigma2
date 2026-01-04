@@ -29,6 +29,7 @@ from os import path, popen
 import re
 import os
 
+
 class BoxInfo(Poll, Converter, object):
 	Boxtype = 0
 	CpuInfo = 1
@@ -95,7 +96,7 @@ class BoxInfo(Poll, Converter, object):
 				box = open('/proc/stb/info/model').read().strip().upper()
 			if os.path.isfile('/etc/issue'):
 				for line in open('/etc/issue'):
-					software += line.capitalize().replace('Open vision enigma2 image for', '').replace('More information : https://openvision.tech', '').replace('%d, %t - (%s %r %m)', '').replace('release').replace('Welcome to openatv', '').replace('Welcome to opendroid', '').replace('\n', '').replace('\l', '').replace('\\', '').strip()[:-1].capitalize()
+					software += line.capitalize().replace('Open vision enigma2 image for', '').replace('More information : https://openvision.tech', '').replace('%d, %t - (%s %r %m)', '').replace('release', 'r').replace('Welcome to openatv', '').replace('Welcome to opendroid', '').replace('\n', '').replace('\l', '').replace('\\', '').strip()[:-1].capitalize()
 				software = ' : %s ' % software.strip()
 			if os.path.isfile('/etc/vtiversion.info'):
 				software = ''
@@ -191,7 +192,7 @@ class BoxInfo(Poll, Converter, object):
 
 		elif self.type == self.Upinfo:
 			try:
-				with open('/proc/uptime') as file:
+				with open('/proc/uptime', 'r') as file:
 					uptime_info = file.read().split()
 			except:
 				return ' '
@@ -218,7 +219,7 @@ class BoxInfo(Poll, Converter, object):
 			info = ''
 			try:
 				if os.path.exists('/proc/loadavg'):
-					l = open('/proc/loadavg')
+					l = open('/proc/loadavg', 'r')
 					load = l.readline(4)
 					l.close()
 			except:

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import Components.Task
 from twisted.internet import task
@@ -5,6 +6,16 @@ from twisted.internet import task
 
 class GiveupOnSendfile(Exception):
 	pass
+
+
+def nosendfile(*args):
+	raise GiveupOnSendfile("sendfile() not available")
+
+
+try:
+	from sendfile import sendfile
+except:
+	sendfile = nosendfile
 
 
 class FailedPostcondition(Components.Task.Condition):
@@ -17,12 +28,18 @@ class FailedPostcondition(Components.Task.Condition):
 	def check(self, task):
 		return self.exception is None
 
+# Same as Python 3.3 open(filename, "x"), we must be the creator
+
+
+def openex(filename, flags=os.O_CREAT | os.O_EXCL | os.O_WRONLY):
+	return os.fdopen(os.open(filename, flags), 'wb', 0)
+
 
 class CopyFileTask(Components.Task.PythonTask):
 	def openFiles(self, fileList):
 		self.callback = None
 		self.fileList = fileList
-		self.handles = [(os.open(fn[0], os.O_RDONLY), os.open(fn[1], os.O_CREAT | os.O_EXCL | os.O_WRONLY)) for fn in fileList]
+		self.handles = [(open(fn[0], 'rb', buffering=0), openex(fn[1])) for fn in fileList]
 		self.end = 0
 		for src, dst in fileList:
 			try:
@@ -38,14 +55,16 @@ class CopyFileTask(Components.Task.PythonTask):
 		try:
 			for src, dst in self.handles:
 				try:
-					bs = 1048576 # 1MB chunks
+					bs = 1048576  # 1MB chunks
 					offset = 0
+					fdd = dst.fileno()
+					fds = src.fileno()
 					while True:
 						if self.aborted:
 							print("[CopyFileTask] aborting")
 							raise Exception("Aborted")
 						try:
-							l = os.sendfile(dst, src, offset, bs)
+							l = sendfile(fdd, fds, offset, bs)
 						except OSError as ex:
 							if offset == 0:
 								raise GiveupOnSendfile("sendfile failed, probably not suitable for mmap")
@@ -84,8 +103,8 @@ class CopyFileTask(Components.Task.PythonTask):
 		except:
 			# In any event, close all handles
 			for src, dst in self.handles:
-				os.close(src)
-				os.close(dst)
+				src.close()
+				dst.close()
 			for s, d in self.fileList:
 				# Remove incomplete data.
 				try:
