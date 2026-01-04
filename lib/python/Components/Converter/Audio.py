@@ -53,7 +53,7 @@ class Audio(Converter, object):
 		fileString = ""
 		try:
 			print("[Audio] Read /tmp/share.info")
-			fp = open("/tmp/share.info")
+			fp = open("/tmp/share.info", "r")
 			while True:
 				currentLine = fp.readline()
 				if (currentLine == ""):
@@ -87,7 +87,7 @@ class Audio(Converter, object):
 		try:
 			caId = caId[2:]
 			print("[Audio] Read /usr/keys/cwshare.cfg")
-			fp = open("/usr/keys/cwshare.cfg")
+			fp = open("/usr/keys/cwshare.cfg", "r")
 			while True:
 				currentLine = fp.readline()
 				if (currentLine == ""):
@@ -175,10 +175,12 @@ class Audio(Converter, object):
 	def getCryptInfo(self, info):
 		isCrypted = info.getInfo(iServiceInformation.sIsCrypted)
 		if isCrypted == 1:
+			id_ecm = ""
 			caID = ""
+			syID = ""
 			try:
 				print("[Audio] Read /tmp/ecm.info")
-				file = open("/tmp/ecm.info")
+				file = open("/tmp/ecm.info", "r")
 			except:
 				print("[Audio] Read /tmp/ecm.info failed.")
 				return ""
@@ -206,10 +208,11 @@ class Audio(Converter, object):
 	def getStreamInfo(self, ltype):
 		try:
 			print("[Audio] Read /tmp/ecm.info")
-			file = open("/tmp/ecm.info")
+			file = open("/tmp/ecm.info", "r")
 		except:
 			print("[Audio] Read /tmp/ecm.info failed.")
 			return ""
+		ee = 0
 		caid = "0000"
 		provid = "0000"
 		while True:
@@ -243,7 +246,7 @@ class Audio(Converter, object):
 	def getSourceInfo(self, ltype):
 		try:
 			print("[Audio] Read /tmp/ecm.info")
-			file = open("/tmp/ecm.info")
+			file = open("/tmp/ecm.info", "r")
 		except:
 			print("[Audio] Read /tmp/ecm.info failed.")
 			return ""

@@ -62,7 +62,7 @@ def ChoiceEntryComponent(key=None, text=None):
 class ChoiceList(MenuList):
 	def __init__(self, list, selection=0, enableWrapAround=False):
 		MenuList.__init__(self, list, enableWrapAround, eListboxPythonMultiContent)
-		font = fonts.get("ChoiceList", ("Regular", 20, 30))
+		font = fonts.get("ChoiceList", ("Regular", 20, 25))
 		self.l.setFont(0, gFont(font[0], font[1]))
 		self.l.setItemHeight(font[2])
 		self.itemHeight = font[2]
