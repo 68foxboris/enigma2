@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from os import stat
 from os.path import exists
 from time import time
@@ -44,14 +45,14 @@ def createCurrentCaidLabel(info, currentCaid=None, currentDevice=None):
 		if info and info.getInfo(iServiceInformation.sIsCrypted) == 1 or exists("/tmp/ecm.info"):
 			data = ecmdata.getEcmData()
 		else:
-			data = ("", "0", "0", "0")
+			data = ("", "0", "0", "0", "")
 		# source, caid, provid, ecmpid, device
-		return data[0], data[1], data[2], data[3]
+		return data[0], data[1], data[2], data[3], data[4]
 
 	if not currentCaid:
 		cryptoInfo = getCryptoInfo()
 		currentCaid = cryptoInfo[1]
-		currentDevice = cryptoInfo[3]
+		currentDevice = cryptoInfo[4]
 	result = ""
 	decodingCiSlot = -1
 	NUM_CI = BoxInfo.getItem("CommonInterface")
@@ -71,7 +72,7 @@ def createCurrentCaidLabel(info, currentCaid=None, currentDevice=None):
 
 	for caidData in getCaidData():
 		if int(caidData[0], 16) <= int(currentCaid, 16) <= int(caidData[1], 16):
-			result = caidData[3]
+			result = caidData[4]
 	if decodingCiSlot > -1:
 		return f"CI{decodingCiSlot}{result}"
 	deviceName = ecmdata.createCurrentDevice(currentDevice, False)
@@ -224,5 +225,8 @@ class GetEcmInfo:
 			for key, (long_name, short_name) in mapping.items():
 				if key in device_lower:
 					return long_name if isLong else short_name
+
 		return ""
+
+
 ecmdata = GetEcmInfo()

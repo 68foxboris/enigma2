@@ -3,6 +3,7 @@ from json import loads
 from requests import exceptions, get
 from enigma import checkInternetAccess
 
+
 # Data available from http://ip-api.com/json/:
 #
 # 	Name		Description				Example			Type

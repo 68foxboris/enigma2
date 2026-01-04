@@ -13,7 +13,8 @@ class ServiceName(Converter):
 	REFERENCE = 2
 	EDITREFERENCE = 3
 	NUMBER = 4
-	FORMAT_STRING = 5
+	STREAM_URL = 5
+	FORMAT_STRING = 6
 
 	def __init__(self, type):
 		Converter.__init__(self, type)
@@ -31,6 +32,8 @@ class ServiceName(Converter):
 				self.type = self.EDITREFERENCE
 			elif type == "Number":
 				self.type = self.NUMBER
+			elif type == "StreamUrl":
+				self.type = self.STREAM_URL
 			else:
 				self.type = self.NAME
 
@@ -59,6 +62,17 @@ class ServiceName(Converter):
 		elif self.type == self.NUMBER:
 			numservice = self.source.serviceref
 			return self.getNumber(numservice, info)
+		elif self.type == self.STREAM_URL:
+			srpart = "//%s:%s/" % (config.misc.softcam_streamrelay_url.getHTML(), config.misc.softcam_streamrelay_port.value)
+			if not ref:
+				refstr = info.getInfoString(iServiceInformation.sServiceref)
+				path = refstr and eServiceReference(refstr).getPath()
+				if not path.startswith("//") and path.find(srpart) == -1:
+					return path
+				else:
+					return ""
+			path = ref.getPath()
+			return "" if path.startswith("//") and path.find(srpart) == -1 else path
 		elif self.type == self.FORMAT_STRING:
 			name = self.getName(ref, info)
 			numservice = hasattr(self.source, "serviceref") and self.source.serviceref
@@ -118,9 +132,9 @@ class ServiceName(Converter):
 			try:
 				position = tp_data["orbital_position"]
 				if position > 1800:  # west
-					orbitalpos = "%.1f " %(float(3600 - position)/10) + _("°W")
+					orbitalpos = "%.1f " % (float(3600 - position) / 10) + _("°W")
 				else:
-					orbitalpos = "%.1f " %(float(position)/10) + _("°E")
+					orbitalpos = "%.1f " % (float(position) / 10) + _("°E")
 			except:
 				pass
 		return orbitalpos, tp_data

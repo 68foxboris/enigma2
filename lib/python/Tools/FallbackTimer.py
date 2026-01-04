@@ -4,6 +4,7 @@ from Components.config import config
 from Screens.MessageBox import MessageBox
 from timer import TimerEntry as TimerObject
 from urllib.parse import quote
+from xml.etree.ElementTree import fromstring
 from json import loads
 from base64 import encodebytes
 
@@ -145,7 +146,7 @@ class FallbackTimerList():
 				self.getFallbackTimerList()
 			else:
 				self.fallback(root[1].text)
-		except:
+		except Exception:
 				self.fallback("Unexpected Error")
 
 	def fallback(self, message=None):
@@ -164,7 +165,7 @@ class FallbackTimerDirs(FallbackTimerList):
 		if self.url:
 			try:
 				self.getUrl("web/getlocations").addCallback(self.getlocations).addErrback(self.fallbackFunction)
-			except:
+			except Exception:
 				self.fallbackFunction()
 		else:
 			self.fallbackFunction()
@@ -173,7 +174,7 @@ class FallbackTimerDirs(FallbackTimerList):
 		self.locations = [c.text for c in fromstring(data)]
 		try:
 			self.getUrl("web/getcurrlocation").addCallback(self.getcurrlocation).addErrback(self.fallbackFunction)
-		except:
+		except Exception:
 			self.fallbackFunction()
 
 	def getcurrlocation(self, data):
