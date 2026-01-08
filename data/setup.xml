@@ -10,31 +10,30 @@
 		<item level="1" text="Long press volume steps" description="Select the size of the volume steps when the VOLUME buttons are held down.">config.volumeControl.longStep</item>
 		<item level="1" text="Volume/Mute display timer" description="Select how long, in seconds, that the volume and mute displays are shown before they automatically hide.">config.volumeControl.hideTimer</item>
 		<if requires="CanDownmixAC3">
-			<item level="1" text="AC3 downmix" description="Choose whether AC3 sound tracks should be downmixed to stereo.">config.av.downmix_ac3</item>
+			<item level="1" text="AC3 downmix" description="Select whether AC3 audio tracks should be downmixed to stereo.">config.av.downmix_ac3</item>
 			<if requires="VuEAC3Fix" conditional="not config.av.downmix_ac3.value">
 				<item level="1" text="Passthrough audio handling delay AC3" description="Used to specify delay when switching between services and AC3 passthrough is enabled.">config.av.passthrough_fix_short</item>
 				<item level="1" text="Passthrough audio handling delay AC3+" description="Used to specify delay when switching between services and AC3+/Atmos passthrough is enabled.">config.av.passthrough_fix_long</item>
 			</if>
 		</if>
-		<item level="1" text="AC3 plus transcoding" description="Choose whether AC3 Plus sound tracks should be transcoded to AC3." requires="CanAC3plusTranscode">config.av.transcodeac3plus</item>
-		<item level="1" text="DTS downmix" description="Choose whether DTS channel sound tracks should be downmixed to stereo." requires="CanDownmixDTS">config.av.downmix_dts</item>
-		<item level="1" text="DTS/DTS-HD HR/DTS-HD MA/DTS:X" description="Choose whether DTS channel sound tracks should be downmixed or transcoded." requires="CanDTSHD">config.av.dtshd</item>
-		<item level="1" text="WMA Pro" description="Choose whether WMA Pro channel sound tracks should be downmixed or transcoded." requires="CanWMAPRO">config.av.wmapro</item>
-		<item level="1" text="AAC downmix" description="Choose whether multi channel sound tracks should be downmixed to stereo." requires="CanDownmixAAC">config.av.downmix_aac</item>
-		<item level="1" text="AAC plus downmix" description="Configure whether multi channel sound tracks should be downmixed to stereo." requires="CanDownmixAACPlus">config.av.downmix_aacplus</item>
-		<item level="1" text="Audio Source" description="Choose whether multi channel sound tracks should be convert to PCM, SPDIF or Bluetooth." requires="HDMIAudioSource">config.av.hdmi_audio_source</item>
-		<item level="1" text="AAC transcoding" description="Choose whether AAC sound tracks should be transcoded." requires="CanAACTranscode">config.av.transcodeaac</item>
-		<item level="1" text="General AC3 delay" description="This option configures the general audio delay of Dolby Digital sound tracks.">config.av.generalAC3delay</item>
+		<item level="1" text="AC3 plus transcoding" description="Select whether AC3 Plus audio tracks should be transcoded to AC3." requires="CanAC3plusTranscode">config.av.transcodeac3plus</item>
+		<item level="1" text="DTS downmix" description="Select whether DTS channel audio tracks should be downmixed to stereo." requires="CanDownmixDTS">config.av.downmix_dts</item>
+		<item level="1" text="DTS/DTS-HD HR/DTS-HD MA/DTS:X" description="Select whether DTS channel audio tracks should be downmixed or transcoded." requires="CanDTSHD">config.av.dtshd</item>
+		<item level="1" text="WMA Pro" description="Select whether WMA Pro channel audio tracks should be downmixed or transcoded." requires="CanWMAPRO">config.av.wmapro</item>
+		<item level="1" text="AAC downmix" description="Select whether multichannel audio tracks should be downmixed to stereo." requires="CanDownmixAAC">config.av.downmix_aac</item>
+		<item level="1" text="AAC plus downmix" description="Select whether multichannel audio tracks should be downmixed to stereo." requires="CanDownmixAACPlus">config.av.downmix_aacplus</item>
+		<item level="1" text="AAC transcoding" description="Select whether AAC audio tracks should be transcoded." requires="CanAACTranscode">config.av.transcodeaac</item>
+		<item level="1" text="Audio Source" description="Select whether multichannel audio tracks should be converted to PCM or SPDIF." requires="Canaudiosource">config.av.audio_source</item>
+		<item level="1" text="General AC3 delay" description="This option selects the general audio delay of Dolby Digital sound tracks.">config.av.generalAC3delay</item>
 		<item level="1" text="General PCM delay" description="This option configures the general audio delay of stereo sound tracks.">config.av.generalPCMdelay</item>
 		<item level="1" text="Multichannel PCM" description="Configure whether multi channel PCM sound should be enabled." requires="CanPcmMultichannel">config.av.multichannel_pcm</item>
-		<item level="1" text="Audio Auto Volume Level" description="This option configures you can set Auto Volume Level." requires="HasAutoVolume">config.av.autovolume</item>
-		<item level="1" text="Audio Auto Volume Level" description="This option configures you can set Auto Volume Level." requires="HasAutoVolumeLevel">config.av.autovolumelevel</item>
 		<item level="1" text="3D Surround" description="This option allows you to enable 3D Surround Sound." requires="Can3DSurround">config.av.surround_3d</item>
 		<item level="1" text="3D Surround Speaker Position" description="This option allows you to change the virtual loudspeaker position." requires="Can3DSpeaker" conditional="config.av.surround_3d.value != 'none'">config.av.surround_3d_speaker</item>
 		<item level="1" text="3D surround softlimiter" description="This option allows you to enable 3D surround softlimiter." requires="Has3DSurroundSoftLimiter" conditional="config.av.surround_3d_speaker.value != 'none'">config.av.surround_softlimiter_3d</item>
 		<item level="1" text="General audio delay" description="This option configures the general audio delay." requires="CanAudioDelay">config.av.audiodelay</item>
-		<item level="1" text="Enable BT audio" description="This option allows you to switch audio to BT speakers." requires="CanBTAudio">config.av.btaudio</item>
-		<item level="1" text="General BT Audio delay" description="This option configures the general audio delay for BT Speakers." requires="CanBTAudioDelay">config.av.btaudiodelay</item>
+		<item level="1" text="Audio Auto Volume Level" description="This option allows you to set the Auto Volume Level output." requires="CanAutoVolume">config.av.autovolume</item>
+		<item level="1" text="Enable BT audio" description="This option allows you to switch Audio to Bluetooth speakers." requires="CanBTAudio">config.av.btaudio</item>
+		<item level="1" text="General BT audio delay" description="This option configures the audio delay value for Bluetooth speakers." requires="CanBTAudioDelay">config.av.btaudiodelay</item>
 	</setup>
 	<setup key="AutoLanguage" title="Auto Language Settings">
 		<item level="0" text="Audio language selection 1" description="Configure the first audio language (highest priority).">config.autolanguage.audio_autoselect1</item>
@@ -149,10 +148,10 @@
 		<item level="2" text="EPG location" description="Choose the location where the EPG data will be stored when your device is shut down. The location must be available at boot time.">config.misc.epgcachepath</item>
 		<item level="2" text="EPG filename" description="Choose the name of the file that holds the EPG data when your device is shut down. This can be handy to differentiate between several receivers.">config.misc.epgcachefilename</item>
 		<item level="2" text="Automatic refresh" description="Allows your device to read the stored EPG data regularly.">config.epg.cacheloadsched</item>
-		<item level="2" text="Refresh every x hours" description="The %s %s reads the stored EPG data every x hours." requires="config.epg.cacheloadsched">config.epg.cacheloadtimer</item>
+		<item level="2" text="Refresh every" description="The %s %s reads the stored EPG data every selected number of hours." requires="config.epg.cacheloadsched">config.epg.cacheloadtimer</item>
 		<item level="2" text="Save EPG data" description="Configure if epg.dat should be saved at all.">config.epg.saveepg</item>
 		<item level="2" text="Automatic save" description="Allows your device to store the EPG data regularly.">config.epg.cachesavesched</item>
-		<item level="2" text="Save every x hours" description="The %s %s stores the EPG data every x hours." requires="config.epg.cachesavesched">config.epg.cachesavetimer</item>
+		<item level="2" text="Save every" description="The %s %s stores the EPG data every selected number of hours." requires="config.epg.cachesavesched">config.epg.cachesavetimer</item>
 		<item level="2" text="Show EIT Now/Next event data in the InfoBar" description="Display the EIT Now/Next event data in the InfoBar.">config.usage.show_eit_nownext</item>
 		<item level="2" text="Enable EIT EPG" description="Use EIT EPG information when it is available.">config.epg.eit</item>
 		<item level="2" text="Enable MHW EPG" description="Use MHW EPG information when it is available.">config.epg.mhw</item>
@@ -653,7 +652,7 @@
 	<setup key="UserInterface" title="User Interface">
 		<item level="1" text="Enable blinking" description="Enable blink functionality for some areas like record icon.">config.usage.enable_blinking</item>
 		<item level="1" text="Show animation while busy" description="Show busy indicator when the system is busy.">config.usage.show_spinner</item>
-		<item level="1" text="Show positioner movement" requires="isRotorTuner" description="Configure whether or not an icon should be shown when your motorized dish is moving.">config.usage.showdish</item>
+		<item level="1" text="Show positioner movement" requires="isRotorTuner" description="Select whether or not an icon should be shown when your motorized dish is moving.">config.usage.showdish</item>
 		<item level="1" text="Show positioner position" requires="isRotorTuner" description="Configure whether or not a rotor position will be displayed on the infobar">config.misc.showrotorposition</item>
 		<item level="1" text="Position of completed timers in timerlist" description="Configure where completed timers show up in the timer list.">config.usage.timerlist_finished_timer_position</item>
 		<item level="0" text="Info bar timeout" description="Configure for how long the infobar will remain visible after activation.">config.usage.infobar_timeout</item>
@@ -678,7 +677,7 @@
 		<item level="1" text="Show transponder remaining/elapsed as" description="This option allows you to choose how to display the remaining/elapsed time for live TV.">config.usage.swap_time_display_on_vfd</item>
 		<item level="1" text="Show Media playback Remaining/Elapsed as" description="This option allows you to choose how to display the remaining/elapsed time for media playback.">config.usage.swap_media_time_display_on_vfd</item>
 		<item level="0" text="Show time elapsed as positive" description="This option allows you choose how to display elapsed time as + or -">config.usage.elapsed_time_positive_osd</item>
-		<item level="0" text="Show subservices *" description="This option allows you to choose the option for Subservice indicator or selection.">config.usage.showInfoBarSubservices</item>
+		<item level="0" text="Show subservices" description="This option allows you to choose the option for Subservice indicator or selection." restart="gui">config.usage.showInfoBarSubservices</item>
 		<item level="0" text="Zap history sequence" description="Select the display sequence of previously visited services.">config.usage.zapHistorySort</item>
 		<item level="2" text="Hide zap errors" description="When enabled, error messages related to zapping will not be shown.">config.usage.hide_zap_errors</item>
 		<item level="2" text="Show crypto info in infobar" description="When enabled, encryption info will be shown in the infobar (when supported by the skin).">config.usage.show_cryptoinfo</item>
@@ -696,7 +695,7 @@
 		<item level="2" text="Show additional slider value" description="Enable to display the current value of the slider at end of the slider bar.">config.usage.show_slider_value</item>
 		<item level="0" text="Sort order for help screen" description="Choose the order in which items are displayed in Help windows">config.usage.helpSortOrder</item>
 		<item level="0" text="Animation speed of help indicators" description="Control the animation speed of the button indicators in the Help screen. 'Disabled' turns off animation so that indicators jump between buttons.">config.usage.helpAnimationSpeed</item>
-				<item level="2" text="Spinner Position" description="Set the top left location of the busy spinner. The coordinates are scaled such that the top left is at 0,0 and the bottom right is at 1260,700. Note that the position is the top left of the spinner and not the centre of the spinner.">config.misc.spinnerPosition</item>
+		<item level="2" text="Spinner Position" description="Set the top left location of the busy spinner. The coordinates are scaled such that the top left is at (0,0) and the bottom right is at (1260,700). Note that the position is the top left of the spinner and not the centre of the spinner.">config.misc.spinnerPosition</item>
 		<item text="Fallback Font *" description="Choose the fallback font.">config.skin.FallbackFont</item>
 	</setup>
 	<setup key="VolumeAdjust" title="Volume Adjust Settings">

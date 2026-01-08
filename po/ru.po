@@ -4776,42 +4776,6 @@ msgstr "Укажите действие для кнопки '0', когда PiP 
 msgid "Choose where to mount your devices to:"
 msgstr "Выберите точку подключения для устройства:"
 
-msgid "Choose whether AAC sound tracks should be transcoded."
-msgstr "Укажите нужно ли перекодировать звук AAC."
-
-msgid "Choose whether AC3 sound tracks should be transcoded."
-msgstr "Укажите нужно ли перекодировать звук AC3."
-
-msgid "Choose whether AC3 Plus sound tracks should be transcoded to AC3."
-msgstr "Транскодировать звуковые дорожки AC3-Plus в AC3."
-
-msgid "Choose whether AC3 sound tracks should be downmixed to stereo."
-msgstr "Cледует ли преобразовывать звуковые дорожки AC3 в формат стерео."
-
-msgid "Choose whether DTS channel sound tracks should be downmixed or transcoded."
-msgstr "Следует ли преобразовывать в стерео или транскодировать многоканальные звуковые дорожки DTS."
-
-msgid "Choose whether DTS channel sound tracks should be downmixed to stereo."
-msgstr "Следует ли преобразовывать в стерео многоканальные звуковые дорожки DTS."
-
-msgid "Choose whether multi channel DTS-HD(HR/MA) sound tracks should be downmixed or transcoded."
-msgstr "Выберите, следует ли микшировать или транскодировать многоканальные звуковые дорожки DTS-HD(HR/MA)."
-
-msgid "Choose whether WMA Pro channel sound tracks should be downmixed or transcoded."
-msgstr "Следует ли преобразовывать в стерео или транскодировать многоканальные звуковые дорожки WMA Pro."
-
-msgid "Choose whether multi channel aac+ sound tracks should be downmixed to stereo."
-msgstr "Выберите, следует ли микшировать многоканальные звуковые дорожки AAC+ в стерео."
-
-msgid "Choose whether multi channel sound tracks should be convert to PCM or SPDIF."
-msgstr "Выберите, следует ли преобразовывать многоканальные звуковые дорожки в формат PCM или SPDIF."
-
-msgid "Choose whether multi channel sound tracks should be downmixed to stereo."
-msgstr "Следует ли многоканальные звуковые дорожки преобразовывать в стерео."
-
-msgid "Choose whether multi channel sound tracks should be output as PCM."
-msgstr "Следует ли многоканальные звуковые дорожки выводить как PCM."
-
 msgid "Choose whether or not to show an icon when a motorized dish is moving."
 msgstr "Нужно ли показывать значок во время движении антенны с мотоподвесом."
 
@@ -5567,8 +5531,8 @@ msgstr "Выберите шрифт телетекста: масштабируе
 msgid "Configure whether multi channel PCM sound should be enabled."
 msgstr "Настройка, нужно ли включать мультиканальный звук PCM."
 
-msgid "Configure whether multi channel sound tracks should be downmixed to stereo."
-msgstr "Преобразовывать ли многоканальные звуковые дорожки в стереозвук."
+msgid "Configure whether multichannel audio tracks should be downmixed to stereo."
+msgstr "Настройте параметр, следует ли преобразовывать многоканальные аудиодорожки в стерео."
 
 msgid "Configure whether or not a rotor position will be displayed on the infobar"
 msgstr "Настройка для показа позиции ротора в инфобаре"
@@ -7789,6 +7753,9 @@ msgstr "Включить 5V для антенны"
 msgid "Enable debug logs *"
 msgstr "Включить журналы отладки *"
 
+msgid "Enable BT audio"
+msgstr "Включить Bluetooth-аудио"
+
 msgid "Enable Chkroot MultiBoot"
 msgstr "Включить Chkroot MultiBoot"
 
@@ -9370,11 +9337,8 @@ msgstr "Общий"
 msgid "General AC3 delay"
 msgstr "Общая задержка AC3"
 
-msgid "Включить BT-аудио"
-msgstr "Общая задержка блютуз аудио"
-
-msgid "General BT Audio delay"
-msgstr "Общая задержка аудио BT"
+msgid "General BT audio delay"
+msgstr "Общая задержка звука Bluetooth"
 
 msgid "General bluetooth audio delay"
 msgstr "Общая задержка звука Bluetooth"
@@ -12170,9 +12134,6 @@ msgstr "Сетевой лог"
 msgid "Network Log Actions"
 msgstr "Действия с сетевым логом"
 
-msgid "Network name"
-msgstr "Название сети"
-
 msgid "Network Speed:"
 msgstr "Скорость сети:"
 
@@ -14784,8 +14745,8 @@ msgstr "Рекомендуется перепрошить!"
 msgid "Refresh"
 msgstr "Обновить"
 
-msgid "Refresh every (in hours)"
-msgstr "Интервал обновления (час)"
+msgid "Refresh every"
+msgstr "Интервал обновления"
 
 msgid "Refresh rate"
 msgstr "Частота обновления"
@@ -15192,6 +15153,9 @@ msgstr "Перезапустить эмулятор"
 msgid "Restart test"
 msgstr "Перезапустить тест"
 
+msgid "Restart your network connection and interfaces."
+msgstr "Перезагрузите сетевое соединение и интерфейсы."
+
 msgid "Restore"
 msgstr "Восстановить"
 
@@ -15561,8 +15525,8 @@ msgstr "Сохранить и остановить таймшифт"
 msgid "Save changes"
 msgstr "Сохранить изменения"
 
-msgid "Save every (in hours)"
-msgstr "Сохранить каждые (в часах)"
+msgid "Save every"
+msgstr "Сохраните все"
 
 #, python-format
 msgid "Save image as '%s'"
@@ -16409,6 +16373,36 @@ msgstr "Выберите, имеет ли Ваше устройство SCR вн
 msgid "Select whether IPv4, IPv6, or both protocols should be used. If both are enabled then which should be preferred."
 msgstr "Выберите, какой протокол следует использовать: IPv4, IPv6 или оба. Если оба протокола включены, то какой из них следует предпочесть."
 
+msgid "Select whether AAC audio tracks should be transcoded."
+msgstr "Выберите, следует ли перекодировать аудиодорожки в формате AAC."
+
+msgid "Select whether AC3 Plus audio tracks should be transcoded to AC3."
+msgstr "Выберите, следует ли перекодировать аудиодорожки AC3 Plus в AC3."
+
+msgid "Select whether AC3 audio tracks should be downmixed to stereo."
+msgstr "Выберите, следует ли преобразовывать аудиодорожки AC3 в стерео."
+
+msgid "Select whether DTS channel audio tracks should be downmixed or transcoded."
+msgstr "Выберите, следует ли выполнять понижение микширования или перекодирование аудиодорожек DTS-каналов."
+
+msgid "Select whether DTS channel audio tracks should be downmixed to stereo."
+msgstr "Выберите, следует ли преобразовывать аудиодорожки DTS-каналов в стерео."
+
+msgid "Select whether WMA Pro channel audio tracks should be downmixed or transcoded."
+msgstr "Выберите, следует ли понижать уровень микширования или перекодировать аудиодорожки каналов WMA Pro."
+
+msgid "Select whether multichannel audio tracks should be converted to PCM or SPDIF."
+msgstr "Выберите, следует ли преобразовывать многоканальные аудиодорожки в формат PCM или SPDIF."
+
+msgid "Select whether multichannel audio tracks should be downmixed to stereo."
+msgstr "Выберите, следует ли преобразовывать многоканальные аудиодорожки в стерео."
+
+msgid "Select whether multichannel audio tracks should be output as PCM."
+msgstr "Выберите, следует ли выводить многоканальные аудиодорожки в формате PCM."
+
+msgid "Select whether or not to show an icon when a motorized dish is moving."
+msgstr "Выберите, следует ли отображать значок при движении моторизованной антенны."
+
 msgid "Select wireless network"
 msgstr "Выберите беспроводную сеть"
 
@@ -16931,6 +16925,9 @@ msgstr "Выберите нужный прайм-тайм (в часах)"
 
 msgid "Set to the desired primetime (minutes."
 msgstr "Выберите нужный прайм-тайм (в минутах)"
+
+msgid "Set the top left location of the busy spinner. The coordinates are scaled such that the top left is at (0,0) and the bottom right is at (1260,700). Note that the position is the top left of the spinner and not the centre of the spinner."
+msgstr "Задайте положение верхнего левого угла вращающегося индикатора занятости. Координаты масштабированы таким образом, что верхний левый угол находится в точке (0,0), а нижний правый — в точке (1260,700). Обратите внимание, что позиция — это верхний левый угол индикатора, а не его центр."
 
 msgid "Set to what you want the button to do."
 msgstr "Выберите действие для кнопки."
@@ -19281,11 +19278,11 @@ msgstr "%s %s не имеет подключения к Интернету."
 msgid "The %d min remaining before the end of the event."
 msgstr "Осталось %d мин до окончания текущего события."
 
-msgid "The %s %s reads the stored EPG data every (hours)."
-msgstr "Ваш %s %s считывает сохраненные данные ТВ-гида каждые (часов)."
+msgid "The %s %s reads the stored EPG data every selected number of hours."
+msgstr "Функция %s %s считывает сохраненные данные EPG каждые выбранное количество часов."
 
-msgid "The %s %s stores the EPG data every (hours)."
-msgstr "Ваш %s %s сохраняет данные ТВ-гида каждые (часов)."
+msgid "The %s %s stores the EPG data every selected number of hours."
+msgstr "Программа %s %s сохраняет данные EPG за выбранное количество часов."
 
 #, python-format
 msgid "The %s %s will reboot within 1 seconds."
@@ -19625,11 +19622,14 @@ msgstr "Эта опция позволяет установить уровень
 msgid "This option allows you choose the name of folder picons."
 msgstr "Эта опция позволяет вам выбрать имя папки picons."
 
-msgid "This option allows you to switch audio to bluetooth speakers."
-msgstr "Эта опция позволяет переключать звук на блютуз динамики."
+msgid "This option allows you to switch Audio to Bluetooth speakers."
+msgstr "Эта опция позволяет переключить воспроизведение звука на Bluetooth-колонки."
 
-msgid "This option allows you can to set the auto volume level."
-msgstr "Эта опция настраивает уровень автоматической громкости звука."
+msgid "This option configures the audio delay value for Bluetooth speakers."
+msgstr "Эта опция задает значение задержки звука для Bluetooth-колонок."
+
+msgid "This option allows you to set the Auto Volume Level output."
+msgstr "Эта опция позволяет установить уровень автоматической регулировки громкости."
 
 msgid "This option allows you choose if the display shows the time, channel number or nothing during operation."
 msgstr "Эта опция позволяет вам выбрать, будет ли на дисплее отображаться время, номер канала или ничего во время работы."
@@ -19715,8 +19715,8 @@ msgstr "Эта опция позволяет вам отключить или и
 msgid "This option allows you to enable 3D surround softlimiter."
 msgstr "Эта опция позволяет вам включить 3D софт-ограничитель объемного звука."
 
-msgid "This option allows you to enable 3D surround sound."
-msgstr "Эта опция позволяет вам включить 3D объемный звук."
+msgid "This option allows you to enable 3D Surround Sound."
+msgstr "Эта опция позволяет включить трехмерный объемный звук."
 
 msgid "This option allows you to enable or disable the 10 bit color mode"
 msgstr "Этот параметр позволяет вам включать или отключать режим цвета 10bit"
@@ -19769,15 +19769,6 @@ msgstr "Эта опция позволяет вам просматривать �
 msgid "This option can be useful for long HDMI cables."
 msgstr "Эта опция может быть полезна для длинных кабелей HDMI (более 5 метров)."
 
-msgid "This option configures the general audio delay."
-msgstr "Эта опция настраивает общую задержку звука."
-
-msgid "This option configures the general audio delay for BT speakers."
-msgstr "Настройка общей задержки звуковых дорожек со стереозвуком."
-
-msgid "This option configures the general audio delay for bluetooth speakers."
-msgstr "Этот параметр настраивает общую задержку звука для динамиков блютуз."
-
 msgid "This option lets you adjust the 3D depth"
 msgstr "Здесь можете настроить 3D глубину"
 
@@ -19828,6 +19819,12 @@ msgstr "Эта опция устанавливает подавление лож
 
 msgid "This option sets up the picture sharpness, used when the picture is being upscaled."
 msgstr "Эта опция устанавливает резкость, используемую при масштабировании изображения."
+
+msgid "This option selects the general audio delay of Dolby Digital sound tracks."
+msgstr "Эта опция выбирает общую задержку звука для звуковых дорожек Dolby Digital."
+
+msgid "This option selects the general audio delay of stereo sound tracks."
+msgstr "Эта опция выбирает общую задержку звука для стереофонических звуковых дорожек."
 
 msgid "This option to enable numbers in Plugin Browser"
 msgstr "Эта опция позволяет включить числа в браузере плагинов"
@@ -21050,6 +21047,9 @@ msgstr ""
 
 msgid "Use the up/down keys on your remote control to select an option. After, press OK."
 msgstr "Используйте клавиши вверх/вниз на пульте дистанционного управления, чтобы выбрать опцию. После нажмите ОК."
+
+msgid "Use the network wizard to configure your Network."
+msgstr "Воспользуйтесь мастером настройки сети для её конфигурации."
 
 msgid "Use the wizard to set up basic features"
 msgstr "Пользуйтесь мастером для настройки основных параметров"
