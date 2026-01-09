@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # the implementation here is a bit crappy.
 import time
 from Tools.Directories import resolveFilename, SCOPE_CONFIG
@@ -42,9 +41,8 @@ def profile(id):
 			else:
 				perc = PERCENTAGE_START
 			try:
-				f = open("/proc/progress", "w")
-				f.write("%d \n" % perc)
-				f.close()
+				with open("/proc/progress", "w") as f:
+					f.write("%d \n" % perc)
 			except IOError:
 				pass
 
