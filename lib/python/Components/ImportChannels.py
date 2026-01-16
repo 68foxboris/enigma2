@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from os import listdir, remove
-from os.path import basename, dirname, join
-from re import match
-from shutil import move, rmtree
-from tempfile import mkdtemp
-from threading import Thread, enumerate as tenumerate
+import os
+import re
+import shutil
+import tempfile
+import threading
 from base64 import encodebytes
 from json import loads
 from time import sleep
@@ -18,11 +17,12 @@ from Tools.Notifications import AddNotificationWithID
 
 supportfiles = ('lamedb', 'blacklist', 'whitelist', 'alternatives.')
 
+e2path = "/etc/enigma2"
+
 
 class ImportChannels:
 
 	def __init__(self):
-		self.e2path = "/etc/enigma2"
 		if "ChannelsImport" in [x.name for x in threading.enumerate()]:
 			print("[Import Channels] Import Channels Thread is already running")
 		elif config.usage.remote_fallback_enabled.value and config.usage.remote_fallback_import.value and config.usage.remote_fallback.value:
@@ -32,11 +32,11 @@ class ImportChannels:
 			else:
 				self.url = config.usage.remote_fallback.value.rsplit(":", 1)[0]
 			if config.usage.remote_fallback_openwebif_customize.value:
-				self.url = f"{self.url}:{config.usage.remote_fallback_openwebif_port.value}"
+				self.url = "%s:%s" % (self.url, config.usage.remote_fallback_openwebif_port.value)
 				if config.usage.remote_fallback_openwebif_userid.value and config.usage.remote_fallback_openwebif_password.value:
 					self.header = "Basic %s" % encodebytes(("%s:%s" % (config.usage.remote_fallback_openwebif_userid.value, config.usage.remote_fallback_openwebif_password.value)).encode("UTF-8")).strip().decode()
 			self.remote_fallback_import = config.usage.remote_fallback_import.value
-			self.thread = Thread(target=self.threaded_function, name="ChannelsImport")
+			self.thread = threading.Thread(target=self.threaded_function, name="ChannelsImport")
 			self.settings = {}
 			self.thread.start()
 
@@ -66,12 +66,12 @@ class ImportChannels:
 
 	def getFallbackSettingsValue(self, url, e2settingname):
 		if url not in self.settings:
-			result = self.getUrl(f"{url}/api/settings")
+			result = self.getUrl("%s/api/settings" % url)
 			if result:
 				self.settings['url'] = loads(result.decode('utf-8'))
 		if 'url' in self.settings and 'result' in self.settings['url'] and self.settings['url']['result'] == True:
 				for key, value in self.settings['url']['settings']:
-					if key.endswith(e2settingname): #use the config key when the endpart but also the whole part matches
+					if key.endswith(e2settingname):  # use the config key when the endpart but also the whole part matches
 						return value
 		return ""
 
@@ -93,7 +93,7 @@ class ImportChannels:
 	Enumerate all the files that make up the bouquet system, either local or on a remote machine
 	"""
 
-	def ImportGetFilelist(self, remote=False, radio=False, *files):
+	def ImportGetFilelist(self, remote=False, *files):
 		result = []
 		for file in files:
 			# read the contents of the file
@@ -108,14 +108,14 @@ class ImportChannels:
 								open(os.path.join(self.tmp_dir, os.path.basename(file)), "wb").write(content)
 								content = content.decode('utf-8', 'replace').split('\n')
 					except Exception as e:
-						print(f"[Import Channels] Exception: {str(e)}")
+						print("[Import Channels] Exception: %s" % str(e))
 						continue
 				else:
-					with open(f"{self.e2path}/{file}", "r") as f:
+					with open('%s/%s' % (e2path, file), 'r') as f:
 						content = f.readlines()
 			except Exception as e:
 				# for the moment just log and ignore
-				print(f"[Import Channels] {str(e)}")
+				print("[Import Channels] %s" % str(e))
 				continue
 			# check the contents for more bouquet files
 			if content:
@@ -132,11 +132,11 @@ class ImportChannels:
 		return result
 
 	def threaded_function(self):
-		self.tmp_dir = mkdtemp(prefix="ImportChannels_")
+		self.tmp_dir = tempfile.mkdtemp(prefix="ImportChannels_")
 
 		if "channels" in self.remote_fallback_import:
 			print("[Import Channels] Enumerate and Fetch remote files")
-			if self.ImportGetFilelist(True, 'bouquets.tv', 'bouquets.radio'): # we should ensure we have at some files available
+			if self.ImportGetFilelist(True, 'bouquets.tv', 'bouquets.radio'):  # we should ensure we have at some files available
 				try:
 					print("[Import Channels] Enumerate and Fetch remote support files")
 					for file in [file.replace(e2path, '') for file in loads(self.getUrl("%s/file?dir=%s" % (self.url, e2path)))["files"] if os.path.basename(file).startswith(supportfiles)]:
@@ -166,41 +166,41 @@ class ImportChannels:
 		if "epg" in self.remote_fallback_import:
 			print("[Import Channels] Writing epg.dat file on server box")
 			try:
-				result = loads(self.getUrl(f"{self.url}/api/saveepg", timeout=30).decode("utf-8"))
-				if "result" not in result and result["result"] == False:
+				result = loads(self.getUrl("%s/api/saveepg" % self.url, timeout=30).decode('utf-8'))
+				if 'result' not in result and result['result'] == False:
 					self.ImportChannelsDone(False, _("Error when writing epg.dat on the fallback receiver"))
 			except Exception as e:
-				print(f"[Import Channels] Exception: {str(e)}")
+				print("[Import Channels] Exception: %s" % str(e))
 				self.ImportChannelsDone(False, _("Error when writing epg.dat on the fallback receiver"))
 				return
 			print("[Import Channels] Get EPG Location")
 			try:
 				epgdatfile = self.getFallbackSettingsValue(self.url, "config.misc.epgcache_filename") or "/media/hdd/epg.dat"
 				try:
-					files = [file for file in loads(self.getUrl(f"{self.url}/file?dir={dirname(epgdatfile)}"))["files"] if basename(file).startswith(basename(epgdatfile))]
+					files = [file for file in loads(self.getUrl("%s/file?dir=%s" % (self.url, os.path.dirname(epgdatfile))))["files"] if os.path.basename(file).startswith(os.path.basename(epgdatfile))]
 				except:
-					files = [file for file in loads(self.getUrl(f"{self.url}/file?dir=/"))["files"] if basename(file).startswith("epg.dat")]
+					files = [file for file in loads(self.getUrl("%s/file?dir=/" % self.url))["files"] if os.path.basename(file).startswith("epg.dat")]
 				epg_location = files[0] if files else None
 			except Exception as e:
-				print(f"[Import Channels] Exception: {str(e)}")
+				print("[Import Channels] Exception: %s" % str(e))
 				self.ImportChannelsDone(False, _("Error while retrieving location of epg.dat on the fallback receiver"))
 				return
 			if epg_location:
 				print("[Import Channels] Copy EPG file...")
 				try:
-					open(join(self.tmp_dir, "epg.dat"), "wb").write(self.getUrl(f"{self.url}/file?file={epg_location}"))
+					open(os.path.join(self.tmp_dir, "epg.dat"), "wb").write(self.getUrl("%s/file?file=%s" % (self.url, epg_location)))
 				except Exception as e:
-					print(f"[Import Channels] Exception: {str(e)}")
+					print("[Import Channels] Exception: %s" % str(e))
 					self.ImportChannelsDone(False, _("Error while retrieving epg.dat from the fallback receiver"))
 					return
 				try:
-					move(join(self.tmp_dir, "epg.dat"), config.misc.epgcache_filename.value)
+					shutil.move(os.path.join(self.tmp_dir, "epg.dat"), config.misc.epgcache_filename.value)
 				except:
 					# follow same logic as in epgcache.cpp
 					try:
-						move(join(self.tmp_dir, "epg.dat"), "/epg.dat")
-					except OSError as e:
-						print(f"[Import Channels] Exception: {str(e)}")
+						shutil.move(os.path.join(self.tmp_dir, "epg.dat"), "/epg.dat")
+					except Exception as e:
+						print("[Import Channels] Exception: %s" % str(e))
 						self.ImportChannelsDone(False, _("Error while moving epg.dat to its destination"))
 						return
 			else:
@@ -211,7 +211,7 @@ class ImportChannels:
 		self.ImportChannelsDone(True, {"channels": _("Channels"), "epg": _("EPG"), "channels_epg": _("Channels and EPG")}[self.remote_fallback_import])
 
 	def ImportChannelsDone(self, flag, message=None):
-		rmtree(self.tmp_dir, True)
+		shutil.rmtree(self.tmp_dir, True)
 		if flag:
 			AddNotificationWithID("ChannelsImportOK", MessageBox, _("%s imported from fallback tuner") % message, type=MessageBox.TYPE_INFO, timeout=5)
 		else:

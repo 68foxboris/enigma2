@@ -103,7 +103,7 @@ void keyEvent(const eRCKey &key)
 #include <lib/dvb/epgtransponderdatareader.h>
 
 /* Defined in eerror.cpp */
-void setDebugTime(int level);
+void setDebugTime(bool enable);
 class eMain : public eApplication, public sigc::trackable
 {
 	eInit init;
@@ -395,7 +395,7 @@ int main(int argc, char **argv)
 
 	if (exit_code == 5) /* python crash */
 	{
-		eDebug("[Enigma] Exit code 5!");
+		eDebug("[Enigma] Exit code 5");
 		bsodFatal(0);
 	}
 
@@ -435,11 +435,6 @@ const char *getEnigmaVersionString()
 const char *getBoxType()
 {
 	return BOXTYPE;
-}
-
-const char *getBoxBrand()
-{
-	return BOXBRAND;
 }
 
 int getVFDSymbolsPoll()

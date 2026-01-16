@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from functools import reduce
 
 from Tools.CList import CList
@@ -60,8 +61,8 @@ class Element:
 		self.cache = {}
 		self.downstream_elements.changed(*args, **kwargs)
 		self.cache = None
-		for method in self.onChanged:
- 			method()
+		for x in self.onChanged:
+ 			x()
 
 	def setSuspend(self, suspended):
 		changed = self.__suspended != suspended
@@ -77,7 +78,7 @@ class Element:
 	suspended = property(lambda self: self.__suspended, setSuspend)
 
 	def checkSuspend(self):
-		self.suspended = self.downstream_elements and reduce(lambda x, y: x and y.__suspended, self.downstream_elements, True)
+		self.suspended = reduce(lambda x, y: x and y.__suspended, self.downstream_elements, True)
 
 	def doSuspend(self, suspend):
 		pass

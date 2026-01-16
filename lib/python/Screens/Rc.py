@@ -1,137 +1,96 @@
-from xml.etree.ElementTree import ParseError, parse
-from Components.InputDevice import remoteControl
-from keyids import KEYIDS
-from Components.config import ConfigInteger, config
-from Components.Pixmap import MovingPixmap, Pixmap
-from Components.SystemInfo import BoxInfo
-from Tools.LoadPixmap import LoadPixmap
+# -*- coding: utf-8 -*-
+from Components.Pixmap import MovingPixmap, MultiPixmap
+from Tools.Directories import resolveFilename, SCOPE_SKIN
+from xml.etree.ElementTree import ElementTree
+from Components.config import config, ConfigInteger
+from Components.RcModel import rc_model
 
 config.misc.rcused = ConfigInteger(default=1)
 
 
 class Rc:
 	def __init__(self):
-		self["rc"] = Pixmap()
-		self.rcPosition = None
-		buttonImages = 16
-		rcHeights = (500,) * 2
-		self.selectPics = []
-		for indicator in range(buttonImages):
-			self.selectPics.append(self.KeyIndicator(self, rcHeights, ("indicatorU%d" % indicator, "indicatorL%d" % indicator)))
-		self.nSelectedKeys = 0
-		self.oldNSelectedKeys = 0
+		self["rc"] = MultiPixmap()
+		self["arrowdown"] = MovingPixmap()
+		self["arrowdown2"] = MovingPixmap()
+		self["arrowup"] = MovingPixmap()
+		self["arrowup2"] = MovingPixmap()
+
+		config.misc.rcused = ConfigInteger(default=1)
+		self.isDefaultRc = rc_model.rcIsDefault()
+		self.rcheight = 500
+		self.rcheighthalf = 250
+
+		self.selectpics = []
+		self.selectpics.append((self.rcheighthalf, ["arrowdown", "arrowdown2"], (-18, -70)))
+		self.selectpics.append((self.rcheight, ["arrowup", "arrowup2"], (-18, 0)))
+
+		self.readPositions()
 		self.clearSelectedKeys()
-		self.wizardConversion = {  # This dictionary converts named buttons in the Wizards to keyIds.
-			"OK": KEYIDS.get("KEY_OK"),
-			"EXIT": KEYIDS.get("KEY_EXIT"),
-			"LEFT": KEYIDS.get("KEY_LEFT"),
-			"RIGHT": KEYIDS.get("KEY_RIGHT"),
-			"UP": KEYIDS.get("KEY_UP"),
-			"DOWN": KEYIDS.get("KEY_DOWN"),
-			"RED": KEYIDS.get("KEY_RED"),
-			"GREEN": KEYIDS.get("KEY_GREEN"),
-			"YELLOW": KEYIDS.get("KEY_YELLOW"),
-			"BLUE": KEYIDS.get("KEY_BLUE")
-		}
-		self.onLayoutFinish.append(self.initRemoteControl)
+		self.onShown.append(self.initRc)
 
-	class KeyIndicator:
+	def initRc(self):
+		if self.isDefaultRc:
+			self["rc"].setPixmapNum(config.misc.rcused.value)
+		else:
+			self["rc"].setPixmapNum(0)
 
-		class KeyIndicatorPixmap(MovingPixmap):
-			def __init__(self, activeYPos, pixmap):
-				MovingPixmap.__init__(self)
-				self.activeYPos = activeYPos
-				self.pixmapName = pixmap
+	def readPositions(self):
+		if self.isDefaultRc:
+			target = resolveFilename(SCOPE_SKIN, "rcpositions.xml")
+		else:
+			target = rc_model.getRcPositions()
+		tree = ElementTree(file=target)
+		rcs = tree.getroot()
+		self.rcs = {}
+		for rc in rcs:
+			id = int(rc.attrib["id"])
+			self.rcs[id] = {}
+			for key in rc:
+				name = key.attrib["name"]
+				pos = key.attrib["pos"].split(",")
+				self.rcs[id][name] = (int(pos[0]), int(pos[1]))
 
-		def __init__(self, owner, activeYPos, pixmaps):
-			self.pixmaps = []
-			for actYpos, pixmap in zip(activeYPos, pixmaps):
-				pm = self.KeyIndicatorPixmap(actYpos, pixmap)
-				owner[pixmap] = pm
-				self.pixmaps.append(pm)
-			self.pixmaps.sort(key=lambda x: x.activeYPos)
+	def getSelectPic(self, pos):
+		for selectPic in self.selectpics:
+			if pos[1] <= selectPic[0]:
+				return (selectPic[1], selectPic[2])
+		return None
 
-		def slideTime(self, start, end, time=20):
-			if not self.pixmaps:
-				return time
-			dist = ((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2) ** 0.5
-			slide = int(round(dist / self.pixmaps[-1].activeYPos * time))
-			return slide if slide > 0 else 1
+	def hideRc(self):
+		self["rc"].hide()
+		self.hideSelectPics()
 
-		def moveTo(self, pos, rcPos, moveFrom=None, time=20):
-			foundActive = False
-			for index, pixmap in enumerate(self.pixmaps):
-				fromX, fromY = pixmap.getPosition()
-				if moveFrom:
-					fromX, fromY = moveFrom.pixmaps[index].getPosition()
-				x = pos[0] + rcPos[0]
-				y = pos[1] + rcPos[1]
-				if pos[1] <= pixmap.activeYPos and not foundActive:
-					pixmap.move(fromX, fromY)
-					pixmap.moveTo(x, y, self.slideTime((fromX, fromY), (x, y), time))
-					pixmap.show()
-					pixmap.startMoving()
-					foundActive = True
-				else:
-					pixmap.move(x, y)
+	def showRc(self):
+		self["rc"].show()
 
-		def hide(self):
-			for pixmap in self.pixmaps:
-				pixmap.hide()
-
-	def initRemoteControl(self):
-		rc = LoadPixmap(BoxInfo.getItem("RCImage"))
-		if rc:
-			self["rc"].instance.setPixmap(rc)
-			self.rcPosition = self["rc"].getPosition()
-			rcHeight = self["rc"].getSize()[1]
-			for selectPic in self.selectPics:
-				nBreaks = len(selectPic.pixmaps)
-				roundup = nBreaks - 1
-				n = 1
-				for pic in selectPic.pixmaps:
-					pic.activeYPos = (rcHeight * n + roundup) / nBreaks
-					n += 1
-
-	def selectKey(self, keyId):
-		if self.rcPosition:
-			if isinstance(keyId, str):  # This test looks for named buttons in the Wizards and converts them to keyIds.
-				keyId = self.wizardConversion.get(keyId, 0)
-			pos = remoteControl.getRemoteControlKeyPos(keyId)
-			if pos and self.nSelectedKeys < len(self.selectPics):
-				selectPic = self.selectPics[self.nSelectedKeys]
-				self.nSelectedKeys += 1
-				if self.oldNSelectedKeys > 0 and self.nSelectedKeys > self.oldNSelectedKeys:
-					selectPic.moveTo(pos, self.rcPosition, moveFrom=self.selectPics[self.oldNSelectedKeys - 1], time=int(config.usage.helpAnimationSpeed.value))
-				else:
-					selectPic.moveTo(pos, self.rcPosition, time=int(config.usage.helpAnimationSpeed.value))
+	def selectKey(self, key):
+		if self.isDefaultRc:
+			rc = self.rcs[config.misc.rcused.value]
+		else:
+			rc = self.rcs[2]
+		if key in rc:
+			rcpos = self["rc"].getPosition()
+			pos = rc[key]
+			selectPics = self.getSelectPic(pos)
+			selectPic = None
+			for x in selectPics[0]:
+				if x not in self.selectedKeys:
+					selectPic = x
+					break
+			if selectPic is not None:
+				print("selectPic:", selectPic)
+				self[selectPic].moveTo(rcpos[0] + pos[0] + selectPics[1][0], rcpos[1] + pos[1] + selectPics[1][1], 1)
+				self[selectPic].startMoving()
+				self[selectPic].show()
+				self.selectedKeys.append(selectPic)
 
 	def clearSelectedKeys(self):
+		self.showRc()
+		self.selectedKeys = []
 		self.hideSelectPics()
-		self.oldNSelectedKeys = self.nSelectedKeys
-		self.nSelectedKeys = 0
 
 	def hideSelectPics(self):
-		for selectPic in self.selectPics:
-			selectPic.hide()
-
-	# Visits all the buttons in turn, sliding between them.  Starts with
-	# the top left button and finishes on the bottom right button.
-	# Leaves the highlight on the bottom right button at the end of
-	# the test run.  The callback method can be used to restore the
-	# highlight(s) to their correct position(s) when the animation
-	# completes.
-	#
-	def testHighlights(self, callback=None):
-		if not self.selectPics or not self.selectPics[0].pixmaps:
-			return
-		self.hideSelectPics()
-		pixmap = self.selectPics[0].pixmaps[0]
-		pixmap.show()
-		rcPos = self["rc"].getPosition()
-		pixmap.clearPath()
-		for keyId in remoteControl.getRemoteControlKeyList():
-			pos = remoteControl.getRemoteControlKeyPos(keyId)
-			pixmap.addMovePoint(rcPos[0] + pos[0], rcPos[1] + pos[1], time=5)
-			pixmap.addMovePoint(rcPos[0] + pos[0], rcPos[1] + pos[1], time=10)
-		pixmap.startMoving(callback)
+		for selectPic in self.selectpics:
+			for pic in selectPic[1]:
+				self[pic].hide()

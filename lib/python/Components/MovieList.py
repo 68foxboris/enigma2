@@ -174,7 +174,7 @@ class MovieList(GUIComponent):
 		self.partIconeShiftCompact = 4
 		self.partIconeShiftOriginal = 5
 		self.spaceRight = 2
-		self.spaceLeft= 2
+		self.spaceLeft = 2
 		self.spaceIconeText = 2
 		self.iconsWidth = 22
 		self.trashShift = 1
@@ -493,8 +493,8 @@ class MovieList(GUIComponent):
 		ih = self.itemHeight
 		if self.list_type == MovieList.LISTTYPE_ORIGINAL:
 			fc, sc = self.columnsOriginal[0], self.columnsOriginal[1]
-			ih1 = (ih * 2) // 5 # 75 -> 30
-			ih2 = (ih * 2) // 3 # 75 -> 50
+			ih1 = (ih * 2) // 5  # 75 -> 30
+			ih2 = (ih * 2) // 3  # 75 -> 50
 			res.append(MultiContentEntryText(pos=(iconSize + space + self.spaceLeft, 0), size=(width - fc - r - self.spaceLeft, ih1), font=0, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER, text=data.txt))
 			if self.tags:
 				res.append(MultiContentEntryText(pos=(width - fc - r, 0), size=(fc, ih1), font=2, flags=RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text=info.getInfoString(serviceref, iServiceInformation.sTags)))
@@ -508,7 +508,7 @@ class MovieList(GUIComponent):
 			if len:
 				res.append(MultiContentEntryText(pos=(width - sc - r, ih2), size=(sc, ih - ih2), font=1, flags=RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text=len))
 		elif self.list_type == MovieList.LISTTYPE_COMPACT_DESCRIPTION:
-			ih1 = ((ih * 8) + 14) // 15 # 37 -> 20, round up
+			ih1 = ((ih * 8) + 14) // 15  # 37 -> 20, round up
 			if len:
 				lenSize = 58 * ih // 37
 			else:
@@ -523,7 +523,7 @@ class MovieList(GUIComponent):
 				res.append(MultiContentEntryText(pos=(width - lenSize - r, ih1), size=(lenSize, ih - ih1), font=1, flags=RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text=len))
 		elif self.list_type == MovieList.LISTTYPE_COMPACT:
 			col = self.compactColumn
-			ih1 = ((ih * 8) + 14) // 15 # 37 -> 20, round up
+			ih1 = ((ih * 8) + 14) // 15  # 37 -> 20, round up
 			if len:
 				lenSize = 2 * ih
 			else:
@@ -545,7 +545,7 @@ class MovieList(GUIComponent):
 				res.append(MultiContentEntryText(pos=(iconSize + space + self.spaceLeft, 0), size=(width - iconSize - space - dateSize - r - self.spaceLeft, ih), font=0, flags=RT_HALIGN_LEFT | RT_VALIGN_CENTER, text=data.txt))
 				res.append(MultiContentEntryText(pos=(width - dateSize - r, 2), size=(dateSize, ih), font=1, flags=RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text=begin_string))
 			else:
-				lenSize = ih * 3 # 25 -> 75
+				lenSize = ih * 3  # 25 -> 75
 				res.append(MultiContentEntryText(pos=(iconSize + space + self.spaceLeft, 0), size=(width - lenSize - iconSize - space - r - self.spaceLeft, ih), font=0, flags=RT_HALIGN_LEFT, text=data.txt))
 				res.append(MultiContentEntryText(pos=(width - lenSize - r, 0), size=(lenSize, ih), font=0, flags=RT_HALIGN_RIGHT | RT_VALIGN_CENTER, text=len))
 		return res
@@ -778,7 +778,7 @@ class MovieList(GUIComponent):
 				self.tags[match] = set(tags)
 			else:
 				match = " ".join(tags)
-				if (len(match) > 2) or (match in realtags): #Omit small words, only for auto tags
+				if (len(match) > 2) or (match in realtags):  # Omit small words, only for auto tags
 					self.tags[match] = set(tags)
 		# Adding the realtags to the tag list
 		for tag in realtags:
@@ -813,8 +813,8 @@ class MovieList(GUIComponent):
 			return (0, "", -x[2])
 		return (1, "", -x[2])
 
-	def buildGroupwiseSortkey(self, x): # Sort recordings by date, sort MP3 and stuff by name
-		ref = x[0] # x = ref, info, begin, ...
+	def buildGroupwiseSortkey(self, x):  # Sort recordings by date, sort MP3 and stuff by name
+		ref = x[0]  # x = ref, info, begin, ...
 		return self.buildAlphaNumericSortKey(x) if ref.type >= eServiceReference.idUser or ref.flags & eServiceReference.mustDescent else self.buildBeginTimeSortKey(x)
 
 	def moveTo(self, serviceref):
@@ -838,7 +838,7 @@ class MovieList(GUIComponent):
 			lbl.visible = True
 		self.moveToCharTimer = eTimer()
 		self.moveToCharTimer.callback.append(self._moveToChrStr)
-		self.moveToCharTimer.start(1000, True) #Time to wait for next key press to decide which letter to use...
+		self.moveToCharTimer.start(1000, True)  # Time to wait for next key press to decide which letter to use...
 
 	def moveToString(self, char, lbl=None):
 		self._char = f"{self._char}{char.upper()}"
@@ -848,7 +848,7 @@ class MovieList(GUIComponent):
 			lbl.visible = True
 		self.moveToCharTimer = eTimer()
 		self.moveToCharTimer.callback.append(self._moveToChrStr)
-		self.moveToCharTimer.start(1000, True) #Time to wait for next key press to decide which letter to use...
+		self.moveToCharTimer.start(1000, True)  # Time to wait for next key press to decide which letter to use...
 
 	def _moveToChrStr(self):
 		currentIndex = self.instance.getCurrentIndex()
@@ -868,7 +868,7 @@ class MovieList(GUIComponent):
 					self.instance.moveSelectionTo(index + currentIndex + 1)
 					break
 		if found == False and currentIndex > 0:
-			itemsAbove = self.list[1:currentIndex] #first item (0) points parent folder - no point to include
+			itemsAbove = self.list[1:currentIndex]  # first item (0) points parent folder - no point to include
 			for index, item in enumerate(itemsAbove):
 				ref = item[0]
 				itemName = getShortName(item[1].getName(ref).upper(), ref)
@@ -887,10 +887,10 @@ class MovieList(GUIComponent):
 
 
 def getShortName(name, serviceref):
-	if serviceref.flags & eServiceReference.mustDescent: #Directory
+	if serviceref.flags & eServiceReference.mustDescent:  # Directory
 		pathName = serviceref.getPath()
 		p = split(pathName)
-		if not p[1]: #if path ends in "/", p is blank.
+		if not p[1]:  # if path ends in "/", p is blank.
 			p = split(p[0])
 		return p[1].upper()
 	else:

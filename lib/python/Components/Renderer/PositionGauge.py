@@ -1,10 +1,9 @@
-from enigma import ePositionGauge
+# -*- coding: utf-8 -*-
 from Components.Renderer.Renderer import Renderer
+from enigma import ePositionGauge
 
 
 class PositionGauge(Renderer):
-	GUI_WIDGET = ePositionGauge
-
 	def __init__(self):
 		Renderer.__init__(self)
 		self.__position = 0
@@ -13,6 +12,8 @@ class PositionGauge(Renderer):
 		self.__seek_enable = 0
 		self.__cutlist = []
 
+	GUI_WIDGET = ePositionGauge
+
 	def postWidgetCreate(self, instance):
 		self.changed((self.CHANGED_DEFAULT,))
 		self.cutlist_changed()
@@ -20,7 +21,7 @@ class PositionGauge(Renderer):
 
 	def changed(self, what):
 		if what[0] == self.CHANGED_CLEAR:
-			(self.length, self.position) = (0, 0)
+			(self.length, self.position) = 0
 		else:
 			(self.length, self.position) = (self.source.length or 0, self.source.position or 0)
 

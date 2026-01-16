@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from enigma import iRdsDecoder, iPlayableService
 from Components.Converter.Converter import Converter
 from Components.Element import cached
@@ -11,10 +12,10 @@ class RdsInfo(Converter):
 	def __init__(self, type):
 		Converter.__init__(self, type)
 		self.type, self.interesting_events = {
-			"RadioText": (self.RADIO_TEXT_CHANGED, (iPlayableService.evUpdatedRadioText,)),
-			"RtpText": (self.RTP_TEXT_CHANGED, (iPlayableService.evUpdatedRtpText,)),
-			"RasInteractiveAvailable": (self.RASS_INTERACTIVE_AVAILABLE, (iPlayableService.evUpdatedRassInteractivePicMask,))
-		}[type]
+				"RadioText": (self.RADIO_TEXT_CHANGED, (iPlayableService.evUpdatedRadioText,)),
+				"RtpText": (self.RTP_TEXT_CHANGED, (iPlayableService.evUpdatedRtpText,)),
+				"RasInteractiveAvailable": (self.RASS_INTERACTIVE_AVAILABLE, (iPlayableService.evUpdatedRassInteractivePicMask,))
+			}[type]
 
 	@cached
 	def getText(self):
@@ -26,7 +27,7 @@ class RdsInfo(Converter):
 			elif self.type == self.RTP_TEXT_CHANGED:
 				text = decoder.getText(iRdsDecoder.RtpText)
 			else:
-				print("[RdsInfo] unknown RdsInfo Converter type", self.type)
+				print("unknown RdsInfo Converter type", self.type)
 		return text
 
 	text = property(getText)

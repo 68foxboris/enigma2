@@ -1,5 +1,7 @@
-from enigma import eLabel
+# -*- coding: utf-8 -*-
 from Components.Renderer.Renderer import Renderer
+
+from enigma import eLabel
 
 
 class FixedLabel(Renderer):
