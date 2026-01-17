@@ -47,12 +47,12 @@ def createCurrentCaidLabel(info, currentCaid=None, currentDevice=None):
 		else:
 			data = ("", "0", "0", "0", "")
 		# source, caid, provid, ecmpid, device
-		return data[0], data[1], data[2], data[3], data[4]
+		return data[0], data[1], data[2], data[3]
 
 	if not currentCaid:
 		cryptoInfo = getCryptoInfo()
 		currentCaid = cryptoInfo[1]
-		currentDevice = cryptoInfo[4]
+		currentDevice = cryptoInfo[3]
 	result = ""
 	decodingCiSlot = -1
 	NUM_CI = BoxInfo.getItem("CommonInterface")
