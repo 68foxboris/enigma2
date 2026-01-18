@@ -8,7 +8,7 @@
 #include <lib/gdi/esize.h>
 #include <lib/base/init.h>
 #include <lib/base/init_num.h>
-#if defined(HAVE_TEXTLCD) || defined(HAVE_7SEGMENT)
+#if defined(HAVE_TEXTLCD)
 #include <lib/base/estring.h>
 #endif
 #include <lib/gdi/glcddc.h>
@@ -21,6 +21,10 @@ const char *VFD_scroll_delay_proc = "/proc/stb/lcd/scroll_delay"; //  NOSONAR
 const char *VFD_initial_scroll_delay_proc = "/proc/stb/lcd/initial_scroll_delay"; //  NOSONAR
 const char *VFD_final_scroll_delay_proc = "/proc/stb/lcd/final_scroll_delay"; //  NOSONAR
 const char *VFD_scroll_repeats_proc = "/proc/stb/lcd/scroll_repeats"; //  NOSONAR
+
+#ifdef DM9X0_LCD
+#define LCD_DM9X0_Y_OFFSET 4
+#endif
 
 eLCD *eLCD::instance;
 
@@ -41,8 +45,8 @@ void eLCD::setSize(int xres, int yres, int bpp)
 {
 	_stride = xres * bpp / 8;
 	_buffer = new unsigned char[xres * yres * bpp / 8];
-#ifdef LCD_DM900_Y_OFFSET
-	xres -= LCD_DM900_Y_OFFSET;
+#ifdef DM9X0_LCD
+	xres -= LCD_DM9X0_Y_OFFSET;
 #endif
 	res = eSize(xres, yres);
 	memset(_buffer, 0, xres * yres * bpp / 8);
@@ -72,7 +76,7 @@ void eLCD::unlock()
 
 const char *eLCD::get_VFD_scroll_delay() const
 {
-#if defined(HAVE_7SEGMENT)
+#if defined(HAVE_TEXTLCD)
 	return "";
 #else
 	return (access(VFD_scroll_delay_proc, W_OK) == 0) ? VFD_scroll_delay_proc : "";
@@ -81,7 +85,7 @@ const char *eLCD::get_VFD_scroll_delay() const
 
 const char *eLCD::get_VFD_initial_scroll_delay() const
 {
-#if defined(HAVE_7SEGMENT)
+#if defined(HAVE_TEXTLCD)
 	return "";
 #else
 	return (access(VFD_initial_scroll_delay_proc, W_OK) == 0) ? VFD_initial_scroll_delay_proc : "";
@@ -90,7 +94,7 @@ const char *eLCD::get_VFD_initial_scroll_delay() const
 
 const char *eLCD::get_VFD_final_scroll_delay() const
 {
-#if defined(HAVE_7SEGMENT)
+#if defined(HAVE_TEXTLCD)
 	return "";
 #else
 	return (access(VFD_final_scroll_delay_proc, W_OK) == 0) ? VFD_final_scroll_delay_proc : "";
@@ -99,11 +103,7 @@ const char *eLCD::get_VFD_final_scroll_delay() const
 
 const char *eLCD::get_VFD_scroll_repeats() const
 {
-#if defined(HAVE_7SEGMENT)
-	return "";
-#else
 	return (access(VFD_scroll_repeats_proc, W_OK) == 0) ? VFD_scroll_repeats_proc : "";
-#endif
 }
 
 void eLCD::set_VFD_scroll_delay(int delay) const
@@ -149,7 +149,7 @@ void eLCD::setLCDMode(int mode, bool apply) const
 	}
 }
 
-#if defined(HAVE_TEXTLCD) || defined(HAVE_7SEGMENT)
+#if defined(HAVE_TEXTLCD)
 void eLCD::renderText(ePoint start, const char *text)
 {
 	if (lcdfd >= 0 && start.y() < 5)
@@ -441,7 +441,7 @@ void eDBoxLCD::dumpLCD(bool png)
 
 void eDBoxLCD::update()
 {
-#if !defined(HAVE_TEXTLCD) && !defined(HAVE_7SEGMENT)
+#if !defined(HAVE_TEXTLCD)
 	if (lcdfd >= 0)
 	{
 		[[maybe_unused]] ssize_t ret; /* dummy value to store write return values */
@@ -499,13 +499,13 @@ void eDBoxLCD::update()
 			}
 			else
 			{
-#if defined(LCD_DM900_Y_OFFSET)
+#if defined(DM9X0_LCD)
 				unsigned char gb_buffer[_stride * res.height()];
 				for (int offset = 0; offset < ((_stride * res.height()) >> 2); offset++)
 				{
 					unsigned int src = 0;
-					if (offset % (_stride >> 2) >= LCD_DM900_Y_OFFSET)
-						src = ((unsigned int *)_buffer)[offset - LCD_DM900_Y_OFFSET];
+					if (offset % (_stride >> 2) >= LCD_DM9X0_Y_OFFSET)
+						src = ((unsigned int *)_buffer)[offset - LCD_DM9X0_Y_OFFSET];
 					//                                             blue                         red                  green low                     green high
 					((unsigned int *)gb_buffer)[offset] = ((src >> 3) & 0x001F001F) | ((src << 3) & 0xF800F800) | ((src >> 8) & 0x00E000E0) | ((src << 8) & 0x07000700);
 				}

@@ -452,6 +452,7 @@ BoxInfo.setItem("PowerLED", fileCheck("/proc/stb/power/powerled") or MODEL in ("
 BoxInfo.setItem("StandbyLED", fileCheck("/proc/stb/power/standbyled") or MODEL in ("gbue4k", "gbquad4k", "gbquad4kpro") and fileCheck("/proc/stb/fp/led0_pattern"))
 BoxInfo.setItem("SuspendLED", fileCheck("/proc/stb/power/suspendled") or fileCheck("/proc/stb/fp/enable_led"))
 BoxInfo.setItem("Display", BoxInfo.getItem("FrontpanelDisplay") or BoxInfo.getItem("StandbyLED") or MODEL in ("dreamone", "dreamtwo"))
+BoxInfo.setItem("LEDButtons", MACHINEBUILD == "vuultimo")
 BoxInfo.setItem("LEDControl", MODEL not in ("dreamone", "dreamtwo"))
 BoxInfo.setItem("LEDColorControl", fileExists("/proc/stb/fp/led_color"))
 BoxInfo.setItem("LedPowerColor", fileCheck("/proc/stb/fp/ledpowercolor"))
