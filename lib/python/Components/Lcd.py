@@ -37,8 +37,8 @@ def IconCheck(session=None, **kwargs):
 
 class IconCheckPoller:
 	def __init__(self):
-		self.symbolNetwork = exists("/proc/stb/lcd/symbol_network")
-		self.symbolUsb = exists("/proc/stb/lcd/symbol_usb")
+		self.symbolNetwork = isfile("/proc/stb/lcd/symbol_network")
+		self.symbolUsb = isfile("/proc/stb/lcd/symbol_usb")
 		self.lcdMode = config.lcd.mode.value
 		config.lcd.mode.addNotifier(self.setLCDmode)
 		self.timer = eTimer()
@@ -406,33 +406,40 @@ def InitLcd():
 		], default="0")
 		if isfile("/sys/module/brcmstb_osmega/parameters/pt6302_cgram"):
 			config.usage.vfd_xcorevfd.addNotifier(setXcoreVFD)
-		config.lcd.ledpowercolor = ConfigSelection(default="1", choices=colorchoices)
+
+		choices = [("0", _("Off")), ("1", _("blue")), ("2", _("red")), ("3", _("violet"))]
+
+		config.lcd.ledpowercolor = ConfigSelection(default="1", choices=choices)
 		if isfile("/proc/stb/fp/ledpowercolor"):
 			config.lcd.ledpowercolor.addNotifier(setLedPowerColor)
-		config.lcd.ledstandbycolor = ConfigSelection(default="3", choices=colorchoices)
+		config.lcd.ledstandbycolor = ConfigSelection(default="3", choices=choices)
 		if isfile("/proc/stb/fp/ledstandbycolor"):
 			config.lcd.ledstandbycolor.addNotifier(setLedStandbyColor)
-		config.lcd.ledsuspendcolor = ConfigSelection(default="2", choices=colorchoices)
+		config.lcd.ledsuspendcolor = ConfigSelection(default="2", choices=choices)
 		if isfile("/proc/stb/fp/ledsuspendledcolor"):
 			config.lcd.ledsuspendcolor.addNotifier(setLedSuspendColor)
+
 		config.lcd.power4x7on = ConfigSelection(choices=[
 			("off", _("Off")),
 			("on", _("On"))
 		], default="on")
 		if isfile("/proc/stb/fp/power4x7on"):
 			config.lcd.power4x7on.addNotifier(setPower4x7On)
+
 		config.lcd.power4x7standby = ConfigSelection(choices=[
 			("off", _("Off")),
 			("on", _("On"))
 		], default="on")
 		if isfile("/proc/stb/fp/power4x7standby"):
 			config.lcd.power4x7standby.addNotifier(setPower4x7Standby)
+
 		config.lcd.power4x7suspend = ConfigSelection(choices=[
 			("off", _("Off")),
 			("on", _("On"))
 		], default="on")
 		if isfile("/proc/stb/fp/power4x7suspend"):
 			config.lcd.power4x7suspend.addNotifier(setPower4x7Suspend)
+
 		if MODEL in ("dm900", "dm920"):
 			standby_default = 4
 		else:
@@ -442,6 +449,7 @@ def InitLcd():
 			config.lcd.contrast.addNotifier(setLCDcontrast)
 		else:
 			config.lcd.contrast = ConfigNothing()
+
 		config.lcd.standby = ConfigSlider(default=standby_default, limits=(0, 10))
 		config.lcd.dimbright = ConfigSlider(default=standby_default, limits=(0, 10))
 		config.lcd.bright = ConfigSlider(default=BoxInfo.getItem("DefaultDisplayBrightness"), limits=(0, 10))
