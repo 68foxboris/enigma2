@@ -308,13 +308,13 @@ def InitLcd():
 		else:
 			config.lcd.modeminitv = ConfigNothing()
 			config.lcd.fpsminitv = ConfigNothing()
-		config.lcd.scroll_speed = ConfigSelection(choices=[
+		config.lcd.scrollSpeed = ConfigSelection(choices=[
 			("500", _("Slow")),
 			("300", _("Normal")),
 			("100", _("Fast"))
 		], default="300")
 		delayChoices = [(x, ngettext("%d Second", "%d Seconds", x) % x) for x in (10, 20, 30, 40, 50)] + [(x * 60, ngettext("%d Minute", "%d Minutes", x) % x) for x in (1, 2, 3, 5, 10, 15)] + [(0, _("Off"))]
-		config.lcd.scroll_delay = ConfigSelection(default=10, choices=delayChoices)
+		config.lcd.scrollDelay = ConfigSelection(default=10, choices=delayChoices)
 
 		def setLCDbright(configElement):
 			ilcd.setBright(configElement.value)
