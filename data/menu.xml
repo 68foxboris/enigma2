@@ -75,9 +75,12 @@
 					<item key="user_interface" level="0" text="User Interface" ><setup setupKey="UserInterface"/></item>
 					<item key="channelselection_setup" level="0" text="Channel Selection Settings" weight="10"><setup setupKey="ChannelSelection" /></item>
 					<item key="usage_setup" level="0" text="Customize"><setup setupKey="Usage"/></item>
-					<item key="skin_setup" level="0" text="Skin Settings" weight="25"><screen module="SkinSelection" screen="SkinSelection" /></item>
-					<item key="lcd_setup" level="1" text="LCD Setup" weight="10" requires="Display"><setup setupKey="FrontDisplay" /></item>
-					<item key="led_setup" level="1" text="LED Setup" weight="15"><setup setupKey="LedDisplay" /></item>
+					<item key="primary_skin_selector" level="0" text="Skin"><screen module="SkinSelector" screen="SkinSelector"/></item>
+					<menu key="lcd" level="0" text="Front Panel Display">
+						<item key="display_skin_selector" level="0" text="Skin Setup" weight="5" requires="Display"><screen module="SkinSelector" screen="LcdSkinSelector" /></item>
+						<item key="lcd_setup" level="1" text="LCD Setup" weight="10" requires="Display"><setup setupKey="FrontDisplay" /></item>
+						<item key="led_setup" level="1" text="LED Setup" weight="15"><setup setupKey="LedDisplay" /></item>
+					</menu>
 				</menu>
 				<menu key="logs_menu" level="0" text="Log Manager" weight="2">
 					<item key="logs_setup" level="2" text="Logs Settings"><setup setupKey="Logs" /></item>
