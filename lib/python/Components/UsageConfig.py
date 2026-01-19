@@ -7,7 +7,7 @@ from skin import getcomponentTemplateNames, parameters, domScreens
 from Components.Harddisk import harddiskmanager
 from Components.International import international
 from Components.Console import Console
-from Components.config import ConfigBoolean, ConfigClock, ConfigDictionarySet, ConfigDirectory, ConfigFloat, ConfigInteger, ConfigIP, ConfigLocations, ConfigNumber, ConfigPassword, ConfigSelection, ConfigSelectionNumber, ConfigSequence, ConfigSet, ConfigSlider, ConfigSubDict, ConfigSubsection, ConfigText, ConfigYesNo, ConfigEnableDisable, NoSave, config, configfile
+from Components.config import ConfigBoolean, ConfigClock, ConfigDictionarySet, ConfigDirectory, ConfigFloat, ConfigInteger, ConfigIP, ConfigLocations, ConfigNumber, ConfigPassword, ConfigSelection, ConfigSelectionNumber, ConfigSelectionInteger, ConfigSequence, ConfigSet, ConfigSlider, ConfigSubDict, ConfigSubsection, ConfigText, ConfigYesNo, ConfigEnableDisable, NoSave, config, configfile
 from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eSubtitleSettings, eSettings, eDVBLocalTimeHandler, eEPGCache
 from Components.About import GetIPsFromNetworkInterfaces
 from Components.NimManager import nimmanager
@@ -1431,6 +1431,39 @@ def InitUsageConfig():
 	config.epg.cachesavesched.addNotifier(EpgCacheSaveSchedChanged, immediate_feedback = False)
 	config.epg.cacheloadtimer = ConfigSelection(default=24, choices=[(x, ngettext("%d Hour", "%d Hours", x) % x) for x in range(1, 25)])
 	config.epg.cachesavetimer = ConfigSelection(default=24, choices=[(x, ngettext("%d Hour", "%d Hours", x) % x) for x in range(1, 25)])
+
+	config.osd = ConfigSubsection()
+	if BoxInfo.getItem("AmlogicFamily"):
+		from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
+		limits = [int(x) for x in video_hw.getWindowsAxis().split()]
+		config.osd.dst_left = ConfigSelectionNumber(default=limits[0], stepwidth=1, min=limits[0] - 255, max=limits[0] + 255, wraparound=False)
+		config.osd.dst_top = ConfigSelectionNumber(default=limits[1], stepwidth=1, min=limits[1] - 255, max=limits[1] + 255, wraparound=False)
+		config.osd.dst_width = ConfigSelectionNumber(default=limits[2], stepwidth=1, min=limits[2] - 255, max=limits[2] + 255, wraparound=False)
+		config.osd.dst_height = ConfigSelectionNumber(default=limits[3], stepwidth=1, min=limits[3] - 255, max=limits[3] + 255, wraparound=False)
+	else:
+		config.osd.dst_left = ConfigSelectionInteger(default=0, first=0, last=720, step=1, wrap=False)
+		config.osd.dst_top = ConfigSelectionInteger(default=0, first=0, last=576, step=1, wrap=False)
+		config.osd.dst_width = ConfigSelectionInteger(default=720, first=0, last=720, step=1, wrap=False)
+		config.osd.dst_height = ConfigSelectionInteger(default=576, first=0, last=576, step=1, wrap=False)
+
+	config.osd.alpha = ConfigSelectionInteger(default=255, first=0, last=255, step=1, wrap=False)
+	config.osd.alpha_teletext = ConfigSelectionInteger(default=255, first=0, last=255, step=1, wrap=False)
+	config.osd.alpha_webbrowser = ConfigSelectionInteger(default=255, first=0, last=255, step=1, wrap=False)
+	config.osd.threeDmode = ConfigSelection(default="auto", choices=[
+		("off", _("Off")),
+		("auto", _("Auto")),
+		("sidebyside", _("Side by Side")),
+		("topandbottom", _("Top and Bottom"))
+	])
+	config.osd.threeDznorm = ConfigSlider(default=50, increment=1, limits=(0, 100))
+	config.osd.show3dextensions = ConfigYesNo(default=False)
+	config.osd.threeDsetmode = ConfigSelection(default="mode1", choices=[
+		("mode1", _("Mode 1")),
+		("mode2", _("Mode 2"))
+	])
+
+	config.osd.language = ConfigText(default=config.misc.locale.value)
+
 
 	def debugEPGhanged(configElement):
 		from enigma import eEPGCache

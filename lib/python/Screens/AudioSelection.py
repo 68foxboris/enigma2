@@ -785,6 +785,7 @@ class QuickSubtitlesConfigMenu(ConfigListScreen, Screen):
 		self.infobar.setSeekState(self.infobar.SEEK_STATE_PLAY)
 
 	def getFps(self):
+		from enigma import iServiceInformation
 		service = self.session.nav.getCurrentService()
 		info = service and service.info()
 		if not info:

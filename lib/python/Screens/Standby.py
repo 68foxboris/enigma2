@@ -473,15 +473,6 @@ class TryQuitMainloop(MessageBox):
 			elif not inStandby:
 				config.misc.RestartUI.value = True
 				config.misc.RestartUI.save()
-			if BoxInfo.getItem("Display") and BoxInfo.getItem("LCDMiniTV"):
-				print("[Standby] LCDminiTV off")
-				eDBoxLCD.getInstance().setLCDMode("0")
-			if MODEL == "vusolo4k":
-				oled_brightness = "/proc/stb/fp/oled_brightness"
-				if isfile(oled_brightness):
-					print("[Standby] Brightness OLED off")
-					with open(oled_brightness, "w") as oled:
-						oled.write("0")
 			self.quitMainloop()
 		else:
 			if self.descramble:
