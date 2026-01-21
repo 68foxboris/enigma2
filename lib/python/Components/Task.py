@@ -6,7 +6,7 @@ from Tools.CList import CList
 
 
 class Job:
-	NOT_STARTED, IN_PROGRESS, FINISHED, FAILED = range(4)
+	NOT_STARTED, IN_PROGRESS, FINISHED, FAILED = list(range(4))
 
 	def __init__(self, name):
 		self.tasks = []
@@ -15,7 +15,7 @@ class Job:
 		self.current_task = 0
 		self.callback = None
 		self.name = name
-		self.finished = False
+		self.finished = False  # FIXME Do we need this?
 		self.end = 100
 		self.__progress = 0
 		self.weightScale = 1
@@ -132,6 +132,8 @@ class Task:
 		self.cwd = "/tmp"
 		self.args = []
 		self.cmdline = None
+		self.nice = None
+		self.ionice = None
 		self.task_progress_changed = None
 		self.output_line = ""
 		job.addTask(self)
@@ -172,6 +174,10 @@ class Task:
 		self.container.stderrAvail.append(self.processStderr)
 		if self.cwd is not None:
 			self.container.setCWD(self.cwd)
+		if self.nice is not None:
+			self.container.setNice(self.nice)
+		if self.ionice is not None:
+			self.container.setIONice(self.ionice)
 		if not self.cmd and self.cmdline:
 			print("[Task] execute:", self.container.execute(self.cmdline), self.cmdline)
 		else:
@@ -203,10 +209,10 @@ class Task:
 		pass
 
 	def processStdout(self, data):
-		self.processOutput(data.decode())
+		self.processOutput(data)
 
 	def processStderr(self, data):
-		self.processOutput(data.decode())
+		self.processOutput(data)
 
 	def processOutput(self, data):
 		if isinstance(data, bytes):
@@ -292,7 +298,7 @@ class PythonTask(Task):
 		self.timer.start(5)
 
 	def work(self):
-		raise NotImplemented("work")
+		raise NotImplementedError("work")
 
 	def abort(self):
 		self.aborted = True
@@ -385,17 +391,17 @@ class JobManager:
 				self.active_job.start(self.jobDone)
 
 	def notifyFailed(self, job, task, problems):
-		from Tools.Notifications import AddNotification, AddNotificationWithCallback
+		import Tools.Notifications
 		from Screens.MessageBox import MessageBox
 		if problems[0].RECOVERABLE:
-			AddNotificationWithCallback(self.errorCB, MessageBox, _("Error: %s\nRetry?") % (problems[0].getErrorMessage(task)))
+			Tools.Notifications.AddNotificationWithCallback(self.errorCB, MessageBox, _("Error: %s\nRetry?") % (problems[0].getErrorMessage(task)))
 			return True
 		else:
-			AddNotification(MessageBox, job.name + "\n" + _("Error") + f': {problems[0].getErrorMessage(task)}', type=MessageBox.TYPE_ERROR)
+			Tools.Notifications.AddNotification(MessageBox, job.name + "\n" + _("Error") + f': {problems[0].getErrorMessage(task)}', type=MessageBox.TYPE_ERROR)
 			return False
 
 	def jobDone(self, job, task, problems):
-		print("[Task] job", job, "completed with", problems, "in", task)
+		print("job", job, "completed with", problems, "in", task)
 		if problems:
 			if not job.onFail(job, task, problems):
 				self.errorCB(False)
@@ -408,10 +414,10 @@ class JobManager:
 	# Set job.onSuccess to this function if you want to pop up the jobview when the job is done/
 	def popupTaskView(self, job):
 		if not self.visible:
-			from Tools.Notifications import AddNotification
+			import Tools.Notifications
 			from Screens.TaskView import JobView
 			self.visible = True
-			AddNotification(JobView, job)
+			Tools.Notifications.AddNotification(JobView, job)
 
 	def errorCB(self, answer):
 		if answer:
@@ -432,6 +438,9 @@ class JobManager:
 
 
 class Condition:
+	def __init__(self):
+		pass
+
 	RECOVERABLE = False
 
 	def getErrorMessage(self, task):
@@ -439,7 +448,11 @@ class Condition:
 
 
 class WorkspaceExistsPrecondition(Condition):
+	def __init__(self):
+		pass
+
 	def check(self, task):
+		import os
 		return os.access(task.job.workspace, os.W_OK)
 
 
@@ -458,36 +471,46 @@ class DiskspacePrecondition(Condition):
 			return False
 
 	def getErrorMessage(self, task):
-		return _("Not enough disk space. Please free up some disk space and try again. (%(req)d MB required, %(avail)d MB available)") % {"req": self.diskspace_required / 1024 / 1024, "avail": self.diskspace_available / 1024 / 1024}
+		return _("Not enough disk space. Please free up some disk space and try again. (%d MB required, %d MB available)") % (self.diskspace_required / 1024 / 1024, self.diskspace_available / 1024 / 1024)
 
 
 class ToolExistsPrecondition(Condition):
+	def __init__(self):
+		pass
+
 	def check(self, task):
 		import os
 		if task.cmd[0] == '/':
 			self.realpath = task.cmd
-			print("[Task] ToolExistsPrecondition WARNING: usage of absolute paths for tasks should be avoided!")
+			print("[Task][ToolExistsPrecondition] WARNING: usage of absolute paths for tasks should be avoided!")
 			return os.access(self.realpath, os.X_OK)
 		else:
 			self.realpath = task.cmd
 			path = os.environ.get('PATH', '').split(os.pathsep)
 			path.append(task.cwd + '/')
-			absolutes = list(filter(lambda file: os.access(file, os.X_OK), list(map(lambda directory, file=task.cmd: os.path.join(directory, file), path))))
+			# FIXME PY3 map,filter
+			absolutes = list(filter(lambda _file: os.access(_file, os.X_OK), map(lambda directory, _file=task.cmd: os.path.join(directory, _file), path)))
 			if absolutes:
 				self.realpath = absolutes[0]
 				return True
 		return False
 
 	def getErrorMessage(self, task):
-		return _("A required tool (%s) was not found.") % (self.realpath)
+		return _("A required tool (%s) was not found.") % self.realpath
 
 
 class AbortedPostcondition(Condition):
+	def __init__(self):
+		pass
+
 	def getErrorMessage(self, task):
 		return _("Cancelled upon user request")
 
 
 class ReturncodePostcondition(Condition):
+	def __init__(self):
+		pass
+
 	def check(self, task):
 		return task.returncode == 0
 

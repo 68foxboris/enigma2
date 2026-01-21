@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
-from enigma import iRecordableService
+
 from Components.config import config, ConfigSubList, ConfigSubsection, ConfigSlider
 from Tools.BoundFunction import boundFunction
 
 import NavigationInstance
-from Components.SystemInfo import BoxInfo
-
-model = BoxInfo.getItem("model")
+from enigma import iRecordableService
 
 
 class FanControl:
@@ -25,36 +23,36 @@ class FanControl:
 			cfg = self.getConfig(fanid)
 			self.setVoltage(fanid, cfg.vlt.value)
 			self.setPWM(fanid, cfg.pwm.value)
-			print("[FanControl] setting fan values: fanid = %d, voltage = %d, pwm = %d" % (fanid, cfg.vlt.value, cfg.pwm.value))
+			print("[FanControl]: setting fan values: fanid = %d, voltage = %d, pwm = %d" % (fanid, cfg.vlt.value, cfg.pwm.value))
 
 	def setVoltage_PWM_Standby(self):
 		for fanid in range(self.getFanCount()):
 			cfg = self.getConfig(fanid)
 			self.setVoltage(fanid, cfg.vlt_standby.value)
 			self.setPWM(fanid, cfg.pwm_standby.value)
-			print("[FanControl] setting fan values (standby mode): fanid = %d, voltage = %d, pwm = %d" % (fanid, cfg.vlt_standby.value, cfg.pwm_standby.value))
+			print("[FanControl]: setting fan values (standby mode): fanid = %d, voltage = %d, pwm = %d" % (fanid, cfg.vlt_standby.value, cfg.pwm_standby.value))
 
 	def getRecordEvent(self, recservice, event):
-		recordingsCount = NavigationInstance.instance.getRealRecordingsCount()
+		recordings = len(NavigationInstance.instance.getRecordings())
 		if event == iRecordableService.evEnd:
-			if not recordingsCount:
+			if recordings == 0:
 				self.setVoltage_PWM_Standby()
 		elif event == iRecordableService.evStart:
-			if recordingsCount:
+			if recordings == 1:
 				self.setVoltage_PWM()
 
 	def leaveStandby(self):
 		NavigationInstance.instance.record_event.remove(self.getRecordEvent)
-		recordingsCount = NavigationInstance.instance.getRealRecordingsCount()
-		if not recordingsCount:
+		recordings = NavigationInstance.instance.getRecordings()
+		if not recordings:
 			self.setVoltage_PWM()
 
 	def standbyCounterChanged(self, configElement):
 		from Screens.Standby import inStandby
 		inStandby.onClose.append(self.leaveStandby)
-		recordingsCount = NavigationInstance.instance.getRealRecordingsCount()
+		recordings = NavigationInstance.instance.getRecordings()
 		NavigationInstance.instance.record_event.append(self.getRecordEvent)
-		if not recordingsCount:
+		if not recordings:
 			self.setVoltage_PWM_Standby()
 
 	def createConfig(self):
@@ -68,23 +66,9 @@ class FanControl:
 		for fanid in range(self.getFanCount()):
 			fan = ConfigSubsection()
 			fan.vlt = ConfigSlider(default=15, increment=5, limits=(0, 255))
-			if model == "tm2t":
-				fan.pwm = ConfigSlider(default=150, increment=5, limits=(0, 255))
-			elif model == "tmsingle":
-				fan.pwm = ConfigSlider(default=100, increment=5, limits=(0, 255))
-			elif model == "beyonwizu4":
-				fan.pwm = ConfigSlider(default=0xcc, increment=0x11, limits=(0x22, 0xff))
-			elif model == "beyonwizt4":
-				fan.pwm = ConfigSlider(default=200, increment=5, limits=(0, 255))
-			else:
-				fan.pwm = ConfigSlider(default=50, increment=5, limits=(0, 255))
+			fan.pwm = ConfigSlider(default=0, increment=5, limits=(0, 255))
 			fan.vlt_standby = ConfigSlider(default=5, increment=5, limits=(0, 255))
-			if model == "beyonwizu4":
-				fan.pwm_standby = ConfigSlider(default=0x44, increment=0x11, limits=(0x22, 0xff))
-			elif model == "beyonwizt4":
-				fan.pwm_standby = ConfigSlider(default=10, increment=5, limits=(0, 0xff))
-			else:
-				fan.pwm_standby = ConfigSlider(default=0, increment=5, limits=(0, 255))
+			fan.pwm_standby = ConfigSlider(default=0, increment=5, limits=(0, 255))
 			fan.vlt.addNotifier(boundFunction(setVlt, self, fanid))
 			fan.pwm.addNotifier(boundFunction(setPWM, self, fanid))
 			config.fans.append(fan)
@@ -102,29 +86,22 @@ class FanControl:
 		return os.path.exists("/proc/stb/fp/fan_vlt") or os.path.exists("/proc/stb/fp/fan_pwm")
 
 	def getFanSpeed(self, fanid):
-		print("[FanControl] Read /proc/stb/fp/fan_speed")
-		return int(open("/proc/stb/fp/fan_speed").readline().strip()[:-4])
+		return int(open("/proc/stb/fp/fan_speed", "r").readline().strip()[:-4])
 
 	def getVoltage(self, fanid):
-		print("[FanControl] Read /proc/stb/fp/fan_vlt")
-		return int(open("/proc/stb/fp/fan_vlt").readline().strip(), 16)
+		return int(open("/proc/stb/fp/fan_vlt", "r").readline().strip(), 16)
 
 	def setVoltage(self, fanid, value):
-		if model == "beyonwizu4":
-			return
 		if value > 255:
 			return
-		print("[FanControl] Write to /proc/stb/fp/fan_vlt")
 		open("/proc/stb/fp/fan_vlt", "w").write("%x" % value)
 
 	def getPWM(self, fanid):
-		print("[FanControl] Read /proc/stb/fp/fan_pwm")
-		return int(open("/proc/stb/fp/fan_pwm").readline().strip(), 16)
+		return int(open("/proc/stb/fp/fan_pwm", "r").readline().strip(), 16)
 
 	def setPWM(self, fanid, value):
 		if value > 255:
 			return
-		print("[FanControl] Write to /proc/stb/fp/fan_pwm")
 		open("/proc/stb/fp/fan_pwm", "w").write("%x" % value)
 
 

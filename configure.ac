@@ -62,12 +62,6 @@ AC_ARG_WITH(boxtype,
 AC_SUBST(BOXTYPE)
 AC_DEFINE_UNQUOTED(BOXTYPE,"$BOXTYPE",[box type])
 
-AC_ARG_WITH(boxbrand,
-	AS_HELP_STRING([--with-boxbrand],[build for BOXBRAND, $withval]),
-	[BOXBRAND="$withval"],[BOXBRAND=""])
-AC_SUBST(BOXBRAND)
-AC_DEFINE_UNQUOTED(BOXBRAND,"$BOXBRAND",[box brand])
-
 AC_ARG_WITH(machinebuild,
 	[  --with-machinebuild=NAME machine build [[none,atemeo5200,atemeo6000...]]],
 	[MACHINEBUILD="$withval"],[MACHINEBUILD="atemeo5200"])
@@ -716,6 +710,7 @@ data/display/vfd140/Makefile
 data/display/vfd255/Makefile
 data/extensions/Makefile
 data/keymaps/Makefile
+data/hw_info/Makefile
 data/rc_models/Makefile
 data/skin_default/Makefile
 data/skin_default/buttons/Makefile

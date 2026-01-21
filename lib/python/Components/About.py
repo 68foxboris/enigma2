@@ -11,7 +11,7 @@ from socket import AF_INET, SOCK_DGRAM, inet_ntoa, socket
 from struct import pack, unpack
 from sys import maxsize, modules, version as pyversion
 from time import localtime, strftime
-
+from Tools.HardwareInfo import HardwareInfo
 from Components.SystemInfo import BoxInfo
 from Tools.Directories import fileReadLine, fileReadLines
 
@@ -68,6 +68,7 @@ def getFlashDateString():
 
 
 def returndate(date):
+	date = str(date)
 	return "%s-%s-%s" % (date[:4], date[4:6], date[6:8])
 
 
@@ -92,6 +93,10 @@ def getEnigmaVersionString():
 def getKernelVersionString():
 	version = fileReadLine("/proc/version", default="", source=MODULE_NAME)
 	return version.split(" ", 4)[2].split("-", 2)[0] if version else _("Unknown")
+
+
+def getHardwareTypeString():
+	return HardwareInfo().get_device_string()
 
 
 def getImageTypeString():
@@ -195,6 +200,16 @@ def getSystemTemperature():
 	return f"{temperature}{DEGREE}C" if temperature else ""
 
 
+def getFlashType():
+	if BoxInfo.getItem("SmallFlash"):
+		result = _("Small - Tiny image")
+	elif BoxInfo.getItem("MiddleFlash"):
+		result = _("Middle - Lite image")
+	else:
+		result = _("Normal - Standard image")
+	return result
+
+
 def getCPUBrand():
 	socFamily = BoxInfo.getItem("socfamily")
 	if BoxInfo.getItem("AmlogicFamily"):
@@ -221,18 +236,11 @@ def getCPUArch():
 	return result
 
 
-def getFlashType():
-	if BoxInfo.getItem("SmallFlash"):
-		result = _("Small - Tiny image")
-	elif BoxInfo.getItem("MiddleFlash"):
-		result = _("Middle - Lite image")
-	else:
-		result = _("Normal - Standard image")
-	return result
-
-
 def getDVBAPI():
-	return _("Old") if BoxInfo.getItem("OLDE2API") else _("New")
+	if BoxInfo.getItem("OLDE2API"):
+		return _("Old")
+	else:
+		return _("New")
 
 
 def getDriverInstalledDate():

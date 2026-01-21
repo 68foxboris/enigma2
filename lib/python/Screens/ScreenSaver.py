@@ -13,12 +13,15 @@ from sys import maxsize
 
 class InfoBarScreenSaver:
 	def __init__(self):
+		self.onExecBegin.append(self.__onExecBegin)
+		self.onExecEnd.append(self.__onExecEnd)
 		self.screenSaverTimer = eTimer()
 		self.screenSaverTimer.callback.append(self.screenSaverTimeout)
 		self.screenSaver = self.session.instantiateDialog(screenSaver)
-		self.onExecBegin.append(self.__onExecBegin)
-		self.onExecEnd.append(self.__onExecEnd)
 		self.onLayoutFinish.append(self.__layoutFinished)
+
+	def __layoutFinished(self):
+		self.screenSaver.hide()
 
 	def __onExecBegin(self):
 		self.screenSaverTimerStart()
@@ -28,9 +31,6 @@ class InfoBarScreenSaver:
 			self.screenSaver.hide()
 			eActionMap.getInstance().unbindAction("", self.screenSaverKeyPress)
 		self.screenSaverTimer.stop()
-
-	def __layoutFinished(self):
-		self.screenSaver.hide()
 
 	def screenSaverTimerStart(self):
 		startTimer = config.usage.screenSaverStartTimer.value

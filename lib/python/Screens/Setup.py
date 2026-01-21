@@ -13,7 +13,7 @@ from Components.SystemInfo import BoxInfo, getBoxDisplayName
 from Components.Sources.StaticText import StaticText
 from Screens.HelpMenu import HelpableScreen
 from Screens.Screen import Screen, ScreenSummary
-from Tools.Directories import SCOPE_PLUGINS, SCOPE_SKIN, fileReadXML, resolveFilename  # noqa F401
+from Tools.Directories import SCOPE_PLUGINS, SCOPE_SKIN, fileReadXML, resolveFilename
 
 MODULE_NAME = __name__.split(".")[-1]
 
@@ -81,7 +81,7 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 				title = dgettext(self.pluginLanguageDomain, title) if self.pluginLanguageDomain else _(title)
 			self.setTitle(title if title else _("Setup"))
 			if not self.list:  #If there are no eligible items available to be displayed then show at least one ConfigNothing item indicating this
-				self["config"].list = [(_("No config items available"))]
+				self["config"].list = [(_("No config items available"),)]
 			elif self.list != oldList or self.showDefaultChanged or self.graphicSwitchChanged:
 				currentItem = self["config"].getCurrent()
 				self["config"].list = self.list
@@ -89,7 +89,7 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 					self["config"].list.sort(key=lambda x: x[0])
 				self.moveToItem(currentItem)
 
-	def addItems(self, parentNode, including=True, indent=""):
+	def addItems(self, parentNode, including=True, indent=0):
 		for element in parentNode:
 			if not element.tag:
 				continue
@@ -100,7 +100,8 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 				if including and include:
 					self.addItem(element, indent=indent)
 			elif element.tag == "if":
-				indent = element.get("indent", indent)
+				indent = element.get("indent", "")
+				indent = int(indent) if indent and indent.isnumeric() and int(indent) > 0 else None
 				if including:
 					self.addItems(element, including=include, indent=indent)
 			elif element.tag == "elif":
@@ -108,7 +109,7 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 			elif element.tag == "else":
 				including = True
 
-	def addItem(self, element, indent=""):
+	def addItem(self, element, indent=0):
 		indent = parameters.get("SetupIndent", "  ") * int(element.get("indents", 0))
 		if self.pluginLanguageDomain:
 			itemText = indent + (dgettext(self.pluginLanguageDomain, x) if (x := element.get("text")) else "* fix me *")
@@ -117,29 +118,30 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 			itemText = indent + (_(x) if (x := element.get("text")) else "* fix me *")
 			itemDescription = _(x) if (x := element.get("description")) else ""
 		restart = element.get("restart", "").lower()
-		data = element.get("data", "").split(",")
-		indent = element.get("indent", indent)
-		indent = int(indent) if indent and indent.isnumeric() else None
+		indent = element.get("indent", "") or str(indent)
+		indent = int(indent) if indent and indent.isnumeric() and int(indent) > 0 else None
 		if restart == "gui" and not itemText.endswith("*"):  # Add "*" as restart indicator based on the restart attribute.
 			itemText = f"{itemText} *"
 		elif restart == "system" and not itemText.endswith("#"):  # Add "#" as reboot indicator based on the restart attribute.
 			itemText = f"{itemText} #"
 		item = eval(element.text or "")
 		if item == "":
-			self.list.append((self.formatItemText(itemText, data),))  # Add the comment line to the config list.
+			self.list.append((self.formatItemText(itemText),))  # Add the comment line to the config list.
 		elif not isinstance(item, ConfigNothing):
-			label = (self.formatItemText(itemText, data), indent) if indent else self.formatItemText(itemText, data)
-			self.list.append((label, item, self.formatItemDescription(item, itemDescription, data)))  # Add the item to the config list.
+			if indent:
+				self.list.append(((self.formatItemText(itemText), indent), item, self.formatItemDescription(item, itemDescription)))  # Add the item to the config list.
+			else:
+				self.list.append((self.formatItemText(itemText), item, self.formatItemDescription(item, itemDescription)))  # Add the item to the config list.
 		if item is config.usage.setupShowDefault:
 			self.showDefaultChanged = True
 		if item is config.usage.boolean_graphic:
 			self.graphicSwitchChanged = True
 
-	def formatItemText(self, text, data=None):
-		return text % tuple(data) if data and "%s %s" not in text and text.count("%s") == len(data) else text.replace("%s %s", "%s %s" % getBoxDisplayName())
+	def formatItemText(self, itemText):
+		return itemText.replace("%s %s", "%s %s" % getBoxDisplayName())
 
-	def formatItemDescription(self, item, itemDescription, data=None):
-		itemDescription = self.formatItemText(itemDescription, data)
+	def formatItemDescription(self, item, itemDescription):
+		itemDescription = itemDescription.replace("%s %s", "%s %s" % getBoxDisplayName())
 		if config.usage.setupShowDefault.value != "no":
 			spacer = "\n" if config.usage.setupShowDefault.value == "newline" else "  "
 			itemDefault = item.toDisplayString(item.default)
@@ -198,10 +200,10 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 	def setFootnote(self, footnote):
 		if footnote is None:
 			if self.getCurrentEntry().endswith("*"):
-				self["footnote"].setText(_("* = Restart required if this item is changed."))
+				self["footnote"].setText(_("* = Restart Required"))
 				self["footnote"].show()
 			elif self.getCurrentEntry().endswith("#"):
-				self["footnote"].setText(_("# = Reboot required if this item is changed."))
+				self["footnote"].setText(_("# = Reboot Required"))
 				self["footnote"].show()
 			else:
 				self["footnote"].setText("")
@@ -271,7 +273,7 @@ class SetupSummary(ScreenSummary):
 def setupDom(setup=None, plugin=None):
 	# Constants for checkItems()
 	ROOT_ALLOWED = ("setup", )  # Tags allowed in top level of setupxml entry.
-	ELEMENT_ALLOWED = ("item", "if")  # Tags allowed in top level of setup entry.  # noqa F841
+	ELEMENT_ALLOWED = ("item", "if")  # noqa: F841 Tags allowed in top level of setup entry.
 	IF_ALLOWED = ("item", "if", "elif", "else")  # Tags allowed inside <if />.
 	AFTER_ELSE_ALLOWED = ("item", "if")  # Tags allowed after <elif /> or <else />.
 	CHILDREN_ALLOWED = ("setup", "if", )  # Tags that may have children.
@@ -374,6 +376,8 @@ def getConfigMenuItem(configElement):
 
 # Temporary legacy interfaces.  Only used in Menu screen.
 #
+
+
 def getSetupTitle(id):
 	xmlData = setupDom()
 	for x in xmlData.findall("setup"):

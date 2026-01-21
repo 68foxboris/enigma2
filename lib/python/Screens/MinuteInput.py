@@ -8,7 +8,7 @@ class MinuteInput(Screen):
 		def __init__(self, session, basemins=5, maxValue=False, windowTitle=None):
 			Screen.__init__(self, session)
 
-			self["minutes"] = Input(str(basemins), type=Input.NUMBER, maxValue=False)
+			self["minutes"] = Input(str(basemins), type=Input.NUMBER, maxValue=maxValue)
 
 			self["actions"] = NumberActionMap(["InputActions", "MinuteInputActions", "TextEntryActions", "KeyboardInputActions"],
 			{

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Components.Element import cached
 from Components.Sources.Source import Source
 
@@ -59,6 +60,13 @@ to generate HTML."""
 		self.index = oldIndex
 		self.disableCallbacks = False
 
+	def setConnectedGuiElement(self, guiElement):
+		self.connectedGuiElement = guiElement
+		index = guiElement.instance.getCurrentIndex()
+		self.__current = self.list[index]
+		self.__index = index
+		self.changed((self.CHANGED_ALL,))
+
 	def updateEntry(self, index, data):
 		self.listData[index] = data
 		self.entryChanged(index)
@@ -69,15 +77,6 @@ to generate HTML."""
 			instance.setSelectionEnable(enabled)
 		except AttributeError:
 			pass
-
-	# this is for manually set which is the GUI element connected with the list
-	# For use in case of addons where there is no source so to rely on the master
-	def setConnectedGuiElement(self, guiElement):
-		self.connectedGuiElement = guiElement
-		index = guiElement.instance.getCurrentIndex()
-		self.__current = self.listData[index]
-		self.__index = index
-		self.changed((self.CHANGED_ALL,))
 
 	def selectionChanged(self, index):
 		if not self.disableCallbacks:
@@ -99,7 +98,10 @@ to generate HTML."""
 
 	@cached
 	def getCurrentIndex(self):
-		return self.master.index if self.master is not None and hasattr(self.master, "index") else self.__index
+		try:
+			return self.master.index if self.master is not None else 0  # None - The 0 is a hack to avoid badly written code from crashing!
+		except AttributeError:
+			return self.master.index if self.master is not None and hasattr(self.master, "index") else self.__index
 
 	def setCurrentIndex(self, index):
 		if self.master is not None:
@@ -180,6 +182,10 @@ to generate HTML."""
 		return result
 
 	visible = property(getVisible, setVisible)
+
+	def listUpdated(self):
+		for method in self.onListUpdated:
+			method()
 
 	def show(self):
 		try:
@@ -264,10 +270,6 @@ to generate HTML."""
 			instance.goBottom()
 		except AttributeError:
 			pass
-
-	def listUpdated(self):
-		for method in self.onListUpdated:
-			method()
 
 	# These hacks protect code that was modified to use the previous up/down hack!   These methods should be found and removed from all code.
 	#

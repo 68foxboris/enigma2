@@ -222,7 +222,8 @@ def getHotkeyFunctions():
 	for plugin in plugins.getPluginsForMenu("scan"):
 		hotkey.functions.append((plugin[0], "MenuPlugin/scan/" + plugin[2], "Scanning"))
 	hotkey.functions.append((_("Network"), "Module/Screens.NetworkSetup/NetworkAdapterSelection", "Setup"))
-	hotkey.functions.append((_("SkinSelection"), "Module/Screens.SkinSelection/SkinSelection", "Setup"))
+	hotkey.functions.append((_("Skin"), "Module/Screens.SkinSelector/SkinSelector", "Setup"))
+	hotkey.functions.append((_("Display skin"), "Module/Screens.SkinSelector/LcdSkinSelector", "Setup"))
 	hotkey.functions.append((_("Plugin Browser"), "Module/Screens.PluginBrowser/PluginBrowser", "Setup"))
 	hotkey.functions.append((_("Sleeptimer edit"), "Module/Screens.SleepTimerEdit/SleepTimerEdit", "Setup"))
 	hotkey.functions.append((_("Channel Info"), "Module/Screens.Information/ServiceInformation", "Setup"))
@@ -236,6 +237,8 @@ def getHotkeyFunctions():
 	for plugin in plugins.getPluginsForMenu("gui"):
 		if plugin[2]:
 			hotkey.functions.append((plugin[0], "MenuPlugin/gui/" + plugin[2], "Setup"))
+	hotkey.functions.append((_("Skin Selection"), "Module/Screens.SkinSelector/SkinSelector", "Setup"))
+	hotkey.functions.append((_("Reload Skin"), "ReloadSkin/", "Setup"))
 	hotkey.functions.append((_("PowerMenu"), "Menu/shutdown", "Power"))
 	hotkey.functions.append((_("Standby"), "Module/Screens.Standby/Standby", "Power"))
 	hotkey.functions.append((_("Restart"), "Module/Screens.Standby/TryQuitMainloop/2", "Power"))
@@ -250,7 +253,6 @@ def getHotkeyFunctions():
 	hotkey.functions.append((_("Language"), "Module/Screens.LocaleSelection/LocaleSelection", "Setup"))
 	hotkey.functions.append((_("OScam Information"), "Module/Screens.OScamInfo/OSCamInfo", "Plugins"))
 	hotkey.functions.append((_("Memory Info"), "Module/Screens.Information/MemoryInfo", "Setup"))
-	hotkey.functions.append((_("Reload Skin"), "ReloadSkin/", "Setup"))
 	if BoxInfo.getItem("canMultiBoot"):
 		hotkey.functions.append((_("Multiboot image selector"), "Module/Screens.FlashImage/MultibootSelection", "Setup"))
 		hotkey.functions.append((_("MultiBoot Manager"), "Module/Screens.MultiBootManager/MultiBootManager", "Setup"))

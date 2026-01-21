@@ -1,12 +1,13 @@
+# -*- coding: utf-8 -*-
 from os.path import join
 from enigma import addInputDevice, removeInputDevice
-import Components.Netlink
+from Components import Netlink
 
 
-class NetlinkReader():
+class NetlinkReader:
 	def __init__(self):
 		from twisted.internet import reactor
-		self.nls = Components.Netlink.NetlinkSocket()
+		self.nls = Netlink.NetlinkSocket()
 		reactor.addReader(self)
 
 	def fileno(self):

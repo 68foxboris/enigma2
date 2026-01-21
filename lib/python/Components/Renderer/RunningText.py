@@ -1,37 +1,5 @@
-################################################################################
-#    RunningText.py - Running Text Renderer for Enigma2
-#    Version: 1.5 (04.04.2012 23:40)
-#    Copyright (C) 2010-2012 vlamo <vlamodev@gmail.com>
-#
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-#
-#    You should have received a copy of the GNU General Public License along
-#    with this program; if not, write to the Free Software Foundation, Inc.,
-#    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-################################################################################
-
-################################################################################
-# several changes made by Dr.Best <dr.best@dreambox-tools.info> (07-18-2013)
-# - I got rid of eCanvas, instead I took a widget as a parent and scroll the label directly into the widget (this saves performance (about 30%))
-# - new property: mShown --> this fixes the bug that this renderer keeps running in background when its not shown
-# - this renderer can be used in OLED display with dmm oe2.0 images
-# - due to changing to eWidget in combination with eLabel transparent flag is possible (still cpu killer!)
-# - fixed left / right scrolling , fixed nowrap-mode
-# take a look at the discussion: http://board.dreambox-tools.info/showthread.php?6050-Erweiterung-Running-Text-render
-################################################################################
-
-from enigma import eWidget, eLabel, eTimer, ePoint, eSize, gFont, \
-	RT_HALIGN_LEFT, RT_HALIGN_CENTER, RT_HALIGN_RIGHT, RT_HALIGN_BLOCK, \
-	RT_VALIGN_TOP, RT_VALIGN_CENTER, RT_VALIGN_BOTTOM, RT_WRAP
-
+# -*- coding: utf-8 -*-
+from enigma import eWidget, eLabel, eTimer, ePoint, eSize, gFont, RT_HALIGN_LEFT, RT_HALIGN_CENTER, RT_HALIGN_RIGHT, RT_HALIGN_BLOCK, RT_VALIGN_TOP, RT_VALIGN_CENTER, RT_VALIGN_BOTTOM, RT_WRAP
 from Components.Renderer.Renderer import Renderer
 from skin import parseColor, parseFont
 
@@ -47,15 +15,13 @@ RIGHT = 1
 TOP = 2
 BOTTOM = 3
 # halign:
-# LEFT     = 0
-# RIGHT    = 1
+#LEFT     = 0
+#RIGHT    = 1
 CENTER = 2
 BLOCK = 3
 
 
 class RunningText(Renderer):
-	GUI_WIDGET = eWidget
-
 	def __init__(self):
 		Renderer.__init__(self)
 		self.type = NONE
@@ -75,10 +41,12 @@ class RunningText(Renderer):
 		self.lineHeight = 0		# for text height auto correction on dmm-enigma2
 		self.mShown = 0
 
+	GUI_WIDGET = eWidget
+
 	def postWidgetCreate(self, instance):
 		for (attrib, value) in self.skinAttributes:
 			if attrib == "size":
-				x, y = value.split(",")
+				x, y = value.split(',')
 				self.W, self.H = int(x), int(y)
 		self.instance.move(ePoint(0, 0))
 		self.instance.resize(eSize(self.W, self.H))
@@ -100,11 +68,12 @@ class RunningText(Renderer):
 				else:
 					x = max(limit, int(val))
 			except Exception:
-				x = default
+					x = default
 			return x
 
 		def setWrapFlag(attrib, value):
-			if (attrib.lower() == "wrap" and value == "0") or (attrib.lower() == "nowrap" and value != "0"):
+			if (attrib.lower() == "wrap" and value == "0") or \
+			   (attrib.lower() == "nowrap" and value != "0"):
 				self.txtflags &= ~RT_WRAP
 			else:
 				self.txtflags |= RT_WRAP
@@ -120,7 +89,7 @@ class RunningText(Renderer):
 				elif attrib in ("shadowColor", "borderColor"):  # fake for openpli-enigma2
 					self.scroll_label.setShadowColor(parseColor(value))
 				elif attrib == "shadowOffset":
-					x, y = value.split(",")
+					x, y = value.split(',')
 					self.soffset = (int(x), int(y))
 					self.scroll_label.setShadowOffset(ePoint(self.soffset))
 				elif attrib == "borderWidth":			# fake for openpli-enigma2
@@ -134,10 +103,10 @@ class RunningText(Renderer):
 				elif attrib == "noWrap":
 					setWrapFlag(attrib, value)
 				elif attrib == "options":
-					options = value.split(",")
+					options = value.split(',')
 					for o in options:
-						if "=" in o:
-							opt, val = (x.strip() for x in o.split("=", 1))
+						if '=' in o:
+							opt, val = (x.strip() for x in o.split('=', 1))
 						else:
 							opt, val = o.strip(), ""
 
@@ -214,7 +183,7 @@ class RunningText(Renderer):
 		Renderer.connect(self, source)
 
 	def changed(self, what):
-		if self.mTimer is not None:
+		if not self.mTimer is None:
 			self.mTimer.stop()
 		if what[0] == self.CHANGED_CLEAR:
 			self.txtext = ""
@@ -222,7 +191,10 @@ class RunningText(Renderer):
 				self.scroll_label.setText("")
 		else:
 			if self.mShown:
-				self.txtext = self.source.text or ""
+				try:
+					self.txtext = self.source.text or ""
+				except Exception:
+					self.txtext = ""
 				if self.instance and not self.calcMoving():
 					self.scroll_label.resize(eSize(self.W, self.H))
 					self.moveLabel(self.X, self.Y)
@@ -258,9 +230,9 @@ class RunningText(Renderer):
 			text_height = max(text_height, (text_height + self.lineHeight - 1) / self.lineHeight * self.lineHeight)
 
 
-		# self.type =		0 - NONE; 1 - RUNNING; 2 - SWIMMING; 3 - AUTO(???)
-		# self.direction =	0 - LEFT; 1 - RIGHT;   2 - TOP;      3 - BOTTOM
-		# self.halign =		0 - LEFT; 1 - RIGHT;   2 - CENTER;   3 - BLOCK
+#		self.type =		0 - NONE; 1 - RUNNING; 2 - SWIMMING; 3 - AUTO(???)
+#		self.direction =	0 - LEFT; 1 - RIGHT;   2 - TOP;      3 - BOTTOM
+#		self.halign =		0 - LEFT; 1 - RIGHT;   2 - CENTER;   3 - BLOCK
 
 		if self.direction in (LEFT, RIGHT):
 			if not self.mAlways and text_width <= self.W:
@@ -276,15 +248,15 @@ class RunningText(Renderer):
 					self.mStep = abs(self.mStep)
 					self.mStop = self.B - text_width + self.soffset[0] - self.mStep
 					self.P = self.A
-				if self.mStartPoint is not None:
+				if not self.mStartPoint is None:
 					if self.direction == LEFT:
 						self.mStop = self.P = max(self.A, min(self.W, self.mStartPoint))
 					else:
 						self.mStop = self.P = max(self.A, min(self.B, self.mStartPoint - text_width + self.soffset[0]))
 			elif self.type == SWIMMING:
 				if text_width < self.W:
-					self.A = self.X + 1			# incomprehensible indent "+ 1" ???
-					self.B = self.W - text_width - 1  # incomprehensible indent "- 1" ???
+					self.A = self.X + 1			# incomprehensible indent '+ 1' ???
+					self.B = self.W - text_width - 1  # incomprehensible indent '- 1' ???
 					if self.halign == LEFT:
 						self.P = self.A
 						self.mStep = abs(self.mStep)
@@ -324,7 +296,7 @@ class RunningText(Renderer):
 					self.mStep = abs(self.mStep)
 					self.mStop = self.B - text_height + self.soffset[1] - self.mStep
 					self.P = self.A
-				if self.mStartPoint is not None:
+				if not self.mStartPoint is None:
 					if self.direction == TOP:
 						self.mStop = self.P = max(self.A, min(self.H, self.mStartPoint))
 					else:

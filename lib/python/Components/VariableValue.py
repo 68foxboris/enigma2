@@ -6,10 +6,7 @@ class VariableValue:
 		self.__value = 0
 
 	def setValue(self, value):
-		try:
-			self.__value = int(value)
-		except:
-			self.__value = 0
+		self.__value = int(value)
 		if self.instance:
 			self.instance.setValue(self.__value)
 
