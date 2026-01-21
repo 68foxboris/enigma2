@@ -201,10 +201,10 @@ class ChannelContextMenu(Screen):
 				"1": self.unhideParentalServices,
 				"2": self.renameEntry,
 				"3": self.findCurrentlyPlayed,
-				"4": self.insertEntry,
-				"5": self.addServiceToBouquetOrAlternative,
-				"6": self.toggleMoveModeSelect,
-				"7": self.showSubservices,
+				"4": self.showSubservices,
+				"5": self.insertEntry,
+				"6": self.addServiceToBouquetOrAlternative,
+				"7": self.toggleMoveModeSelect,
 				"8": self.removeEntry
 			})
 		menu = []
@@ -216,7 +216,7 @@ class ChannelContextMenu(Screen):
 		current_root = csel.getRoot()
 		current_sel_path = current.getPath()
 		current_sel_flags = current.flags
-		self.inBouquetRootList = current_root and 'FROM BOUQUET "bouquets.' in current_root.getPath() #FIXME HACK
+		self.inBouquetRootList = current_root and 'FROM BOUQUET "bouquets.' in current_root.getPath()  # FIXME HACK
 		inAlternativeList = current_root and 'FROM BOUQUET "alternatives' in current_root.getPath()
 		self.inBouquet = csel.getMutableList() is not None
 		haveBouquets = config.usage.multibouquet.value
@@ -420,10 +420,10 @@ class ChannelContextMenu(Screen):
 		self.close()
 
 	def toggleStreamrelay(self):
-		from enigma import eTimer
 		Screens.InfoBar.InfoBar.instance.ToggleStreamrelay(self.csel.getCurrentSelection())
 		self.csel.refreshServiceListTimer = eTimer()
 		self.csel.refreshServiceListTimer.callback.append(self.csel.servicelist.resetRoot)
+		self.csel.refreshServiceListTimer.start(100, True)
 		self.close()
 
 	def addCenterDVBSubsFlag(self):
@@ -654,9 +654,6 @@ class ChannelContextMenu(Screen):
 		if ref and root or (self.PiPAvailable and not self.csel.dopipzap and newservice and newservice.valid() and Components.ParentalControl.parentalControl.isServicePlayable(newservice, boundFunction(self.showServiceInPiP, root=currentBouquet), self.session)):
 			if hasattr(self.session, 'pipshown') and self.session.pipshown and hasattr(self.session, 'pip'):
 				del self.session.pip
-				if BoxInfo.getItem("LCDMiniTVPiP") and config.lcd.modepip.value >= 1:
-					print('[ChannelSelection] LCDMiniTV disable PIP')
-					eDBoxLCD.getInstance().setLCDMode(config.lcd.modeminitv.value)
 			self.session.pip = self.session.instantiateDialog(PictureInPicture)
 			self.session.pip.setAnimationMode(0)
 			self.session.pip.show()
@@ -664,16 +661,10 @@ class ChannelContextMenu(Screen):
 				self.session.pipshown = True
 				self.session.pip.servicePath = self.csel.getCurrentServicePath()
 				self.session.pip.servicePath[1] = currentBouquet
-				if BoxInfo.getItem("LCDMiniTVPiP") and config.lcd.modepip.value >= 1:
-					print('[ChannelSelection] LCDMiniTV enable PIP')
-					eDBoxLCD.getInstance().setLCDMode(config.lcd.modepip.value, True)
 				self.close(True)
 			else:
 				self.session.pipshown = False
 				del self.session.pip
-				if BoxInfo.getItem("LCDMiniTV") and int(config.lcd.modepip.value) >= 1:
-					print('[ChannelSelection] LCDMiniTV disable PIP')
-					eDBoxLCD.getInstance().setLCDMode(config.lcd.modeminitv.value)
 				self.session.openWithCallback(self.close, MessageBox, _("Could not open Picture in Picture"), MessageBox.TYPE_ERROR)
 		else:
 			return 0
@@ -1182,10 +1173,10 @@ class ChannelSelectionEdit:
 			flags = eServiceReference.isGroup | eServiceReference.canDescent | eServiceReference.mustDescent
 			if self.mode == MODE_TV:
 				ref = eServiceReference(eServiceReference.idDVB, flags, eServiceReferenceDVB.dTv)
-				ref.setPath('FROM BOUQUET "alternatives.%s.tv" ORDER BY bouquet' % self.buildBouquetID(name))
+				ref.setPath(f"FROM BOUQUET \"alternatives.{self.buildBouquetID(name)}.tv\" ORDER BY bouquet")
 			else:
 				ref = eServiceReference(eServiceReference.idDVB, flags, eServiceReferenceDVB.dRadio)
-				ref.setPath('FROM BOUQUET "alternatives.%s.radio" ORDER BY bouquet' % self.buildBouquetID(name))
+				ref.setPath(f"FROM BOUQUET \"alternatives.{self.buildBouquetID(name)}.radio\" ORDER BY bouquet")
 			new_ref = ServiceReference(ref)
 			if not mutableBouquet.addService(new_ref.ref, cur_service.ref):
 				mutableBouquet.removeService(cur_service.ref)
@@ -1219,11 +1210,11 @@ class ChannelSelectionEdit:
 			if self.mode == MODE_TV:
 				bName = f"{bName} {_('(TV)')}"
 				new_bouquet_ref = eServiceReference(service_types_tv_ref)
-				new_bouquet_ref.setPath("FROM BOUQUET \"userbouquet.%s.tv\" ORDER BY bouquet" % self.buildBouquetID(bName))
+				new_bouquet_ref.setPath(f"FROM BOUQUET \"userbouquet.{self.buildBouquetID(bName)}.tv\" ORDER BY bouquet")
 			else:
 				bName = f"{bName} {_('(Radio)')}"
 				new_bouquet_ref = eServiceReference(service_types_radio_ref)
-				new_bouquet_ref.setPath("FROM BOUQUET \"userbouquet.%s.radio\" ORDER BY bouquet" % self.buildBouquetID(bName))
+				new_bouquet_ref.setPath(f"FROM BOUQUET \"userbouquet.{self.buildBouquetID(bName)}.radio\" ORDER BY bouquet")
 			if not mutableBouquetList.addService(new_bouquet_ref):
 				mutableBouquetList.flushChanges()
 				eDVBDB.getInstance().reloadBouquets()
@@ -1550,7 +1541,10 @@ multibouquet_radio_ref.setPath("FROM BOUQUET \"bouquets.radio\" ORDER BY bouquet
 singlebouquet_radio_ref = serviceRefAppendPath(service_types_radio_ref, " FROM BOUQUET \"userbouquet.favourites.radio\" ORDER BY bouquet")
 
 
-class ChannelSelectionBase(Screen, HelpableScreen):
+class ChannelSelectionBase(Screen):
+	MODE_TV = 0
+	MODE_RADIO = 1
+
 	def __init__(self, session):
 		def leftHelp():
 			return _("Move to previous marker") if self.servicelist.isVertical() else _("Move to the previous item")
@@ -1722,7 +1716,7 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 			self.startRoot = self.getRoot()
 		path = root.getPath()
 		isBouquet = 'FROM BOUQUET' in path and (root.flags & eServiceReference.isDirectory)
-		inBouquetRootList = 'FROM BOUQUET "bouquets.' in path #FIXME HACK
+		inBouquetRootList = 'FROM BOUQUET "bouquets.' in path  # FIXME HACK
 		if not inBouquetRootList and isBouquet:
 			self.servicelist.setMode(ServiceList.MODE_FAVOURITES)
 		else:
@@ -1734,7 +1728,7 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 	def getServiceName(self, serviceReference):
 		serviceNameTmp = ServiceReference(serviceReference).getServiceName()
 		serviceName = serviceNameTmp.replace(_("(TV)") if self.mode == MODE_TV else _("(Radio)"), "").replace("  ", " ").strip()
-		print(f"[ChannelSelection] getServiceName DEBUG: Service Name Before='{serviceNameTmp}', After='{serviceName}'.")
+		# print(f"[ChannelSelection] getServiceName DEBUG: Service Name Before='{serviceNameTmp}', After='{serviceName}'.")
 		if "bouquets" in serviceName.lower():
 			return _("User bouquets")
 		if not serviceName:
@@ -1924,11 +1918,7 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 						if cur_ref:
 							# pos = self.service_types.rfind(":")  # DEBUG NOTE: This doesn't appear to be used.
 							ref = eServiceReference(self.service_types_ref)
-							path = '(channelID == %08x%04x%04x) && %s ORDER BY name' % (
-								cur_ref.getUnsignedData(4),  # NAMESPACE
-								cur_ref.getUnsignedData(2),  # TSID
-								cur_ref.getUnsignedData(3),  # ONID
-								self.service_types_ref.getPath())
+							path = f"(channelID == {cur_ref.getUnsignedData(4):08x}{cur_ref.getUnsignedData(2):04x}{cur_ref.getUnsignedData(3):04x}) && {self.service_types_ref.getPath()} ORDER BY name"
 							ref.setPath(path)
 							ref.setName(_("Current transponder"))
 							self.servicelist.addService(ref, beforeCurrent=True)
@@ -1971,7 +1961,7 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 							if info:
 								provider = info.getInfoString(iServiceInformation.sProvider)
 								ref = eServiceReference(eServiceReference.idDVB, eServiceReference.flagDirectory)
-								ref.setPath("(provider == \"%s\") && %s ORDER BY name" % (provider, self.service_types_ref.getPath()))
+								ref.setPath(f"(provider == \"{provider}\") && {self.service_types_ref.getPath()} ORDER BY name")
 								ref.setName(provider)
 								self.setCurrentSelectionAlternative(ref)
 
@@ -2209,7 +2199,7 @@ class ChannelSelectionBase(Screen, HelpableScreen):
 					provider = info.getInfoString(iServiceInformation.sProvider)
 					op = self.session.nav.getCurrentlyPlayingServiceOrGroup().getUnsignedData(4) >> 16
 					ref = eServiceReference(eServiceReference.idDVB, eServiceReference.flagDirectory)
-					ref.setPath("(provider == \"%s\") && (satellitePosition == %d) && %s ORDER BY name" % (provider, op, self.service_types_ref.getPath()))
+					ref.setPath(f"(provider == \"{provider}\") && (satellitePosition == {op}) && {self.service_types_ref.getPath()} ORDER BY name")
 					ref.setName(provider)
 					self.servicelist.setCurrent(eServiceReference(ref))
 		elif not self.isBasePathEqual(self.bouquet_root) or self.bouquet_mark_edit == EDIT_ALTERNATIVES or (self.startRoot and self.startRoot != ref):
@@ -2895,7 +2885,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 class RadioInfoBar(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		print(f"[ChannelSelection] RadioInfoBar DEBUG: Setting title='{self.getTitle()}'.")
+		# print(f"[ChannelSelection] RadioInfoBar DEBUG: Setting title='{self.getTitle()}'.")
 		self["RdsDecoder"] = RdsDecoder(self.session.nav)
 
 
