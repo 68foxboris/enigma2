@@ -1,3 +1,5 @@
+import os
+
 from socket import socket, AF_UNIX, SOCK_STREAM
 from twisted.internet.reactor import callInThread
 
@@ -13,9 +15,15 @@ class ServiceHelper:
 
 	def _action(self, action):
 		self.deamonSocket = socket(AF_UNIX, SOCK_STREAM)
-		self.deamonSocket.connect("/tmp/deamon.socket")
-		self.deamonSocket.send(f"{action},{self.serviceName}".encode())
-		self._waitSocket()
+		if not os.path.exists("/tmp/deamon.socket"):
+			if self.callback: self.callback()
+			return
+		try:
+			self.deamonSocket.connect("/tmp/deamon.socket")
+			self.deamonSocket.send(f"{action},{self.serviceName}".encode())
+			self._waitSocket()
+		except:
+			if self.callback: self.callback()
 
 	def restart(self, callback, timeout=5000):
 		self.callback = callback

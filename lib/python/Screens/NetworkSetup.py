@@ -191,7 +191,7 @@ class NetworkAdapterSelection(Screen):
 			def restartfinishedCB():
 				self.updateList()
 				self.session.open(MessageBox, _("Finished configuring your network"), type=MessageBox.TYPE_INFO, timeout=10, default=False)
-			RestartNetworkNew.start(callback=restartfinishedCB)
+			self.session.openWithCallback(self.close, RestartNetwork)
 
 	def openNetworkWizard(self):
 		try:
@@ -403,7 +403,8 @@ class DNSSettings(Setup):
 		tomlPath = "/etc/dnscrypt-proxy/dnscrypt-proxy.toml"
 		oldLines = fileReadLines(tomlPath, source=MODULE_NAME)
 		if not oldLines:
-			print("[NetworkSetup] DNSSettings: DNSCrypt config file is missing, cannot write settings.")
+			self.session.open(MessageBox, _("Sorry DNSCrypt Config is Missing"), MessageBox.TYPE_INFO)
+			self.close()
 			return
 		found = set()
 		newLines = []
@@ -1015,7 +1016,7 @@ class AdapterSetupConfiguration(Screen):
 			def restartfinishedCB():
 				self.updateStatusbar()
 				self.session.open(MessageBox, _("Finished configuring your network"), type=MessageBox.TYPE_INFO, timeout=10, default=False)
-			RestartNetworkNew.start(callback=restartfinishedCB)
+			self.session.openWithCallback(self.close, RestartNetwork)
 
 	def dataAvail(self, data):
 		self.LinkState = None
@@ -2174,10 +2175,12 @@ class NetworkZeroTierSetup(Setup):
 		token = self.readAuthToken()
 		url = f"{self.ZEROTIERAPI}{path}"
 		headers = {"X-ZT1-Auth": token}
+
 		data = None
 		if payload is not None:
 			data = dumps(payload).encode("utf-8")
 			headers["Content-Type"] = "application/json"
+
 		req = Request(url, data=data, headers=headers, method=method)
 		try:
 			with urlopen(req, timeout=timeout) as resp:
@@ -2211,6 +2214,7 @@ class NetworkZeroTierSetup(Setup):
 			self["key_yellow"].setText("")
 			self["zerotierActions"].setEnabled(False)
 			return
+
 		self["zerotierActions"].setEnabled(True)
 		self["key_yellow"].setText(_("Leave") if self.joined else _("Join"))
 
