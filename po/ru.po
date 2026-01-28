@@ -8538,6 +8538,9 @@ msgstr "Выход из мастера настройки сети"
 msgid "Exit networkadapter setup menu"
 msgstr "Выход из меню настроек сетевого адаптера"
 
+msgid "Exit picture viewer"
+msgstr "Выйти из программы просмотра изображений"
+
 msgid "Exit Quad PiP"
 msgstr "Выход из Quad PiP"
 
@@ -8927,10 +8930,10 @@ msgstr "File Commander действия/просмотр файлов"
 msgid "File Commander Hashes / Checksums"
 msgstr "Хеши/контрольные суммы файлового менеджера"
 
-msgid "File Commander Image Viewer"
+msgid "File Commander Picture Viewer"
 msgstr "File Commander средство просмотра изображений"
 
-msgid "File Commander Image Viewer Actions"
+msgid "File Commander Picture Viewer Actions"
 msgstr "Действия средства просмотра изображений в File Commander"
 
 msgid "File Commander Information Actions"
@@ -13824,6 +13827,9 @@ msgstr "Пожалуйста, подождите..."
 msgid "Please wait... Loading list..."
 msgstr "Пожалуйста, подождите... Загрузка списка..."
 
+msgid "Please wait, loading picture..."
+msgstr "Пожалуйста, подождите, загружается изображение..."
+
 msgid "Plugin Browser"
 msgstr "Браузер плагинов"
 
@@ -17525,6 +17531,9 @@ msgstr "Показать сведения"
 msgid "Show info line"
 msgstr "Показать инфолинию"
 
+msgid "Show first picture"
+msgstr "Показать первое изображение"
+
 msgid "Show/Hide focus bar"
 msgstr "Показать/скрыть панель фокусировки"
 
@@ -17548,6 +17557,9 @@ msgstr "Показать последние изменения на гите"
 
 msgid "Show latest update log"
 msgstr "Показать последний лог обновления"
+
+msgid "Show last picture"
+msgstr "Показать последнюю картинку"
 
 msgid "Show live tv when movie stopped"
 msgstr "Показать прямую трансляцию, когда фильм остановлен"
@@ -17581,6 +17593,9 @@ msgstr "Показать записи"
 
 msgid "Show multi channel EPG"
 msgstr "Показать мульти ТВ-гид"
+
+msgid "Show next picture"
+msgstr "Показать следующее изображение"
 
 msgid "Show notification when import channels and/or EPG from remote receiver URL did not complete"
 msgstr "Показывать уведомление, когда импорт каналов/ТВ-гида из удаленного ресивера URL не завершен"
@@ -17632,6 +17647,9 @@ msgstr "Показать движение позиционера"
 
 msgid "Show positioner position"
 msgstr "Показывать движение позиционера"
+
+msgid "Show previous picture"
+msgstr "Показать предыдущее изображение"
 
 msgid "Show record clock icons"
 msgstr "Показать иконки записей"
@@ -20235,6 +20253,12 @@ msgstr "Переключение между доступными каналам�
 
 msgid "Toggle dashed flickering line for this service"
 msgstr "Показать/скрыть мигающую строку для этого сервиса"
+
+msgid "Toggle display of picture information"
+msgstr "Переключить отображение информации об изображении"
+
+msgid "Toggle display of the picture status overlay"
+msgstr "Переключить отображение наложения статуса изображения"
 
 msgid "Toggle infoBar"
 msgstr "Смена инфобаров"
