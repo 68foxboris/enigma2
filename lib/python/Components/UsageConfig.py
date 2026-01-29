@@ -103,10 +103,6 @@ def InitUsageConfig():
 		(50, _("Very slow"))
 	])
 
-	config.usage.informationShowAllMenuScreens = ConfigYesNo(default=False)
-	config.usage.informationExtraSpacing = ConfigYesNo(False)
-	config.usage.movieSelectionInMenu = ConfigYesNo(False)
-
 	# Settings for servicemp3 and handling from cue sheet file.
 	config.usage.useVideoCuesheet = ConfigYesNo(default=True)  # Use marker for video media file.
 	config.usage.useAudioCuesheet = ConfigYesNo(default=True)  # Use marker for audio media file.
@@ -690,8 +686,11 @@ def InitUsageConfig():
 
 	config.usage.screenSaverStartTimer = ConfigSelection(default=0, choices=[(0, _("Disabled"))] + [(x, ngettext("%d Second", "%d Seconds", x) % x) for x in (5, 10, 20, 30, 40, 50)] + [(x * 60, ngettext("%d Minute", "%d Minutes", x) % x) for x in (1, 5, 10, 15, 20, 30, 45, 60)])
 	config.usage.screenSaverMoveTimer = ConfigSelection(default=10, choices=[(x, ngettext("%d Second", "%d Seconds", x) % x) for x in range(1, 61)])
-
+	config.usage.screenSaverMode = ConfigSelection(default=1, choices=[(0, _("Blank screen")), (1, _("Logo")), (2, _("Picon"))])
+	config.usage.movieSelectionInMenu = ConfigYesNo(False)
 	config.usage.check_timeshift = ConfigYesNo(default=True)
+	config.usage.informationShowAllMenuScreens = ConfigYesNo(default=False)
+	config.usage.informationExtraSpacing = ConfigYesNo(False)
 
 	choiceList = [("0", _("Disabled"))]
 	for i in (2, 3, 4, 5, 10, 20, 30):
