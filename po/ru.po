@@ -6417,6 +6417,12 @@ msgstr "Формат времени лога отладки *"
 msgid "Debug to file"
 msgstr "Отладка в файл"
 
+msgid "Decoder release strategy"
+msgstr "Стратегия выпуска декодера"
+
+msgid "Decoder start timeout"
+msgstr "Таймаут запуска декодера"
+
 msgid "Deep Standby LED"
 msgstr "LED в глубоком режиме ожидания"
 
@@ -9897,6 +9903,9 @@ msgstr "Сколько минут Вы хотите добавить к запи
 msgid "How many minutes do you want to record?"
 msgstr "Сколько минут Вы хотите записать?"
 
+msgid "How to release the hardware decoder when switching to software descrambling. 'Quick' releases immediately (faster zapping). 'Normal' performs clean shutdown first (more stable on some boxes)."
+msgstr "Как освободить аппаратный декодер при переключении на программное дескремблирование. Режим «Быстрое» освобождает устройство немедленно (более быстрое переключение). Режим «Обычное» сначала выполняет чистое завершение работы (более стабилен на некоторых устройствах)."
+
 msgid ""
 "How would you like to modify the movie?\n"
 "Warning: This operation cannot be undone!"
@@ -11445,6 +11454,9 @@ msgstr "Может быть причина этого, что сейчас ид�
 
 msgid "Maximum space used (MB):"
 msgstr "Максимальный используемый размер (МБ):"
+
+msgid "Maximum time to wait for the incoming data and descrambling keys (CW) before starting decoder. Usually both arrive much faster and this is only for special cases."
+msgstr "Максимальное время ожидания входящих данных и ключей дешифровки (CW) перед запуском декодера. Обычно и данные, и ключи дешифровки поступают гораздо быстрее, и это только в особых случаях."
 
 msgid "Mayotte"
 msgstr "Mayotte"
@@ -16099,6 +16111,9 @@ msgstr "Выберите, как быстро тарелка должна пер
 msgid "Select how the arrow ('UP', 'DOWN', 'LEFT', and 'RIGHT') buttons will act during seek actions."
 msgstr "Выберите, как будут действовать кнопки со стрелками («ВВЕРХ», «ВНИЗ», «ВЛЕВО» и «ВПРАВО») во время поиска."
 
+msgid "Select how the descrambled data stream is processed. 'Automatic' uses asynchronous writes (lower CPU usage) with automatic fallback to synchronous if kernel AIO is not supported. 'Synchronous' forces blocking writes (stable, most compatible)."
+msgstr "Выберите способ обработки дешифрованного потока данных. «Автоматический» использует асинхронную запись (меньшее использование ЦП) с автоматическим переключением на синхронную, если AIO ядра не поддерживается. «Синхронный» принудительно выполняет блокирующую запись (стабильный, наиболее совместимый режим)."
+
 msgid "Select how the number buttons will act during seek actions."
 msgstr "Выберите, как будут действовать цифровые кнопки во время поиска."
 
@@ -18187,6 +18202,9 @@ msgstr "Семейство SoC"
 msgid "SocketMMI"
 msgstr "SocketMMI"
 
+msgid "SoftCSA Settings"
+msgstr "Настройки SoftCSA"
+
 msgid "SoftCam / CI"
 msgstr "Эмуляторы / CI"
 
@@ -18210,6 +18228,9 @@ msgstr "ПО"
 
 msgid "Software MultiBoot"
 msgstr "Мультизагрузка ПО"
+
+msgid "Software descrambling"
+msgstr "Расшифровка программного обеспечения"
 
 msgid "Software management"
 msgstr "Менеджер управления ПО"
@@ -19038,6 +19059,9 @@ msgstr "Синхронизировать NTP каждые x минут"
 
 msgid "Sync failure moving back to origin !"
 msgstr "Сбой синхронизации,возврат к оригиналу!"
+
+msgid "Synchronous"
+msgstr "Синхронный"
 
 msgid "Sync time using"
 msgstr "Синхронизировать время используя"
