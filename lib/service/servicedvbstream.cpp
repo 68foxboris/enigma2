@@ -18,7 +18,6 @@ eDVBServiceStream::eDVBServiceStream()
 	m_stream_ecm = false;
 	m_stream_eit = false;
 	m_stream_ait = false;
-	m_stream_sdtbat = false;
 	m_tuned = 0;
 	m_target_fd = -1;
 }
