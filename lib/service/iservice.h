@@ -59,7 +59,6 @@ public:
 	int flags; // flags will NOT be compared.
 
 	inline int getSortKey() const { return (flags & hasSortKey) ? data[3] : ((flags & sort1) ? 1 : 0); }
-
 	static RESULT parseNameAndProviderFromName(std::string &sourceName, std::string& name, std::string& prov);
 
 #ifndef SWIG
@@ -122,6 +121,7 @@ public:
 		memset(data, 0, sizeof(data));
 		number = 0;
 	}
+
 	eServiceReference(int type, int flags)
 		: type(type), flags(flags)
 	{
@@ -173,6 +173,7 @@ public:
 		data[4]=data4;
 		number = 0;
 	}
+
 	eServiceReference(int type, int flags, const std::string &path)
 		: type(type), flags(flags), path(path)
 	{
@@ -424,6 +425,7 @@ public:
 		sGamma,
 		sVideoInfo,
 		sExtendedDescription,
+		sIsRecoveringStream,
 		sIsSoftCSA,			/* 1 if current service uses software descrambling */
 
 		sUser = 0x100
