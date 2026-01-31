@@ -75,6 +75,13 @@ void eStreamClient::notifier(int what)
 	{
 		rsn->stop();
 		stop();
+		// Free encoder on disconnect
+		if (encoderFd >= 0)
+		{
+			eDebug("[eStreamClient] connection lost: freeing encoder fd=%d", encoderFd);
+			if (eEncoder::getInstance()) eEncoder::getInstance()->freeEncoder(encoderFd);
+			encoderFd = -1;
+		}
 		parent->connectionLost(this);
 		return;
 	}
@@ -162,7 +169,16 @@ void eStreamClient::notifier(int what)
 				set_tcp_option(streamFd, TCP_USER_TIMEOUT, 10 * 1000);
 
 				if (serviceref.substr(0, 10) == "file?file=") /* convert openwebif stream reqeust back to serviceref */
-					serviceref = std::string("1:0:1:0:0:0:0:0:0:0:") + serviceref.substr(10);
+					serviceref = "1:0:1:0:0:0:0:0:0:0:" + serviceref.substr(10);
+				/* Strip session ID from URL if it exists, PLi streaming can not handle it */
+				pos = serviceref.find("&sessionid=");
+				if (pos != std::string::npos) {
+					serviceref.erase(pos, std::string::npos);
+				}
+				pos = serviceref.find("?sessionid=");
+				if (pos != std::string::npos) {
+					serviceref.erase(pos, std::string::npos);
+				}
 
 				pos = serviceref.find('?');
 				if (pos == std::string::npos)
@@ -257,7 +273,6 @@ void eStreamClient::notifier(int what)
 								acodec = acodec.substr(0, pos);
 							}
 						}
-
 						encoderFd = -1;
 
 						if (eEncoder::getInstance())
@@ -296,8 +311,16 @@ void eStreamClient::notifier(int what)
 
 void eStreamClient::stopStream()
 {
-	ePtr<eStreamClient> ref = this;
 	rsn->stop();
+	// Free encoder BEFORE connectionLost removes us from the list
+	// This ensures the encoder is released even if the destructor is delayed
+	if (encoderFd >= 0)
+	{
+		eDebug("[eStreamClient] stopStream: freeing encoder fd=%d", encoderFd);
+		if (eEncoder::getInstance()) eEncoder::getInstance()->freeEncoder(encoderFd);
+		encoderFd = -1;
+	}
+	ePtr<eStreamClient> ref = this;
 	parent->connectionLost(this);
 }
 
@@ -419,7 +442,7 @@ PyObject *eStreamServer::getConnectedClientDetails(int index)
 		}
 
 		if(list.size()) {
-		
+
 			eDVBChannelID channel;
 			dvbservice.getChannelID(channel);
 
@@ -432,7 +455,7 @@ PyObject *eStreamServer::getConnectedClientDetails(int index)
 					break;
 				}
 			}
-					
+
 		}
 
 	}

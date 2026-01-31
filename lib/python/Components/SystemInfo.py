@@ -5,7 +5,7 @@ from os.path import exists, isfile, join
 from re import findall
 from subprocess import PIPE, Popen
 
-from enigma import eAVControl, Misc_Options, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl
+from enigma import eAVControl, Misc_Options, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, eDVBCSAEngine
 
 from process import ProcessList
 from Tools.Directories import SCOPE_LIBDIR, SCOPE_SKIN, isPluginInstalled, fileCheck, fileReadLine, fileReadLines, fileExists, fileHas, pathExists, resolveFilename
@@ -357,6 +357,7 @@ BoxInfo.setItem("HasGPT", MODEL in ("dreamone", "dreamtwo") and pathExists("/dev
 BoxInfo.setItem("HasMMC", fileHas("/proc/cmdline", "root=/dev/mmcblk") or MultiBoot.canMultiBoot() and fileHas("/proc/cmdline", "root=/dev/sda"))
 BoxInfo.setItem("HasSDmmc", MultiBoot.canMultiBoot() and "sd" in MultiBoot.getBootSlots().get("2", "") and "mmcblk" in MTDROOTFS)
 BoxInfo.setItem("HasSDswap", MODEL in ("h9", "i55plus") and pathExists("/dev/mmcblk0p1"))
+BoxInfo.setItem("HasSoftCSA", eDVBCSAEngine.isAvailable())
 BoxInfo.setItem("HasSoftcamInstalled", hassoftcaminstalled())
 BoxInfo.setItem("HaveCISSL", fileCheck("/etc/ssl/certs/customer.pem") and fileCheck("/etc/ssl/certs/device.pem"))
 BoxInfo.setItem("HasFBCtuner", ["Vuplus DVB-C NIM(BCM3158)", "Vuplus DVB-C NIM(BCM3148)", "Vuplus DVB-S NIM(7376 FBC)", "Vuplus DVB-S NIM(45308X FBC)", "Vuplus DVB-S NIM(45208 FBC)", "DVB-S2 NIM(45208 FBC)", "DVB-S2X NIM(45308X FBC)", "DVB-S2 NIM(45308 FBC)", "DVB-C NIM(3128 FBC)", "BCM45208", "BCM45308X", "BCM3158"])

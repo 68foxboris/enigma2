@@ -60,12 +60,18 @@ eEncoder::eEncoder()
 
 		for(int index = 0; index < 4; index++) // increase this if machines appear with more than 4 encoding engines
 		{
-			char filename[64];
+			char filename[256];
 
 			snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/decoder", index);
 
 			if (CFile::parseInt(&decoder_index, filename) < 0)
-				break;
+			{
+				// VU+ 
+				snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/demux", index);
+				if (CFile::parseInt(&decoder_index, filename) < 0)
+					break;
+			}
+
 
 			/* the connected video decoder for "Xtrend" transcoding / encoding or for Broadcom HDMI recording */
 			if((navigation_instance_normal = new eNavigation(service_center, decoder_index)) == nullptr)
@@ -130,49 +136,72 @@ int eEncoder::allocateEncoder(const std::string &serviceref, int &buffersize,
 		return(-1);
 	}
 
+	// Set encoder parameters - unified for both BCM and HiSilicon encoders
+	// BCM parameters now enabled for URL parameter support via Port 8001
+	// This makes transtreamproxy obsolete and enables SoftCSA for transcoding
+
 	if(bcm_encoder)
 	{
 		vcodec_node = "video_codec";
 		acodec_node = "audio_codec";
 		encoder[encoder_index].navigation_instance = encoder[encoder_index].navigation_instance_alternative;
+
+		// Write transcoding parameters to /proc/stb/encoder for BCM
+		eDebug("[eEncoder] BCM encoder %d: setting bitrate=%d framerate=%d", encoder_index, bitrate, framerate);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/bitrate", encoder_index);
+		CFile::writeInt(filename, bitrate);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/framerate", encoder_index);
+		CFile::writeInt(filename, framerate);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/display_format", encoder_index);
+		if(height > 576)
+			CFile::write(filename, "720p");
+		else if(height > 480)
+			CFile::write(filename, "576p");
+		else
+			CFile::write(filename, "480p");
+
+		/*
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/width", encoder_index);
+		CFile::writeInt(filename, width);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/height", encoder_index);
+		CFile::writeInt(filename, height);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/interlaced", encoder_index);
+		CFile::writeInt(filename, interlaced);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/aspectratio", encoder_index);
+		CFile::writeInt(filename, aspectratio);
+		*/
 	}
 	else
 	{
 		vcodec_node = "vcodec";
 		acodec_node = "acodec";
 		encoder[encoder_index].navigation_instance = encoder[encoder_index].navigation_instance_normal;
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/bitrate", encoder_index);
+		CFile::writeInt(filename, bitrate);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/width", encoder_index);
+		CFile::writeInt(filename, width);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/height", encoder_index);
+		CFile::writeInt(filename, height);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/framerate", encoder_index);
+		CFile::writeInt(filename, framerate);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/interlaced", encoder_index);
+		CFile::writeInt(filename, interlaced);
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/aspectratio", encoder_index);
+		CFile::writeInt(filename, aspectratio);
+
 	}
-
-	snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/bitrate", encoder_index);
-	CFile::writeInt(filename, bitrate);
-
-	snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/width", encoder_index);
-	CFile::writeInt(filename, width);
-
-	snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/height", encoder_index);
-	CFile::writeInt(filename, height);
-
-	if(bcm_encoder)
-	{
-		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/display_format", encoder_index);
-
-		if(height > 576)
-			CFile::write(filename, "720p");
-		else
-			if(height > 480)
-				CFile::write(filename, "576p");
-			else
-				CFile::write(filename, "480p");
-	}
-
-	snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/framerate", encoder_index);
-	CFile::writeInt(filename, framerate);
-
-	snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/interlaced", encoder_index);
-	CFile::writeInt(filename, interlaced);
-
-	snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/aspectratio", encoder_index);
-	CFile::writeInt(filename, aspectratio);
 
 	if(!vcodec.empty())
 	{
@@ -194,8 +223,12 @@ int eEncoder::allocateEncoder(const std::string &serviceref, int &buffersize,
 		}
 	}
 
-	snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/apply", encoder_index);
-	CFile::writeInt(filename, 1);
+	if(!bcm_encoder) {
+
+		snprintf(filename, sizeof(filename), "/proc/stb/encoder/%d/apply", encoder_index);
+		CFile::writeInt(filename, 1);
+
+	}
 
 	if(source_file.empty())
 		encoder[encoder_index].file_fd = -1;
@@ -241,7 +274,6 @@ int eEncoder::allocateEncoder(const std::string &serviceref, int &buffersize,
 				close(encoder[encoder_index].encoder_fd);
 				encoder[encoder_index].encoder_fd = -1;
 				return(-1);
-				break;
 			}
 		}
 	}
@@ -263,6 +295,7 @@ int eEncoder::allocateEncoder(const std::string &serviceref, int &buffersize,
 int eEncoder::allocateHDMIEncoder(const std::string &serviceref, int &buffersize)
 {
 	/* these are hardcoded because they're ignored anyway */
+
 /*
 	static const int hdmi_encoding_bitrate = 100000;
 	static const int hdmi_encoding_width = 1280;
@@ -397,6 +430,15 @@ void eEncoder::freeEncoder(int encoderfd)
 
 	encoder[encoder_index].state = EncoderContext::state_finishing;
 	encoder[encoder_index].kill();
+
+	// Send STOP_TRANSCODING ioctl before closing (required for BCM encoders!)
+	if(bcm_encoder && encoder[encoder_index].encoder_fd >= 0)
+	{
+		eDebug("[eEncoder] freeEncoder: sending STOP_TRANSCODING ioctl");
+		if(ioctl(encoder[encoder_index].encoder_fd, IOCTL_BROADCOM_STOP_TRANSCODING, 0))
+			eWarning("[eEncoder] freeEncoder: STOP_TRANSCODING ioctl failed");
+	}
+
 	encoder[encoder_index].navigation_instance->getCurrentService(service);
 
 	service->tap(tservice);

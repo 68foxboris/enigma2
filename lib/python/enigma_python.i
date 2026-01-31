@@ -99,6 +99,7 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/dvb/dvbtime.h>
 #include <lib/dvb/pmt.h>
 #include <lib/dvb/cahandler.h>
+#include <lib/dvb/csaengine.h>
 #include <lib/dvb/fastscan.h>
 #include <lib/dvb/cablescan.h>
 #include <lib/dvb/encoder.h>
@@ -208,12 +209,6 @@ typedef long time_t;
 %immutable ePythonMessagePump::recv_msg;
 %immutable eDVBLocalTimeHandler::m_timeUpdated;
 %immutable eFCCServiceManager::m_fcc_event;
-%immutable iCryptoInfo::clientname;
-%immutable iCryptoInfo::clientinfo;
-%immutable iCryptoInfo::verboseinfo;
-%immutable iCryptoInfo::usedcaid;
-%immutable iCryptoInfo::decodetime;
-%immutable iCryptoInfo::usedcardid;
 %immutable eTuxtxtApp::appClosed;
 %immutable iDVBChannel::receivedTsidOnid;
 %immutable eStreamServer::streamStatusChanged;
@@ -268,6 +263,7 @@ typedef long time_t;
 %include <lib/dvb/frontend.h>
 %include <lib/dvb/pmt.h>
 %include <lib/dvb/cahandler.h>
+%include <lib/dvb/csaengine.h>
 %include <lib/dvb/fastscan.h>
 %include <lib/dvb/cablescan.h>
 %include <lib/components/scan.h>
