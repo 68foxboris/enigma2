@@ -3232,6 +3232,9 @@ msgstr "Автозапуск:"
 msgid "Available format variables"
 msgstr "Доступные форматы переменных"
 
+msgid "Available"
+msgstr "Доступный"
+
 msgid "Available locales are:"
 msgstr "Доступные локали:"
 
