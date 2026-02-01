@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2026-01-02 21:03+0200\n"
+"PO-Revision-Date: 2026-01-31 22:47+0200\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -5161,7 +5161,7 @@ msgstr "Настройте тип по умолчанию для новых та
 msgid "Configure for how long the infobar will remain visible after activation."
 msgstr "Настройка для показа инфобара после его активации в секундах."
 
-msgid "Configure for which types of recordings a warning about active recordings is shown when attempting to restart the box or the GUI."
+msgid "Configure for which types of recordings a warning about active recordings is shown when attempting to restart the receiver or the GUI."
 msgstr "Укажите, для каких типов записей следует выводить предупреждение, когда будет выбрана перезагрузка ресивера или пользовательского интерфейса."
 
 msgid "Configure how long finished events should remain visible in the EPG. Useful when you need information about an event which has just finished, or has been delayed (or for plugins that support catchup)."
@@ -5182,8 +5182,8 @@ msgstr "Настройка цвета светодиодов спереди в �
 msgid "Configure how many channels are shown in the selection list."
 msgstr "Настройка, сколько каналов показать в списке выбора каналов."
 
-msgid "Configure how recording filenames are constructed."
-msgstr "Настройка способа составления названия имени записываемого файла."
+msgid "Configure how recording filenames are constructed. Standard: Date Time - Channel - Title Very very short: Title Very short: Title - Date Time Short with time: Date Time - Title Short: Date - Title Long: Date Time - Channel - Title - Info."
+msgstr "Задайте формат имен файлов записей. Стандартный: Дата Время - Канал - Заголовок, Совсем короткий: Заголовок, Очень короткий: Заголовок - Дата Время, Короткий со временем: Дата Время - Заголовок, Короткий: Дата - Заголовок, Длинный: Дата Время - Канал - Название - Информация."
 
 msgid "Configure how the fan should operate"
 msgstr "Настройка режимов работы вентилятора"
@@ -5546,8 +5546,8 @@ msgstr "Настройка - нужно ли показывать иконку �
 msgid "Configure whether service picons will be shown in number zap."
 msgstr "Укажите,будут ли показываться сервисные пиконы в номере zap."
 
-msgid "Configure whether the 'recording' symbol (in the display skin and LCD skin) is visible for real recordings only or also for streaming and pseuso recordings (e.g. EPGrefresh)."
-msgstr "Укажите, когда выводить значок записи на дисплей ресивера, только при записи передач или при потоковом вещании и псевдозаписях тоже (Например при обновлении ТВ-гида)"
+msgid "Configure whether the 'recording' symbol (in the display skin and LCD skin) is visible for real recordings only or also for streaming and pseudo recordings (e.g. in EPGrefresh)."
+msgstr "Укажите, когда выводить значок записи на дисплей ресивера, только при записи передач или при потоковом вещании и псевдозаписях тоже (например при обновлении ТВ-гида)."
 
 msgid "Configure which access level to use for the configuration menu. Expert level gives access to all items."
 msgstr "Настройка уровня доступа для использования в меню конфигурации.Экспертный уровень дает доступ к другим элементам."
@@ -6478,6 +6478,9 @@ msgstr "Выбран режим видео по умолчанию"
 msgid "Default volume offset"
 msgstr "Стандартная компенсация громкости"
 
+msgid "Default wake-up is 5 minutes prior to timer start to wake up from Deep Standby. Adjust if the wake-up is too early or late, e.g., for network drives."
+msgstr "Настройки по умолчанию - на 5 минут раньше, чтобы выйти из глубокого режима ожидания. Возможно, это необходимо изменить. (например: фактическое время пробуждения неточное или слишком позднее, ожидание сетевого диска и т. д.)"
+
 #, python-format
 msgid "Default: '%s'."
 msgstr "По умолчанию: '%s'."
@@ -6958,6 +6961,9 @@ msgstr "Отключить профили операторов"
 msgid "Disable the HDD Process on VFD"
 msgstr "Отключить показ состояния HDD на дисплее"
 
+msgid "Disable the MultiBoot option"
+msgstr "Отключить опцию MultiBoot"
+
 msgid "Disable timer"
 msgstr "Отключить таймер"
 
@@ -7048,7 +7054,7 @@ msgstr "Отображение списка выбора в виде меню в
 msgid "Display skin"
 msgstr "Скин дисплея"
 
-msgid "Display the EIT now/next eventdata in infobar."
+msgid "Display the EIT Now/Next event data in the InfoBar."
 msgstr "Передачи сейчас/следующая отображать в инфопанели из EIT."
 
 msgid "Display the virtual keyboard for data entry"
@@ -9835,7 +9841,7 @@ msgid "Horizontal turning speed"
 msgstr "Поляризация (H) - скорость поворота"
 
 msgid "Host"
-msgstr "Host"
+msgstr "Хост"
 
 msgid "Host domain"
 msgstr "Хост-домен"
@@ -10009,6 +10015,9 @@ msgstr "Если доступен EPG"
 
 msgid "If disabled, underline characters in file and directory names are not shown and are replaced with spaces."
 msgstr "Если этот параметр отключен,символы подчеркивания в именах файлов и каталогов не отображаются и заменяются пробелами."
+
+msgid "If enabled, AIT data is included in recordings."
+msgstr "Если включено, данные AIT (Информационной таблицы применения) будут включаться в записи."
 
 msgid "If enabled, a log will be kept of CEC protocol traffic ('hdmicec.log')"
 msgstr "Если включено, будет вестись журнал трафика протокола CEC ('hdmicec.log')."
@@ -10222,7 +10231,10 @@ msgid "Inadyn setup"
 msgstr "Настройки мастера"
 
 msgid "Include AIT in http streams"
-msgstr "Включать AIT в http потоки"
+msgstr "Включать AIT в http-потоки"
+
+msgid "Include AIT in recordings"
+msgstr "Включать AIT в записи"
 
 msgid "Include CI assignment"
 msgstr "Включить назначение CI"
@@ -10237,7 +10249,7 @@ msgid "Include DVB timesync data"
 msgstr "Включить данные синхронизации времени DVB"
 
 msgid "Include ECM in http streams"
-msgstr "Включать ECM в http потоки"
+msgstr "Включить ECM в http потоки"
 
 msgid "Include EIT in http streams"
 msgstr "Включать EIT в http потоки"
@@ -11480,7 +11492,7 @@ msgid "Media service"
 msgstr "Медиасервис"
 
 msgid "Medium is not a writeable DVD!"
-msgstr "Носитель не записываемый DVD!"
+msgstr "Запись на этот DVD невозможна!"
 
 msgid "Medium is not empty!"
 msgstr "Носитель не пуст!"
@@ -15174,6 +15186,9 @@ msgstr "Перезапустить эмулятор"
 msgid "Restart test"
 msgstr "Перезапустить тест"
 
+msgid "Restart Required"
+msgstr "Требуется перезапуск"
+
 msgid "Restart your network connection and interfaces."
 msgstr "Перезагрузите сетевое соединение и интерфейсы."
 
@@ -17288,6 +17303,9 @@ msgstr "Показать пакеты для дисплея"
 msgid "Show Driver packages"
 msgstr "Показать пакеты драйверов"
 
+msgid "Show EIT Now/Next event data in the InfoBar"
+msgstr "Показать EIT сейчас/след в инфопанели"
+
 msgid "Show Extension packages"
 msgstr "Показать пакеты расширений"
 
@@ -17460,7 +17478,7 @@ msgid "Show chapter positions for supported video files."
 msgstr "Показывает положение глав для поддерживаемых видеофайлов."
 
 msgid "Show columns"
-msgstr "Показать столбцы"
+msgstr "Выровнять название передачи"
 
 msgid "Show contents of ipk file"
 msgstr "Показать содержимое ipk файла"
@@ -17532,7 +17550,7 @@ msgid "Show help"
 msgstr "Показать меню помощи"
 
 msgid "Show icon for new/unseen items"
-msgstr "Показ значки для новых/невидимых элементов"
+msgstr "Показывать значки для новых/невидимых элементов"
 
 msgid "Show in Extension Menu"
 msgstr "Показывать в меню дополнений"
@@ -17612,8 +17630,26 @@ msgstr "Показать записи"
 msgid "Show multi channel EPG"
 msgstr "Показать мульти ТВ-гид"
 
+msgid "Show next commit log"
+msgstr "Показать следующий журнал изменений"
+
+msgid "Show next debug log file"
+msgstr "Показать следующий файл лога отладки"
+
+msgid "Show next event"
+msgstr "Показать следующее событие"
+
+msgid "Show next page"
+msgstr "Показать следующую страницу"
+
 msgid "Show next picture"
 msgstr "Показать следующее изображение"
+
+msgid "Show next service information screen"
+msgstr "Показать экран информации о следующем канале"
+
+msgid "Show next system information screen"
+msgstr "Показать следующий экран информации о системе"
 
 msgid "Show notification when import channels and/or EPG from remote receiver URL did not complete"
 msgstr "Показывать уведомление, когда импорт каналов/ТВ-гида из удаленного ресивера URL не завершен"
@@ -17665,6 +17701,18 @@ msgstr "Показать движение позиционера"
 
 msgid "Show positioner position"
 msgstr "Показывать движение позиционера"
+
+msgid "Show previous commit log"
+msgstr "Показать журнал предыдущей записи"
+
+msgid "Show previous debug log file"
+msgstr "Показать предыдущий файл лога отладки"
+
+msgid "Show previous event"
+msgstr "Показать предыдущее событие"
+
+msgid "Show previous page"
+msgstr "Показать предыдущую страницу"
 
 msgid "Show previous picture"
 msgstr "Показать предыдущее изображение"
@@ -18233,7 +18281,7 @@ msgid "Software MultiBoot"
 msgstr "Мультизагрузка ПО"
 
 msgid "Software descrambling"
-msgstr "Расшифровка программного обеспечения"
+msgstr "Расшифровка ПО"
 
 msgid "Software management"
 msgstr "Менеджер управления ПО"
@@ -18251,7 +18299,7 @@ msgid "Software Update Actions"
 msgstr "Действия при обновлении ПО"
 
 msgid "Software information"
-msgstr "Информация о ПО"
+msgstr "Информация о программном обеспечении"
 
 msgid ""
 "Software update starting, please wait.\n"
@@ -18363,6 +18411,9 @@ msgstr "Звук"
 
 msgid "Sound carrier"
 msgstr "Несущая"
+
+msgid "Source Packages"
+msgstr "Пакеты исходного кода"
 
 msgid "Source request"
 msgstr "Исходный запрос"
@@ -19066,6 +19117,9 @@ msgstr "Сбой синхронизации,возврат к оригиналу
 msgid "Synchronous"
 msgstr "Синхронный"
 
+msgid "Sync mode"
+msgstr "Режим синхронизации"
+
 msgid "Sync time using"
 msgstr "Синхронизировать время используя"
 
@@ -19097,7 +19151,7 @@ msgid "System information"
 msgstr "Информация о системе"
 
 msgid "System temperature"
-msgstr "Температура системы"
+msgstr "Температура CPU"
 
 msgid ""
 "System temperature: %s%sC\n"
@@ -19140,7 +19194,7 @@ msgid "TMBD details for event"
 msgstr "Детали TMBD для события"
 
 msgid "TRANSLATOR_INFO"
-msgstr "Коррекция перевода Foxbob - 28.09.2024"
+msgstr "Коррекция перевода Foxbob - 31.01.2026"
 
 msgid "TS file is too large for ISO9660 level 1!"
 msgstr "TS файл слишком большой для ISO9660 уровня 1!"
@@ -21618,7 +21672,7 @@ msgstr "Пробуждение"
 msgid "Wakeup A/V receiver from standby."
 msgstr "Включить аудио/видео систему при выходе из ожидания."
 
-msgid "Wake up time before a timer begins [mins]"
+msgid "Wake up time before a timer begins"
 msgstr "Включить до начала таймера за [мин]"
 
 msgid "Wake up to standby"
@@ -21690,7 +21744,7 @@ msgid "Warning: FBC-C V1 tuner should be connected to the first slot to work cor
 msgstr "Предупреждение: тюнер FBC-C V1 должен быть подключен к первому слоту для правильной работы. В противном случае при подключении во втором слоте будут доступны только 2 демодулятора из 8. "
 
 msgid "Warning: no LNB; using factory defaults."
-msgstr "Предупреждение: нет LNB; используются заводские настройки."
+msgstr "Внимание: нет LNB; используются заводские настройки по умолчанию."
 
 msgid ""
 "WARNING: The DNS were not saved in your settings.\n"
@@ -22048,7 +22102,7 @@ msgstr "Если включено, то этот параметр значит �
 msgid "When enabled, this setting has more weight than 'Preferred tuner'."
 msgstr "Если включено, то этот параметр значит больше чем 'Приоритетный тюнер'."
 
-msgid "When enabled, time shift starts automatically in background after specified time."
+msgid "When enabled, timeshift starts automatically in background after specified time."
 msgstr "При включении таймшифт автоматически будет запущен в фоновом режиме через заданное время."
 
 msgid "When enabled, use DHCP for the IP configuration."
