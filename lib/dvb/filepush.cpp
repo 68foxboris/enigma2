@@ -184,7 +184,6 @@ void eFilePushThread::thread()
 					continue;
 				}
 				else if (m_flags == 1) { // timeshift
-
 #ifdef DREAMNEXTGEN
 					usleep(15000);  // 15 milliseconds - balance between responsiveness and CPU
 #else
