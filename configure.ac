@@ -265,6 +265,16 @@ if test x"$withnolcd" != xno ; then
 fi
 AM_CONDITIONAL(NO_LCD, test x"$withnolcd" != xno)
 
+AC_ARG_WITH(hifblayer,
+	AC_HELP_STRING([--with-hifblayer], [use HI FB layer, yes or no]),
+	[[withhifblayer=$withval]],
+	[[withhifblayer=no]]
+)
+if test x"$withhifblayer" != xno ; then
+	AC_DEFINE(HAVE_HIFBLAYER, 1,[Define when using a HI FB layer])
+fi
+AM_CONDITIONAL(HAVE_HIFBLAYER, test x"$withhifblayer" != xno)
+
 AC_ARG_WITH(textlcd,
 	AS_HELP_STRING([--with-textlcd], [use ascii based lcd, yes or no]),
 	[[withtextlcd=$withval]],
@@ -574,7 +584,6 @@ if test "$BOXTYPE" == "vuduo" -o "$BOXTYPE" == "vusolo" -o "$BOXTYPE" == "vuduo2
 	AC_DEFINE(KEY_INFO_TO_KEY_EPG, 1,[define when rc sends a KEY_INFO event for its KEY_EPG key])
 	AC_DEFINE(KEY_EDIT_TO_KEY_TIME, 1,[define when rc sends a KEY_TIME event for its KEY_EDIT key])
 	AC_DEFINE(DESCRAMBLER_VU, 1 ,[define set IOCTRL for FBCTUNER 8-16])
-
 fi
  
 if test "$BOXTYPE" == "vuultimo4k" -o "$BOXTYPE" == "vuduo4kse"; then
