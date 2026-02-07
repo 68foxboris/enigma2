@@ -26,7 +26,7 @@
 		<item level="1" text="Audio Source" description="Select whether multichannel audio tracks should be converted to PCM or SPDIF." requires="Canaudiosource">config.av.audio_source</item>
 		<item level="1" text="General AC3 delay" description="This option selects the general audio delay of Dolby Digital sound tracks.">config.av.generalAC3delay</item>
 		<item level="1" text="General PCM delay" description="This option configures the general audio delay of stereo sound tracks.">config.av.generalPCMdelay</item>
-		<item level="1" text="Multichannel PCM" description="Configure whether multi channel PCM sound should be enabled." requires="CanPcmMultichannel">config.av.multichannel_pcm</item>
+		<item level="1" text="PCM Multichannel" description="Select whether multichannel audio tracks should be output as PCM." requires="CanPcmMultichannel">config.av.pcm_multichannel</item>
 		<item level="1" text="3D Surround" description="This option allows you to enable 3D Surround Sound." requires="Can3DSurround">config.av.surround_3d</item>
 		<item level="1" text="3D Surround Speaker Position" description="This option allows you to change the virtual loudspeaker position." requires="Can3DSpeaker" conditional="config.av.surround_3d.value != 'none'">config.av.surround_3d_speaker</item>
 		<item level="1" text="3D surround softlimiter" description="This option allows you to enable 3D surround softlimiter." requires="Has3DSurroundSoftLimiter" conditional="config.av.surround_3d_speaker.value != 'none'">config.av.surround_softlimiter_3d</item>
