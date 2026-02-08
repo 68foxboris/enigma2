@@ -420,6 +420,7 @@ class ChannelContextMenu(Screen):
 		self.close()
 
 	def toggleStreamrelay(self):
+		from enigma import eTimer
 		Screens.InfoBar.InfoBar.instance.ToggleStreamrelay(self.csel.getCurrentSelection())
 		self.csel.refreshServiceListTimer = eTimer()
 		self.csel.refreshServiceListTimer.callback.append(self.csel.servicelist.resetRoot)
@@ -1173,10 +1174,10 @@ class ChannelSelectionEdit:
 			flags = eServiceReference.isGroup | eServiceReference.canDescent | eServiceReference.mustDescent
 			if self.mode == MODE_TV:
 				ref = eServiceReference(eServiceReference.idDVB, flags, eServiceReferenceDVB.dTv)
-				ref.setPath(f"FROM BOUQUET \"alternatives.{self.buildBouquetID(name)}.tv\" ORDER BY bouquet")
+				ref.setPath('FROM BOUQUET "alternatives.%s.tv" ORDER BY bouquet' % self.buildBouquetID(name))
 			else:
 				ref = eServiceReference(eServiceReference.idDVB, flags, eServiceReferenceDVB.dRadio)
-				ref.setPath(f"FROM BOUQUET \"alternatives.{self.buildBouquetID(name)}.radio\" ORDER BY bouquet")
+				ref.setPath('FROM BOUQUET "alternatives.%s.radio" ORDER BY bouquet' % self.buildBouquetID(name))
 			new_ref = ServiceReference(ref)
 			if not mutableBouquet.addService(new_ref.ref, cur_service.ref):
 				mutableBouquet.removeService(cur_service.ref)
@@ -1210,11 +1211,11 @@ class ChannelSelectionEdit:
 			if self.mode == MODE_TV:
 				bName = f"{bName} {_('(TV)')}"
 				new_bouquet_ref = eServiceReference(service_types_tv_ref)
-				new_bouquet_ref.setPath(f"FROM BOUQUET \"userbouquet.{self.buildBouquetID(bName)}.tv\" ORDER BY bouquet")
+				new_bouquet_ref.setPath("FROM BOUQUET \"userbouquet.%s.tv\" ORDER BY bouquet" % self.buildBouquetID(bName))
 			else:
 				bName = f"{bName} {_('(Radio)')}"
 				new_bouquet_ref = eServiceReference(service_types_radio_ref)
-				new_bouquet_ref.setPath(f"FROM BOUQUET \"userbouquet.{self.buildBouquetID(bName)}.radio\" ORDER BY bouquet")
+				new_bouquet_ref.setPath("FROM BOUQUET \"userbouquet.%s.radio\" ORDER BY bouquet" % self.buildBouquetID(bName))
 			if not mutableBouquetList.addService(new_bouquet_ref):
 				mutableBouquetList.flushChanges()
 				eDVBDB.getInstance().reloadBouquets()
@@ -1813,6 +1814,8 @@ class ChannelSelectionBase(Screen):
 		if self.bouquet_root:
 			self.enterPath(self.bouquet_root)
 		self.enterPath(root)
+		if self.isSubservices(root):
+			self.enterSubservices()
 		self.startRoot = None
 		if save_root:
 			self.saveRoot()
@@ -1918,7 +1921,11 @@ class ChannelSelectionBase(Screen):
 						if cur_ref:
 							# pos = self.service_types.rfind(":")  # DEBUG NOTE: This doesn't appear to be used.
 							ref = eServiceReference(self.service_types_ref)
-							path = f"(channelID == {cur_ref.getUnsignedData(4):08x}{cur_ref.getUnsignedData(2):04x}{cur_ref.getUnsignedData(3):04x}) && {self.service_types_ref.getPath()} ORDER BY name"
+							path = '(channelID == %08x%04x%04x) && %s ORDER BY name' % (
+								cur_ref.getUnsignedData(4),  # NAMESPACE
+								cur_ref.getUnsignedData(2),  # TSID
+								cur_ref.getUnsignedData(3),  # ONID
+								self.service_types_ref.getPath())
 							ref.setPath(path)
 							ref.setName(_("Current transponder"))
 							self.servicelist.addService(ref, beforeCurrent=True)
@@ -1961,7 +1968,7 @@ class ChannelSelectionBase(Screen):
 							if info:
 								provider = info.getInfoString(iServiceInformation.sProvider)
 								ref = eServiceReference(eServiceReference.idDVB, eServiceReference.flagDirectory)
-								ref.setPath(f"(provider == \"{provider}\") && {self.service_types_ref.getPath()} ORDER BY name")
+								ref.setPath("(provider == \"%s\") && %s ORDER BY name" % (provider, self.service_types_ref.getPath()))
 								ref.setName(provider)
 								self.setCurrentSelectionAlternative(ref)
 
@@ -2199,7 +2206,7 @@ class ChannelSelectionBase(Screen):
 					provider = info.getInfoString(iServiceInformation.sProvider)
 					op = self.session.nav.getCurrentlyPlayingServiceOrGroup().getUnsignedData(4) >> 16
 					ref = eServiceReference(eServiceReference.idDVB, eServiceReference.flagDirectory)
-					ref.setPath(f"(provider == \"{provider}\") && (satellitePosition == {op}) && {self.service_types_ref.getPath()} ORDER BY name")
+					ref.setPath("(provider == \"%s\") && (satellitePosition == %d) && %s ORDER BY name" % (provider, op, self.service_types_ref.getPath()))
 					ref.setName(provider)
 					self.servicelist.setCurrent(eServiceReference(ref))
 		elif not self.isBasePathEqual(self.bouquet_root) or self.bouquet_mark_edit == EDIT_ALTERNATIVES or (self.startRoot and self.startRoot != ref):
@@ -2293,9 +2300,9 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			ChannelSelection.instance = self
 
 		self.startServiceRef = None
-		self.history_tv = []
-		self.history_radio = []
-		self.history = self.history_tv
+
+		self.history = []
+
 		self.history_pos = 0
 		self.delhistpoint = None
 
@@ -2380,7 +2387,6 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 	def setModeTv(self):
 		if self.revertMode is None:
 			self.revertMode = self.mode
-		self.history = self.history_tv
 		self.lastservice = config.tv.lastservice
 		self.lastroot = config.tv.lastroot
 		config.servicelist.lastmode.value = "tv"
@@ -2397,7 +2403,6 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		if self.revertMode is None:
 			self.revertMode = self.mode
 		if config.usage.e1like_radio_mode.value:
-			self.history = self.history_radio
 			self.lastservice = config.radio.lastservice
 			self.lastroot = config.radio.lastroot
 			config.servicelist.lastmode.value = "radio"
@@ -2511,7 +2516,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			self.showPipzapMessage()
 			self.dopipzap = True
 			self.__evServiceStart()
-			# Move to service playing in pip (will not work with subservices)
+			# Move to service playing in pip.
 			self.setCurrentSelection(self.session.pip.getCurrentService())
 			self.modetitle = _(" (PiP)")
 		self.buildTitleString()
@@ -2596,30 +2601,30 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		return ret
 
 	def addToHistory(self, ref):
-		if not self.isSubservices() or not self.history:
-			if self.delhistpoint is not None:
-				x = self.delhistpoint
-				while x <= len(self.history)-1:
-					del self.history[x]
-			self.delhistpoint = None
-
-			if self.servicePath is not None:
-				tmp = self.servicePath[:]
-				tmp.append(ref)
-				self.history.append(tmp)
-				hlen = len(self.history)
-				x = 0
-				while x < hlen - 1:
-					if self.history[x][-1] == ref:
-						del self.history[x]
-						hlen -= 1
-					else:
-						x += 1
-
-				if hlen > HISTORYSIZE:
-					del self.history[0]
+		if self.history and self.isSubservices(self.history[self.history_pos][0]) and self.isSubservices(self.servicePath[0]):  # Only replace subservice
+			self.history[self.history_pos] = self.servicePath[:] + [ref]
+			return
+		if self.delhistpoint is not None:
+			x = self.delhistpoint
+			while x <= len(self.history) - 1:
+				del self.history[x]
+		self.delhistpoint = None
+		if self.servicePath is not None:
+			tmp = self.servicePath[:]
+			tmp.append(ref)
+			self.history.append(tmp)
+			hlen = len(self.history)
+			x = 0
+			while x < hlen - 1:
+				if self.history[x][-1] == ref and not self.isSubservices() or self.isSubservices(self.history[x][0]):
+					del self.history[x]  # TODO This deletion is wrong
 					hlen -= 1
-				self.history_pos = hlen - 1
+				else:
+					x += 1
+			if hlen > HISTORYSIZE:
+				del self.history[0]
+				hlen -= 1
+			self.history_pos = hlen - 1
 
 	def historyBack(self):
 		hlen = len(self.history)
@@ -2630,7 +2635,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		if hlen > 1 and self.history_pos > 0:
 			self.history_pos -= 1
 			self.setHistoryPath()
-		self.delhistpoint = self.history_pos+1
+		# self.delhistpoint = self.history_pos + 1 # TODO Do we need this?
 
 	def historyNext(self):
 		self.delhistpoint = None
@@ -2642,8 +2647,11 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 	def setHistoryPath(self, doZap=True):
 		path = self.history[self.history_pos][:]
 		ref = path.pop()
-		del self.servicePath[:]
-		self.servicePath += path
+		if self.isSubservices(path[0]):
+			self.enterSubservices(ref)
+		else:
+			del self.servicePath[:]
+			self.servicePath += path
 		self.saveRoot()
 		root = path[-1]
 		cur_root = self.getRoot()
@@ -2659,9 +2667,9 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 
 	def historyClear(self):
 		if self and self.servicelist:
-			for i in range(0, len(self.history)-1):
+			for i in range(0, len(self.history) - 1):
 				del self.history[0]
-			self.history_pos = len(self.history)-1
+			self.history_pos = len(self.history) - 1
 			return True
 		return False
 
@@ -2684,9 +2692,9 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			if x[-1] == retval:
 				break
 			pos += 1
-		self.delhistpoint = pos + 1
+		# self.delhistpoint = pos + 1  # TODO Do we need this?
 		if pos < hlen and pos != self.history_pos:
-			tmp = self.history[pos]
+			# tmp = self.history[pos]
 			# self.history.append(tmp)
 			# del self.history[pos]
 			self.history_pos = pos
@@ -2774,7 +2782,11 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			self.addToHistory(currentPlayedRef)
 			hlen = len(self.history)
 		if hlen > 1:
-			if self.history_pos == hlen - 1:
+			if self.isSubservices(self.history[self.history_pos][0]):  # Exit subservice!
+				del self.history[self.history_pos]
+				if self.history_pos > 0:
+					self.history_pos -= 1
+			elif self.history_pos == hlen - 1:
 				tmp = self.history[self.history_pos]
 				self.history[self.history_pos] = self.history[self.history_pos - 1]
 				self.history[self.history_pos - 1] = tmp
@@ -2788,7 +2800,6 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		if self.revertMode is None:
 			self.restoreRoot()
 			if self.dopipzap:
-				# This unfortunately won't work with subservices.
 				self.setCurrentSelection(self.session.pip.getCurrentService())
 			else:
 				lastservice = eServiceReference(self.lastservice.value)
@@ -2820,7 +2831,6 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		self.startServiceRef = None
 		self.startRoot = None
 		if self.dopipzap:
-			# This unfortunately won't work with subservices.
 			self.setCurrentSelection(self.session.pip.getCurrentService())
 		else:
 			lastservice = eServiceReference(self.lastservice.value)
@@ -2885,7 +2895,6 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 class RadioInfoBar(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		# print(f"[ChannelSelection] RadioInfoBar DEBUG: Setting title='{self.getTitle()}'.")
 		self["RdsDecoder"] = RdsDecoder(self.session.nav)
 
 
@@ -3120,7 +3129,7 @@ class SimpleChannelSelection(ChannelSelectionBase, SelectionEventInfo):
 		self.showFavourites()
 
 	def toggleTVRadio(self):
-		if self.mode == MODE_TV :
+		if self.mode == MODE_TV:
 			self.setModeRadio()
 		else:
 			self.setModeTv()
