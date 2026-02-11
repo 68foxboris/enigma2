@@ -2457,6 +2457,7 @@ def InitUsageConfig():
 		default=800,
 		choices=[(x, _("%d ms") % x) for x in range(100, 2001, 100)]
 	)
+	config.softcsa.useStreamRelayWhitelist = ConfigYesNo(default=True)
 
 	config.misc.softcam_setup = ConfigSubsection()
 	config.misc.softcam_setup.extension_menu = ConfigYesNo(default=True)
@@ -2464,7 +2465,6 @@ def InitUsageConfig():
 	config.misc.softcam_streamrelay_port = ConfigInteger(default=17999, limits=(0, 65535))
 	config.misc.softcam_streamrelay_delay = ConfigSelectionNumber(min=0, max=2000, stepwidth=50, default=0, wraparound=True)
 	config.misc.softcam_hideServerName = ConfigYesNo(default=False)
-
 
 	config.misc.useNTPminutes = ConfigSelection(default=30, choices=[(30, ngettext("%d Minute", "%d Minutes", 30) % 30)] + [(x * 60, ngettext("%d Hour", "%d Hours", x) % x) for x in (1, 24)])
 

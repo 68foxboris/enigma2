@@ -4782,6 +4782,9 @@ msgstr "Выберите точку подключения для устройс
 msgid "Choose whether or not to show an icon when a motorized dish is moving."
 msgstr "Нужно ли показывать значок во время движении антенны с мотоподвесом."
 
+msgid "Choose whether to use the streamrelay_whitelist file. The whitelist file should be disabled if you are using softcsa."
+msgstr "Выберите, следует ли использовать файл streamrelay_whitelist. Если вы используете softcsa, файл белого списка следует отключить."
+
 msgid "Choose which level of menu/setting's to display. 'Expert'-level shows all items."
 msgstr "Выберите уровень отображения для настроек меню. 'Эксперт' - отображаются все элементы."
 
@@ -21103,6 +21106,9 @@ msgstr "Используйте разделительные линии"
 
 msgid "Use spacer lines to pad the bouquet to make the #SERVICE line numbers match the LCN."
 msgstr "Используйте разделительные линии для заполнения букета, чтобы номера строк #SERVICE соответствовали LCN."
+
+msgid "Use streamrelay_whitelist file"
+msgstr "Используйте файл streamrelay_whitelist"
 
 msgid "Use the alternative screen"
 msgstr "Используйте альтернативный экран"
