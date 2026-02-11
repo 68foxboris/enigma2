@@ -2151,6 +2151,9 @@ msgstr "Активный"
 msgid "Active clients"
 msgstr "Активные клиенты"
 
+msgid "Adjusts compensation for hardware buffer latency for DM9x0."
+msgstr "Корректирует компенсацию задержки аппаратного буфера для DM9x0."
+
 msgid "AdGuard DNS (Ads/Trackers)"
 msgstr "AdGuard DNS (реклама/трекеры)"
 
@@ -9704,6 +9707,9 @@ msgstr "Устройство MultiBoot"
 
 msgid "Hardware information"
 msgstr "Информация об оборудовании"
+
+msgid "Hardware latency correction"
+msgstr "Аппаратная коррекция задержки"
 
 msgid "Hardware serial"
 msgstr "Серийный номер ПО"
