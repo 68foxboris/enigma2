@@ -2484,7 +2484,7 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 					self.protectContextMenu = True
 					self.close(ref)
 
-	def bouquetParentalControlCallback(self, ref):
+	def bouquetParentalControlCallback(self, ref, forceRestart=False):  # 'forceRestart' is used in ParentalControl
 		self.enterPath(ref)
 		self.gotoCurrentServiceOrProvider(ref)
 		self.revertMode = None
