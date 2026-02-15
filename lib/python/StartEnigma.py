@@ -4,6 +4,8 @@ from os.path import isdir, islink, join, exists
 import sys  # This is needed for the twisted redirection access to stderr and stdout.
 from time import time
 
+# flake8: noqa F401, E402
+
 import Tools.RedirectOutput
 
 import enigma  # Establish enigma2 connections to processing methods.
@@ -12,205 +14,9 @@ import eConsoleImpl
 enigma.eTimer = eBaseImpl.eTimer
 enigma.eSocketNotifier = eBaseImpl.eSocketNotifier
 enigma.eConsoleAppContainer = eConsoleImpl.eConsoleAppContainer
-from Components.config import config, configfile, ConfigText, ConfigYesNo, ConfigInteger, ConfigSelection, ConfigSubsection, ConfigOnOff, NoSave
 
-enigma.eProfileWrite("BoxInfo")
-from Components.SystemInfo import BoxInfo
-from Tools.Directories import InitFallbackFiles, resolveFilename, SCOPE_PLUGINS, SCOPE_CURRENT_SKIN
-from traceback import print_exc
+MODULE_NAME = "StartEnigma"  # This is done here as "__name__.split(".")[-1]" returns "__main__" for this module.
 
-BRAND = BoxInfo.getItem("brand")
-BOX_TYPE = BoxInfo.getItem("machinebuild")
-MODEL = BoxInfo.getItem("model")
-DISPLAYBRAND = BoxInfo.getItem("displaybrand")
-
-print("[StartEnigma] Receiver name = %s %s" % (DISPLAYBRAND, BoxInfo.getItem("displaymodel")))
-print("[StartEnigma] Build Brand = %s" % BRAND)
-print("[StartEnigma] Build Model = %s" % MODEL)
-print("[StartEnigma] SoC family = %s" % BoxInfo.getItem("socfamily"))
-
-if BoxInfo.getItem("architecture") in ("aarch64"):
-	# import usb.core
-	from usb.backend.libusb1 import get_backend
-	get_backend(find_library=lambda x: "/lib64/libusb-1.0.so.0")
-
-# These entries should be moved back to UsageConfig.py when it is safe to bring UsageConfig init to this location in StartEnigma.py.
-#
-config.crash = ConfigSubsection()
-config.crash.debugInternational = ConfigYesNo(default=False)
-config.crash.debugMultiBoot = ConfigYesNo(default=False)
-config.crash.debugActionMaps = ConfigYesNo(default=False)
-config.crash.debugKeyboards = ConfigYesNo(default=False)
-config.crash.debugOpkg = ConfigYesNo(default=False)
-config.crash.debugRemoteControls = ConfigYesNo(default=False)
-config.crash.debugScreens = ConfigYesNo(default=False)
-config.crash.debugDVBScan = ConfigYesNo(default=False)
-config.crash.debugDVBTime = ConfigYesNo(default=False)
-config.crash.debugDVB = ConfigYesNo(default=False)
-config.crash.debugTimers = ConfigYesNo(default=False)
-config.crash.debugTeletext = ConfigYesNo(default=False)
-config.crash.debugStorage = ConfigYesNo(default=False)
-config.crash.debugDVBDB = ConfigYesNo(default=False)
-
-# config.plugins needs to be defined before InputDevice < HelpMenu < MessageBox < InfoBar.
-config.plugins = ConfigSubsection()
-config.plugins.remotecontroltype = ConfigSubsection()
-config.plugins.remotecontroltype.rctype = ConfigInteger(default=0)
-
-# Enable numbers in Plugin Browser (Do not move it to other file)
-config.misc.menu_show_numbers = ConfigYesNo(default=False)
-
-config.parental = ConfigSubsection()
-config.parental.lock = ConfigOnOff(default=False)
-config.parental.setuplock = ConfigOnOff(default=False)
-
-config.expert = ConfigSubsection()
-config.expert.satpos = ConfigOnOff(default=True)
-config.expert.fastzap = ConfigOnOff(default=True)
-config.expert.skipconfirm = ConfigOnOff(default=False)
-config.expert.hideerrors = ConfigOnOff(default=False)
-config.expert.autoinfo = ConfigOnOff(default=True)
-
-enigma.eProfileWrite("Keyboard")
-from Components.InputDevice import keyboard
-
-enigma.eProfileWrite("ScreenSummary")
-# from Screens.SimpleSummary import SimpleSummary
-from Screens.Screen import ScreenSummary
-
-enigma.eProfileWrite("InfoBar")
-from Screens import InfoBar
-
-from sys import stdout
-
-enigma.eProfileWrite("LoadBouquets")
-config.misc.load_unlinked_userbouquets = ConfigSelection(default="1", choices=[("0", _("Off")), ("1", _("Top")), ("2", _("Bottom"))])
-if config.misc.load_unlinked_userbouquets.value.lower() in ("true", "false"):
-	config.misc.load_unlinked_userbouquets.value = "1" if config.misc.load_unlinked_userbouquets.value.lower() == "true" else "0"
-
-
-def localeNotifier(configElement):
-	international.activateLocale(configElement.value)
-
-
-enigma.eProfileWrite("International")
-from Components.International import international
-
-config.misc.locale = ConfigText(default="en_US")
-config.misc.locale.addNotifier(localeNotifier)
-config.misc.language = ConfigText(default=international.getLanguage("en_US"))
-config.misc.country = ConfigText(default=international.getCountry("en_US"))
-
-
-def setLoadUnlinkedUserbouquets(configElement):
-	enigma.eDVBDB.getInstance().setLoadUnlinkedUserbouquets(int(configElement.value))
-
-
-config.misc.load_unlinked_userbouquets.addNotifier(setLoadUnlinkedUserbouquets)
-enigma.eDVBDB.getInstance().reloadBouquets()
-
-enigma.eProfileWrite("ConfigMisc")
-config.misc.radiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "radio.mvi"))
-config.misc.blackradiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "black.mvi"))
-config.misc.startCounter = ConfigInteger(default=0)  # Number of e2 starts.
-config.misc.standbyCounter = NoSave(ConfigInteger(default=0))  # Number of standby.
-config.misc.DeepStandby = NoSave(ConfigYesNo(default=False))  # Detect deep standby.
-config.misc.RestartUI = ConfigYesNo(default=False)  # detect user interface restart
-config.misc.prev_wakeup_time = ConfigInteger(default=0)
-# config.misc.prev_wakeup_time_type is only valid when wakeup_time is not 0
-config.misc.prev_wakeup_time_type = ConfigInteger(default=0)
-# 0 = RecordTimer, 1 = ZapTimer, 2 = Plugins, 3 = WakeupTimer
-config.misc.epgcache_filename = ConfigText(default="/media/hdd/epg.dat", fixed_size=False)
-config.misc.SyncTimeUsing = ConfigSelection(default="0", choices=[
-	("0", _("Transponder Time")),
-	("1", _("NTP"))
-])
-config.misc.NTPserver = ConfigText(default="pool.ntp.org", fixed_size=False)
-
-
-def setEPGCachePath(configElement):
-	if isdir(configElement.value) or islink(configElement.value):
-		configElement.value = join(configElement.value, "epg.dat")
-	enigma.eEPGCache.getInstance().setCacheFile(configElement.value)
-
-# Demo code for use of standby enter leave callbacks.
-#
-# def leaveStandby():
-# 	print("[StartEnigma] Leaving standby.")
-#
-#
-# def standbyCountChanged(configElement):
-# 	print("[StartEnigma] Enter standby number %s." % configElement.value)
-# 	from Screens.Standby import inStandby
-# 	inStandby.onClose.append(leaveStandby)
-#
-#
-# config.misc.standbyCounter.addNotifier(standbyCountChanged, initial_call=False)
-
-
-enigma.eProfileWrite("Twisted")
-try:
-	import twisted.python.runtime
-
-	import e2reactor
-	e2reactor.install()
-
-	from twisted.internet import reactor
-
-	def runReactor():
-		reactor.run(installSignalHandlers=False)
-except ImportError:
-	print("[StartEnigma] Error: Twisted not available!")
-
-	def runReactor():
-		enigma.runMainloop()
-
-enigma.eProfileWrite("Plugin")
-
-from twisted.python import log
-config.misc.enabletwistedlog = ConfigYesNo(default=False)
-if config.misc.enabletwistedlog.value == True:
-	log.startLogging(open('/tmp/twisted.log', 'w'))
-else:
-	log.startLogging(sys.stdout)
-
-# initialize autorun plugins and plugin menu entries
-from Components.PluginComponent import plugins
-
-enigma.eProfileWrite("Wizard")
-config.misc.rcused = ConfigInteger(default=1)
-from Screens.Wizard import wizardManager
-from Screens.StartWizard import *
-#import Screens.Rc
-from Tools.BoundFunction import boundFunction
-from Plugins.Plugin import PluginDescriptor
-
-enigma.eProfileWrite("misc")
-had = dict()
-
-
-def dump(dir, p=""):
-	if isinstance(dir, dict):
-		for (entry, val) in dir.items():
-			dump(val, p + "(dict)/" + entry)
-	if hasattr(dir, "__dict__"):
-		for name, value in dir.__dict__.items():
-			if str(value) not in had:
-				had[str(value)] = 1
-				dump(value, p + "/" + str(name))
-			else:
-				print(p + "/" + str(name) + ":" + str(dir.__class__) + "(cycle)")
-	else:
-		print(p + ":" + str(dir))
-
-# + ":" + str(dir.__class__)
-
-# Display.
-enigma.eProfileWrite("ScreenGlobals")
-from Screens.Globals import Globals
-from Screens.SessionGlobals import SessionGlobals
-from Screens.Screen import Screen
-Screen.globalScreen = Globals()
 
 # Session.open:
 # * Push current active dialog ("current_dialog") onto stack.
@@ -425,12 +231,6 @@ class Session:
 				dialog.applySkin()
 
 
-enigma.eProfileWrite("Standby,PowerKey")
-import Screens.Standby
-from Screens.Menu import MainMenu, mdom
-from GlobalActions import globalActionMap
-
-
 class PowerKey:
 	"""PowerKey code - Handles the powerkey press and powerkey release actions."""
 
@@ -441,13 +241,6 @@ class PowerKey:
 		globalActionMap.actions["power_long"] = self.powerlong
 		globalActionMap.actions["deepstandby"] = self.shutdown  # Front panel long power button press.
 		globalActionMap.actions["discrete_off"] = self.standby
-
-	def shutdown(self):
-		print("[StartEnigma] PowerOff - Now!")
-		if not Screens.Standby.inTryQuitMainloop and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND:
-			self.session.open(Screens.Standby.TryQuitMainloop, 1)
-		else:
-			return 0
 
 	def powerup(self):
 		if not Screens.Standby.inStandby and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND and self.session.in_exec:
@@ -461,6 +254,17 @@ class PowerKey:
 		else:
 			return 0
 
+	def shutdown(self):
+		print("[StartEnigma] Power off, now!")
+		if not Screens.Standby.inTryQuitMainloop and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND:
+			self.session.open(Screens.Standby.TryQuitMainloop, 1)  # Shutdown
+		else:
+			return 0
+
+	def standby(self):
+		if not Screens.Standby.inStandby and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND and self.session.in_exec:
+			self.session.open(Screens.Standby.Standby)
+
 	def doAction(self, selected):
 		if selected:
 			selected = selected.split("/")
@@ -471,7 +275,6 @@ class PowerKey:
 				except:
 					print("[StartEnigma] Error during executing module %s, screen %s" % (selected[1], selected[2]))
 			elif selected[0] == "Menu":
-				from Screens.Menu import MainMenu, mdom
 				root = mdom.getroot()
 				for x in root.findall("menu"):
 					if x.get("key") == "shutdown":
@@ -479,16 +282,6 @@ class PowerKey:
 						menu_screen = self.session.openWithCallback(self.MenuClosed, MainMenu, x)
 						menu_screen.setTitle(_("Standby / restart"))
 						break
-
-	def standby(self):
-		if not Screens.Standby.inStandby and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND and self.session.in_exec:
-			self.session.open(Screens.Standby.Standby)
-		else:
-			return 0
-
-
-enigma.eProfileWrite("Scart")
-from Screens.Scart import Scart
 
 
 class AutoScartControl:
@@ -504,7 +297,7 @@ class AutoScartControl:
 			config.av.vcrswitch.addNotifier(self.recheckVCRSb)
 			enigma.eAVControl.getInstance().vcr_sb_notifier.get().append(self.VCRSbChanged)
 
-	def recheckVCRSb(self, configElement):
+	def recheckVCRSb(self, configelement):
 		self.VCRSbChanged(self.current_vcr_sb)
 
 	def VCRSbChanged(self, value):
@@ -518,77 +311,48 @@ class AutoScartControl:
 					self.scartDialog.switchToTV()
 
 
-enigma.eProfileWrite("CI")
-from Screens.Ci import CiHandler
-
-enigma.eProfileWrite("VolumeControl")
-from Screens.VolumeControl import VolumeAdjust, VolumeControl
-
-enigma.eProfileWrite("Processing")
-from Screens.Processing import Processing
-
-enigma.eProfileWrite("ModalMessageBox")
-from Screens.MessageBox import ModalMessageBox
-
-enigma.eProfileWrite("StackTracePrinter")
-from Components.StackTrace import StackTracePrinter
-StackTracePrinterInst = StackTracePrinter()
-
-
 def runScreenTest():
 	config.misc.startCounter.value += 1
-	config.misc.startCounter.save()
-
-	enigma.eProfileWrite("readPluginList")
+	enigma.eProfileWrite("ReadPluginList")
 	enigma.pauseInit()
 	plugins.readPluginList(resolveFilename(SCOPE_PLUGINS))
 	enigma.resumeInit()
-
-	enigma.eProfileWrite("Init:Session")
+	enigma.eProfileWrite("Session")
 	nav = Navigation()
 	session = Session(desktop=enigma.getDesktop(0), summaryDesktop=enigma.getDesktop(1), navigation=nav)
 	CiHandler.setSession(session)
 	from Screens.SwapManager import SwapAutostart
 	SwapAutostart()
 	powerOffTimer.setSession(session)
-
 	screensToRun = [p.fnc for p in plugins.getPlugins(PluginDescriptor.WHERE_WIZARD)]
 	enigma.eProfileWrite("Wizards")
 	screensToRun += wizardManager.getWizards()
-
 	screensToRun.append((100, InfoBar.InfoBar))
-
-	screensToRun.sort(key=lambda x: x[0])
-
+	screensToRun.sort(key=lambda x: x[0])  # works in both Pythons but let's not use sort method here first we must see if we have work network in the wizard.
+	print(screensToRun)
 	enigma.ePythonConfigQuery.setQueryFunc(configfile.getResolvedKey)
 
 	def runNextScreen(session, screensToRun, *result):
 		if result:
 			enigma.quitMainloop(*result)
 			return
-
 		screen = screensToRun[0][1]
 		args = screensToRun[0][2:]
-
 		if screensToRun:
 			session.openWithCallback(boundFunction(runNextScreen, session, screensToRun[1:]), screen, *args)
 		else:
 			session.open(screen, *args)
-
-	config.misc.epgcache_filename.addNotifier(setEPGCachePath)
-
 	runNextScreen(session, screensToRun)
-
-	enigma.eProfileWrite("Init:VolumeControl")
-	vol = VolumeControl(session)
+	enigma.eProfileWrite("VolumeControl Screen")
+	vol = VolumeControl(session)  # noqa F841
 	enigma.eProfileWrite("VolumeAdjust")
-	vol = VolumeAdjust(session)
-	enigma.eProfileWrite("InitProcessing")
-	processing = Processing(session)
+	vol = VolumeAdjust(session)  # noqa F841
+	enigma.eProfileWrite("Processing Screen")
+	processing = Processing(session)  # noqa F841
 	enigma.eProfileWrite("Global MessageBox Screen")
-	modalmessagebox = ModalMessageBox(session)
-	enigma.eProfileWrite("Init:PowerKey")
-	power = PowerKey(session)
+	modalmessagebox = ModalMessageBox(session)  # noqa F841
+	enigma.eProfileWrite("PowerKey")
+	power = PowerKey(session)  # noqa F841
 	if enigma.getVFDSymbolsPoll():
 		enigma.eProfileWrite("VFDSymbolsCheck")
 		from Components.VfdSymbols import SymbolsCheck
@@ -596,19 +360,17 @@ def runScreenTest():
 	# We need session.scart to access it from within menu.xml.
 	session.scart = AutoScartControl(session)
 
-	enigma.eProfileWrite("Init:Trashcan")
+	enigma.eProfileWrite("Trashcan")
 	import Tools.Trashcan
 	Tools.Trashcan.init(session)
 	enigma.eProfileWrite("RunReactor")
 	enigma.eProfileDone()
-	runReactor()
 	from Components.FrontPanelLed import frontPanelLed
+	runReactor()
 	session.shutdown = True
 	frontPanelLed.shutdown()
 	print("[StartEnigma] Normal shutdown.")
-
-	from time import time, strftime, localtime
-	from Tools.StbHardware import setFPWakeuptime, setRTCtime
+	config.misc.startCounter.save()
 	from Screens.SleepTimerEdit import isNextWakeupTime
 	# get currentTime
 	nowTime = time()
@@ -636,17 +398,210 @@ def runScreenTest():
 	else:
 		config.misc.prev_wakeup_time.value = 0
 	config.misc.prev_wakeup_time.save()
-
 	session.nav.stopService()
-	enigma.eProfileWrite("nav shutdown")
 	session.nav.shutdown()
 	session.doShutdown()
-
-	enigma.eProfileWrite("configfile.save")
 	configfile.save()
 
 	return 0
 
+
+def localeNotifier(configElement):
+	international.activateLocale(configElement.value)
+
+
+def setLoadUnlinkedUserbouquets(configElement):
+	enigma.eDVBDB.getInstance().setLoadUnlinkedUserbouquets(int(configElement.value))
+
+
+def dump(dir, p=""):
+	had = dict()
+	if isinstance(dir, dict):
+		for (entry, val) in dir.items():
+			dump(val, p + "(dict)/" + entry)
+	if hasattr(dir, "__dict__"):
+		for name, value in dir.__dict__.items():
+			if str(value) not in had:
+				had[str(value)] = 1
+				dump(value, p + "/" + str(name))
+			else:
+				print("[StartEnigma] Dump: %s/%s:%s(cycle)" % (p, str(name), str(dir.__class__)))
+	else:
+		print("[StartEnigma] Dump: %s:%s" % (p, str(dir)))  # + ":" + str(dir.__class__)
+
+
+# Demo code for use of standby enter leave callbacks.
+#
+# def leaveStandby():
+# 	print("[StartEnigma] Leaving standby.")
+#
+#
+# def standbyCountChanged(configElement):
+# 	print("[StartEnigma] Enter standby number %s." % configElement.value)
+# 	from Screens.Standby import inStandby
+# 	inStandby.onClose.append(leaveStandby)
+#
+#
+# config.misc.standbyCounter.addNotifier(standbyCountChanged, initial_call=False)
+
+#################################
+#                               #
+#  Code execution starts here!  #
+#                               #
+#################################
+
+enigma.eProfileWrite("Twisted")
+print("[StartEnigma] Initializing Twisted.")
+try:  # Configure the twisted processor.
+	from twisted.python.runtime import platform
+	platform.supportsThreads = lambda: True
+	from e2reactor import install
+	install()
+	from twisted.internet import reactor
+
+	def runReactor():
+		reactor.run(installSignalHandlers=False)
+
+except ImportError:
+	print("[StartEnigma] Error: Twisted not available!")
+
+	def runReactor():
+		enigma.runMainloop()
+
+try:  # Configure the twisted logging.
+	from twisted.python import log, util
+
+	def quietEmit(self, eventDict):
+		text = log.textFromEventDict(eventDict)
+		if text is None:
+			return
+		if "/api/statusinfo" in text:  # Do not log OpenWebif status info.
+			return
+		# Log with time stamp.
+		#
+		# timeStr = self.formatTime(eventDict["time"])
+		# fmtDict = {
+		# 	"ts": timeStr,
+		# 	"system": eventDict["system"],
+		# 	"text": text.replace("\n", "\n\t")
+		# }
+		# msgStr = log._safeFormat("%(ts)s [%(system)s] %(text)s\n", fmtDict)
+		#
+		# Log without time stamp.
+		#
+		fmtDict = {
+			"text": text.replace("\n", "\n\t")
+		}
+		msgStr = log._safeFormat("%(text)s\n", fmtDict)
+		util.untilConcludes(self.write, msgStr)
+		util.untilConcludes(self.flush)
+
+	logger = log.FileLogObserver(sys.stdout)
+	log.FileLogObserver.emit = quietEmit
+	stdoutBackup = sys.stdout  # Backup stdout and stderr redirections.
+	stderrBackup = sys.stderr
+	log.startLoggingWithObserver(logger.emit)
+	sys.stdout = stdoutBackup  # Restore stdout and stderr redirections because of twisted redirections.
+	sys.stderr = stderrBackup
+
+except ImportError:
+	print("[StartEnigma] Error: Twisted not available!")
+
+# Initialize the country, language and locale data.
+#
+enigma.eProfileWrite("International")
+from Components.International import international
+
+enigma.eProfileWrite("BoxInfo")
+from Components.SystemInfo import BoxInfo
+
+BRAND = BoxInfo.getItem("brand")
+BOX_TYPE = BoxInfo.getItem("machinebuild")
+MODEL = BoxInfo.getItem("model")
+DISPLAYBRAND = BoxInfo.getItem("displaybrand")
+
+print("[StartEnigma] Receiver name = %s %s" % (DISPLAYBRAND, BoxInfo.getItem("displaymodel")))
+print("[StartEnigma] %s version = %s" % (BoxInfo.getItem("displaydistro"), BoxInfo.getItem("imgversion")))
+print("[StartEnigma] %s revision = %s" % (BoxInfo.getItem("displaydistro"), BoxInfo.getItem("imgrevision")))
+print("[StartEnigma] Build Brand = %s" % BRAND)
+print("[StartEnigma] Build Model = %s" % MODEL)
+print("[StartEnigma] Platform = %s" % BoxInfo.getItem("platform"))
+print("[StartEnigma] SoC family = %s" % BoxInfo.getItem("socfamily"))
+
+if BoxInfo.getItem("architecture") in ("aarch64"):
+	# import usb.core
+	from usb.backend.libusb1 import get_backend
+	get_backend(find_library=lambda x: "/lib64/libusb-1.0.so.0")
+
+from traceback import print_exc
+from Components.config import config, configfile, ConfigText, ConfigYesNo, ConfigInteger, ConfigSelection, ConfigSubsection, ConfigOnOff, NoSave
+
+config.misc.locale = ConfigText(default="en_US")
+config.misc.locale.addNotifier(localeNotifier)
+config.misc.language = ConfigText(default=international.getLanguage("en_US"))
+config.misc.country = ConfigText(default=international.getCountry("en_US"))
+
+# These entries should be moved back to UsageConfig.py when it is safe to bring UsageConfig init to this location in StartEnigma.py.
+#
+config.crash = ConfigSubsection()
+config.crash.debugInternational = ConfigYesNo(default=False)
+config.crash.debugMultiBoot = ConfigYesNo(default=False)
+config.crash.debugActionMaps = ConfigYesNo(default=False)
+config.crash.debugKeyboards = ConfigYesNo(default=False)
+config.crash.debugOpkg = ConfigYesNo(default=False)
+config.crash.debugRemoteControls = ConfigYesNo(default=False)
+config.crash.debugScreens = ConfigYesNo(default=False)
+config.crash.debugDVBScan = ConfigYesNo(default=False)
+config.crash.debugDVBTime = ConfigYesNo(default=False)
+config.crash.debugDVB = ConfigYesNo(default=False)
+config.crash.debugTimers = ConfigYesNo(default=False)
+config.crash.debugTeletext = ConfigYesNo(default=False)
+config.crash.debugStorage = ConfigYesNo(default=False)
+config.crash.debugDVBDB = ConfigYesNo(default=False)
+
+
+# Enable numbers in Plugin Browser (Do not move it to other file)
+config.misc.menu_show_numbers = ConfigYesNo(default=False)
+
+
+# config.plugins needs to be defined before InputDevice < HelpMenu < MessageBox < InfoBar.
+config.plugins = ConfigSubsection()
+config.plugins.remotecontroltype = ConfigSubsection()
+config.plugins.remotecontroltype.rctype = ConfigInteger(default=0)
+
+config.parental = ConfigSubsection()
+config.parental.lock = ConfigOnOff(default=False)
+config.parental.setuplock = ConfigOnOff(default=False)
+
+config.expert = ConfigSubsection()
+config.expert.satpos = ConfigOnOff(default=True)
+config.expert.fastzap = ConfigOnOff(default=True)
+config.expert.skipconfirm = ConfigOnOff(default=False)
+config.expert.hideerrors = ConfigOnOff(default=False)
+config.expert.autoinfo = ConfigOnOff(default=True)
+
+enigma.eProfileWrite("Keyboard")
+from Components.InputDevice import keyboard
+
+enigma.eProfileWrite("InfoBar")
+from Screens import InfoBar
+
+def setEPGCachePath(configElement):
+	if isdir(configElement.value) or islink(configElement.value):
+		configElement.value = join(configElement.value, "epg.dat")
+	enigma.eEPGCache.getInstance().setCacheFile(configElement.value)
+
+enigma.eProfileWrite("ScreenSummary")
+# from Screens.SimpleSummary import SimpleSummary
+from Screens.Screen import ScreenSummary
+
+enigma.eProfileWrite("LoadBouquets")
+config.misc.load_unlinked_userbouquets = ConfigSelection(default="1", choices=[("0", _("Off")), ("1", _("Top")), ("2", _("Bottom"))])
+if config.misc.load_unlinked_userbouquets.value.lower() in ("true", "false"):
+	config.misc.load_unlinked_userbouquets.value = "1" if config.misc.load_unlinked_userbouquets.value.lower() == "true" else "0"
+
+config.misc.load_unlinked_userbouquets.addNotifier(setLoadUnlinkedUserbouquets)
+enigma.eDVBDB.getInstance().reloadBouquets()
 
 enigma.eProfileWrite("Navigation")
 from Navigation import Navigation
@@ -655,7 +610,44 @@ enigma.eProfileWrite("ReadSkin")
 from skin import readSkin
 
 enigma.eProfileWrite("InitFallbackFiles")
+from Tools.Directories import InitFallbackFiles, resolveFilename, SCOPE_PLUGINS, SCOPE_CURRENT_SKIN
 InitFallbackFiles()
+
+enigma.eProfileWrite("ConfigMisc")
+config.misc.boxtype = ConfigText(default=BOX_TYPE)
+config.misc.radiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "radio.mvi"))
+config.misc.blackradiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "black.mvi"))
+config.misc.RestartUI = ConfigYesNo(default=False)  # detect user interface restart
+config.misc.prev_wakeup_time = ConfigInteger(default=0)
+# config.misc.prev_wakeup_time_type is only valid when wakeup_time is not 0
+config.misc.prev_wakeup_time_type = ConfigInteger(default=0)
+# 0 = RecordTimer, 1 = ZapTimer, 2 = Plugins, 3 = WakeupTimer
+config.misc.epgcache_filename = ConfigText(default="/media/hdd/epg.dat", fixed_size=False)
+config.misc.SyncTimeUsing = ConfigSelection(default="0", choices=[
+	("0", _("Transponder Time")),
+	("1", _("NTP"))
+])
+config.misc.NTPserver = ConfigText(default="pool.ntp.org", fixed_size=False)
+
+config.misc.startCounter = ConfigInteger(default=0)  # Number of e2 starts.
+config.misc.standbyCounter = NoSave(ConfigInteger(default=0))  # Number of standby.
+config.misc.DeepStandby = NoSave(ConfigYesNo(default=False))  # Detect deep standby.
+
+enigma.eProfileWrite("AutoRunPlugins")
+# Initialize autorun plugins and plugin menu entries.
+from Components.PluginComponent import plugins
+
+enigma.eProfileWrite("StartWizard")
+from Screens.StartWizard import *
+from Tools.BoundFunction import boundFunction
+from Plugins.Plugin import PluginDescriptor
+
+# Display.
+enigma.eProfileWrite("ScreenGlobals")
+from Screens.Globals import Globals
+from Screens.SessionGlobals import SessionGlobals
+from Screens.Screen import Screen
+Screen.globalScreen = Globals()
 
 enigma.eProfileWrite("Standby")
 import Screens.Standby
@@ -663,6 +655,28 @@ from Screens.Menu import MainMenu, mdom
 
 enigma.eProfileWrite("GlobalActionMap")
 from GlobalActions import globalActionMap
+
+enigma.eProfileWrite("Scart")
+from Screens.Scart import Scart
+
+enigma.eProfileWrite("CIHandler")
+from Screens.Ci import CiHandler
+
+enigma.eProfileWrite("VolumeControl")
+from Screens.VolumeControl import VolumeAdjust, VolumeControl
+
+enigma.eProfileWrite("Processing")
+from Screens.Processing import Processing
+
+enigma.eProfileWrite("ModalMessageBox")
+from Screens.MessageBox import ModalMessageBox
+
+enigma.eProfileWrite("StackTracePrinter")
+from Components.StackTrace import StackTracePrinter
+StackTracePrinterInst = StackTracePrinter()
+
+from time import localtime, strftime
+from Tools.StbHardware import setFPWakeuptime, setRTCtime
 
 enigma.eProfileWrite("InitSkins")
 from skin import InitSkins

@@ -338,8 +338,7 @@ void bsodFatal(const char *component)
 			}
 			else {
 				logtail = std::string(logp2, logs2);
-				break;		/* clear the ringbuffer */
-		clearRingBuffer();
+				break;
 			}
 		}
 	}
