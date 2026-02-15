@@ -365,8 +365,8 @@ def runScreenTest():
 	Tools.Trashcan.init(session)
 	enigma.eProfileWrite("RunReactor")
 	enigma.eProfileDone()
-	runReactor()
 	from Components.FrontPanelLed import frontPanelLed
+	runReactor()
 	session.shutdown = True
 	frontPanelLed.shutdown()
 	print("[StartEnigma] Normal shutdown.")
@@ -521,8 +521,11 @@ MODEL = BoxInfo.getItem("model")
 DISPLAYBRAND = BoxInfo.getItem("displaybrand")
 
 print("[StartEnigma] Receiver name = %s %s" % (DISPLAYBRAND, BoxInfo.getItem("displaymodel")))
+print("[StartEnigma] %s version = %s" % (BoxInfo.getItem("displaydistro"), BoxInfo.getItem("imgversion")))
+print("[StartEnigma] %s revision = %s" % (BoxInfo.getItem("displaydistro"), BoxInfo.getItem("imgrevision")))
 print("[StartEnigma] Build Brand = %s" % BRAND)
 print("[StartEnigma] Build Model = %s" % MODEL)
+print("[StartEnigma] Platform = %s" % BoxInfo.getItem("platform"))
 print("[StartEnigma] SoC family = %s" % BoxInfo.getItem("socfamily"))
 
 if BoxInfo.getItem("architecture") in ("aarch64"):
@@ -611,6 +614,7 @@ from Tools.Directories import InitFallbackFiles, resolveFilename, SCOPE_PLUGINS,
 InitFallbackFiles()
 
 enigma.eProfileWrite("ConfigMisc")
+config.misc.boxtype = ConfigText(default=BOX_TYPE)
 config.misc.radiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "radio.mvi"))
 config.misc.blackradiopic = ConfigText(default=resolveFilename(SCOPE_CURRENT_SKIN, "black.mvi"))
 config.misc.RestartUI = ConfigYesNo(default=False)  # detect user interface restart
