@@ -20,6 +20,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit autotools pkgconfig pythonnative
 
 do_unpack[noexec] = "1"
+do_patch[no_exec] = "1"
 do_populate_sysroot[noexec] = "1"
 do_populate_lic[noexec] = "1"
 do_packagedata[noexec] = "1"
@@ -44,7 +45,7 @@ EXTRACONFFUNCS += "e2_copy_aclocal"
 bindir = "/usr/bin"
 sbindir = "/usr/sbin"
 
-EXTRA_OECONF = "\
+EXTRA_OECONF = " \
 	--enable-maintainer-mode --with-target=native --with-libsdl=no --with-boxtype=${MACHINE} \
 	--enable-dependency-tracking \
 	BUILD_SYS=${BUILD_SYS} \
