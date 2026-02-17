@@ -5985,7 +5985,7 @@ msgstr "KHÔNG"
 msgid "NOW"
 msgstr "HIỆN NAY"
 
-msgid "NTP Hostname"
+msgid "Optional local NTP server"
 msgstr "Tên máy chủ NTP"
 
 msgid "NTSC"
@@ -6838,7 +6838,7 @@ msgstr "Vui lòng thay đổi thời gian ghi âm"
 msgid "Please choose an extension..."
 msgstr "Vui lòng chọn một phần mở rộng ..."
 
-msgid "Please configure the fallback tuner setup"
+msgid "Please configure the fallback receiver setup"
 msgstr "Vui lòng cấu hình thiết lập bộ thu dự phòng"
 
 msgid ""
@@ -8538,7 +8538,7 @@ msgid "Select the time zone within the area or region."
 msgstr "Chọn múi giờ trong khu vực hoặc khu vực."
 
 #, fuzzy
-msgid "Select the timer from the fallback tuner by default"
+msgid "Select the timer from the fallback receiver by default"
 msgstr "Khi được bật, bộ hẹn giờ từ bộ điều chỉnh dự phòng được nhập"
 
 msgid "Select the tuner that controls the motorised dish."
@@ -10160,7 +10160,7 @@ msgstr ""
 msgid "The following files were found..."
 msgstr "Các tập tin sau đã được tìm thấy ..."
 
-msgid "The hostname or the IP address of the NTP server to synchronise the time with."
+msgid "The hostname or the IP address of a local NTP server to synchronise the time with."
 msgstr "Tên máy chủ hoặc địa chỉ IP của máy chủ NTP để đồng bộ hóa thời gian với."
 
 msgid ""
@@ -10914,7 +10914,7 @@ msgstr ""
 msgid "URL"
 msgstr "URL"
 
-msgid "URL of fallback remote receiver"
+msgid "URL of remote receiver for imports"
 msgstr "URL của máy thu từ xa dự phòng"
 
 msgid "USALS automatically moves a motorised dish to the correct satellite based on the coordinates entered by the user. Without USALS each satellite will need to be setup and saved individually."
@@ -11636,11 +11636,11 @@ msgstr "Khi được bật, đầu thu sẽ tự động đánh thức từ ch�
 msgid "When enabled the set top box is able to wakeup on LAN"
 msgstr "Khi được bật, hộp trên cùng có thể thức dậy trên mạng LAN"
 
-msgid "When enabled the timer from the fallback tuner is imported"
+msgid "When enabled the timer from the fallback receiver is imported"
 msgstr "Khi được bật, bộ hẹn giờ từ bộ điều chỉnh dự phòng được nhập"
 
 #, fuzzy
-msgid "When enabled the timer from the fallback tuner is the default timer"
+msgid "When enabled the timer from the fallback receiver is the default timer"
 msgstr "Khi được bật, bộ hẹn giờ từ bộ điều chỉnh dự phòng được nhập"
 
 msgid "When enabled then when you select a new channel in the channel selection the channel selection will not close. It will only close when you select the current playing service. This is a kind of preview mode"
@@ -11649,7 +11649,7 @@ msgstr "Khi được bật thì khi bạn chọn một kênh mới trong lựa c
 msgid "When enabled you can control the volume with the arrow buttons instead of getting the channel selection list"
 msgstr "Khi được bật, bạn có thể điều khiển âm lượng bằng các nút mũi tên thay vì lấy danh sách chọn kênh"
 
-msgid "When enabled you can customize the OpenWebIf settings for the fallback tuner"
+msgid "When enabled you can customize the OpenWebIf settings for the fallback receiver"
 msgstr "Khi được bật, bạn có thể tùy chỉnh cài đặt OpenWeb If cho bộ điều chỉnh dự phòng"
 
 msgid "When enabled you can specify a timeframe to ignore the shutdown timer when the receiver is in standby mode"

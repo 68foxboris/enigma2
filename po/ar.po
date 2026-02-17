@@ -6368,7 +6368,7 @@ msgstr "لا"
 msgid "NOW"
 msgstr "لا"
 
-msgid "NTP Hostname"
+msgid "Optional local NTP server"
 msgstr ""
 
 msgid "NTSC"
@@ -7272,7 +7272,7 @@ msgid "Please choose an extension..."
 msgstr "من فضلك أختار من الملحقات..."
 
 #, fuzzy
-msgid "Please configure the fallback tuner setup"
+msgid "Please configure the fallback receiver setup"
 msgstr "ضبط مؤالف التراجع"
 
 msgid ""
@@ -9097,7 +9097,7 @@ msgid "Select the time zone within the area or region."
 msgstr "تعيين مكان أيقونة التسجيل"
 
 #, fuzzy
-msgid "Select the timer from the fallback tuner by default"
+msgid "Select the timer from the fallback receiver by default"
 msgstr "عند تمكين اندفاع اللاقط سيتم فرضه"
 
 msgid "Select the tuner that controls the motorised dish."
@@ -10826,7 +10826,7 @@ msgstr ""
 msgid "The following files were found..."
 msgstr "تم العثور على هذه الملفات..."
 
-msgid "The hostname or the IP address of the NTP server to synchronise the time with."
+msgid "The hostname or the IP address of a local NTP server to synchronise the time with."
 msgstr ""
 
 msgid ""
@@ -11618,7 +11618,7 @@ msgid "URL"
 msgstr "الرابط"
 
 #, fuzzy
-msgid "URL of fallback remote receiver"
+msgid "URL of remote receiver for imports"
 msgstr "تمكين الريموت الإحتياطي في الرسيفر"
 
 msgid "USALS automatically moves a motorised dish to the correct satellite based on the coordinates entered by the user. Without USALS each satellite will need to be setup and saved individually."
@@ -12384,11 +12384,11 @@ msgid "When enabled the set top box is able to wakeup on LAN"
 msgstr ""
 
 #, fuzzy
-msgid "When enabled the timer from the fallback tuner is imported"
+msgid "When enabled the timer from the fallback receiver is imported"
 msgstr "عند تمكين اندفاع اللاقط سيتم فرضه"
 
 #, fuzzy
-msgid "When enabled the timer from the fallback tuner is the default timer"
+msgid "When enabled the timer from the fallback receiver is the default timer"
 msgstr "عند تمكين اندفاع اللاقط سيتم فرضه"
 
 msgid "When enabled then when you select a new channel in the channel selection the channel selection will not close. It will only close when you select the current playing service. This is a kind of preview mode"
@@ -12398,7 +12398,7 @@ msgstr ""
 msgid "When enabled you can control the volume with the arrow buttons instead of getting the channel selection list"
 msgstr "عند التمكين، سيعرض أرقام القنوات في شاشة اختيار القناة."
 
-msgid "When enabled you can customize the OpenWebIf settings for the fallback tuner"
+msgid "When enabled you can customize the OpenWebIf settings for the fallback receiver"
 msgstr ""
 
 msgid "When enabled you can specify a timeframe to ignore the shutdown timer when the receiver is in standby mode"
