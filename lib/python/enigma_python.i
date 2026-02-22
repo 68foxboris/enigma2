@@ -33,6 +33,9 @@ is usually caused by not marking PSignals as immutable.
 */
 
 %module enigma
+%begin %{
+#pragma GCC diagnostic ignored "-Wsign-compare"
+%}
 %{
 
 #define SWIG_COMPILE
@@ -138,11 +141,7 @@ is usually caused by not marking PSignals as immutable.
  %fragment("t_out_helper"{Type},"header",
      fragment="t_output_helper") {}
  %typemap(argout,fragment="t_out_helper"{Type}) Type *OUTPUT, Type &OUTPUT
-#if SWIG_VERSION >= 0x040300
-    "$result = SWIG_Python_AppendOutput($result, (SWIG_NewPointerObj((void*)($1), $1_descriptor, 1)), 1);"
-#else
    "$result = t_output_helper($result, (SWIG_NewPointerObj((void*)($1), $1_descriptor, 1)));"
-#endif
 %enddef
 
 %define %typemap_output_ptr(Type)
@@ -153,11 +152,7 @@ is usually caused by not marking PSignals as immutable.
      fragment="t_output_helper") {}
  %typemap(argout,fragment="t_out_helper"{Type}) Type *OUTPUT, Type &OUTPUT
 		// generate None if smartpointer is NULL
-#if SWIG_VERSION >= 0x040300
-   "$result = SWIG_Python_AppendOutput($result, ((*$1) ? SWIG_NewPointerObj((void*)($1), $1_descriptor, 1) : (delete $1, Py_INCREF(Py_None), Py_None)), 1);"
-#else
    "$result = t_output_helper($result, ((*$1) ? SWIG_NewPointerObj((void*)($1), $1_descriptor, 1) : (delete $1, Py_INCREF(Py_None), Py_None)));"
-#endif
 %enddef
 
 
@@ -167,6 +162,22 @@ typedef long time_t;
 %include "std_string.i"
 %include "stdint.i"
 %include <lib/python/swig.h>
+
+/* Stub declarations for base classes not directly wrapped by SWIG */
+namespace sigc { class trackable { public: trackable(); ~trackable(); }; }
+class eThread { eThread(); ~eThread(); };
+class eMessagePumpMT { eMessagePumpMT(); ~eMessagePumpMT(); };
+class eServerSocket { eServerSocket(); ~eServerSocket(); };
+class eRCDriver { eRCDriver(); ~eRCDriver(); };
+class eConfigManager { eConfigManager(); ~eConfigManager(); };
+class LongCrcSection { LongCrcSection(); ~LongCrcSection(); };
+class eDVBPMTParser { eDVBPMTParser(); ~eDVBPMTParser(); };
+class iDVBSatelliteEquipmentControl { iDVBSatelliteEquipmentControl(); ~iDVBSatelliteEquipmentControl(); };
+class iDVBChannelList { iDVBChannelList(); ~iDVBChannelList(); };
+
+%immutable eApp;
+%rename(_raise) eWidget::raise;
+
 %include <lib/base/object.h>
 %include <lib/base/eenv.h>
 %include <lib/base/eerror.h>
