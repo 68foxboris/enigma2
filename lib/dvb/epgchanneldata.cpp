@@ -57,7 +57,7 @@ void eEPGChannelData::startChannel()
 void eEPGChannelData::startEPG()
 {
 #ifdef GLIBC_64BIT_TIME_FLAGS
-	eDebug("[eEPGChannelData] start reading events(%lld)", ::time(0));
+	eDebug("[eEPGChannelData] start reading events(%lld)", (long long)::time(0));
 #else
 	eDebug("[eEPGChannelData] start reading events(%ld)", ::time(0));
 #endif
@@ -284,7 +284,7 @@ void eEPGChannelData::finishEPG()
 	if (!isRunning)  // epg ready
 	{
 #ifdef GLIBC_64BIT_TIME_FLAGS
-		eDebug("[eEPGChannelData] stop caching events(%lld)", ::time(0));
+		eDebug("[eEPGChannelData] stop caching events(%lld)", (long long)::time(0));
 #else
 		eDebug("[eEPGChannelData] stop caching events(%ld)", ::time(0));
 #endif
@@ -1163,7 +1163,7 @@ void eEPGChannelData::readMHWData(const uint8_t *data)
 		}
 	}
 #ifdef GLIBC_64BIT_TIME_FLAGS
-	eDebug("[eEPGChannelData] mhw finished(%lld) %zu summaries not found",
+	eDebug("[eEPGChannelData] mhw finished(%lld) %zu summaries not found", (long long)::time(0),
 #else
 	eDebug("[eEPGChannelData] mhw finished(%ld) %zu summaries not found",
 #endif
@@ -1481,7 +1481,7 @@ void eEPGChannelData::readMHWData2(const uint8_t *data)
 			for (std::map<uint32_t, mhw_title_t>::iterator itTitle(m_titles.begin()); itTitle != m_titles.end(); itTitle++)
 				storeMHWTitle( itTitle, "", data );
 #ifdef GLIBC_64BIT_TIME_FLAGS
-			eDebug("[eEPGChannelData] mhw2 finished(%lld) %zu summaries not found",
+			eDebug("[eEPGChannelData] mhw2 finished(%lld) %zu summaries not found", (long long)::time(0),
 #else
 			eDebug("[eEPGChannelData] mhw2 finished(%ld) %zu summaries not found",
 #endif
