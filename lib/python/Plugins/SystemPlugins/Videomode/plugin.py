@@ -84,9 +84,9 @@ class VideoSetup(ConfigListScreen, Screen):
 				if BoxInfo.getItem("HasBypassEdidChecking"):
 					self.list.append((_("Bypass HDMI EDID checking"), config.av.bypass_edid_checking, _("Configure if the HDMI EDID checking should be bypassed as this might solve issue with some TVs.")))
 				if BoxInfo.getItem("HasColorspace"):
-					self.list.append((_("HDMI Colorspace"), config.av.hdmicolorspace, _("This option allows you to configure the Colorspace from Auto to RGB")))
+					self.list.append((_("HDMI Colorspace"), config.av.hdmicolorspace, _("This option allows you to configure the Colorspace from Auto to RGB.")))
 				if BoxInfo.getItem("HasColordepth"):
-					self.list.append((_("HDMI Colordepth"), config.av.hdmicolordepth, _("This option allows you to configure the Colordepth for UHD")))
+					self.list.append((_("HDMI Colordepth"), config.av.hdmicolordepth, _("This option allows you to configure the Colordepth for UHD.")))
 				if BoxInfo.getItem("HasColorimetry"):
 					self.list.append((_("HDMI Colorimetry"), config.av.hdmicolorimetry, _("This option allows you to configure the Colorimetry for HDR.")))
 				if BoxInfo.getItem("HasHdrType"):
@@ -94,13 +94,13 @@ class VideoSetup(ConfigListScreen, Screen):
 				if BoxInfo.getItem("HasHDMIpreemphasis"):
 					self.list.append((_("Use HDMI pre-emphasis"), config.av.hdmipreemphasis, _("This option can be useful for long HDMI cables.")))
 				if BoxInfo.getItem("HDRSupport"):
-					self.list.append((_("HLG support"), config.av.hlg_support, _("This option allows you to force the HLG modes for UHD")))
-					self.list.append((_("HDR10 support"), config.av.hdr10_support, _("This option allows you to force the HDR10 modes for UHD")))
-					self.list.append((_("Allow 12bit"), config.av.allow_12bit, _("This option allows you to enable or disable the 12 bit color mode")))
-					self.list.append((_("Allow 10bit"), config.av.allow_10bit, _("This option allows you to enable or disable the 10 bit color mode")))
+					self.list.append((_("HLG support"), config.av.hlg_support, _("This option allows you to force the HLG modes for UHD.")))
+					self.list.append((_("HDR10 support"), config.av.hdr10_support, _("This option allows you to force the HDR10 modes for UHD.")))
+					self.list.append((_("Allow 12bit"), config.av.allow_12bit, _("This option allows you to enable or disable the 12 bit color mode.")))
+					self.list.append((_("Allow 10bit"), config.av.allow_10bit, _("This option allows you to enable or disable the 10 bit color mode.")))
 				if BoxInfo.getItem("AmlHDRSupport"):
-					self.list.append((_("Amlogic HLG Support"), config.av.amlhlg_support, _("This option allows you to force the HLG modes for UHD")))
-					self.list.append((_("Amlogic HDR10 Support"), config.av.amlhdr10_support, _("This option allows you to force the HDR10 modes for UHD")))
+					self.list.append((_("Amlogic HLG Support"), config.av.amlhlg_support, _("This option allows you to force the HLG modes for UHD.")))
+					self.list.append((_("Amlogic HDR10 Support"), config.av.amlhdr10_support, _("This option allows you to force the HDR10 modes for UHD.")))
 				if BoxInfo.getItem("CanSyncMode"):
 					self.list.append((_("Video sync mode"), config.av.sync_mode, _("This option allows you to use video sync mode.")))
 
@@ -115,35 +115,35 @@ class VideoSetup(ConfigListScreen, Screen):
 			self.list.append((_("Scaler sharpness"), config.av.scaler_sharpness, _("This option configures the picture sharpness.")))
 
 		if BoxInfo.getItem("havecolorspace"):
-			self.list.append((_("HDMI color space"), config.av.hdmicolorspace, _("This option allows you can config the Colorspace from Auto to RGB")))
+			self.list.append((_("HDMI color space"), config.av.hdmicolorspace, _("This option allows you can config the Colorspace from Auto to RGB.")))
 
 		if BoxInfo.getItem("havecolorimetry"):
-			self.list.append((_("HDMI Colorimetry"), config.av.hdmicolorimetry, _("This option allows you can config the Colorimetry for HDR")))
+			self.list.append((_("HDMI Colorimetry"), config.av.hdmicolorimetry, _("This option allows you can config the Colorimetry for HDR.")))
 
 		if BoxInfo.getItem("havehdmicolordepth"):
-			self.list.append((_("HDMI color depth"), config.av.hdmicolordepth, _("This option allows you can config the Colordepth for UHD")))
+			self.list.append((_("HDMI color depth"), config.av.hdmicolordepth, _("This option allows you can config the Colordepth for UHD.")))
 
 		if BoxInfo.getItem("havehdmihdrtype"):
-			self.list.append((_("HDMI HDR Type"), config.av.hdmihdrtype, _("This option allows you can force the HDR Modes for UHD")))
+			self.list.append((_("HDMI HDR Type"), config.av.hdmihdrtype, _("This option allows you can force the HDR Modes for UHD.")))
 
 		if BoxInfo.getItem("Canedidchecking"):
-			self.list.append((_("Bypass HDMI EDID Check"), config.av.bypass_edid_checking, _("This option allows you to bypass HDMI EDID check")))
+			self.list.append((_("Bypass HDMI EDID Check"), config.av.bypass_edid_checking, _("This option allows you to bypass HDMI EDID check.")))
 
 		if BoxInfo.getItem("haveboxmode"):
-			self.list.append((_("Change Boxmode to control Hardware Chip Modes*"), config.av.boxmode, _("Switch Mode to enable HDR Modes or PiP Functions")))
+			self.list.append((_("Change Boxmode to control Hardware Chip Modes*"), config.av.boxmode, _("Switch Mode to enable HDR Modes or PiP Functions.")))
 
 		if BoxInfo.getItem("HDRSupport"):
-			self.list.append((_("HLG Support"), config.av.hlg_support, _("This option allows you can force the HLG Modes for UHD")))
-			self.list.append((_("HDR10 Support"), config.av.hdr10_support, _("This option allows you can force the HDR10 Modes for UHD")))
-			self.list.append((_("Allow 12bit"), config.av.allow_12bit, _("This option allows you can enable or disable the 12 Bit Color Mode")))
-			self.list.append((_("Allow 10bit"), config.av.allow_10bit, _("This option allows you can enable or disable the 10 Bit Color Mode")))
+			self.list.append((_("HLG Support"), config.av.hlg_support, _("This option allows you can force the HLG Modes for UHD.")))
+			self.list.append((_("HDR10 Support"), config.av.hdr10_support, _("This option allows you can force the HDR10 Modes for UHD.")))
+			self.list.append((_("Allow 12bit"), config.av.allow_12bit, _("This option allows you can enable or disable the 12 Bit Color Mode.")))
+			self.list.append((_("Allow 10bit"), config.av.allow_10bit, _("This option allows you can enable or disable the 10 Bit Color Mode.")))
 
 		if BoxInfo.getItem("havesyncmode"):
 			self.list.append((_("Sync mode"), config.av.sync_mode, _("Setup how to control the channel changing.")))
 
 		if BoxInfo.getItem("haveamlhdrsupport"):
 			self.list.append((_("HLG Support"), config.av.amlhlg_support, _("This option allows you can force the HLG Modes for UHD")))
-			self.list.append((_("HDR10 Support"), config.av.amlhdr10_support, _("This option allows you can force the HDR10 Modes for UHD")))
+			self.list.append((_("HDR10 Support"), config.av.amlhdr10_support, _("This option allows you can force the HDR10 Modes for UHD.")))
 
 		self["config"].list = self.list
 		self["config"].l.setList(self.list)

@@ -236,8 +236,8 @@ if config.misc.firstrun.value:
 wizardManager.registerWizard(IncorrectBoxInfoWizard, not BoxInfo.getItem("checksum"), priority=0)
 wizardManager.registerWizard(AutoInstallWizard, os.path.isfile("/etc/.doAutoinstall"), priority=0)
 wizardManager.registerWizard(AutoRestoreWizard, config.misc.wizardLanguageEnabled.value and config.misc.firstrun.value and checkForAvailableAutoBackup(), priority=0)
-#wizardManager.registerWizard(LocaleSelection, config.misc.wizardLanguageEnabled.value, priority=10)
+# wizardManager.registerWizard(LocaleSelection, config.misc.wizardLanguageEnabled.value, priority=10)
 wizardManager.registerWizard(TimeWizard, config.misc.firstrun.value, priority=20)
-#if OverscanWizard:
-#	wizardManager.registerWizard(OverscanWizard, config.misc.do_overscanwizard.value, priority=30)
+# if OverscanWizard:
+# wizardManager.registerWizard(OverscanWizard, config.misc.do_overscanwizard.value, priority=30)
 wizardManager.registerWizard(StartWizard, config.misc.firstrun.value, priority=40)

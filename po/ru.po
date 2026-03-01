@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2026-01-31 22:47+0200\n"
+"PO-Revision-Date: 2026-02-28 18:51+0200\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -989,9 +989,9 @@ msgstr[1] "Найдено %d пакета."
 msgstr[2] "Найдено %d пакетов."
 
 #, python-format
-msgid "%d package has an update"
+msgid "%d package has an update."
 msgid_plural "%d packages have updates."
-msgstr[0] "%d пакет можно обновить"
+msgstr[0] "%d пакет можно обновить."
 msgstr[1] "%d пакета можно обновить."
 msgstr[2] "%d пакетов можно обновить."
 
@@ -4224,6 +4224,9 @@ msgstr "Центр"
 msgid "Cancel and exit the context menu"
 msgstr "Отменить и выйти из контекстного меню"
 
+msgid "Cancel any changed settings and exit"
+msgstr "Отменить все изменения настройки и выйти"
+
 msgid "Cancel any changed settings and exit all menus"
 msgstr "Отменить все изменения настройки и выйти из всех меню"
 
@@ -4454,7 +4457,10 @@ msgid "Channel"
 msgstr "Канал"
 
 msgid "Channel +/- button mode"
-msgstr "Канал +/- режим кнопок"
+msgstr "Кнопки Channel +/-"
+
+msgid "Channel / Service"
+msgstr "Канал/Сервис"
 
 msgid "Channel 1"
 msgstr "Канал 1"
@@ -4725,41 +4731,41 @@ msgstr "Выберите режим работы протокола CI. CI ил�
 msgid "Choose the amount of additional slots."
 msgstr "Выберите количество дополнительных слотов."
 
-msgid "Choose the display formatting style for dates. 'D' / 'DD' is the date and 'M' / 'MM' is the month in digits.  ('DD' and 'MM' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin."
+msgid "Choose the display formatting style for dates. 'D'/'DD' is the date and 'M'/'MM' is the month in digits. ('DD' and 'MM' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin."
 msgstr "Выберите стиль форматирования отображения для дат. 'Д' / 'ДД' - это дата, а 'M' / 'MM' - месяц в цифрах.  ('ДД' и 'ММ' имеют начальные нули для однозначных значений.) Отображение экрана будет зависеть от вашего выбора, но может зависеть от скина."
 
-msgid "Choose the display formatting style for times. 'H' / 'HH' is the hour for a 24 hour clock, 'h' / 'hh' is the hour for a 12 hour clock, 'mm' is the minutes and 'ss' is the seconds.  ('HH' and 'hh' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin."
+msgid "Choose the display formatting style for times. 'H'/'HH' is the hour for a 24 hour clock, 'h'/'hh' is the hour for a 12 hour clock, 'mm' is the minutes and 'ss' is the seconds. ('HH' and 'hh' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin."
 msgstr "Выберите стиль форматирования отображения для времени. 'Ч' / 'ЧЧ' - это час для 24-часовых часов, 'ч' / 'чч' - час для 12-часовых часов, 'мм' - это минуты, а 'сс' - секунды.  ('ЧЧ' и 'чч' имеют начальные нули для однозначных значений.) Отображение экрана будет зависеть от вашего выбора, но может зависеть от скина."
 
 msgid "Choose the fallback font."
 msgstr "Выберите резервный шрифт."
 
-msgid "Choose the front panel display formatting style for dates. 'D' / 'DD' is the date and 'M' / 'MM' is the month in digits.  ('DD' and 'MM' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin."
+msgid "Choose the front panel display formatting style for dates. 'D'/'DD' is the date and 'M'/'MM' is the month in digits. ('DD' and 'MM' have leading zeros for single digit values.) The screen display will be based on your choice but can be influenced by the skin."
 msgstr "Выберите стиль форматирования отображения передней панели для дат. 'Д' / 'ДД' - это дата, а 'M' / 'MM' - месяц в цифрах.  ('ДД' и 'ММ' имеют начальные нули для однозначных значений.) Отображение экрана будет зависеть от вашего выбора, но может зависеть от скина."
 
-msgid "Choose the front panel display formatting style for times. 'H' / 'HH' is the hour for a 24 hour clock, 'h' / 'hh' is the hour for a 12 hour clock, 'mm' is the minutes.  ('HH' and 'hh' have leading zeros for single digit values.) The front panel display will be based on your choice but can be influenced any applicable skin."
+msgid "Choose the front panel display formatting style for times. 'H'/'HH' is the hour for a 24 hour clock, 'h'/'hh' is the hour for a 12 hour clock, 'mm' is the minutes. ('HH' and 'hh' have leading zeros for single digit values.) The front panel display will be based on your choice but can be influenced any applicable skin."
 msgstr "Выберите стиль форматирования дисплея передней панели для времени. 'Ч' / 'ЧЧ' - это час для 24-часовых часов, 'ч' / 'чч' - час для 12-часовых часов, 'мм' - это минуты.  ('ЧЧ' и 'чч' имеют начальные нули для однозначных значений.) Дисплей передней панели будет основан на вашем выборе, но может быть подвержен влиянию любого применяемого скина."
 
 msgid "Choose the location for crash and debug logs."
 msgstr "Выберите расположение для логов сбоя и отладки."
 
-msgid "Choose the location where the EPG data will be stored when your device is shut down. The location must be available at boot time."
-msgstr "Выберите место, где будут храниться данные EPG, когда ваше устройство будет выключено. Расположение должно быть доступно во время загрузки."
+msgid "Choose the location where the EPG data will be stored when the %s %s is shut down. The location must be available at boot time."
+msgstr "Выберите место, где будут храниться данные EPG при выключении %s %s. Это место должно быть доступно во время загрузки."
 
-msgid "Choose the name of the file that holds the EPG data when your device is shut down. This can be handy to differentiate between several boxes."
-msgstr "Выберите имя файла, который содержит данные EPG, когда ваше устройство выключено. Это может быть удобно, чтобы различать несколько ресиверов."
-
-msgid "Choose the order in which items are displayed in Help windows"
-msgstr "Выберите порядок отображения элементов в окнах справки"
+msgid "Choose the name of the file that holds the EPG data when the %s %s is shut down. This can be handy to differentiate between several receivers."
+msgstr "Выберите имя файла для данных ТВ-гида, когда %s %s выключен. Это может быть полезно, если используются несколько ресиверов."
 
 msgid "Choose the option to correct invalid EPG data."
-msgstr "Выберите параметр для исправления неверных данных ТВ-гида."
+msgstr "Выберите параметр для исправления неверных данных EPG."
 
 msgid "Choose the skin to be used for the GUI interface. Press 'GREEN' to activate the skin."
 msgstr "Выберите скин, который будет использоваться для графического интерфейса. Нажмите ЗЕЛЁНУЮ кнопку, для активации скина."
 
 msgid "Choose the skin to be used for the LCD/front panel interface. Press 'GREEN' to activate the skin."
 msgstr "Выберите оформление, которое будет использоваться для интерфейса ЖК-дисплея/передней панели. Нажмите ЗЕЛЁНУЮ кнопку для активации скина."
+
+msgid "Choose the style/order in which items are displayed in help windows."
+msgstr "Выберите стиль/порядок, в котором элементы отображаются в окнах справки."
 
 msgid "Choose the target device for the slots."
 msgstr "Выберите целевое устройство для слотов."
@@ -4776,7 +4782,7 @@ msgstr "Выберите время для проверки наличия об�
 msgid "Choose time interval to which the graphics will be rounded off."
 msgstr "Укажите временной интервал, в котором графика будет отключена."
 
-msgid "Choose what you want the button '0' to do when PIP is active."
+msgid "Choose what you want the button '0' to do when PiP is active."
 msgstr "Укажите действие для кнопки '0', когда PiP окно активно."
 
 msgid "Choose where to mount your devices to:"
@@ -5468,7 +5474,7 @@ msgstr "Настройте время пропуска при нажатии к�
 msgid "Configure the slow motion speeds."
 msgstr "Настройте скорость замедленного воспроизведения."
 
-msgid "Configure the source of the frontend data as shown on the infobars. 'Settings' is as stored on the settings. 'Tuner' is as reported by the tuner."
+msgid "Configure the source of the frontend data as shown on the InfoBars. 'Settings' is as stored on the settings. 'Tuner' is as reported by the tuner."
 msgstr "Настройка источника отображения данных в инфопанели. 'Настройки' - отображать информацию из настроек. 'Тюнер' - отображать информацию из тюнера."
 
 msgid "Configure the speed of the background deletion process. Lower speed will consume less hard disk drive performance."
@@ -19805,14 +19811,14 @@ msgstr "Эта опция позволяет выбрать один из дву
 msgid "This option allows you to choose whether or not to display genre information for the event."
 msgstr "Эта опция позволяет вам выбрать, отображать ли информацию о жанре для события."
 
-msgid "This option allows you to configure the Colordepth for UHD"
-msgstr "Этот параметр позволяет установить глубину цвета HDMI для UHD"
+msgid "This option allows you to configure the Colordepth for UHD."
+msgstr "Этот параметр позволяет установить глубину цвета HDMI для UHD."
 
 msgid "This option allows you to configure the Colorimetry for HDR."
 msgstr "Эта опция позволяет вам настроить колориметрию для HDR."
 
-msgid "This option allows you to configure the Colorspace from Auto to RGB"
-msgstr "Этот параметр позволяет установить режим цветовой модели HDMI - от авто до RGB"
+msgid "This option allows you to configure the Colorspace from Auto to RGB."
+msgstr "Этот параметр позволяет установить режим цветовой модели HDMI - от авто до RGB."
 
 msgid "This option allows you to configure the HDR type."
 msgstr "Эта опция позволяет вам настроить тип HDR."
@@ -19826,20 +19832,20 @@ msgstr "Эта опция позволяет вам включить 3D софт
 msgid "This option allows you to enable 3D Surround Sound."
 msgstr "Эта опция позволяет включить трехмерный объемный звук."
 
-msgid "This option allows you to enable or disable the 10 bit color mode"
-msgstr "Этот параметр позволяет вам включать или отключать режим цвета 10bit"
+msgid "This option allows you to enable or disable the 10 bit color mode."
+msgstr "Этот параметр позволяет вам включать или отключать режим цвета 10bit."
 
-msgid "This option allows you to enable or disable the 12 bit color mode"
-msgstr "Этот параметр позволяет вам включать или отключать режим цвета 12bit"
+msgid "This option allows you to enable or disable the 12 bit color mode."
+msgstr "Этот параметр позволяет вам включать или отключать режим цвета 12bit."
 
-msgid "This option allows you to force the HDR10 modes for UHD"
-msgstr "Этот параметр позволяет принудительно использовать режим HDR10 для UHD"
+msgid "This option allows you to force the HDR10 modes for UHD."
+msgstr "Этот параметр позволяет принудительно использовать режим HDR10 для UHD."
 
-msgid "This option allows you to force the HLG modes for UHD"
-msgstr "Этот параметр позволяет принудительно использовать режим HLG для UHD"
+msgid "This option allows you to force the HLG modes for UHD."
+msgstr "Этот параметр позволяет принудительно использовать режим HLG для UHD."
 
-msgid "This option allows you to hide and sort menu entries. When selecting user you can change order and hide menu items via the blue button. With the user defined hidden the blue button is not shown in the menus"
-msgstr "Эта опция позволяет скрывать и сортировать пункты меню. При выборе пользователя вы можете изменить порядок и скрыть пункты меню с помощью синей кнопки. Если пользователь скрыт, синяя кнопка не отображается в меню"
+msgid "This option allows you to hide and sort menu entries. When selecting user you can change order and hide menu items via the blue button. With the user defined hidden the blue button is not shown in the menus."
+msgstr "Эта опция позволяет скрывать и сортировать пункты меню. При выборе пользователя вы можете изменить порядок и скрыть пункты меню с помощью синей кнопки. Если пользователь скрыт, синяя кнопка не отображается в меню."
 
 msgid "This option allows you to select if the default value for a setup item is shown and, if so, where it is displayed in relation to the description."
 msgstr "Эта опция позволяет вам выбрать, будет ли отображаться значение по умолчанию для элемента настройки, и если да, то где оно будет отображаться по отношению к описанию."
@@ -19877,8 +19883,8 @@ msgstr "Эта опция позволяет вам просматривать �
 msgid "This option can be useful for long HDMI cables."
 msgstr "Эта опция может быть полезна для длинных кабелей HDMI (более 5 метров)."
 
-msgid "This option lets you adjust the 3D depth"
-msgstr "Здесь можете настроить 3D глубину"
+msgid "This option lets you adjust the 3D depth."
+msgstr "Здесь можете настроить 3D глубину."
 
 msgid "This option lets you adjust the transparency of the OSD."
 msgstr "Здесь можете настроить прозрачность пользовательского интерфейса."
@@ -19934,8 +19940,8 @@ msgstr "Эта опция выбирает общую задержку звук�
 msgid "This option selects the general audio delay of stereo sound tracks."
 msgstr "Эта опция выбирает общую задержку звука для стереофонических звуковых дорожек."
 
-msgid "This option to enable numbers in Plugin Browser"
-msgstr "Эта опция позволяет включить числа в браузере плагинов"
+msgid "This option to enable numbers in Plugin Browser."
+msgstr "Эта опция позволяет включить числа в браузере плагинов."
 
 msgid "This plugin is installed."
 msgstr "Этот плагин установлен."
