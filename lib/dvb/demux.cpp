@@ -588,19 +588,17 @@ int eDVBRecordFileThread::AsyncIO::poll()
 {
 	if (aio.aio_buf == NULL)
 		return 0;
-	if (aio_error(&aio) == EINPROGRESS)
+	int err = aio_error(&aio);
+	if (err == EINPROGRESS)
 	{
 		return 1;
 	}
+
 	int r = aio_return(&aio);
 
 	if (r >= 0 && (size_t)r != aio.aio_nbytes)
 	{ // short write
-#ifdef GLIBC_64BIT_TIME_FLAGS
-		eDebug("[eDVBRecordFileThread] short write: %d of bytes %d written -> retry", r, aio.aio_nbytes);
-#else
-		eDebug("[eDVBRecordFileThread] short write: %d of bytes %lu written -> retry", r, aio.aio_nbytes);
-#endif
+		eDebug("[eDVBRecordFileThread] short write: %d of bytes %zu written -> retry", r, aio.aio_nbytes);
 		aio.aio_nbytes -= r;
 		aio.aio_offset += r;
 		aio.aio_buf = (volatile void*)((const char*)aio.aio_buf + r);
@@ -826,7 +824,7 @@ void eDVBRecordFileThread::flush()
 		}
 	}
 	int bufferCount = m_aio.size();
-	eDebug("[eDVBRecordFileThread] buffer usage histogram (%d buffers of %lu kB)", bufferCount, m_buffersize>>10);
+	eDebug("[eDVBRecordFileThread] buffer usage histogram (%d buffers of %zu kB)", bufferCount, m_buffersize>>10);
 	for (int i=0; i <= bufferCount; ++i)
 	{
 		if (m_buffer_use_histogram[i] != 0)
