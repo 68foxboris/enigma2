@@ -3114,6 +3114,9 @@ msgstr "Авто DiSEqC"
 msgid "Auto EXIF Orientation rotation/flipping"
 msgstr "Авто EXIF ориентация вращения/поворота"
 
+msgid "Auto (not available)"
+msgstr "Автоматический режим (недоступен)"
+
 msgid "Auto Language Setup"
 msgstr "Автоматический выбор языка"
 
@@ -6434,6 +6437,9 @@ msgstr "Отладка в файл"
 
 msgid "Decoder release strategy"
 msgstr "Стратегия выпуска декодера"
+
+msgid "Decoder start delay"
+msgstr "Задержка запуска декодера"
 
 msgid "Decoder start timeout"
 msgstr "Таймаут запуска декодера"
@@ -11485,8 +11491,8 @@ msgstr "Может быть причина этого, что сейчас ид�
 msgid "Maximum space used (MB):"
 msgstr "Максимальный используемый размер (МБ):"
 
-msgid "Maximum time to wait for the incoming data and descrambling keys (CW) before starting decoder. Usually both arrive much faster and this is only for special cases."
-msgstr "Максимальное время ожидания входящих данных и ключей дешифровки (CW) перед запуском декодера. Обычно и данные, и ключи дешифровки поступают гораздо быстрее, и это только в особых случаях."
+msgid "Maximum time to wait for the first descrambling key (CW) before starting the decoder. 'Disabled' starts the decoder immediately without waiting."
+msgstr "Максимальное время ожидания первого дешифрирующего ключа (CW) перед запуском декодера. В режиме «Отключено» декодер запускается немедленно, без ожидания."
 
 msgid "Mayotte"
 msgstr "Mayotte"
@@ -16248,6 +16254,9 @@ msgstr "Выберите частоту полосы пользователя, �
 
 msgid "Select the User Band to be assigned to this tuner. This is an index into the table of frequencies the SCR switch or SCR LNB uses to pass the requested transponder to the tuner."
 msgstr "Выберите пользовательский диапазон, который будет назначен данному тюнеру. Это индекс в таблице частот, который коммутатор SCR или LNB SCR использует для передачи запрошенного транспондера тюнеру."
+
+msgid "Select the delay to buffer descrambled data before starting playback. This can reduce AC3 audio dropouts by ensuring enough data is available when the decoder starts. Higher values are more stable but increase channel switch time."
+msgstr "Выберите задержку для буферизации дешифрованных данных перед началом воспроизведения. Это может уменьшить количество просадок звука AC3, обеспечивая наличие достаточного количества данных к моменту запуска декодера. Более высокие значения обеспечивают большую стабильность, но увеличивают время переключения каналов."
 
 msgid "Select the delay to use when closing a Stream Relay service before reallocating the tuner for another service. Using '0' is only recommended for receivers with multiple satellite tuners."
 msgstr "Выберите задержку, которая будет использоваться при закрытии сервиса Stream Relay перед перераспределением тюнера для другого сервиса. Значение «0» рекомендуется использовать только для ресиверов с несколькими спутниковыми тюнерами."
