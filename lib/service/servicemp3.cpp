@@ -3865,6 +3865,9 @@ void eServiceMP3::pullSubtitle(GstBuffer* buffer) {
 						}
 
 						if (decoder_pts >= 0) {
+							// Both values are in 90kHz
+							const uint64_t pts_mask = (1ULL << 33) - 1; // 33-bit mask
+
 							// Calculate delta based on MPEGTS difference
 							delta = (sub.vtt_mpegts_base - m_base_mpegts) / 90; // Convert to ms
 						}
