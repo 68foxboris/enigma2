@@ -309,10 +309,10 @@ def InitLcd():
 			config.lcd.modeminitv = ConfigNothing()
 			config.lcd.fpsminitv = ConfigNothing()
 		config.lcd.scrollSpeed = ConfigSelection(choices=[
-			("500", _("Slow")),
-			("300", _("Normal")),
-			("100", _("Fast"))
-		], default="300")
+			(500, _("Slow")),
+			(300, _("Normal")),
+			(100, _("Fast"))
+		], default=300)
 		delayChoices = [(x, ngettext("%d Second", "%d Seconds", x) % x) for x in (10, 20, 30, 40, 50)] + [(x * 60, ngettext("%d Minute", "%d Minutes", x) % x) for x in (1, 2, 3, 5, 10, 15)] + [(0, _("Off"))]
 		config.lcd.scrollDelay = ConfigSelection(default=10, choices=delayChoices)
 
@@ -406,16 +406,43 @@ def InitLcd():
 		], default="0")
 		if isfile("/sys/module/brcmstb_osmega/parameters/pt6302_cgram"):
 			config.usage.vfd_xcorevfd.addNotifier(setXcoreVFD)
-
-		choices = [("0", _("Off")), ("1", _("blue")), ("2", _("red")), ("3", _("violet"))]
-
-		config.lcd.ledpowercolor = ConfigSelection(default="1", choices=choices)
+		config.usage.lcd_powerled = ConfigSelection(choices=[
+			("off", _("Off")),
+			("on", _("On"))
+		], default="on")
+		if isfile("/proc/stb/power/powerled"):
+			config.usage.lcd_powerled.addNotifier(setPowerLEDstate)
+		config.usage.lcd_powerled2 = ConfigSelection(choices=[
+			("off", _("Off")),
+			("on", _("On"))
+		], default="on")
+		if isfile("/proc/stb/power/powerled2"):
+			config.usage.lcd_powerled2.addNotifier(setPowerLEDstate2)
+		config.usage.lcd_standbypowerled = ConfigSelection(choices=[
+			("off", _("Off")),
+			("on", _("On"))
+		], default="on")
+		if isfile("/proc/stb/power/standbyled"):
+			config.usage.lcd_standbypowerled.addNotifier(setPowerLEDstanbystate)
+		config.usage.lcd_deepstandbypowerled = ConfigSelection(choices=[
+			("off", _("Off")),
+			("on", _("On"))
+		], default="on")
+		if isfile("/proc/stb/power/suspendled"):
+			config.usage.lcd_deepstandbypowerled.addNotifier(setPowerLEDdeepstanbystate)
+		colorchoices = [
+			("0", _("Off")),
+			("1", _("Blue")),
+			("2", _("Red")),
+			("3", _("Violet"))
+		]
+		config.lcd.ledpowercolor = ConfigSelection(default="1", choices=colorchoices)
 		if isfile("/proc/stb/fp/ledpowercolor"):
 			config.lcd.ledpowercolor.addNotifier(setLedPowerColor)
-		config.lcd.ledstandbycolor = ConfigSelection(default="3", choices=choices)
+		config.lcd.ledstandbycolor = ConfigSelection(default="3", choices=colorchoices)
 		if isfile("/proc/stb/fp/ledstandbycolor"):
 			config.lcd.ledstandbycolor.addNotifier(setLedStandbyColor)
-		config.lcd.ledsuspendcolor = ConfigSelection(default="2", choices=choices)
+		config.lcd.ledsuspendcolor = ConfigSelection(default="2", choices=colorchoices)
 		if isfile("/proc/stb/fp/ledsuspendledcolor"):
 			config.lcd.ledsuspendcolor.addNotifier(setLedSuspendColor)
 
@@ -623,13 +650,13 @@ def InitLcd():
 		config.lcd.fblcddisplay = ConfigNothing()
 		config.lcd.mode = ConfigNothing()
 		config.lcd.hdd = ConfigNothing()
-		config.lcd.scroll_speed = ConfigSelection(choices=[
-			("500", _("Slow")),
-			("300", _("Normal")),
-			("100", _("Fast"))
-		], default="300")
+		config.lcd.scrollSpeed = ConfigSelection(choices=[
+			(500, _("Slow")),
+			(300, _("Normal")),
+			(100, _("Fast"))
+		], default=300)
 		delayChoices = [(x, ngettext("%d Second", "%d Seconds", x) % x) for x in (10, 20, 30, 40, 50)] + [(x * 60, ngettext("%d Minute", "%d Minutes", x) % x) for x in (1, 2, 3, 5, 10, 15)] + [(0, _("Off"))]
-		config.lcd.scroll_delay = ConfigSelection(default=10, choices=delayChoices)
+		config.lcd.scrollDelay = ConfigSelection(default=10, choices=delayChoices)
 		config.lcd.showoutputresolution = ConfigNothing()
 		config.lcd.ledbrightness = ConfigNothing()
 		config.lcd.ledbrightness.apply = lambda: doNothing()
