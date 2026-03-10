@@ -955,6 +955,12 @@ class ConfigSelection(ConfigElement):
 
 	description = property(lambda self: descriptionsList(self.choices.choices, self.choices.type))
 
+	# for compatibility with other distros (so we can use their plugins)
+	setSelectionList = setChoices
+	def getSelectionList(self):
+		return list(zip(self.choices.__list__(), self.description.__list__()))
+
+
 
 # This is a special control that is a place holder in a settings list that does nothing.
 #
