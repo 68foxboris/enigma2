@@ -131,7 +131,7 @@ public:
 		eventNoPATEntry,   // no pat entry for the corresponding SID could be found
 		eventNoPMT,        // no pmt could be received (timeout)
 		eventNewProgramInfo, // we just received a PMT
-		eventTuned,        // a channel was sucessfully (re-)tuned in, you may start additional filters now
+		eventTuned,        // a channel was successfully (re-)tuned in, you may start additional filters now
 
 		eventPreStart,     // before start filepush thread
 		eventSOF,          // seek pre start
