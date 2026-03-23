@@ -367,6 +367,18 @@ def InitLcd():
 		def setLEDblinkingtime(configElement):
 			ilcd.setLEDBlinkingTime(configElement.value)
 
+		def setPowerLEDstate(configElement):
+			fileWriteLine("/proc/stb/power/powerled", configElement.value)
+
+		def setPowerLEDstate2(configElement):
+			fileWriteLine("/proc/stb/power/powerled2", configElement.value)
+
+		def setPowerLEDstanbystate(configElement):
+			fileWriteLine("/proc/stb/power/standbyled", configElement.value)
+
+		def setPowerLEDdeepstanbystate(configElement):
+			fileWriteLine("/proc/stb/power/suspendled", configElement.value)
+
 		def setLedPowerColor(configElement):
 			fileWriteLine("/proc/stb/fp/ledpowercolor", configElement.value)
 
