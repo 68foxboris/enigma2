@@ -9,4 +9,4 @@ install_PYTHON = \
 	camcontrol.py CountryCodes.py MultiBoot.py FallbackTimer.py Hex2strColor.py \
 	Geolocation.py Trace.py Log.py LogConfig.py Conversions.py WeatherID.py \
 	CopyFiles.py ServiceReference.py Migration.py ServiceHelper.py \
-	BaseSubsParser.py SubRip.py TolerantDict.py
+	BaseSubsParser.py SubRip.py TolerantDict.py SubtitleRenderer.py
