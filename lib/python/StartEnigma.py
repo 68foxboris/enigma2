@@ -1,4 +1,5 @@
 from errno import ENOENT
+from glob import glob
 from os import remove
 from os.path import isdir, islink, join, exists
 import sys  # This is needed for the twisted redirection access to stderr and stdout.

@@ -7,7 +7,7 @@ from os.path import basename, getmtime, isdir, isfile, join
 from subprocess import PIPE, Popen
 from time import localtime, strftime, strptime
 from urllib.request import urlopen
-from enigma import eAVControl, eDVBFrontendParametersSatellite, eDVBResourceManager, eGetEnigmaDebugLvl, eServiceCenter, eStreamServer, eTimer, getDesktop, getGStreamerVersionString, iPlayableService, iServiceInformation, eDVBCSAEngine
+from enigma import eAVControl, eDVBCSAEngine, eDVBFrontendParametersSatellite, eDVBResourceManager, eGetEnigmaDebugLvl, eServiceCenter, eStreamServer, eTimer, getDesktop, getGStreamerVersionString, iPlayableService, iServiceInformation
 from ServiceReference import ServiceReference
 from skin import parameters
 from Components.About import about
@@ -15,7 +15,6 @@ from Components.ActionMap import HelpableActionMap, HelpableNumberActionMap
 
 from Components.config import config
 from Components.Console import Console
-from Components.Sources.StaticText import StaticText
 from Components.Harddisk import harddiskmanager
 from Components.InputDevice import remoteControl
 from Components.Label import Label
@@ -24,18 +23,19 @@ from Components.NimManager import nimmanager
 from Components.Pixmap import Pixmap
 from Components.ScrollLabel import ScrollLabel
 from Components.ServiceEventTracker import ServiceEventTracker
+from Components.Sources.StaticText import StaticText
 from Components.ProgressBar import ProgressBar
 from Components.GUIComponent import GUIComponent
+
 from Components.SystemInfo import BoxInfo, getBoxDisplayName, getDemodVersion
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen, ScreenSummary
-
+from Tools.Conversions import formatDate, scaleNumber
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename, fileExists, fileHas, pathExists, fileReadLine, fileReadLines, fileWriteLine, isPluginInstalled
 from Tools.Geolocation import geolocation
-from Tools.MultiBoot import MultiBoot
-from Tools.StbHardware import getFPVersion, getBoxProc, getHWSerial, getBoxRCType, getBoxProcType
 from Tools.LoadPixmap import LoadPixmap
-from Tools.Conversions import scaleNumber, formatDate
+from Tools.MultiBoot import MultiBoot
+from Tools.StbHardware import getBoxProc, getBoxProcType, getBoxRCType, getFPVersion, getHWSerial
 from Tools.Transponder import ConvertToHumanReadable
 
 
