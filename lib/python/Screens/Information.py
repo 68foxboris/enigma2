@@ -195,6 +195,77 @@ def formatLine(style, left, right=None):
 	return f"{leftIndent}{leftStartColor}{left}:{leftEndColor}|{rightIndent}{rightStartColor}{right}{rightEndColor}"
 
 
+class BenchmarkInformation(InformationBase):  # This code can't be used until we find open source test code!
+	def __init__(self, session):
+		InformationBase.__init__(self, session)
+		self.setTitle(_("Benchmark Information"))
+		self.skinName.insert(0, "BenchmarkInformation")
+		self.cpuTypes = []
+		self.cpuBenchmark = None
+		self.cpuRating = None
+		self.ramBenchmark = None
+
+	def fetchInformation(self):
+		self.informationTimer.stop()
+		self.cpuTypes = []
+		lines = []
+		lines = fileReadLines("/proc/cpuinfo", lines, source=MODULE_NAME)
+		for line in lines:
+			if line.startswith("model name") or line.startswith("Processor"):  # HiSilicon use the label "Processor"!
+				self.cpuTypes.append([x.strip() for x in line.split(":")][1])
+		self.console.ePopen(("/usr/bin/dhry", "/usr/bin/dhry"), self.cpuBenchmarkFinished)
+		# Serialize the tests for better accuracy.
+		# self.console.ePopen(("/usr/bin/streambench", "/usr/bin/streambench"), self.ramBenchmarkFinished)
+		for callback in self.onInformationUpdated:
+			if callable(callback):
+				callback()
+
+	def cpuBenchmarkFinished(self, result, retVal, extraArgs):
+		for line in result.split("\n"):
+			if line.startswith("DMIPS"):
+				self.cpuBenchmark = int([x.strip() for x in line.split(":")][1])
+			if line.startswith("CPU status"):
+				self.cpuRating = [x.strip() for x in line.split(":")][1]
+		# Serialize the tests for better accuracy.
+		self.console.ePopen(("/usr/bin/streambench", "/usr/bin/streambench"), self.ramBenchmarkFinished)
+		for callback in self.onInformationUpdated:
+			if callable(callback):
+				callback()
+
+	def ramBenchmarkFinished(self, result, retVal, extraArgs):
+		for line in result.split("\n"):
+			if line.startswith("Copy rate"):
+				self.ramBenchmark = float([x.strip() for x in line.split(":")][1])
+		for callback in self.onInformationUpdated:
+			if callable(callback):
+				callback()
+
+	def refreshInformation(self):
+		self.cpuBenchmark = None
+		self.cpuRating = None
+		self.ramBenchmark = None
+		InformationBase.refreshInformation(self)
+
+	def displayInformation(self):
+		info = []
+		info.append(formatLine("H", _("Benchmark information for %s %s") % getBoxDisplayName()))
+		info.append("")
+		for index, cpu in enumerate(self.cpuTypes):
+			info.append(formatLine("P1", _("CPU / Core %d type") % index, cpu))
+		info.append("")
+		info.append(formatLine("P1", _("CPU benchmark"), _("%d DMIPS per core") % (self.cpuBenchmark if self.cpuBenchmark else _("Calculating benchmark..."))))
+		count = len(self.cpuTypes)
+		if count > 1:
+			info.append(formatLine("P1", _("Total CPU benchmark"), _("%d DMIPS with %d cores") % (self.cpuBenchmark * count, count) if self.cpuBenchmark else _("Calculating benchmark...")))
+		info.append(formatLine("P1", _("CPU rating"), self.cpuRating if self.cpuRating else _("Calculating rating...")))
+		info.append("")
+		info.append(formatLine("P1", _("RAM benchmark"), f"{self.ramBenchmark:.2f} MB/s copy rate" if self.ramBenchmark else _("Calculating benchmark...")))
+		self["information"].setText("\n".join(info))
+
+	def getSummaryInformation(self):
+		return "Benchmark Information"
+
+
 class BuildInformation(InformationBase):
 	def __init__(self, session):
 		InformationBase.__init__(self, session)
