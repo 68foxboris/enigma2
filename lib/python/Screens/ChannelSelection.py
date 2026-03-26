@@ -201,10 +201,10 @@ class ChannelContextMenu(Screen):
 				"1": self.unhideParentalServices,
 				"2": self.renameEntry,
 				"3": self.findCurrentlyPlayed,
-				"4": self.showSubservices,
-				"5": self.insertEntry,
-				"6": self.addServiceToBouquetOrAlternative,
-				"7": self.toggleMoveModeSelect,
+				"4": self.insertEntry,
+				"5": self.addServiceToBouquetOrAlternative,
+				"6": self.toggleMoveModeSelect,
+				"7": self.showSubservices,
 				"8": self.removeEntry
 			})
 		menu = []
