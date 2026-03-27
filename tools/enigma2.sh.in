@@ -16,57 +16,9 @@ if [ -e /usr/bin/ciplushelper ]; then
 	sleep 3
 fi
 
-#Workaround for aspect ratio issue
-if [ -e /proc/stb/video/avshutdown ]; then
-	echo "down" > /proc/stb/video/avshutdown && echo "up" > /proc/stb/video/avshutdown
-fi
-
-if [ -e /proc/stb/info/boxtype ]; then
-	stbcheck=`cat /proc/stb/info/boxtype`
-	if [ $stbcheck == "sf8008" ] || [ $stbcheck == "sf8008m" ] || [ $stbcheck == "sx988" ] || [ $stbcheck == "ip8" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "ustym4kottpremium" ] || [ $stbcheck == "ustym4ks2ottx" ] || [ $stbcheck == "trio4k" ] || [ $stbcheck == "gbip4k" ] || [ $stbcheck == "gbmv200" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "viper4k" ] || [ $stbcheck == "og2ott4k" ] || [ $stbcheck == "og2s4k" ] || [ $stbcheck == "sfx6008" ] || [ $stbcheck == "sx88v2" ]; then
-		count=`ps -ef |grep libreader |grep -v "grep" |wc -l`
-		if [ 0 == $count ];then
-			libreader 720P_50
-		fi
-	fi
-fi
-# Show backdrop on enigma2 start.
-if [ -x "@bindir@/showiframe" ]; then
-	if [ -e /proc/stb/info/boxtype ]; then
-		stbcheck=`cat /proc/stb/info/boxtype | cut -c1-2`
-		if [ ! $stbcheck == "u5" ] && [ ! $stbcheck == "u4" ]; then
-			killall -9 showiframe; sleep 1
-		fi
-	else
-		killall -9 showiframe; sleep 1
-	fi
-	SKIN=`sed -En 's|^config\.skin\.primary_skin=(.+)/skin\.xml$|\1|p' "@sysconfdir@/enigma2/settings"`
-	if [ -n "${SKIN}" ]; then
-		SEARCHDIRS="@sysconfdir@/enigma2/$SKIN @sysconfdir@/enigma2/skin_common @sysconfdir@/enigma2 @datadir@/enigma2/$SKIN @datadir@/enigma2/skin_default @datadir@/enigma2 @datadir@"
-	else
-		SEARCHDIRS="@sysconfdir@/enigma2/skin_common @sysconfdir@/enigma2 @datadir@/enigma2/skin_default @datadir@/enigma2 @datadir@"
-	fi
-	for DIR in $SEARCHDIRS; do
-		if [ -d "${DIR}" ] && [ -f "${DIR}/bootlogo.mvi" ]; then
-			"@bindir@/showiframe" "${DIR}/bootlogo.mvi"
-			break
-		fi
-	done
-fi
-
-# hook to execute dhcp wait script
-if [ -x @bindir@/enigma2_dhcp_wait.sh ]; then
-	@bindir@/enigma2_dhcp_wait.sh
-fi
-
-# hook to execute scripts always before enigma2 start
-if [ -x @bindir@/enigma2_pre_start.sh ]; then
-	@bindir@/enigma2_pre_start.sh
-fi
-
 if [ -d /home/root ]; then
-	cd /home/root
 	export HOME=/home/root
+	cd
 fi
 
 # any debuglevel passed?
@@ -74,12 +26,6 @@ if [ -z $ENIGMA_DEBUG_LVL ]; then
 	DEBUG_LVL=3
 else
 	DEBUG_LVL=$ENIGMA_DEBUG_LVL
-fi
-
-if [ -f /proc/stb/fp/nec_ir ]; then
-	/sbin/insmod /lib/modules/4.9/extra/lcd/lcd.ko
-	echo 1 > /proc/stb/fp/nec_ir
-	[ -f /sys/class/remote/amremote/protocol ] && echo 2 > /sys/class/remote/amremote/protocol
 fi
 
 if [ ! -e /etc/enigma2/settings ]; then
@@ -104,10 +50,62 @@ fi
 
 LIBS=@libdir@/libopen.so.0.0.0
 
+PLATFORMCHECK=`sed -En 's|^platform=(.+)$|\1|p' /usr/lib/enigma.info`
+
+if [ "${PLATFORMCHECK}" == "meson64" ]; then
+	echo "1" > /sys/class/graphics/fb0/osd_clear
+	echo "1" > /sys/class/graphics/fb1/osd_clear
+	FIRSTRUN=`sed -En 's|^config\.misc\.firstrun=(.+)$|\1|p' /etc/enigma2/settings | tr [A-Z] [a-z]`
+	if [ "$FIRSTRUN" == "true" ]; then
+		echo "1080p50hz" > /sys/class/display/mode
+	fi
+fi
+
 if [ -f /proc/stb/fp/led_color ]; then
 	echo "00ffffff" > /proc/stb/fp/led_color
 elif [ -f /proc/stb/fp/led_brightness ]; then
 	echo "000000ff" > /proc/stb/fp/led_brightness
+fi
+
+if [ -f /proc/stb/fp/nec_ir ]; then
+	/sbin/insmod /lib/modules/4.9/extra/lcd/lcd.ko
+	echo "1" > /proc/stb/fp/nec_ir
+	[ -f /sys/class/remote/amremote/protocol ] && echo "2" > /sys/class/remote/amremote/protocol
+fi
+
+# hook to execute dhcp wait script
+if [ -x /usr/bin/enigma2_dhcp_wait.sh ]; then
+	/usr/bin/enigma2_dhcp_wait.sh
+fi
+
+# hook to execute scripts always before enigma2 start
+if [ -x /usr/bin/enigma2_pre_start.sh ]; then
+	/usr/bin/enigma2_pre_start.sh
+fi
+
+# Show backdrop backdrop on enigma2 start.
+if [ -x "/usr/bin/exteplayer3" -o -x "/usr/bin/showiframe" ]; then
+	# show bootlogo on enigma2 start
+	SKIN=`sed -En 's|^config\.skin\.primary_skin=(.+)/skin\.xml$|\1|p' "/etc/enigma2/settings"`
+	if [ -z "${SKIN}" ]; then
+		SKIN=`strings -n 10 "/usr/lib/enigma2/python/skin.pyc" | egrep -o -m 1 ".+/skin.xml" | sed 's|/skin.xml.*||'`
+	fi
+	if [ -n "${SKIN}" ]; then
+		SEARCHDIRS="/etc/enigma2/$skin /etc/enigma2/skin_common /etc/enigma2 /usr/share/enigma2/$skin /usr/share/enigma2/skin_default /usr/share/enigma2 /usr/share"
+	else
+		SEARCHDIRS="/etc/enigma2/skin_common /etc/enigma2 /usr/share/enigma2/skin_default /usr/share/enigma2 /usr/share"
+	fi
+
+	for DIR in $SEARCHDIRS
+	do
+		if [ -d ${DIR} ] && [ -f ${DIR}/backdrop.mp4 ]; then
+			"/usr/bin/exteplayer3" "${DIR}/bootlogo.mp4"
+			break
+		elif [ -d ${DIR} ] && [ -f ${DIR}/backdrop.mvi ]; then
+			"/usr/bin/showiframe" "${DIR}/backdrop.mvi"
+			break
+		fi
+	done
 fi
 
 # start enigma
@@ -205,19 +203,6 @@ wait ${enigma2pid}
 # >128 signal
 
 ret=$?
-if [ "$ret" -ne "1" ]; then
-	if [ -e /proc/stb/info/boxtype ]; then
-		stbcheck=`cat /proc/stb/info/boxtype | cut -c1-2`
-		if [ $stbcheck == "u5" ] || [ $stbcheck == "u4" ]; then
-			killall -9 showiframe; sleep 5
-		fi
-		stbcheck=`cat /proc/stb/info/boxtype`
-		if [ $stbcheck == "sf8008" ] || [ $stbcheck == "sf8008m" ] || [ $stbcheck == "sx988" ] || [ $stbcheck == "ip8" ] || [ $stbcheck == "ustym4kpro" ] || [ $stbcheck == "ustym4kottpremium" ] || [ $stbcheck == "ustym4ks2ottx" ] || [ $stbcheck == "trio4k" ] || [ $stbcheck == "gbip4k" ] || [ $stbcheck == "gbmv200" ] || [ $stbcheck == "beyonwizv2" ] || [ $stbcheck == "viper4k" ] || [ $stbcheck == "og2ott4k" ] || [ $stbcheck == "og2s4k" ] || [ $stbcheck == "sfx6008" ] || [ $stbcheck == "sx88v2" ]; then
-			killall -9 libreader; sleep 5
-		fi
-	fi
-fi
-
 case $ret in
 	1)
 		if [ -f /proc/stb/fp/led_color ]; then
@@ -266,7 +251,30 @@ case $ret in
 		ret=$?
 		echo "kodi exit code: $ret" >>/tmp/kodi-standalone.log
 		;;
+	16)
+		stbcheck=`cat /proc/stb/info/model`
+		if [[ $stbcheck == "one" || $stbcheck == "two" ]]; then
+			/usr/sbin/to-the-rescue
+		fi
+		if [ -e /dev/block/by-name/flag ]; then
+			echo -n "0" > /dev/block/by-name/flag
+		elif [ -e /dev/block/by-name/bootoptions ]; then
+			mkdir -p /tmp/bootoptions
+			mount /dev/block/by-name/bootoptions /tmp/bootoptions
+			cp -f /tmp/bootoptions/STARTUP_RECOVERY /tmp/bootoptions/STARTUP_ONCE
+		else
+			echo "rescue" > /proc/stb/fp/boot_mode
+		fi
+		[[ -e /etc/enigma2/.deep ]] && rm /etc/enigma2/.deep
+		/sbin/reboot
+		;;
 	42)
+		df -P | grep -v "tmpfs " | awk '{print $6}' | tail -n +3 > /tmp/upgrade_mountpoints.txt
+		while read line; do
+			if [  -f $line/var/lib/opkg/status ]; then
+			DESTS=$DESTS" --add-dest "$line":"$line
+		fi
+		done < /tmp/upgrade_mountpoints.txt
 		# bind the console (when available)
 		[ -f /sys/class/vtconsole/vtcon1/bind ] && echo 1 > /sys/class/vtconsole/vtcon1/bind
 		prevupd=0
@@ -283,16 +291,6 @@ case $ret in
 			currupd=`opkg list-upgradable | wc -l`
 			echo "===> $currupd PACKAGE(S) REMAINING" >> /home/root/opkgupgrade.log
 		done
-		# and remaining install destinations
-		df -P | grep -v "tmpfs " | awk '{print $6}' | tail -n +3 > /tmp/upgrade_mountpoints.txt
-		while read line; do
-			if [  -f $line/var/lib/opkg/status ]; then
-			DESTS=$DESTS" --add-dest "$line":"$line
-		fi
-		done < /tmp/upgrade_mountpoints.txt
-		if [ "$DESTS" != "" ]; then
-			opkg upgrade $DESTS 2>&1 | tee -a /home/root/opkgupgrade.log
-		fi
 		/sbin/reboot
 		;;
 	43)
