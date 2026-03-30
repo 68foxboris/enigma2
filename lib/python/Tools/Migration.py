@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from Components.config import ConfigBoolean, ConfigSubsection, ConfigText, config
 
 
@@ -49,11 +50,6 @@ def migrateMenuSort():  # This function needs to called in StartEnigma after ini
 	oldValue = config.usage.menu_sort_mode.value
 	if oldValue == "a_z":
 		oldValue = "alpha"
-	if oldValue != config.usage.menuSortOrder.value:
-		config.usage.menu_sort_mode.value = config.usage.menu_sort_mode.default  # Remove the old setting.
-		config.usage.menuSortOrder.value = "user"  # Save the new setting.
-		config.usage.menu_sort_mode.save()
-		config.usage.menuSortOrder.save()
 	# Update menu sort hide / show / resorting dictionary setting.
 	oldSettings = config.usage.menu_sort_weight.getSavedValue()
 	if oldSettings:
@@ -137,6 +133,7 @@ def migrateFileCommander():
 		("sortFiles_right", "sortFilesRight"),
 		("unknown_extension_as_text", "useViewerForUnknown")
 	)
+	config.plugins.FileCommander = ConfigSubsection()
 	config.plugins.filecommander = ConfigSubsection()
 	for old, new in attributes:
 		setattr(config.plugins.filecommander, old, ConfigText(default=""))
@@ -151,3 +148,4 @@ def migrateFileCommander():
 			getattr(config.plugins.FileCommander, new).value = value
 		getattr(config.plugins.filecommander, old).value = ""
 	config.plugins.filecommander.save()
+	config.plugins.FileCommander.save()
