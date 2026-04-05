@@ -5,16 +5,14 @@
 #include <lib/driver/input_fake.h>
 #include <lib/driver/rcsdl.h>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
-gSDLDC::gSDLDC() : m_pump(eApp, 1, "gSDLDC")
+gSDLDC::gSDLDC() : m_window(nullptr), m_osd_tex(nullptr), m_pump(eApp, 1,"gSDLDC")
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		eWarning("[gSDLDC] Could not initialize SDL: %s", SDL_GetError());
 		return;
 	}
-
-	setResolution(720, 576);
 
 	CONNECT(m_pump.recv_msg, gSDLDC::pumpEvent);
 
@@ -23,7 +21,10 @@ gSDLDC::gSDLDC() : m_pump(eApp, 1, "gSDLDC")
 
 	m_pixmap = new gPixmap(&m_surface);
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wclass-memaccess"
 	memset(m_surface.clut.data, 0, sizeof(*m_surface.clut.data)*m_surface.clut.colors);
+#pragma GCC diagnostic pop
 
 	run();
 }
@@ -87,7 +88,10 @@ void gSDLDC::exec(const gOpcode *o)
 
 void gSDLDC::setResolution(int xres, int yres, int bpp)
 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wint-to-pointer-cast"
 	pushEvent(EV_SET_VIDEO_MODE, (void *)xres, (void *)yres);
+#pragma GCC diagnostic pop
 }
 
 /*
@@ -96,25 +100,43 @@ void gSDLDC::setResolution(int xres, int yres, int bpp)
 
 void gSDLDC::evSetVideoMode(unsigned long xres, unsigned long yres)
 {
-	m_screen = SDL_SetVideoMode(xres, yres, 32, SDL_HWSURFACE);
-	if (!m_screen) {
-		eFatal("[gSDLDC] Could not create SDL surface: %s", SDL_GetError());
+	m_window = SDL_CreateWindow("enigma2-SDL2", 0, 0, xres, yres, SDL_WINDOW_RESIZABLE);
+	if (!m_window) {
+		eFatal("[gSDLDC] Could not create SDL window: %s", SDL_GetError());
 		return;
 	}
+	m_render = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	if (!m_render) {
+		eFatal("[gSDLDC] Could not create SDL renderer: %s", SDL_GetError());
+		return;
+	}
+	m_osd = SDL_CreateRGBSurface(SDL_SWSURFACE, xres, yres, 32, 0, 0, 0, 0);
+	SDL_SetColorKey(m_osd, SDL_TRUE, SDL_MapRGB(m_osd->format, 0, 0, 0));
+	m_osd_tex = SDL_CreateTexture(m_render, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, xres, yres);
+	SDL_SetTextureBlendMode(m_osd_tex, SDL_BLENDMODE_BLEND);
 
-	m_surface.x = m_screen->w;
-	m_surface.y = m_screen->h;
-	m_surface.bpp = m_screen->format->BitsPerPixel;
-	m_surface.bypp = m_screen->format->BytesPerPixel;
-	m_surface.stride = m_screen->pitch;
-	m_surface.data = m_screen->pixels;
-
-	SDL_EnableUNICODE(1);
+	m_surface.x = m_osd->w;
+	m_surface.y = m_osd->h;
+	m_surface.bpp = m_osd->format->BitsPerPixel;
+	m_surface.bypp = m_osd->format->BytesPerPixel;
+	m_surface.stride = m_osd->pitch;
+	m_surface.data = m_osd->pixels;
 }
 
 void gSDLDC::evFlip()
 {
-	SDL_Flip(m_screen);
+	if (!m_window)
+		return;
+	
+	// Clear
+	SDL_SetRenderDrawColor(m_render, 0, 0, 0, 0);
+	SDL_RenderClear(m_render);
+	
+	// Render OSD
+	SDL_UpdateTexture(m_osd_tex, NULL, m_osd->pixels, m_osd->pitch);
+	SDL_RenderCopy(m_render, m_osd_tex, NULL, NULL);
+
+	SDL_RenderPresent(m_render);
 }
 
 void gSDLDC::thread()

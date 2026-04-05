@@ -8,6 +8,7 @@
 
 #include <lib/base/ebase.h>
 #include <libsig_comp.h>
+#include <lib/python/python.h>
 #include <string>
 #include <unordered_map>
 
