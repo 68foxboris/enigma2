@@ -2,7 +2,6 @@
                 /* avoid warnigs :) */
 #undef _POSIX_C_SOURCE
 #define _POSIX_C_SOURCE 200112L
-
 extern "C" PyObject* PyInit__enigma(void);
 extern "C" PyObject* PyInit_eBaseImpl(void);
 extern "C" PyObject* PyInit_eConsoleImpl(void);
@@ -207,7 +206,7 @@ int ePython::call(ePyObject pFunc, ePyObject pArgs)
 		 	PyErr_Print();
 			ePyObject FuncStr = PyObject_Str(pFunc);
 			ePyObject ArgStr = PyObject_Str(pArgs);
-			eDebug("[ePyObject] (PyObject_CallObject(%s,%s) failed)", PyUnicode_AsUTF8(FuncStr), PyUnicode_AsUTF8(ArgStr));
+			eLog(lvlFatal, "[ePyObject] (PyObject_CallObject(%s,%s) failed)", PyUnicode_AsUTF8(FuncStr), PyUnicode_AsUTF8(ArgStr));
 			Py_DECREF(FuncStr);
 			Py_DECREF(ArgStr);
 			/* immediately show BSOD, so we have the actual error at the bottom */

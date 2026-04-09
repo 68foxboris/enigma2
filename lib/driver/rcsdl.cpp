@@ -19,12 +19,12 @@ eSDLInputDevice::~eSDLInputDevice()
 void eSDLInputDevice::handleCode(long arg)
 {
 	const SDL_KeyboardEvent *event = (const SDL_KeyboardEvent *)arg;
-	const SDL_keysym *key = &event->keysym;
+	const SDL_Keysym *key = &event->keysym;
 	int km = input->getKeyboardMode();
 	int code, flags;
 
 	if (event->type == SDL_KEYDOWN) {
-		m_unicode = key->unicode;
+//		m_unicode = key->unicode;
 		flags = eRCKey::flagMake;
 	} else {
 		flags = eRCKey::flagBreak;
@@ -75,7 +75,7 @@ const char *eSDLInputDevice::getDescription() const
 	return "SDL";
 }
 
-int eSDLInputDevice::translateKey(SDLKey key)
+int eSDLInputDevice::translateKey(SDL_Keycode key)
 {
 	#define P(a)	case SDLK_##a: return KEY_##a
 	#define P2(a,b)	case SDLK_##a: return KEY_##b
@@ -122,12 +122,12 @@ int eSDLInputDevice::translateKey(SDLKey key)
 	P(COLON);
 #endif
 	P(SEMICOLON);
-#if 0
-	P(LESS);
+#if 1
+	P2(LESS,BACK);
 #endif
 	P2(EQUALS,EQUAL);
-#if 0
-	P(GREATER);
+#if 1
+	P2(GREATER,NEXT);
 #endif
 	P(QUESTION);
 #if 0
@@ -266,16 +266,16 @@ int eSDLInputDevice::translateKey(SDLKey key)
 	P(WORLD_94);
 	P(WORLD_95);
 #endif
-	P(KP0);
-	P(KP1);
-	P(KP2);
-	P(KP3);
-	P(KP4);
-	P(KP5);
-	P(KP6);
-	P(KP7);
-	P(KP8);
-	P(KP9);
+//	P(KP0);
+//	P(KP1);
+//	P(KP2);
+//	P(KP3);
+//	P(KP4);
+//	P(KP5);
+//	P(KP6);
+//	P(KP7);
+//	P(KP8);
+//	P(KP9);
 	P2(KP_PERIOD,KPDOT);
 	P2(KP_DIVIDE,KPSLASH);
 	P2(KP_MULTIPLY,KPASTERISK);
@@ -290,47 +290,47 @@ int eSDLInputDevice::translateKey(SDLKey key)
 	P(INSERT);
 	P(HOME);
 	P(END);
-	P(PAGEUP);
-	P(PAGEDOWN);
-	P(F1);
-	P(F2);
-	P(F3);
-	P(F4);
-	P(F5);
-	P(F6);
-	P(F7);
-	P(F8);
-	P(F9);
-	P(F10);
-	P(F11);
+	P2(PAGEUP,CHANNELUP);
+	P2(PAGEDOWN,CHANNELDOWN);
+	P2(F1,RED);
+	P2(F2,GREEN);
+	P2(F3,YELLOW);
+	P2(F4,BLUE);
+	P2(F5,INFO);
+	P2(F6,TV);
+	P2(F7,VIDEO);
+	P2(F8,AUDIO);
+	P2(F9,PVR);
+	P2(F10,POWER);
+	P2(F11,EPG);
 	P(F12);
 	P(F13);
 	P(F14);
 	P(F15);
-	P(NUMLOCK);
+//	P(NUMLOCK);
 	P(CAPSLOCK);
-	P2(SCROLLOCK,SCROLLLOCK);
+//	P2(SCROLLOCK,SCROLLLOCK);
 	P2(RSHIFT,RIGHTSHIFT);
 	P2(LSHIFT,LEFTSHIFT);
 	P2(RCTRL,RIGHTCTRL);
 	P2(LCTRL,LEFTCTRL);
 	P2(RALT,RIGHTALT);
 	P2(LALT,LEFTALT);
-	P2(RMETA,RIGHTMETA);
-	P2(LMETA,LEFTMETA);
+//	P2(RMETA,RIGHTMETA);
+//	P2(LMETA,LEFTMETA);
 #if 0
 	P(LSUPER);
 	P(RSUPER);
 #endif
 	P(MODE);
-	P(COMPOSE);
+//	P(COMPOSE);
 	P(HELP);
-	P(PRINT);
+//	P(PRINT);
 	P2(SYSREQ,SYSRQ);
-	P(BREAK);
+//	P(BREAK);
 	P(MENU);
 	P(POWER);
-	P(EURO);
+//	P(EURO);
 	P(UNDO);
 	default:
 		eDebug("[eSDLInputDevice] unhandled SDL keycode: %d", key);
