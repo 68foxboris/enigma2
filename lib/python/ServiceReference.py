@@ -73,7 +73,7 @@ def isPlayableForCur(ref):
 
 def resolveAlternate(ref):
 	nref = None
-	if ref.flags & eServiceReference.isGroup:
+	if serviceref and serviceref.flags & eServiceReference.isGroup:
 		nref = getBestPlayableServiceReference(ref, getPlayingref(ref))
 		if not nref:
 			nref = getBestPlayableServiceReference(ref, eServiceReference(), True)
