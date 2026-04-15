@@ -636,6 +636,7 @@
 		<item level="2" text="Ignore DVB-T namespace sub network" description="On valid ONIDs, ignore frequency sub network part">config.usage.subnetwork_terrestrial</item>
 		<item level="2" text="Enable cut file support for non *.ts files" description="Enable cut file support for non *.ts files, e.g. mp4.">config.usage.useVideoCuesheet</item>
 		<item level="2" text="Enable cut file support for audio files" description="Enable cut file support for audio files, e.g. mp3.">config.usage.useAudioCuesheet</item>
+		<item level="2" text="Enable extended cut file support" description="Enable extended cut file support. This will write cut with more information and not only marker.">config.usage.nativeCuesheetSupport</item>
 		<item level="2" text="Enable chapter support for video files" description="Show chapter positions for supported video files.">config.usage.useChapterInfo</item>
 		<!--item level="2" text="Enable new GStreamer playback" description="If enabled, the new GStreamer playback engine will be used.">config.misc.usegstplaybin3</item-->
 	</setup>
