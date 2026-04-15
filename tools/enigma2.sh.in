@@ -83,7 +83,7 @@ if [ -x /usr/bin/enigma2_pre_start.sh ]; then
 	/usr/bin/enigma2_pre_start.sh
 fi
 
-# Show backdrop backdrop on enigma2 start.
+# Show backdrop on enigma2 start.
 if [ -x "/usr/bin/exteplayer3" -o -x "/usr/bin/showiframe" ]; then
 	# show bootlogo on enigma2 start
 	SKIN=`sed -En 's|^config\.skin\.primary_skin=(.+)/skin\.xml$|\1|p' "/etc/enigma2/settings"`
