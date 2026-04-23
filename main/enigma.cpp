@@ -432,11 +432,6 @@ const char *getEnigmaVersionString()
 	return enigma2_date;
 }
 
-const char *getBoxType()
-{
-	return BOXTYPE;
-}
-
 #ifndef IMAGE_FINGERPRINT
 #define IMAGE_FINGERPRINT 0
 #endif
