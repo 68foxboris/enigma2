@@ -181,7 +181,7 @@ def loadSkin(filename, scope=SCOPE_SKINS, desktop=getDesktop(GUI_SKIN_ID), scree
 							element.attrib["resolution"] = res
 						if config.crash.debugScreens.value:
 							res = [parseInteger(x.strip()) for x in res.split(",")]
-							print(f"[Skin] Loading screen '{name}'{f", resolution {res[0]}x{res[1]}," if len(res) == 2 and res[0] and res[1] else ""} from '{filename}'.  (scope={scope})")
+							print(f'[Skin] Loading screen "{name}" resolution {res[0]}x{res[1]}' if len(res) == 2 and res[0] and res[1] else "" f'from "{filename}".  (scope={scope})')
 						domScreens[name] = (element, f"{dirname(filename)}/")
 			elif element.tag == "windowstyle":  # Process the windowstyle element.
 				scrnID = element.attrib.get("id")
@@ -203,7 +203,7 @@ def loadSkin(filename, scope=SCOPE_SKINS, desktop=getDesktop(GUI_SKIN_ID), scree
 
 
 def reloadSkins():
-	global colors, domScreens, fonts, menus, menuicons, parameters, screens, setups, switchPixmap
+	global colors, domScreens, fonts, menus, menuicons, parameters, setups, switchPixmap
 	domScreens.clear()
 	colors.clear()
 	colors = {
@@ -308,7 +308,7 @@ def parseOptions(options, attribute, value, default):
 		if value in options.keys():
 			value = options[value]
 		else:
-			skinError(f"The '{attribute}' value '{value}' is invalid, acceptable options are '{"', '".join(options.keys())}', using '{default}")
+			skinError(f"The '{attribute}' value '{value}' is invalid, acceptable options are '{', '.join(options.keys())}', using '{default}'")
 			value = default
 	else:
 		skinError(f"The '{attribute}' parser is not correctly initialized, using '{default}'")
@@ -1036,7 +1036,7 @@ class AttributeParser:
 			except KeyError:
 				errors.append(flag)
 		if errors:
-			print(f"[Skin] Error: Attribute 'flags' with value '{value}' has invalid element(s) '{"', '".join(errors)}'!")
+			print(f"[Skin] Error: Attribute 'flags' with value '{value}' has invalid element(s) '{', '.join(errors)}'!")
 
 	def font(self, value):
 		self.guiObject.setFont(parseFont(value, self.scaleTuple))
@@ -1386,7 +1386,7 @@ def applyAllAttributes(guiObject, desktop, attributes, scale=((1, 1), (1, 1))):
 def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN):
 	"""Loads skin data like colors, windowstyle etc."""
 	assert domSkin.tag == "skin", "root element in skin must be 'skin'!"
-	global colors, fonts, menus, parameters, setups, screens, switchPixmap, resolutions, scrollLabelStyle, subtitleFonts
+	global colors, fonts, menus, parameters, setups, switchPixmap, resolutions, scrollLabelStyle, subtitleFonts
 	for tag in domSkin.findall("output"):
 		scrnID = parseInteger(tag.attrib.get("id", GUI_SKIN_ID), GUI_SKIN_ID)
 		if scrnID == GUI_SKIN_ID:
@@ -1397,53 +1397,64 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 				resolutions[scrnID] = (xres, yres, bpp)
 				if bpp != 32:
 					pass  # Load palette (Not yet implemented!)
-
-				# Only add font aliases here for lists that are not part of enigma2 repo.
-				# Font aliases for modules in this repository should be dealt with directly in the corresponding py, not here.
-				fonts["ImsSelectionList"] = applySkinFactor("Regular", 22, 30)
-				fonts["PartnerBoxBouquetList0"] = applySkinFactor("Regular", 20, 30)
-				fonts["PartnerBoxBouquetList1"] = applySkinFactor("Regular", 18)
-				fonts["PartnerBoxChannelList0"] = applySkinFactor("Regular", 20, 70)
-				fonts["PartnerBoxChannelList1"] = applySkinFactor("Regular", 18)
-				fonts["PartnerBoxChannelEPGList0"] = applySkinFactor("Regular", 22, 30)
-				fonts["PartnerBoxE2TimerMenu0"] = applySkinFactor("Regular", 20, 70)
-				fonts["PartnerBoxE2TimerMenu1"] = applySkinFactor("Regular", 18)
-				fonts["PartnerBoxEntryList0"] = applySkinFactor("Regular", 20, 30)
-				fonts["PartnerBoxEntryList1"] = applySkinFactor("Regular", 18)
-
-				# Only add parameters here for lists that are not part of enigma2 repo.
-				# Parameters for modules in this repository should be dealt with directly in the corresponding py, not here.
-				parameters["AutotimerListChannels"] = applySkinFactor(2, 40, 3, 21)
-				parameters["AutotimerListDays"] = applySkinFactor(1, 26, 3, 17)
-				parameters["AutotimerListHasTimespan"] = applySkinFactor(103, 3, 100, 17)
-				parameters["AutotimerListIcon"] = applySkinFactor(2, -1, 24, 24)
-				parameters["AutotimerListRectypeicon"] = applySkinFactor(26, 3, 20, 20)
-				parameters["AutotimerListTimerName"] = applySkinFactor(50, 3, 18, 21)
-				parameters["AutotimerListTimespan"] = applySkinFactor(2, 26, 3, 17)
-				parameters["DreamexplorerIcon"] = applySkinFactor(12, 3, 20, 20)
-				parameters["DreamexplorerName"] = applySkinFactor(40, 2, 1000, 22)
-				parameters["ExpandableListCategory"] = applySkinFactor(45, 0, 655, 25)
-				parameters["ExpandableListIcon"] = applySkinFactor(5, 0, 30, 25)
-				parameters["ExpandableListItem"] = applySkinFactor(80, 3, 620, 25)
-				parameters["ExpandableListLock"] = applySkinFactor(45, 1, 25, 24)
-				parameters["PartnerBoxBouquetListName"] = applySkinFactor(0, 0, 30)
-				parameters["PartnerBoxChannelListName"] = applySkinFactor(0, 0, 30)
-				parameters["PartnerBoxChannelListTime"] = applySkinFactor(0, 50, 150, 20)
-				parameters["PartnerBoxChannelListTitle"] = applySkinFactor(0, 30, 20)
-				parameters["PartnerBoxE1TimerState"] = applySkinFactor(170, 50, 170, 20)
-				parameters["PartnerBoxE1TimerTime"] = applySkinFactor(0, 50, 170, 20)
-				parameters["PartnerBoxE2TimerIcon"] = applySkinFactor(510, 5, 20, 20)
-				parameters["PartnerBoxE2TimerIconRepeat"] = applySkinFactor(510, 30, 20, 20)
-				parameters["PartnerBoxE2TimerState"] = applySkinFactor(150, 50, 150, 20)
-				parameters["PartnerBoxE2TimerTime"] = applySkinFactor(0, 50, 150, 20)
-				parameters["PartnerBoxEntryListName"] = applySkinFactor(5, 0, 150, 25)
-				parameters["PartnerBoxEntryListIP"] = applySkinFactor(120, 0, 150, 25)
-				parameters["PartnerBoxEntryListPort"] = applySkinFactor(270, 0, 100, 25)
-				parameters["PartnerBoxEntryListType"] = applySkinFactor(410, 0, 100, 25)
-				parameters["PartnerBoxTimerName"] = applySkinFactor(0, 30, 20)
-				parameters["PartnerBoxTimerServicename"] = applySkinFactor(0, 0, 30)
-				parameters["SHOUTcastListItem"] = applySkinFactor(20, 18, 22, 69, 20, 23, 43, 22)
-
+				if yres >= 1080:
+					parameters["AboutHddSplit"] = 1
+					parameters["AutotimerListChannels"] = (2, 60, 4, 32)
+					parameters["AutotimerListDays"] = (1, 40, 5, 25)
+					parameters["AutotimerListHasTimespan"] = (154, 4, 150, 25)
+					parameters["AutotimerListIcon"] = (3, -1, 36, 36)
+					parameters["AutotimerListRectypeicon"] = (39, 4, 30, 30)
+					parameters["AutotimerListTimerName"] = (76, 4, 26, 32)
+					parameters["AutotimerListTimespan"] = (2, 40, 5, 25)
+					parameters["ChoicelistDash"] = (0, 3, 1000, 30)
+					parameters["ChoicelistIcon"] = (7, 0, 52, 38)
+					parameters["ChoicelistName"] = (68, 3, 1000, 32)
+					parameters["ChoicelistNameSingle"] = (7, 3, 1000, 32)
+					parameters["ConfigListSeperator"] = 500
+					parameters["DreamexplorerIcon"] = (15, 4, 30, 30)
+					parameters["DreamexplorerName"] = (62, 0, 1200, 38)
+					parameters["FileListIcon"] = (7, 4, 52, 37)
+					parameters["FileListMultiIcon"] = (45, 4, 30, 30)
+					parameters["FileListMultiLock"] = (2, 0, 36, 36)
+					parameters["FileListMultiName"] = (90, 3, 1000, 32)
+					parameters["FileListName"] = (68, 4, 1000, 34)
+					parameters["HelpMenuListExtHlp0"] = (0, 0, 900, 39)
+					parameters["HelpMenuListExtHlp1"] = (0, 42, 900, 30)
+					parameters["HelpMenuListHlp"] = (0, 0, 900, 42)
+					parameters["PartnerBoxBouquetListName"] = (0, 0, 45)
+					parameters["PartnerBoxChannelListName"] = (0, 0, 45)
+					parameters["PartnerBoxChannelListTime"] = (0, 78, 225, 30)
+					parameters["PartnerBoxChannelListTitle"] = (0, 42, 30)
+					parameters["PartnerBoxE1TimerState"] = (255, 78, 255, 30)
+					parameters["PartnerBoxE1TimerTime"] = (0, 78, 255, 30)
+					parameters["PartnerBoxE2TimerIcon"] = (1050, 8, 20, 20)
+					parameters["PartnerBoxE2TimerIconRepeat"] = (1050, 38, 20, 20)
+					parameters["PartnerBoxE2TimerState"] = (225, 78, 225, 30)
+					parameters["PartnerBoxE2TimerTime"] = (0, 78, 225, 30)
+					parameters["PartnerBoxEntryListIP"] = (180, 2, 225, 38)
+					parameters["PartnerBoxEntryListName"] = (8, 2, 225, 38)
+					parameters["PartnerBoxEntryListPort"] = (405, 2, 150, 38)
+					parameters["PartnerBoxEntryListType"] = (615, 2, 150, 38)
+					parameters["PartnerBoxTimerName"] = (0, 42, 30)
+					parameters["PartnerBoxTimerServicename"] = (0, 0, 45)
+					parameters["PicturePlayerThumb"] = (30, 285, 45, 300, 30, 25)
+					parameters["PlayListIcon"] = (7, 7, 24, 24)
+					parameters["PlayListName"] = (38, 2, 1000, 34)
+					parameters["PluginBrowserDescr"] = (180, 42, 25)
+					parameters["PluginBrowserDownloadDescr"] = (120, 42, 25)
+					parameters["PluginBrowserDownloadIcon"] = (15, 0, 90, 76)
+					parameters["PluginBrowserDownloadName"] = (120, 8, 38)
+					parameters["PluginBrowserIcon"] = (15, 8, 150, 60)
+					parameters["PluginBrowserName"] = (180, 8, 38)
+					parameters["SHOUTcastListItem"] = (30, 27, 35, 96, 35, 33, 60, 32)
+					parameters["SelectionListDescr"] = (45, 6, 1000, 45)
+					parameters["SelectionListLock"] = (0, 2, 36, 36)
+					parameters["ServiceInfoLeft"] = (0, 0, 450, 45)
+					parameters["ServiceInfoRight"] = (450, 0, 1000, 45)
+					parameters["VirtualKeyBoard"] = (68, 68)
+					parameters["VirtualKeyBoardAlignment"] = (0, 0)
+					parameters["VirtualKeyBoardPadding"] = (7, 7)
+					parameters["VirtualKeyBoardShiftColors"] = (0x00ffffff, 0x00ffffff, 0x0000ffff, 0x00ff00ff)
 	for tag in domSkin.findall("include"):
 		filename = tag.attrib.get("filename")
 		try:
@@ -2116,7 +2127,7 @@ class TemplateParser():
 
 	def processPanel(self, widget, context, excludeItemIndexes=None, includeItemIndexes=None):
 		if self.debug:
-			print(f"[TemplateParser] processPanel DEBUG: Position={widget.attrib.get("position")}, Size={widget.attrib.get("size")}.")
+			print(f'[TemplateParser] processPanel DEBUG: Position={widget.attrib.get("position")}, Size={widget.attrib.get("size")}.')
 			print(f"[TemplateParser] processPanel DEBUG: Parent x={context.x}, width={context.w}.")
 		position = widget.attrib.get("position")
 		if position == "fill":
@@ -2165,9 +2176,9 @@ class TemplateParser():
 				if item.get("autoGrow", ""):
 					oldSize = [int(x.strip()) for x in item["size"].split(",")]
 					width = oldSize[0] + newContext.w
-					item["size"] = SizeTuple((width, oldSize[1]))
+					item["size"] = f"{width},{oldSize[1]}"
 					if self.debug:
-						print(f"[TemplateParser] DEBUG: autoGrow context={newContext.w}, oldSize={oldSize}, newsize={item["size"]}.")
+						print(f'[TemplateParser] DEBUG: autoGrow context={newContext.w}, oldSize={oldSize}, newsize={item["size"]}.')
 					break
 		if self.debug:
 			print(items)
@@ -2199,7 +2210,7 @@ def readSkin(screen, skin, names, desktop):
 				myName = name  # Use this name for debug output.
 				break
 			else:
-				print(f"[Skin] Warning: Skin screen '{name}' rejected as it does not offer all the mandatory widgets '{"', '".join(screen.mandatoryWidgets)}'!")
+				print(f"[Skin] Warning: Skin screen '{name}' your skin was rejected as it does not offer all the mandatory widgets '{', '.join(screen.mandatoryWidgets)}'!")
 				myScreen = None
 	else:
 		myName = f"<embedded-in-{screen.__class__.__name__}>"
@@ -2227,7 +2238,8 @@ def readSkin(screen, skin, names, desktop):
 		if myScreen is not None:
 			screen.parsedSkin = myScreen
 	if myScreen is None:
-		print("[Skin] No skin to read or screen to display.")
+		className = screen.__class__.__name__
+		print(f"[Skin Error] No exist screen '{className}' in your skin.") if "Summary" not in className else print(f"[Skin Display Error] No exist screen '{className}' on your skin display.")
 		myScreen = screen.parsedSkin = fromstring("<screen></screen>")
 	screen.skinAttributes = []
 	skinPath = getattr(screen, "skin_path", path)  # TODO: It may be possible for "path" to be undefined!
@@ -2310,6 +2322,7 @@ def readSkin(screen, skin, names, desktop):
 		wconnection = widget.attrib.get("connection")
 		widgetConnection = widget.attrib.get("connection")
 		widgetClass = widget.attrib.get("addon")
+		source = None
 		if widgetName is None and widgetSource is None and widgetClass is None:
 			raise SkinError("The widget has no addon, name or source")
 		if widgetName:
@@ -2566,7 +2579,7 @@ def readSkin(screen, skin, names, desktop):
 		posY = "?" if context.y is None else str(context.y)
 		sizeW = "?" if context.w is None else str(context.w)
 		sizeH = "?" if context.h is None else str(context.h)
-		print(f"[Skin] Processing screen '{myName}'{f", from list '{", ".join(names)}'," if len(names) > 1 else ""} position=({posX},{posY}), size=({sizeW},{sizeH}) for module '{screen.__class__.__name__}'.")
+		print(f"[Skin] Processing screen '{myName}', from list '{', '.join(names)}'," if len(names) > 1 else f"Processing screen {screen.__class__.__name__} position=({posX},{posY}), size=({sizeW},{sizeH}) for module '{screen.__class__.__name__}'.")
 		context.x = 0  # Reset offsets, all components are relative to screen coordinates.
 		context.y = 0
 		processScreen(myScreen, context)
