@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from Screens.MessageBox import MessageBox
 from Components.config import ConfigSubsection, ConfigYesNo, config, ConfigSelection
-from enigma import eTimer, eConsoleAppContainer, getBoxType, eDVBDB
+from enigma import eTimer, eConsoleAppContainer, eDVBDB
 from Components.Label import Label
 from time import time, strftime, localtime
 from Tools import Notifications
