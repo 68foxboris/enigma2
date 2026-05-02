@@ -96,8 +96,7 @@ class FlashManager(Screen):
 		self["description"] = StaticText()
 		self["list"] = ChoiceList(list=[ChoiceEntryComponent("", ((_("Retrieving image list, please wait...")), "Loading"))])
 		self.feedUrls = [
-			("OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName")),
-			("OpenPLi", "https://downloads.openpli.org/json/%s" % BoxInfo.getItem("model"))
+			("OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName"))
 		]
 		self.callLater(self.getImagesList)
 
@@ -125,137 +124,40 @@ class FlashManager(Screen):
 				except Exception:
 					print("[FlashManager] getImagesList Error: Unable to extract file list from Zip file '%s'!" % file)
 
-		def getImagesListCallback(retVal=None):
+		def getImagesListCallback(retVal=None):  # The retVal argument absorbs the unwanted return value from MessageBox.
 			if self.imageFeed != "OpenATV":
-				self.keyDistributionCallback("OpenATV")
+				self.keyDistributionCallback("OpenATV")  # No images can be found for the selected distribution so go back to the OpenATV default.
 
 		machinebuild = BoxInfo.getItem("machinebuild")
 		model = BoxInfo.getItem("model")
 		boxname = BoxInfo.getItem("BoxName")
-		
-		# Отладочная информация об устройстве
-		print("[FlashManager] Device info - machinebuild: '%s', model: '%s', boxname: '%s'" % (machinebuild, model, boxname))
-		
-		# Маппинг устройств для совместимости
-		device_mapping = {
-			"et1x00": "et1x000",
-		}
-		
-		# Используем маппинг если устройство есть в списке
-		mapped_machinebuild = device_mapping.get(machinebuild, machinebuild)
-		mapped_boxname = device_mapping.get(boxname, boxname)
-		
-		print("[FlashManager] Mapped boxname: '%s'" % mapped_boxname)
 
 		if not self.imagesList:
 			index = findInList(self.imageFeed)
-			
-			if index is not None:
-				# Для выбранного дистрибутива используем соответствующий URL
-				feedURL = self.feedUrls[index][FEED_JSON_URL]
-				# Для OpenATV применяем маппинг устройств и подставляем имя бокса
-				if self.imageFeed == "OpenATV" and "%s" in feedURL:
-					feedURL = feedURL % mapped_boxname
-				# Для других дистрибутивов используем URL как есть
-			else:
-				# По умолчанию OpenATV с маппингом
-				feedURL = "https://images.mynonpublic.com/openatv/json/%s" % mapped_boxname
-			
+			box = machinebuild if index else boxname
+			feedURL = self.feedUrls[index][FEED_JSON_URL] if index else "https://images.mynonpublic.com/openatv/json/%s" % box
 			try:
-				print("[FlashManager] Loading images from: %s" % feedURL)
 				req = Request(feedURL, None, USER_AGENT)
-				response = urlopen(req)
-				raw_data = response.read().decode('utf-8')
-				print("[FlashManager] Raw response (first 500 chars): %s" % raw_data[:500])
-				
-				# Нужно пересоздать response для json.load
-				response = urlopen(req)
-				json_data = load(response)
-				
-				# Анализируем структуру полученных данных
-				print("[FlashManager] JSON structure type: %s" % type(json_data))
-				print("[FlashManager] JSON data length: %d" % len(json_data))
-				
-				if isinstance(json_data, dict):
-					print("[FlashManager] JSON keys: %s" % list(json_data.keys()))
-					for key, value in json_data.items():
-						print("[FlashManager] Key '%s' has %d items" % (key, len(value) if isinstance(value, (dict, list)) else 1))
-					self.imagesList = json_data
-				elif isinstance(json_data, list):
-					# Если пришел список, преобразуем в нужную структуру
-					print("[FlashManager] Converting list to dictionary structure")
-					print("[FlashManager] First 3 items in list: %s" % str(json_data[:3]))
-					
-					self.imagesList = {"Online Images": {}}
-					image_count = 0
-					for i, item in enumerate(json_data):
-						print("[FlashManager] Item %d: %s" % (i, type(item)))
-						if isinstance(item, dict):
-							print("[FlashManager] Item %d keys: %s" % (i, list(item.keys())))
-							
-							# Проверяем различные возможные структуры данных
-							if 'link' in item and 'name' in item:
-								self.imagesList["Online Images"][item['name']] = item
-								image_count += 1
-								print("[FlashManager] Added image: %s" % item['name'])
-							elif 'url' in item and 'filename' in item:
-								# Альтернативная структура: url и filename
-								self.imagesList["Online Images"][item['filename']] = {
-									"link": item['url'],
-									"name": item['filename']
-								}
-								image_count += 1
-								print("[FlashManager] Added image from url/filename: %s" % item['filename'])
-							elif 'download' in item and 'name' in item:
-								# Еще одна возможная структура
-								self.imagesList["Online Images"][item['name']] = {
-									"link": item['download'],
-									"name": item['name']
-								}
-								image_count += 1
-								print("[FlashManager] Added image from download/name: %s" % item['name'])
-							else:
-								# Пытаемся найти любые ссылки и имена в словаре
-								link_found = None
-								name_found = None
-								for key, value in item.items():
-									if isinstance(value, str) and value.startswith('http'):
-										link_found = value
-									if key in ['name', 'filename', 'imagename'] and isinstance(value, str):
-										name_found = value
-								
-								if link_found and name_found:
-									self.imagesList["Online Images"][name_found] = {
-										"link": link_found,
-										"name": name_found
-									}
-									image_count += 1
-									print("[FlashManager] Added image from auto-detection: %s" % name_found)
-						else:
-							print("[FlashManager] Skipping non-dict item: %s" % type(item))
-					
-					print("[FlashManager] Successfully processed %d images from list" % image_count)
-				else:
-					print("[FlashManager] Unknown JSON structure: %s" % type(json_data))
-					self.imagesList = {}
-					
-				print("[FlashManager] Successfully loaded %d image categories for %s" % (len(self.imagesList), self.imageFeed))
-				
-			except Exception as err:
-				print("[FlashManager] getImagesList Error: Unable to load json data from URL '%s'! (%s)" % (feedURL, err))
-				import traceback
-				traceback.print_exc()
+				self.imagesList = dict(load(urlopen(req)))
+				# if config.usage.alternative_imagefeed.value:
+				# 	url = "%s%s" % (config.usage.alternative_imagefeed.value, box)
+				# 	self.imagesList.update(dict(load(urlopen(url))))
+			except Exception:
+				print("[FlashManager] getImagesList Error: Unable to load json data from URL '%s'!" % feedURL)
 				self.imagesList = {}
-			
-			# Поиск локальных образов используя оригинальные имена устройств
-			if not index or self.imageFeed == "OpenATV":
+			# searchFolders = []
+			# Get all folders of /media/ and /media/net/ and only if OpenATV
+			if not index:
 				for media in ["/media/%s" % x for x in listdir("/media")] + (["/media/net/%s" % x for x in listdir("/media/net")] if isdir("/media/net") else []):
+					# print("[FlashManager] getImagesList DEBUG: media='%s'." % media)
 					if not (BoxInfo.getItem("HasMMC") and "/mmc" in media) and isdir(media):
 						getImages(media, [join(media, x) for x in listdir(media) if splitext(x)[1] == ".zip" and (boxname in x or machinebuild in x or model in x)])
 						for folder in ["images", "downloaded_images", "imagebackups"]:
 							if folder in listdir(media):
 								subFolder = join(media, folder)
+								# print("[FlashManager] getImagesList DEBUG: subFolder='%s'." % subFolder)
 								if isdir(subFolder) and not islink(subFolder) and not ismount(subFolder):
+									# print("[FlashManager] getImagesList DEBUG: Next subFolder='%s'." % subFolder)
 									getImages(subFolder, [join(subFolder, x) for x in listdir(subFolder) if splitext(x)[1] == ".zip" and (boxname in x or machinebuild in x or model in x)])
 									for dir in [dir for dir in [join(subFolder, dir) for dir in listdir(subFolder)] if isdir(dir) and splitext(dir)[1] == ".unzipped"]:
 										try:
@@ -263,15 +165,6 @@ class FlashManager(Screen):
 										except OSError as err:
 											print("[FlashManager] getImagesList Error %d: Unable to remove directory '%s'!  (%s)" % (err.errno, dir, err.strerror))
 
-		# Отладочная информация о загруженных образах
-		total_images = 0
-		for category in self.imagesList:
-			if isinstance(self.imagesList[category], dict):
-				total_images += len(self.imagesList[category])
-				print("[FlashManager] Category '%s' has %d images" % (category, len(self.imagesList[category])))
-		print("[FlashManager] Total images loaded: %d in %d categories" % (total_images, len(self.imagesList)))
-
-		# Остальной код метода без изменений...
 		imageList = []
 		for catagory in sorted(self.imagesList.keys(), reverse=True):
 			if catagory in self.expanded:
@@ -341,17 +234,7 @@ class FlashManager(Screen):
 		self.selectionChanged()
 
 	def keyDistribution(self):
-		device_mapping = {
-			"et1x00": "gi11000",
-			"h9combo": "zgemmah9combo",
-		}
-		boxname = BoxInfo.getItem("BoxName")
-		mapped_boxname = device_mapping.get(boxname, boxname)
-
-		self.feedUrls = [
-			("OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % mapped_boxname),
-			("OpenPLi", "https://downloads.openpli.org/json/%s" % BoxInfo.getItem("model")),
-		]
+		self.feedUrls = [["OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName")]]
 		distributionList = []
 		default = 0
 		machine = BoxInfo.getItem("machinebuild")
@@ -372,7 +255,6 @@ class FlashManager(Screen):
 			self.imageFeed = distribution
 			# TRANSLATORS: The variable is the name of a distribution.  E.g. "OpenATV".
 			self.setTitle(_("Flash Manager - %s Images") % self.imageFeed)
-			print("[FlashManager] Selected distribution: %s" % distribution)
 			self.imagesList = {}
 			self.expanded = []
 			self.setIndex = 0
