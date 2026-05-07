@@ -184,9 +184,11 @@ private:
 	ePtr<iDVBChannelList> m_list;
 	ePtr<iDVBSatelliteEquipmentControl> m_sec;
 	static eDVBResourceManager *instance;
+
 	friend class eDVBChannel;
 	friend class eFBCTunerManager;
 	ePtr<eFBCTunerManager> m_fbcmng;
+
 	RESULT addChannel(const eDVBChannelID &chid, eDVBChannel *ch);
 	RESULT removeChannel(eDVBChannel *ch);
 
@@ -297,6 +299,7 @@ public:
 
 	RESULT getLength(pts_t &len);
 	RESULT getCurrentPosition(iDVBDemux *decoding_demux, pts_t &pos, int mode);
+	void forceSourcePosition(off_t offset) override;
 
 	int getUseCount() { return m_use_count; }
 
@@ -309,8 +312,10 @@ private:
 
 	ePtr<iDVBFrontendParameters> m_current_frontend_parameters;
 	eDVBChannelID m_channel_id;
+
 	sigc::signal<void(iDVBChannel*)> m_stateChanged;
 	sigc::signal<void(iDVBChannel*,int)> m_event;
+
 	int m_state;
 	ePtr<iTsSource> m_source;
 
