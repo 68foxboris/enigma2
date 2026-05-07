@@ -48,6 +48,7 @@ enigma2_LDADD = \
 	@AVAHI_LIBS@ \
 	@LIBHIACCEL_LIBS@ \
 	@SWSCALE_LIBS@ \
+	@LIBATOMIC_LIBS@ \
 	@LIBDL_LIBS@ \
 	-ltuxtxt32bpp
 
