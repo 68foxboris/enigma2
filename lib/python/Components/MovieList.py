@@ -96,6 +96,7 @@ def moviePlayState(cutsFileName, ref, length):
 		if lastPosition >= length:
 			return 100
 		return (100 * lastPosition) // length
+		return min(100, max(0, result))
 	except Exception:
 		last = lastPlayPosFromCache(ref)
 		if last:
@@ -449,7 +450,8 @@ class MovieList(GUIComponent):
 						if config.usage.movielist_unseen.value:
 							data.icon = self.iconUnwatched
 					else:
-						data.icon = self.iconPart[data.part // 25]
+						part_index = min(4, max(0, data.part // 25))
+						data.icon = self.iconPart[part_index]
 				elif switch == "p" or switch == "s":
 					if data.part is None:
 						if config.usage.movielist_unseen.value:
