@@ -9,7 +9,7 @@ from Components.config import config
 from Components.SystemInfo import BoxInfo
 
 ECM_INFO = "/tmp/ecm.info"
-EMPTY_ECM_INFO = "", "0", "0", "0"
+EMPTY_ECM_INFO = "", "0", "0", "0", ""
 
 old_ecm_time = time()
 info = {}
@@ -47,12 +47,12 @@ def createCurrentCaidLabel(info, currentCaid=None, currentDevice=None):
 		else:
 			data = ("", "0", "0", "0", "")
 		# source, caid, provid, ecmpid, device
-		return data[0], data[1], data[2], data[3]
+		return data[0], data[1], data[2], data[3], data[4]
 
 	if not currentCaid:
 		cryptoInfo = getCryptoInfo()
 		currentCaid = cryptoInfo[1]
-		currentDevice = cryptoInfo[3]
+		currentDevice = cryptoInfo[4]
 	result = ""
 	decodingCiSlot = -1
 	NUM_CI = BoxInfo.getItem("CommonInterface")
@@ -205,7 +205,7 @@ class GetEcmInfo:
 			decCI = "0"
 			provid = "0"
 			ecmpid = "0"
-		return self.textValue, decCI, provid, ecmpid
+		return self.textValue, decCI, provid, ecmpid, info.get("device", "")
 
 	def createCurrentDevice(self, device, isLong):
 		if device:
