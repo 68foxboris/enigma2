@@ -131,7 +131,7 @@ def InitSkins():
 		print(f"[Skin] Error: Adding {name} display skin '{config.skin.display_skin.value}' has failed!")
 		result.append(skin)
 	# Add the activated optional skin parts.
-	if currentPrimarySkin is not None:
+	if currentPrimarySkin != None:
 		partsDir = resolveFilename(SCOPE_GUISKIN, pathjoin(dirname(currentPrimarySkin), "mySkin", ""))
 		if pathExists(partsDir) and currentPrimarySkin != DEFAULT_SKIN:
 			for file in sorted(listdir(partsDir)):
@@ -152,7 +152,7 @@ def InitSkins():
 	if resolution[0] and resolution[1]:
 		gMainDC.getInstance().setResolution(resolution[0], resolution[1])
 		getDesktop(GUI_SKIN_ID).resize(eSize(resolution[0], resolution[1]))
-	runCallbacks = True  # noqa F841
+	runCallbacks = True  #
 	# Load all XML templates.
 	reloadSkinTemplates()
 
@@ -181,7 +181,7 @@ def loadSkin(filename, scope=SCOPE_SKINS, desktop=getDesktop(GUI_SKIN_ID), scree
 							element.attrib["resolution"] = res
 						if config.crash.debugScreens.value:
 							res = [parseInteger(x.strip()) for x in res.split(",")]
-							print(f'[Skin] Loading screen "{name}" resolution {res[0]}x{res[1]}' if len(res) == 2 and res[0] and res[1] else "" f'from "{filename}".  (scope={scope})')
+							print(f"[Skin] Loading screen '{name}'{f", resolution {res[0]}x{res[1]}," if len(res) == 2 and res[0] and res[1] else ""} from '{filename}'.  (scope={scope})")
 						domScreens[name] = (element, f"{dirname(filename)}/")
 			elif element.tag == "windowstyle":  # Process the windowstyle element.
 				scrnID = element.attrib.get("id")
@@ -203,7 +203,7 @@ def loadSkin(filename, scope=SCOPE_SKINS, desktop=getDesktop(GUI_SKIN_ID), scree
 
 
 def reloadSkins():
-	global colors, domScreens, fonts, menus, menuicons, parameters, setups, switchPixmap
+	global colors, domScreens, fonts, menus, menuicons, parameters, screens, setups, switchPixmap
 	domScreens.clear()
 	colors.clear()
 	colors = {
@@ -308,7 +308,7 @@ def parseOptions(options, attribute, value, default):
 		if value in options.keys():
 			value = options[value]
 		else:
-			skinError(f"The '{attribute}' value '{value}' is invalid, acceptable options are '{', '.join(options.keys())}', using '{default}'")
+			skinError(f"The '{attribute}' value '{value}' is invalid, acceptable options are '{"', '".join(options.keys())}', using '{default}")
 			value = default
 	else:
 		skinError(f"The '{attribute}' parser is not correctly initialized, using '{default}'")
@@ -603,12 +603,13 @@ def parseParameter(value):
 		return int(value)
 
 
-def parsePixmap(path, desktop):
+def parsePixmap(path, desktop, width=0, height=0):
 	option = path.find("#")
 	if option != -1:
 		path = path[:option]
 	if isfile(path):
-		pixmap = LoadPixmap(path, desktop=desktop)
+		# width/height are only consumed by the SVG rasterizer; raster loaders ignore them.
+		pixmap = LoadPixmap(path, desktop=desktop, width=width, height=height)
 		if pixmap is None:
 			skinError(f"Pixmap file '{path}' could not be loaded")
 	else:
@@ -929,7 +930,8 @@ class AttributeParser:
 		self.scaleTuple = scale
 
 	def applyAll(self, attributes):
-		# attributes.sort(key=lambda x: {"pixmap": 1}.get(x[0], 0))  # For SVG pixmap scale required the size, so sort pixmap last.
+		# Apply 'pixmap' last so 'size' is already set when SVGs rasterize.
+		attributes.sort(key=lambda x: {"pixmap": 1}.get(x[0], 0))
 		for attribute, value in attributes:
 			self.applyOne(attribute, value)
 
@@ -1036,7 +1038,7 @@ class AttributeParser:
 			except KeyError:
 				errors.append(flag)
 		if errors:
-			print(f"[Skin] Error: Attribute 'flags' with value '{value}' has invalid element(s) '{', '.join(errors)}'!")
+			print(f"[Skin] Error: Attribute 'flags' with value '{value}' has invalid element(s) '{"', '".join(errors)}'!")
 
 	def font(self, value):
 		self.guiObject.setFont(parseFont(value, self.scaleTuple))
@@ -1152,7 +1154,10 @@ class AttributeParser:
 		self.guiObject.setPadding(eRect(self.applyHorizontalScale(leftPadding), self.applyVerticalScale(topPadding), self.applyHorizontalScale(rightPadding), self.applyVerticalScale(bottomPadding)))
 
 	def pixmap(self, value):
-		self.guiObject.setPixmap(parsePixmap(value, self.desktop))
+		if value.endswith(".svg"):  # SVG rasterizes to RGBA — force alpha-blend.
+			self.guiObject.setAlphatest(BT_ALPHABLEND)
+		size = self.guiObject.size()
+		self.guiObject.setPixmap(parsePixmap(value, self.desktop, size.width(), size.height()))
 
 	def pointer(self, value):
 		(name, pos) = (x.strip() for x in value.split(":", 1))
@@ -1386,7 +1391,7 @@ def applyAllAttributes(guiObject, desktop, attributes, scale=((1, 1), (1, 1))):
 def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN):
 	"""Loads skin data like colors, windowstyle etc."""
 	assert domSkin.tag == "skin", "root element in skin must be 'skin'!"
-	global colors, fonts, menus, parameters, setups, switchPixmap, resolutions, scrollLabelStyle, subtitleFonts
+	global colors, fonts, menus, parameters, setups, screens, switchPixmap, resolutions, scrollLabelStyle, subtitleFonts
 	for tag in domSkin.findall("output"):
 		scrnID = parseInteger(tag.attrib.get("id", GUI_SKIN_ID), GUI_SKIN_ID)
 		if scrnID == GUI_SKIN_ID:
@@ -2139,7 +2144,7 @@ class TemplateParser:
 
 	def processPanel(self, widget, context, excludeItemIndexes=None, includeItemIndexes=None):
 		if self.debug:
-			print(f'[TemplateParser] processPanel DEBUG: Position={widget.attrib.get("position")}, Size={widget.attrib.get("size")}.')
+			print(f"[TemplateParser] processPanel DEBUG: Position={widget.attrib.get("position")}, Size={widget.attrib.get("size")}.")
 			print(f"[TemplateParser] processPanel DEBUG: Parent x={context.x}, width={context.w}.")
 		position = widget.attrib.get("position")
 		if position == "fill":
@@ -2188,9 +2193,9 @@ class TemplateParser:
 				if item.get("autoGrow", ""):
 					oldSize = [int(x.strip()) for x in item["size"].split(",")]
 					width = oldSize[0] + newContext.w
-					item["size"] = f"{width},{oldSize[1]}"
+					item["size"] = SizeTuple((width, oldSize[1]))
 					if self.debug:
-						print(f'[TemplateParser] DEBUG: autoGrow context={newContext.w}, oldSize={oldSize}, newsize={item["size"]}.')
+						print(f"[TemplateParser] DEBUG: autoGrow context={newContext.w}, oldSize={oldSize}, newsize={item["size"]}.")
 					break
 		if self.debug:
 			print(items)
@@ -2222,14 +2227,14 @@ def readSkin(screen, skin, names, desktop):
 				myName = name  # Use this name for debug output.
 				break
 			else:
-				print(f"[Skin] Warning: Skin screen '{name}' your skin was rejected as it does not offer all the mandatory widgets '{', '.join(screen.mandatoryWidgets)}'!")
+				print(f"[Skin] Warning: Skin screen '{name}' rejected as it does not offer all the mandatory widgets '{"', '".join(screen.mandatoryWidgets)}'!")
 				myScreen = None
 	else:
 		myName = f"<embedded-in-{screen.__class__.__name__}>"
 	if myScreen is None:  # Otherwise try embedded skin.
 		myScreen = getattr(screen, "parsedSkin", None)
 	if myScreen is None and getattr(screen, "skin", None):  # Try uncompiled embedded skin.
-		if isinstance(screen.skin, list):  # This mode of skin scaling is deprecated!
+		if isinstance(screen.skin, list):
 			print(f"[Skin] Resizable embedded skin template found in '{myName}'.")
 			skin = screen.skin[0] % tuple([int(x * getSkinFactor()) for x in screen.skin[1:]])
 		else:
@@ -2250,8 +2255,7 @@ def readSkin(screen, skin, names, desktop):
 		if myScreen is not None:
 			screen.parsedSkin = myScreen
 	if myScreen is None:
-		className = screen.__class__.__name__
-		print(f"[Skin Error] No exist screen '{className}' in your skin.") if "Summary" not in className else print(f"[Skin Display Error] No exist screen '{className}' on your skin display.")
+		print("[Skin] No skin to read or screen to display.")
 		myScreen = screen.parsedSkin = fromstring("<screen></screen>")
 	screen.skinAttributes = []
 	skinPath = getattr(screen, "skin_path", path)  # TODO: It may be possible for "path" to be undefined!
@@ -2334,7 +2338,6 @@ def readSkin(screen, skin, names, desktop):
 		wconnection = widget.attrib.get("connection")
 		widgetConnection = widget.attrib.get("connection")
 		widgetClass = widget.attrib.get("addon")
-		source = None
 		if widgetName is None and widgetSource is None and widgetClass is None:
 			raise SkinError("The widget has no addon, name or source")
 		if widgetName:
@@ -2599,7 +2602,7 @@ def readSkin(screen, skin, names, desktop):
 		posY = "?" if context.y is None else str(context.y)
 		sizeW = "?" if context.w is None else str(context.w)
 		sizeH = "?" if context.h is None else str(context.h)
-		print(f"[Skin] Processing screen '{myName}', from list '{', '.join(names)}'," if len(names) > 1 else f"Processing screen {screen.__class__.__name__} position=({posX},{posY}), size=({sizeW},{sizeH}) for module '{screen.__class__.__name__}'.")
+		print(f"[Skin] Processing screen '{myName}'{f", from list '{", ".join(names)}'," if len(names) > 1 else ""} position=({posX},{posY}), size=({sizeW},{sizeH}) for module '{screen.__class__.__name__}'.")
 		context.x = 0  # Reset offsets, all components are relative to screen coordinates.
 		context.y = 0
 		processScreen(myScreen, context)
