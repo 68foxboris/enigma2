@@ -2313,7 +2313,7 @@ msgstr "Добавить Канал"
 msgid "Add service to bouquet"
 msgstr "Добавить канал в букет"
 
-msgid "Add service to favourites\"Добавить запись (Введите продолжительность записи"
+msgid "Add service to favourites"
 msgstr "Добавить канал в фавориты"
 
 msgid "Add services to this bouquet?"
@@ -2459,6 +2459,9 @@ msgstr "После переключения"
 
 msgid "Aggregate data only"
 msgstr "Только сводные данные"
+
+msgid "Aggressive"
+msgstr "Агрессивный"
 
 msgid "Akan"
 msgstr "Акан"
@@ -9933,8 +9936,8 @@ msgstr "Сколько минут Вы хотите добавить к запи
 msgid "How many minutes do you want to record?"
 msgstr "Сколько минут Вы хотите записать?"
 
-msgid "How to release the hardware decoder when switching to software descrambling. 'Quick' releases immediately (faster zapping). 'Normal' performs clean shutdown first (more stable on some boxes)."
-msgstr "Как освободить аппаратный декодер при переключении на программное дескремблирование. Режим «Быстрое» освобождает устройство немедленно (более быстрое переключение). Режим «Обычное» сначала выполняет чистое завершение работы (более стабилен на некоторых устройствах)."
+msgid "How to release the hardware decoder when switching to software descrambling. 'Quick' releases immediately (faster zapping). 'Normal' performs clean shutdown first (more stable on some boxes). 'Aggressive' resets the HW-descrambler slots and also bypasses the in-process CSA-ALT cache."
+msgstr "Как освободить аппаратный декодер при переключении на программное дескремблирование. Режим «Быстрое» освобождает декодер немедленно (более быстрое переключение). Режим «Обычное» сначала выполняет чистое завершение работы (более стабилен на некоторых устройствах). Режим «Агрессивное» сбрасывает слоты аппаратного дескремблера и также обходит кэш CSA-ALT, находящийся в процессе работы."
 
 msgid ""
 "How would you like to modify the movie?\n"
@@ -16319,16 +16322,16 @@ msgid "Select the protocol used by your SCR device. Choices are 'SCR Unicable' (
 msgstr "Выберите формат Вашего SCR устройства. Возможные варианты - 'SCR Unicable' (Unicable) или 'SCR JESS' (JESS/Unicable II)."
 
 msgid "Select the satellite which is connected to Port-A of your switch. If you are unsure select 'automatic' and the receiver will attempt to determine this for you. If nothing is connected to this port, select 'nothing connected'."
-msgstr "Выберите спутник, который подключен к порту A вашего коммутатора."
+msgstr "Выберите спутник, подключенный к порту A вашего коммутатора. Если вы не уверены, выберите «автоматически», и приемник попытается определить его самостоятельно. Если к этому порту ничего не подключено, выберите «ничего не подключено»."
 
 msgid "Select the satellite which is connected to Port-B of your switch. If you are unsure select 'automatic' and the receiver will attempt to determine this for you. If nothing is connected to this port, select 'nothing connected'."
-msgstr "Выберите спутник, который подключен к порту B вашего коммутатора."
+msgstr "Выберите спутник, подключенный к порту B вашего коммутатора. Если вы не уверены, выберите «автоматически», и приемник попытается определить его самостоятельно. Если к этому порту ничего не подключено, выберите «ничего не подключено»."
 
 msgid "Select the satellite which is connected to Port-C of your switch. If you are unsure select 'automatic' and the receiver will attempt to determine this for you. If nothing is connected to this port, select 'nothing connected'."
-msgstr "Выберите спутник, который подключен к порту C вашего коммутатора."
+msgstr "Выберите спутник, подключенный к порту C вашего коммутатора. Если вы не уверены, выберите «автоматически», и приемник попытается определить его самостоятельно. Если к этому порту ничего не подключено, выберите «ничего не подключено»."
 
 msgid "Select the satellite which is connected to Port-D of your switch. If you are unsure select 'automatic' and the receiver will attempt to determine this for you. If nothing is connected to this port, select 'nothing connected'."
-msgstr "Выберите спутник, который подключен к порту D вашего коммутатора."
+msgstr "Выберите спутник, подключенный к порту D вашего коммутатора. Если вы не уверены, выберите «автоматически», и приемник попытается определить его самостоятельно. Если к этому порту ничего не подключено, выберите «ничего не подключено»."
 
 msgid "Select the satellite you want to configure. Once that satellite is configured you can select and configure other satellites that will be accessed using this same tuner."
 msgstr "Выберите спутник, который Вы хотите настроить. Как только этот спутник настроен, Вы можете выбирать и настраивать другие спутники, к которым будет осуществляться доступ, используя тот же самый тюнер."
