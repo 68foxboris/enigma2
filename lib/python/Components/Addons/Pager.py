@@ -220,6 +220,10 @@ class Pager(GUIAddon):
 
 	def initPager(self):
 		if self.source.__class__.__name__ == "ScrollLabel":
+			# ScrollLabel exposes pageHeight, totalTextHeight and currentPosition; bail
+			# out early before applySkin has run so we don't divide by zero.
+			if not self.source.pageHeight:
+				return
 			currentPageIndex = self.source.currentPosition // self.source.pageHeight
 			if not ((self.source.totalTextHeight - self.source.currentPosition) % self.source.pageHeight):
 				currentPageIndex += 1
