@@ -559,7 +559,7 @@ config.crash.debugTimers = ConfigYesNo(default=False)
 config.crash.debugTeletext = ConfigYesNo(default=False)
 config.crash.debugStorage = ConfigYesNo(default=False)
 config.crash.debugDVBDB = ConfigYesNo(default=False)
-
+config.crash.debugTextEncoding = ConfigYesNo(default=False)
 
 # Enable numbers in Plugin Browser (Do not move it to other file)
 config.misc.menu_show_numbers = ConfigYesNo(default=False)
