@@ -1008,6 +1008,9 @@ class AttributeParser:
 	def borderWidth(self, value):
 		self.guiObject.setBorderWidth(self.applyVerticalScale(value))
 
+	def condition(self, value):
+		pass
+
 	def conditional(self, value):
 		pass
 
@@ -1726,7 +1729,7 @@ class additionalWidget:
 		self.children = []
 
 
-class ComponentTemplates():
+class ComponentTemplates:
 	def __init__(self):
 		self.changedTimes = {}
 		self.templates = {}
@@ -2508,12 +2511,19 @@ def readSkin(screen, skin, names, desktop):
 		for widget in widgets:
 			condition = widget.attrib.get("condition", "")
 			if "config." in condition or "BoxInfo" in condition:
+				negate = condition.startswith("!")
+				if negate:
+					condition = condition[1:]
 				try:
-					if not bool(eval(condition)):
+					if bool(eval(condition)) == negate:
+						continue
+				except AttributeError:
+					if not negate:
 						continue
 				except Exception as err:
 					print(f"[Skin] Error: Screen condition '{myName}' widget '{widget.tag}' {str(err)}!")
-					continue
+					if not negate:
+						continue
 			conditional = widget.attrib.get("conditional")
 			if conditional and not [x for x in conditional.split(",") if x in screen.keys()]:
 				continue
