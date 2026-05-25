@@ -2373,7 +2373,10 @@ def readSkin(screen, skin, names, desktop):
 				else:
 					break  # Otherwise, use the source.
 			if source is None:
-				raise SkinError(f"The source '{widgetSource}' was not found in screen '{myName}'")
+				# Log warning instead of raising exception for missing sources
+				if config.crash.debugScreens.value:
+					print(f"[Skin] Warning: The source '{widgetSource}' was not found in screen '{myName}'. Widget will be skipped.")
+				return  # Skip this widget gracefully
 			widgetRenderer = widget.attrib.get("render")
 			if not widgetRenderer:
 				if widgetSource:
