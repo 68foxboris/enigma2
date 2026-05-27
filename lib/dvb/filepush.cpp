@@ -321,7 +321,7 @@ void eFilePushThread::pause()
 		return;
 	}
 	/* Set thread into a paused state by setting m_stop to 2 and wait
-	 * for the thread to acknowledge. */
+	* for the thread to acknowledge. */
 	eSingleLocker lock(m_run_mutex);
 	m_stop = 2;
 	sendSignal(SIGUSR1);
@@ -463,7 +463,7 @@ int eFilePushThreadRecorder::read_ts(int fd, unsigned char *buf, int size)
 int eFilePushThreadRecorder::read_dmx(int fd, void *m_buffer, int size)
 {
 	unsigned char *buf;
-	int it = 0, pos = 0, bytes = 0;
+	int pos = 0, bytes = 0;
 	int max_pack = 42;
 	int i, left;
 	static int cnt;
@@ -492,7 +492,6 @@ int eFilePushThreadRecorder::read_dmx(int fd, void *m_buffer, int size)
 				eDebug("incomplete packet read from %d with size %d", fd, bytes);
 
 			m_packet_no++;
-			it++;
 			for (i = 0; i < bytes; i += 188)
 			{
 				b = buf + 16 + i;
