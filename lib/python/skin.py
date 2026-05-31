@@ -2357,8 +2357,11 @@ def readSkin(screen, skin, names, desktop):
 			usedComponents.add(widgetName)
 			try:  # Get corresponding "gui" object.
 				attributes = screen[widgetName].skinAttributes = []
-			except Exception:
-				raise SkinError(f"Component with name '{widgetName}' was not found in skin of screen '{myName}'")
+			except KeyError:
+				# Log warning instead of raising exception for missing widgets
+				if config.crash.debugScreens.value:
+					print(f"[Skin] Warning: Component with name '{widgetName}' was not found in skin of screen '{myName}'. Widget will be skipped.")
+				return  # Skip this widget gracefully
 			# assert screen[widgetName] is not Source
 			collectAttributes(attributes, widget, context, skinPath, ignore=("name",))
 			screen[widgetName] = proccesStackAddition(widget, stack, screen[widgetName])
