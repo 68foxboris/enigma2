@@ -772,6 +772,7 @@ lib/python/Plugins/PLi/Makefile
 lib/python/Plugins/SystemPlugins/Makefile
 lib/python/Plugins/SystemPlugins/AnimationSetup/Makefile
 lib/python/Plugins/SystemPlugins/AnimationSetup/meta/Makefile
+lib/python/Plugins/SystemPlugins/AmlFRQ/Makefile
 lib/python/Plugins/SystemPlugins/CableScan/Makefile
 lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/Makefile
 lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/meta/Makefile
