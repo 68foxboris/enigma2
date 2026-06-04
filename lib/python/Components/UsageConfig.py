@@ -450,6 +450,12 @@ def InitUsageConfig():
 	config.usage.tuxtxt_CleanAlgo.addNotifier(patchTuxtxtConfFile, initial_call=True, immediate_feedback=False)
 
 	config.usage.sort_settings = ConfigYesNo(default=False)
+
+	config.usage.fileSortCaseMode = ConfigSelection(default=1, choices=[
+		(0, _("Case insensitive")),
+		(1, _("Case sensitive"))
+	])
+
 	choiceList = [
 		("0", _("No standby"))
 	] + [(str(x), ngettext("%d Second", "%d Seconds", x) % x) for x in (10, 30)] + [(str(x * 60), ngettext("%d Minute", "%d Minutes", x) % x) for x in (1, 2, 5, 10, 20, 30)] + [(str(x * 3600), ngettext("%d Hour", "%d Hours", x) % x) for x in (1, 2, 4)]
