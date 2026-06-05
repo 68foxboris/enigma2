@@ -194,6 +194,8 @@ class AudioSelection(ConfigListScreen, Screen):
 				elif BoxInfo.getItem("machinebuild") in ("gbquad4k", "gbquad4kpro", "gbue4k", "gbx34k"):
 					choice_list = [("downmix", _("Downmix")), ("passthrough", _("Pass-through")), ("force_ac3", _("Convert to AC3")), ("multichannel", _("Convert to multi-channel PCM")), ("force_dts", _("Convert to DTS"))]
 					self.settings.transcodeac3plus = ConfigSelection(choices=choice_list, default=config.av.transcodeac3plus.value)
+				elif BoxInfo.getItem("machinebuild") in ("dreamone", "dreamtwo"):
+					choice_list = [("hdmi_best", _("Use best / Controlled by HDMI")), ("passthrough", _("Pass-through")), ("downmix", _("Downmix")), ("force_ac3", _("Convert to AC3"))]
 				else:
 					choice_list = [("use_hdmi_caps", _("Controlled by HDMI")), ("force_ac3", _("Convert to AC3"))]
 				self.settings.transcodeac3plus = ConfigSelection(choices=choice_list, default=config.av.transcodeac3plus.value)
@@ -212,11 +214,19 @@ class AudioSelection(ConfigListScreen, Screen):
 			if BoxInfo.getItem("CanDTSHD"):
 				if BoxInfo.getItem("machinebuild") in ("dm7080", "dm820"):
 					choice_list = [("use_hdmi_caps", _("Controlled by HDMI")), ("force_dts", _("Convert to DTS"))]
+				elif BoxInfo.getItem("machinebuild") in ("dreamone", "dreamtwo"):
+					choice_list = [("hdmi_best", _("Use best / Controlled by HDMI")), ("passthrough", _("Pass-through")), ("downmix", _("Downmix"))]
 				else:
 					choice_list = [("downmix", _("Downmix")), ("force_dts", _("Convert to DTS")), ("use_hdmi_caps", _("Controlled by HDMI")), ("multichannel", _("Convert to multi-channel PCM")), ("hdmi_best", _("Use best / Controlled by HDMI"))]
 				self.settings.dtshd = ConfigSelection(choices=choice_list, default=config.av.dtshd.value)
 				self.settings.dtshd.addNotifier(self.setDTSHD, initial_call=False)
 				conflist.append(getConfigListEntry(_("DTS HD downmix"), self.settings.dtshd, None))
+
+			if BoxInfo.getItem("CanTrueHD"):
+				choice_list = [("hdmi_best", _("Use best / Controlled by HDMI")), ("passthrough", _("Pass-through")), ("downmix", _("Downmix"))]
+				self.settings.truehd = ConfigSelection(choices=choice_list, default=config.av.truehd.value)
+				self.settings.truehd.addNotifier(self.setTrueHD, initial_call=False)
+				conflist.append(getConfigListEntry(_("Dolby TrueHD"), self.settings.truehd, None))
 
 			if BoxInfo.getItem("CanWMAPRO"):
 				choice_list = [("downmix", _("Downmix")), ("passthrough", _("Pass-through")), ("multichannel", _("Convert to multi-channel PCM")), ("hdmi_best", _("Use best / Controlled by HDMI"))]
@@ -288,7 +298,7 @@ class AudioSelection(ConfigListScreen, Screen):
 				self.settings.surround_3d_speaker.addNotifier(self.change3DSurroundSpeaker, initial_call=False)
 				conflist.append(getConfigListEntry(_("3D Surround Speaker Position"), self.settings.surround_3d_speaker, None))
 
-			if BoxInfo.getItem("HasAutoVolume"):
+			if BoxInfo.getItem("CanAutoVolume"):
 				choice_list = [("none", _("Off")), ("hdmi", _("HDMI")), ("spdif", _("SPDIF")), ("dac", _("DAC"))]
 				self.settings.autovolume = ConfigSelection(choices=choice_list, default=config.av.autovolume.value)
 				self.settings.autovolume.addNotifier(self.changeAutoVolume, initial_call=False)
@@ -485,6 +495,10 @@ class AudioSelection(ConfigListScreen, Screen):
 	def setDTSHD(self, downmix):
 		config.av.dtshd.setValue(downmix.value)
 		config.av.dtshd.save()
+
+	def setTrueHD(self, downmix):
+		config.av.truehd.setValue(downmix.value)
+		config.av.truehd.save()
 
 	def changeDTSDownmix(self, downmix):
 		if downmix.value:
