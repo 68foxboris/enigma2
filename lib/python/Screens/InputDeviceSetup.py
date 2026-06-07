@@ -272,6 +272,10 @@ class InputDeviceSetup(ConfigListScreen, Screen):
 
 class RemoteControlType(ConfigListScreen, Screen):
 	rcList = [
+			("0", _("Default")),
+			("4", _("DMM normal")),
+			("5", "et9000/et9100"),
+			("6", _("DMM advanced")),
 			("7", "et5000/et6000"),
 			("8", "VU+"),
 			("9", "et8000/et10000"),

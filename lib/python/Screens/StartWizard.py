@@ -7,6 +7,7 @@ from Screens.Wizard import wizardManager, Wizard
 from Screens.Time import TimeWizard
 from Screens.HelpMenu import ShowRemoteControl
 from Screens.Standby import TryQuitMainloop, QUIT_RESTART
+from Components.SystemInfo import BoxInfo
 try:
 	from Plugins.SystemPlugins.OSDPositionSetup.overscanwizard import OverscanWizard
 except:
@@ -29,6 +30,8 @@ config.misc.firstrun = ConfigBoolean(default=True)
 config.misc.wizardLanguageEnabled = ConfigBoolean(default=True)
 config.misc.do_overscanwizard = ConfigBoolean(default=OverscanWizard and config.skin.primary_skin.value == "PLi-FullHD/skin.xml")
 
+MODEL = BoxInfo.getItem("model")
+
 MODULE_NAME = __name__.split(".")[-1]
 
 
@@ -40,10 +43,16 @@ class StartWizard(Wizard, ShowRemoteControl):
 		self["wizard"] = Pixmap()
 
 	def markDone(self):
+		# setup remote control, all stb have same settings except dm8000 which uses a different settings
+		if MODEL in ("dm8000"):
+			config.misc.rcused.value = 0
+		else:
+			config.misc.rcused.value = 1
+		config.misc.rcused.save()
+
 		config.misc.firstrun.value = 0
 		config.misc.firstrun.save()
 		configfile.save()
-
 
 	def hasPartitions(self):
 		partitions = fileReadLines("/proc/partitions", source=MODULE_NAME)
