@@ -3757,6 +3757,12 @@ msgstr "Яркость видео"
 msgid "Brightness Video & OSD"
 msgstr "Яркость видео и экранного меню"
 
+msgid "Brightness applied to the combined video + OSD output. Affects everything on screen including this menu."
+msgstr "Регулировка яркости применяется к объединенному видеосигналу и экранному меню. Влияет на все элементы на экране, включая это меню."
+
+msgid "Brightness applied to the video layer only. Does not affect enigma2 menus or OSD."
+msgstr "Регулировка яркости применяется только к видеослою. Не влияет на меню Enigma2 или экранное меню."
+
 msgid "British Indian Ocean Territory"
 msgstr "Британская территория Индийского океана"
 
@@ -4366,6 +4372,12 @@ msgstr "Серийный номер карты"
 
 msgid "Cascade PiP"
 msgstr "Каскад PiP"
+
+msgid "Case insensitive"
+msgstr "Регистр не имеет значения"
+
+msgid "Case sensitive"
+msgstr "С учетом регистра"
 
 msgid "Catchup player commands"
 msgstr "Команды игрока архивов"
@@ -5711,6 +5723,12 @@ msgstr "Продолжить воспроизведение (в цикле)"
 msgid "Contrast"
 msgstr "Контрастность"
 
+msgid "Contrast applied to the combined video + OSD output. Affects everything on screen including this menu."
+msgstr "Контрастность применяется к объединенному видеосигналу и экранному меню. Влияет на все элементы на экране, включая это меню."
+
+msgid "Contrast applied to the video layer only. Does not affect enigma2 menus or OSD."
+msgstr "Контраст применяется только к видеослою. Не влияет на меню Enigma2 или экранное меню."
+
 msgid "Control D (Ads + Tracking)"
 msgstr "Control D (Реклама + отслеживание)"
 
@@ -5725,6 +5743,9 @@ msgstr "Control D (без цензуры)"
 
 msgid "Control D (Unfiltered)"
 msgstr "Control D (без фильтра)"
+
+msgid "Control how files will be sorted in screens that show a file list. Case sensitive will group uppercase files first followed by lowercase files. Case insensitive will sort files alphabetically, ignoring case."
+msgstr "Управляйте сортировкой файлов на экранах со списком файлов. При выборе регистра файлы будут сначала группироваться в верхнем регистре, а затем в нижнем. При выборе регистра файлы будут сортироваться в алфавитном порядке, без учета регистра."
 
 msgid "Control LED can be turned on or off here."
 msgstr "Здесь можно включить или выключить светодиод управления."
@@ -7979,6 +8000,9 @@ msgstr "Включите настройку временного интерва�
 msgid "Enable teletext caching"
 msgstr "Включить кэширование телетекста"
 
+msgid "Enable this option to add text encoding information to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить информацию о кодировке текста в файл журнала отладки."
+
 msgid "Enable this option to add bouquet information detected during system boot to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить информацию о букете, обнаруженную во время загрузки системы, в файл журнала отладки."
 
@@ -9027,6 +9051,9 @@ msgstr "Сжатие файлов"
 msgid "Filename"
 msgstr "Название файла"
 
+msgid "File sorting mode"
+msgstr "Режим сортировки файлов"
+
 msgid "File system"
 msgstr "Файловая система"
 
@@ -9301,6 +9328,9 @@ msgstr "Разделитель полного описания"
 
 msgid "Full factory reset"
 msgstr "Полный сброс к заводским настройкам"
+
+msgid "Full range (no clipping)"
+msgstr "Полный диапазон (без искажений)"
 
 msgid "Full screen"
 msgstr "Полноэкранный"
@@ -9716,6 +9746,9 @@ msgstr "Жёсткий диск"
 
 msgid "Harddisk Setup"
 msgstr "Настройки жёсткого диска"
+
+msgid "Hardware revision"
+msgstr ""
 
 msgid "Hardware MultiBoot device"
 msgstr "Устройство MultiBoot"
@@ -10319,6 +10352,9 @@ msgstr "Включить данные о загрузке экрана"
 
 msgid "Include teletext details"
 msgstr "Включить данные телетекста"
+
+msgid "Include text encoding data"
+msgstr "Включить данные кодировки текста"
 
 msgid "Include timer data"
 msgstr "Включить данные таймера"
@@ -11017,6 +11053,9 @@ msgstr "Лихтенштейн"
 msgid "Lime"
 msgstr "Лайм"
 
+msgid "Limited range (64..940)"
+msgstr "Ограниченный диапазон (64..940)"
+
 msgid "Limit character set for recording filenames"
 msgstr "Ограничить набор символов в именах записей"
 
@@ -11297,6 +11336,9 @@ msgstr "Петлевой вход от"
 
 msgid "Lord Howe Island"
 msgstr "Faroe Islands"
+
+msgid "Lower RGB output clipping limit. 'Full range' = no lower clipping, 'Limited range' clips RGB outputs to 64 (broadcast safe)."
+msgstr "Нижний предел ограничения выходного сигнала RGB. «Полный диапазон» = отсутствие ограничения нижнего предела, «Ограниченный диапазон» ограничивает выходной сигнал RGB до 64 (безопасно для вещания)."
 
 msgid "Lower case"
 msgstr "Нижний регистр"
@@ -14547,6 +14589,12 @@ msgstr "ВЧ выход"
 msgid "RGB"
 msgstr "RGB"
 
+msgid "RGB clamp (lower)"
+msgstr "Зажим RGB (нижний)"
+
+msgid "RGB clamp (upper)"
+msgstr "Зажим RGB (верхний)"
+
 msgid "Radio"
 msgstr "Радио"
 
@@ -16550,6 +16598,9 @@ msgstr "Выберите «Да», чтобы немедленно заверш�
 
 msgid "Selects video source displayed on the LCD."
 msgstr "Выбор источника видео для показа на LCD дисплее."
+
+msgid "Select whether Dolby TrueHD audio tracks should be passed through or decoded."
+msgstr "Выберите, следует ли передавать или декодировать аудиодорожки Dolby TrueHD."
 
 msgid "Select which satellite to scan."
 msgstr "Выберите спутник для сканирования."
@@ -19694,8 +19745,8 @@ msgstr "Это позволяет вам изменять размер шриф�
 msgid "This allows you to change the number of rows shown."
 msgstr "Это позволяет изменить количество отображаемых строк."
 
-msgid "This allows you to set the maximum number of digits in a service number, up to 5."
-msgstr "Здесь можно задать количество цифр 5, если у Вас более чем 9999 каналов."
+msgid "This allows you to set the maximum number of digits in a service number, up to 6."
+msgstr "Это позволяет установить максимальное количество цифр в сервисном номере, до 6."
 
 msgid "This bouquet is protected by a parental control PIN!"
 msgstr "Этот букет защищён родительским контролем!"
@@ -20955,6 +21006,9 @@ msgstr "Обновление каталога ПО"
 
 msgid "Upper / Lower"
 msgstr "Верхний / Нижний"
+
+msgid "Upper RGB output clipping limit. 'Full range' = no upper clipping, 'Limited range' clips RGB outputs to 940 (broadcast safe)."
+msgstr "Верхний предел ограничения выходного сигнала RGB. «Полный диапазон» = отсутствие ограничения верхнего предела, «Ограниченный диапазон» ограничивает выходной сигнал RGB до 940 (безопасно для вещания)."
 
 msgid "Upgrade (Flash & restore all)"
 msgstr "Обновление (прошить и восстановить всё)"
