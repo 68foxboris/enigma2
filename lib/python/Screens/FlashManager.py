@@ -20,7 +20,7 @@ from Plugins.SystemPlugins.SoftwareManager.BackupRestore import BackupScreen
 from Screens.MessageBox import MessageBox
 from Screens.MultiBootManager import MultiBootManager
 from Screens.Screen import Screen
-from Tools.Downloader import downloadWithProgress
+from Tools.Downloader import DownloadWithProgress
 from Tools.MultiBoot import MultiBoot
 
 UMOUNT = "/bin/umount"
@@ -710,7 +710,7 @@ class FlashImage(Screen):
 				self["header"].setText(_("Downloading Image"))
 				self["info"].setText(self.imageName)
 				self["summary_header"].setText(self["header"].getText())
-				self.downloader = downloadWithProgress(self.source.replace(" ", "%20"), self.zippedImage)
+				self.downloader = DownloadWithProgress(self.source.replace(" ", "%20"), self.zippedImage)
 				self.downloader.addProgress(self.downloadProgress)
 				self.downloader.addEnd(self.downloadEnd)
 				self.downloader.addError(self.downloadError)
