@@ -243,6 +243,9 @@ class PowerKey:
 		globalActionMap.actions["deepstandby"] = self.shutdown  # Front panel long power button press.
 		globalActionMap.actions["discrete_off"] = self.standby
 
+	def MenuClosed(self, *val):
+		self.session.infobar = None
+
 	def powerup(self):
 		if not Screens.Standby.inStandby and self.session.current_dialog and self.session.current_dialog.ALLOW_SUSPEND and self.session.in_exec:
 			self.doAction(config.misc.hotkey.power.value)
