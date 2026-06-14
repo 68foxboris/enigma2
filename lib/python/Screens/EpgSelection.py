@@ -34,6 +34,7 @@ mepg_config_initialized = False
 
 
 class EPGSelection(Screen, HelpableScreen):
+	catchupPlayerFunc = None
 	EMPTY = 0
 	ADD_TIMER = 1
 	REMOVE_TIMER = 2
@@ -49,6 +50,7 @@ class EPGSelection(Screen, HelpableScreen):
 		self["key_red"] = StaticText("")
 		self["key_menu"] = StaticText(_("MENU"))
 		self["key_info"] = StaticText(_("INFO"))
+		self["key_play"] = StaticText("")
 		self.closeRecursive = False
 		self.saved_title = None
 		self["Service"] = ServiceEvent()
@@ -121,6 +123,7 @@ class EPGSelection(Screen, HelpableScreen):
 				"yellow": self.yellowButtonPressed,
 				"blue": self.blueButtonPressed,
 				"info": self.infoKeyPressed,
+				"red": self.zapTo,
 				"menu": self.furtherOptions,
 				"nextBouquet": self.nextBouquet,  # just used in multi epg yet
 				"prevBouquet": self.prevBouquet,  # just used in multi epg yet
@@ -137,6 +140,11 @@ class EPGSelection(Screen, HelpableScreen):
 				"endUp": (self.filterEndUp, _("End time") + " +"),
 				"saveTimes": (self.saveFilterValues, _("Use current filter values as default")),
 			})
+		self["CatchUpActions"] = HelpableActionMap(self, "EPGCatchUpActions",
+			{
+			"play": (self.playCatchup, _("Play archive")),
+			}, prio=-2)
+
 
 		self['colouractions'] = HelpableActionMap(self, ["ColorActions"],
 			{
@@ -738,12 +746,30 @@ class EPGSelection(Screen, HelpableScreen):
 				self["more_button"].show()
 				self["more_button_sel"].hide()
 
+	def setupKeyPlayButtonDisplay(self, stime, service):
+		if hasattr(self["list"], "detectCatchupAvailable") and callable(self.catchupPlayerFunc):
+			if self["list"].detectCatchupAvailable(stime, service):
+				self["key_play"].setText(_("PLAY"))
+
+	def playCatchup(self):
+		if hasattr(self["list"], "detectCatchupAvailable") and callable(self.catchupPlayerFunc):
+			event, service = self["list"].getCurrent()[:2]
+			if event and service:
+				stime = event.getBeginTime()
+				if self["list"].detectCatchupAvailable(stime, service):
+					self.catchupPlayerFunc(event, service)
+
 	def onSelectionChanged(self):
 		cur = self["list"].getCurrent()
+		if "key_play" in self:
+			self["key_play"].setText("")
 		if cur is None:
 			if self.key_green_choice != self.EMPTY:
 				self["key_green"].setText("")
 				self.key_green_choice = self.EMPTY
+			if self.key_red_choice != self.EMPTY:
+				self["key_red"].setText("")
+				self.key_red_choice = self.EMPTY
 			return
 		event = cur[0]
 		self["Event"].newEvent(event)
@@ -777,7 +803,13 @@ class EPGSelection(Screen, HelpableScreen):
 			if self.key_green_choice != self.EMPTY:
 				self["key_green"].setText("")
 				self.key_green_choice = self.EMPTY
+			if self.key_red_choice != self.EMPTY:
+				self["key_red"].setText("")
+				self.key_red_choice = self.EMPTY
 			return
+		elif self.key_red_choice != self.ZAP and self.zapFunc is not None:
+			self["key_red"].setText(_("Zap"))
+			self.key_red_choice = self.ZAP
 
 		if event is None:
 			if self.key_green_choice != self.EMPTY:
@@ -804,4 +836,6 @@ class EPGSelection(Screen, HelpableScreen):
 			self.key_green_choice = self.ADD_TIMER
 		if self.parent and eventid and hasattr(self.parent, "setEvent"):
 			self.parent.setEvent(serviceref, eventid)
+		if "key_play" in self:
+			self.setupKeyPlayButtonDisplay(begin, serviceref)
 		self["list"].l.invalidate()
