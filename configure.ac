@@ -59,6 +59,13 @@ PKG_CHECK_MODULES([SWSCALE], [libswscale], [
 ], [
 	AC_MSG_WARN([Could not find libswscale, scaling support will be disabled.])
 ])
+
+AC_ARG_WITH(e2rev,
+	AS_HELP_STRING([--with-e2rev],[value of E2REV, $withval]),
+	[E2REV="$withval"],[E2REV=""])
+AC_SUBST(E2REV)
+AC_DEFINE_UNQUOTED(E2REV,"$E2REV",[enigma2 revision])
+
 AC_ARG_WITH(boxtype,
 	[  --with-boxtype=NAME box type [[none,dm800...]]],
 	[BOXTYPE="$withval"],[BOXTYPE="dm800"])
