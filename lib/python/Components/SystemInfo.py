@@ -204,23 +204,21 @@ def getBootdevice():
 	return dev
 
 
-def getChipSetString():
-	if MODEL in ('dm7080', 'dm820'):
-		return "7435"
-	elif MODEL in ('dm520', 'dm525'):
-		return "73625"
-	elif MODEL in ('dm900', 'dm920', 'et13000', 'sf5008'):
-		return "7252S"
-	elif MODEL in ('hd51', 'vs1500', 'h7', 'h17'):
-		return "7251S"
-	elif MODEL in ('alien5',):
-		return "S905D"
+def getChipsetString():
+	if MODEL in ("dm7080", "dm820"):
+		chipset = "7435"
+	elif MODEL in ("dm520", "dm525"):
+		chipset = "73625"
+	elif MODEL in ("dm900", "dm920", "et13000"):
+		chipset = "7252S"
+	elif MODEL in ("hd51", "vs1500", "h7", "h17"):
+		chipset = "7251S"
+	elif MODEL in ("dreamone", "dreamtwo"):
+		chipset = "S922X"
 	else:
-		chipset = fileReadLine("/proc/stb/info/chipset", source=MODULE_NAME)
-		if chipset is None:
-			return _("Undefined")
-		return str(chipset.lower().replace('\n', '').replace('bcm', '').replace('brcm', '').replace('sti', ''))
-
+		chipset = fileReadLine("/proc/stb/info/chipset", default=_("Undefined"), source=MODULE_NAME)
+		chipset = chipset.lower().replace("\n", "").replace("bcm", "").replace("brcm", "").replace("sti", "")
+	return chipset
 
 def getModuleLayout():
 	module = None
@@ -273,7 +271,6 @@ BoxInfo.setItem("DebugLevel", eGetEnigmaDebugLvl())
 BoxInfo.setItem("InDebugMode", eGetEnigmaDebugLvl() >= 4)
 BoxInfo.setItem("ModuleLayout", getModuleLayout())
 
-BoxInfo.setItem("BoxName", getBoxName())
 BoxInfo.setItem("RCImage", getRCFile("png"))
 BoxInfo.setItem("RCMapping", getRCFile("xml"))
 BoxInfo.setItem("RemoteEnable", MACHINEBUILD in ("dm800",))

@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 from fcntl import ioctl
-from os.path import isfile
+from os.path import exists, isfile
 from struct import pack, unpack
-from time import localtime, time, timezone
-
+from time import time, localtime, gmtime
 from Tools.Directories import fileReadLine, fileWriteLine
 
 MODULE_NAME = __name__.split(".")[-1]
@@ -80,10 +78,8 @@ def setFPWakeuptime(wutime):
 			print("[StbHardware] Error %d: Unable to write to '/dev/dbox/fp0', setFPWakeuptime failed!  (%s)" % (err.errno, err.strerror))
 
 
-def setRTCoffset(forsleep=None):
-	forsleep = 7200 + timezone if localtime().tm_isdst == 0 else 3600 - timezone
-	# t_local = localtime(int(time()))  # This line does nothing!
-	# Set RTC OFFSET (diff. between UTC and Local Time)
+def setRTCoffset():
+	forsleep = (localtime(time()).tm_hour - gmtime(time()).tm_hour) * 3600
 	if fileWriteLine("/proc/stb/fp/rtc_offset", str(forsleep), source=MODULE_NAME):
 		print("[StbHardware] Set RTC offset to %s sec." % forsleep)
 	else:
@@ -91,7 +87,7 @@ def setRTCoffset(forsleep=None):
 
 
 def setRTCtime(wutime):
-	if isfile("/proc/stb/fp/rtc_offset"):
+	if exists("/proc/stb/fp/rtc_offset"):
 		setRTCoffset()
 	if not fileWriteLine("/proc/stb/fp/rtc", str(wutime), source=MODULE_NAME):
 		try:
@@ -110,7 +106,7 @@ def getFPWakeuptime():
 		except OSError as err:
 			wakeup = 0
 			print("[StbHardware] Error %d: Unable to read '/dev/dbox/fp0', getFPWakeuptime failed!  (%s)" % (err.errno, err.strerror))
-	return wakeup
+	return int(wakeup)
 
 
 def getFPWasTimerWakeup(check=False):
@@ -121,7 +117,7 @@ def getFPWasTimerWakeup(check=False):
 			return wasTimerWakeup, isError
 		return wasTimerWakeup
 	wasTimerWakeup = fileReadLine("/proc/stb/fp/was_timer_wakeup", source=MODULE_NAME)
-	if wasTimerWakeup is not None and wasTimerWakeup != "":
+	if wasTimerWakeup is not None:
 		wasTimerWakeup = int(wasTimerWakeup) and True or False
 		if not fileWriteLine("/tmp/was_timer_wakeup.txt", str(wasTimerWakeup), source=MODULE_NAME):
 			try:
@@ -130,6 +126,8 @@ def getFPWasTimerWakeup(check=False):
 			except OSError as err:
 				isError = True
 				print("[StbHardware] Error %d: Unable to read '/dev/dbox/fp0', getFPWasTimerWakeup failed!  (%s)" % (err.errno, err.strerror))
+	else:
+		wasTimerWakeup = False
 	if wasTimerWakeup:
 		clearFPWasTimerWakeup()  # Clear hardware status.
 	if check:
