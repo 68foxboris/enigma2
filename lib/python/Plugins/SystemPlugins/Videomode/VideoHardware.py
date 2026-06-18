@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from enigma import eAVControl, getDesktop
 from Components.config import config, ConfigSlider, ConfigSelection, ConfigSubDict, ConfigInteger, ConfigYesNo, ConfigEnableDisable, ConfigOnOff, ConfigSubsection, ConfigSelectionNumber, ConfigBoolean, ConfigNothing, NoSave
-from Components.SystemInfo import BoxInfo, getChipSetString
+from Components.SystemInfo import BoxInfo, getChipsetString
 from Components.Console import Console
 from Tools.CList import CList
 from Tools.Directories import fileExists, fileReadLine, fileWriteLine
