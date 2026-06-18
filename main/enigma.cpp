@@ -432,6 +432,11 @@ const char *getEnigmaVersionString()
 	return enigma2_date;
 }
 
+const char *getE2Rev()
+{
+	return E2REV;
+}
+
 const char *getBoxType()
 {
 	return BOXTYPE;

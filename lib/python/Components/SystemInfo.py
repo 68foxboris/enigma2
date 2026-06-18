@@ -5,7 +5,7 @@ from os.path import exists, isfile, join
 from re import findall
 from subprocess import PIPE, Popen
 
-from enigma import eAVControl, Misc_Options, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, eDVBCSAEngine
+from enigma import eAVControl, Misc_Options, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, getE2Rev, eDVBCSAEngine
 
 from process import ProcessList
 from Tools.Directories import SCOPE_LIBDIR, SCOPE_SKIN, isPluginInstalled, fileCheck, fileReadLine, fileReadLines, fileExists, fileHas, pathExists, resolveFilename
@@ -282,8 +282,11 @@ BoxInfo.setItem("MiniTV", fileCheck("/proc/stb/fb/sd_detach") or fileCheck("/pro
 BoxInfo.setItem("HDMI-PreEmphasis", fileExists("/proc/stb/hdmi/preemphasis"))
 
 try:
-	branch = "?sha=" + "-".join(about.getEnigmaVersionString().split("-")[3:])
-except:
+	branch = getE2Rev()
+	if "+" in branch:
+		branch = branch.split("+")[1]
+	branch = f"?sha={branch}"
+except IndexError:
 	branch = ""
 branch_e2plugins = "?sha=python3"
 

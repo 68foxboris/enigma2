@@ -8,7 +8,7 @@ from re import search
 from subprocess import PIPE, Popen
 from time import localtime, strftime, strptime
 from urllib.request import urlopen
-from enigma import eAVControl, eDVBCSAEngine, eDVBFrontendParametersSatellite, eDVBResourceManager, eGetEnigmaDebugLvl, eServiceCenter, eStreamServer, eTimer, getDesktop, getGStreamerVersionString, iPlayableService, iServiceInformation
+from enigma import eAVControl, eDVBCSAEngine, eDVBFrontendParametersSatellite, eDVBResourceManager, eGetEnigmaDebugLvl, eServiceCenter, eStreamServer, eTimer, getDesktop, getE2Rev, getGStreamerVersionString, iPlayableService, iServiceInformation
 from ServiceReference import ServiceReference
 from skin import parameters
 from Components.About import about
@@ -672,6 +672,7 @@ class DistributionInformation(InformationBase):
 		else:
 			enigmaVersion = f"{enigmaVersion[0]} ({enigmaVersion[1].capitalize()})"
 		info.append(formatLine("P1", _("%s version") % "Enigma2", enigmaVersion))
+		info.append(formatLine("P1", _("Enigma2 revision"), getE2Rev()))
 		compileDate = str(BoxInfo.getItem("compiledate"))
 		info.append(formatLine("P1", _("Last update"), formatDate(about.getUpdateDateString())))
 		info.append(formatLine("P1", _("Build date"), formatDate(about.getBuildDateString())))

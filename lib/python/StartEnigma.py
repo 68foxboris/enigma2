@@ -517,6 +517,7 @@ enigma.eProfileWrite("International")
 from Components.International import international
 
 enigma.eProfileWrite("BoxInfo")
+from enigma import getE2Rev
 from Components.SystemInfo import BoxInfo
 
 BRAND = BoxInfo.getItem("brand")
@@ -531,6 +532,7 @@ print("[StartEnigma] Build Brand = %s" % BRAND)
 print("[StartEnigma] Build Model = %s" % MODEL)
 print("[StartEnigma] Platform = %s" % BoxInfo.getItem("platform"))
 print("[StartEnigma] SoC family = %s" % BoxInfo.getItem("socfamily"))
+print("[StartEnigma] Enigma2 revision = %s" % getE2Rev())
 
 if BoxInfo.getItem("architecture") in ("aarch64"):
 	# import usb.core
