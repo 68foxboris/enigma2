@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from os import access, path, F_OK
 
-from Components.SystemInfo import BoxInfo, MODEL, getChipSetString
+from Components.SystemInfo import BoxInfo, MODEL, getChipsetString
 from Tools.BoundFunction import boundFunction
 from Tools.Directories import fileReadXML
 
@@ -140,7 +140,7 @@ class SecConfigure:
 
 	def linkNIMs(self, sec, nim1, nim2):
 		print("[NimManager][SecConfigure] link tuner", nim1, "to tuner", nim2)
-		if (nim2 == nim1 - 1) or '7356' in getChipSetString():
+		if (nim2 == nim1 - 1) or '7356' in getChipsetString():
 			self.linkInternally(nim1)
 		sec.setTunerLinked(nim1, nim2)
 
@@ -1002,7 +1002,7 @@ class NimManager:
 			entry["internally_connectable"] = None
 			if "frontend_device" in entry:  # check if internally connectable
 				if path.exists("/proc/stb/frontend/%d/rf_switch" % entry["frontend_device"]) and (not id or entries[id]["name"] == entries[id - 1]["name"]):
-					if '7356' in getChipSetString():
+					if '7356' in getChipsetString():
 						if not id:
 							entry["internally_connectable"] = 1
 					elif id:

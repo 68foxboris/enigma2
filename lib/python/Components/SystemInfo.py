@@ -5,7 +5,7 @@ from os.path import exists, isfile, join
 from re import findall
 from subprocess import PIPE, Popen
 
-from enigma import eAVControl, Misc_Options, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, eDVBCSAEngine
+from enigma import eAVControl, Misc_Options, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, getE2Rev, eDVBCSAEngine
 
 from process import ProcessList
 from Tools.Directories import SCOPE_LIBDIR, SCOPE_SKIN, isPluginInstalled, fileCheck, fileReadLine, fileReadLines, fileExists, fileHas, pathExists, resolveFilename
@@ -204,23 +204,21 @@ def getBootdevice():
 	return dev
 
 
-def getChipSetString():
-	if MODEL in ('dm7080', 'dm820'):
-		return "7435"
-	elif MODEL in ('dm520', 'dm525'):
-		return "73625"
-	elif MODEL in ('dm900', 'dm920', 'et13000', 'sf5008'):
-		return "7252S"
-	elif MODEL in ('hd51', 'vs1500', 'h7', 'h17'):
-		return "7251S"
-	elif MODEL in ('alien5',):
-		return "S905D"
+def getChipsetString():
+	if MODEL in ("dm7080", "dm820"):
+		chipset = "7435"
+	elif MODEL in ("dm520", "dm525"):
+		chipset = "73625"
+	elif MODEL in ("dm900", "dm920", "et13000"):
+		chipset = "7252S"
+	elif MODEL in ("hd51", "vs1500", "h7", "h17"):
+		chipset = "7251S"
+	elif MODEL in ("dreamone", "dreamtwo"):
+		chipset = "S922X"
 	else:
-		chipset = fileReadLine("/proc/stb/info/chipset", source=MODULE_NAME)
-		if chipset is None:
-			return _("Undefined")
-		return str(chipset.lower().replace('\n', '').replace('bcm', '').replace('brcm', '').replace('sti', ''))
-
+		chipset = fileReadLine("/proc/stb/info/chipset", default=_("Undefined"), source=MODULE_NAME)
+		chipset = chipset.lower().replace("\n", "").replace("bcm", "").replace("brcm", "").replace("sti", "")
+	return chipset
 
 def getModuleLayout():
 	module = None
@@ -273,7 +271,6 @@ BoxInfo.setItem("DebugLevel", eGetEnigmaDebugLvl())
 BoxInfo.setItem("InDebugMode", eGetEnigmaDebugLvl() >= 4)
 BoxInfo.setItem("ModuleLayout", getModuleLayout())
 
-BoxInfo.setItem("BoxName", getBoxName())
 BoxInfo.setItem("RCImage", getRCFile("png"))
 BoxInfo.setItem("RCMapping", getRCFile("xml"))
 BoxInfo.setItem("RemoteEnable", MACHINEBUILD in ("dm800",))
@@ -285,8 +282,11 @@ BoxInfo.setItem("MiniTV", fileCheck("/proc/stb/fb/sd_detach") or fileCheck("/pro
 BoxInfo.setItem("HDMI-PreEmphasis", fileExists("/proc/stb/hdmi/preemphasis"))
 
 try:
-	branch = "?sha=" + "-".join(about.getEnigmaVersionString().split("-")[3:])
-except:
+	branch = getE2Rev()
+	if "+" in branch:
+		branch = branch.split("+")[1]
+	branch = f"?sha={branch}"
+except IndexError:
 	branch = ""
 branch_e2plugins = "?sha=python3"
 
