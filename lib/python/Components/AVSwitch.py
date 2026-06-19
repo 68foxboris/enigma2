@@ -113,78 +113,79 @@ def InitAVSwitch():
 	config.av.passthrough_fix_short = ConfigSelection(choices=delayChoices, default=100)
 
 	config.av.osd_alpha = ConfigSlider(default=255, increment=5, limits=(20, 255))  # Make OpenATV compatible with some plugins who still use config.av.osd_alpha.
-		# Some boxes have a redundant proc entry for policy2 choices, but some don't (The choices are from a 16:9 point of view anyways)
-		policy2ChoicesProc = "/proc/stb/video/policy2_choices"
-		if not exists(policy2ChoicesProc):
-			policy2ChoicesProc = "/proc/stb/video/policy_choices"
-		policy2ChoicesRaw = fileReadLine(policy2ChoicesProc, default="letterbox", source=MODULE_NAME)
-		choiceList = {}
-		if "letterbox" in policy2ChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Black bars on top/bottom in doubt, keep English term.
-			choiceList.update({"letterbox": _("Letterbox")})
-		if "panscan" in policy2ChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Cropped content on left/right in doubt, keep English term.
-			choiceList.update({"panscan": _("Pan&scan")})  # Should be "PanScan" or "Pan & Scan".
-		if "nonliner" in policy2ChoicesRaw and "nonlinear" not in policy2ChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the top/bottom. Center of picture maintains aspect, top/bottom lose aspect heaver than on linear stretch.
-			choiceList.update({"nonliner": _("Stretch nonlinear")})
-		if "nonlinear" in policy2ChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the top/bottom. Center of picture maintains aspect, top/bottom lose aspect heaver than on linear stretch.
-			choiceList.update({"nonlinear": _("Stretch nonlinear")})
-		if "scale" in policy2ChoicesRaw and "auto" not in policy2ChoicesRaw and "bestfit" not in policy2ChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
-			choiceList.update({"scale": _("Stretch linear")})
-		if "auto" in policy2ChoicesRaw and "bestfit" not in policy2ChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
-			choiceList.update({"auto": _("Stretch linear")})  # IanSav: This is duplicated!
-		if "bestfit" in policy2ChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
-			choiceList.update({"bestfit": _("Stretch linear")})
-		if "full" in policy2ChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (force aspect).
-			choiceList.update({"full": _("Stretch full")})
-		config.av.policy_169 = ConfigSelection(default="letterbox", choices=choiceList)
-		policyChoicesRaw = fileReadLine("/proc/stb/video/policy_choices", default="panscan", source=MODULE_NAME)
-		choiceList = {}
-		if "pillarbox" in policyChoicesRaw and "panscan" not in policyChoicesRaw:
-			# Very few boxes support "pillarbox" as an alias for "panscan" (Which in fact does pillarbox) so only add "pillarbox" if "panscan" is not listed in choices.
-			#
-			# TRANSLATORS: Aspect ratio policy: Black bars on left/right in doubt, keep English term.
-			choiceList.update({"pillarbox": _("Pillarbox")})
-		if "panscan" in policyChoicesRaw:
-			# DRIVER BUG:	"panscan" in /proc actually does "pillarbox" (That's probably why an alias to it named "pillarbox" existed)!
-			#		Interpret "panscan" setting with a "Pillarbox" text in order to show the correct value in GUI.
-			#
-			# TRANSLATORS: Aspect ratio policy: Black bars on left/right in doubt, keep English term.
-			choiceList.update({"panscan": _("Pillarbox")})
-		if "letterbox" in policyChoicesRaw:
-			# DRIVER BUG:	"letterbox" in /proc actually does pan&scan.
-			#		"letterbox" and 4:3 content on 16:9 TVs is mutually exclusive, as "letterbox" is the method to show wide content on narrow TVs.
-			#		Probably the bug arose as the driver actually does the same here as it would for wide content on narrow TVs (it stretches the picture to fit width).
-			#
-			# TRANSLATORS: Aspect ratio policy: Fit width, cut/crop top and bottom (maintain aspect ratio).
-			choiceList.update({"letterbox": _("Pan&scan")})  # Should be "PanScan" or "Pan & Scan".
-		if "nonliner" in policyChoicesRaw and "nonlinear" not in policyChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the left/right. Center 50% of picture maintain aspect, left/right 25% lose aspect heaver than on linear stretch.
-			choiceList.update({"nonliner": _("Stretch nonlinear")})
-		if "nonlinear" in policyChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the left/right. Center 50% of picture maintain aspect, left/right 25% lose aspect heaver than on linear stretch.
-			choiceList.update({"nonlinear": _("Stretch nonlinear")})
-		# "auto", "bestfit" and "scale" are aliases for the same "Stretch linear".
-		if "scale" in policyChoicesRaw and "auto" not in policyChoicesRaw and "bestfit" not in policyChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
-			choiceList.update({"scale": _("Stretch linear")})
-		if "auto" in policyChoicesRaw and "bestfit" not in policyChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
-			choiceList.update({"auto": _("Stretch linear")})
-		if "bestfit" in policyChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
-			choiceList.update({"bestfit": _("Stretch linear")})
-		if "full" in policyChoicesRaw:
-			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (force aspect).
-			choiceList.update({"full": _("Stretch full")})
-		config.av.policy_43 = ConfigSelection(default="panscan", choices=choiceList)
 
+	# Some boxes have a redundant proc entry for policy2 choices, but some don't (The choices are from a 16:9 point of view anyways)
+	policy2ChoicesProc = "/proc/stb/video/policy2_choices"
+	if not exists(policy2ChoicesProc):
+	policy2ChoicesProc = "/proc/stb/video/policy_choices"
+	policy2ChoicesRaw = fileReadLine(policy2ChoicesProc, default="letterbox", source=MODULE_NAME)
+	choiceList = {}
+	if "letterbox" in policy2ChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Black bars on top/bottom in doubt, keep English term.
+		choiceList.update({"letterbox": _("Letterbox")})
+	if "panscan" in policy2ChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Cropped content on left/right in doubt, keep English term.
+		choiceList.update({"panscan": _("Pan&scan")})  # Should be "PanScan" or "Pan & Scan".
+	if "nonliner" in policy2ChoicesRaw and "nonlinear" not in policy2ChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the top/bottom. Center of picture maintains aspect, top/bottom lose aspect heaver than on linear stretch.
+		choiceList.update({"nonliner": _("Stretch nonlinear")})
+	if "nonlinear" in policy2ChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the top/bottom. Center of picture maintains aspect, top/bottom lose aspect heaver than on linear stretch.
+		choiceList.update({"nonlinear": _("Stretch nonlinear")})
+	if "scale" in policy2ChoicesRaw and "auto" not in policy2ChoicesRaw and "bestfit" not in policy2ChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+		choiceList.update({"scale": _("Stretch linear")})
+	if "auto" in policy2ChoicesRaw and "bestfit" not in policy2ChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+		choiceList.update({"auto": _("Stretch linear")})  # IanSav: This is duplicated!
+	if "bestfit" in policy2ChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+		choiceList.update({"bestfit": _("Stretch linear")})
+	if "full" in policy2ChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (force aspect).
+		choiceList.update({"full": _("Stretch full")})
+	config.av.policy_169 = ConfigSelection(default="letterbox", choices=choiceList)
+	policyChoicesRaw = fileReadLine("/proc/stb/video/policy_choices", default="panscan", source=MODULE_NAME)
+	choiceList = {}
+	if "pillarbox" in policyChoicesRaw and "panscan" not in policyChoicesRaw:
+		# Very few boxes support "pillarbox" as an alias for "panscan" (Which in fact does pillarbox) so only add "pillarbox" if "panscan" is not listed in choices.
+		#
+		# TRANSLATORS: Aspect ratio policy: Black bars on left/right in doubt, keep English term.
+		choiceList.update({"pillarbox": _("Pillarbox")})
+	if "panscan" in policyChoicesRaw:
+		# DRIVER BUG:	"panscan" in /proc actually does "pillarbox" (That's probably why an alias to it named "pillarbox" existed)!
+		#		Interpret "panscan" setting with a "Pillarbox" text in order to show the correct value in GUI.
+		#
+		# TRANSLATORS: Aspect ratio policy: Black bars on left/right in doubt, keep English term.
+		choiceList.update({"panscan": _("Pillarbox")})
+	if "letterbox" in policyChoicesRaw:
+		# DRIVER BUG:	"letterbox" in /proc actually does pan&scan.
+		#		"letterbox" and 4:3 content on 16:9 TVs is mutually exclusive, as "letterbox" is the method to show wide content on narrow TVs.
+		#		Probably the bug arose as the driver actually does the same here as it would for wide content on narrow TVs (it stretches the picture to fit width).
+		#
+		# TRANSLATORS: Aspect ratio policy: Fit width, cut/crop top and bottom (maintain aspect ratio).
+		choiceList.update({"letterbox": _("Pan&scan")})  # Should be "PanScan" or "Pan & Scan".
+	if "nonliner" in policyChoicesRaw and "nonlinear" not in policyChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the left/right. Center 50% of picture maintain aspect, left/right 25% lose aspect heaver than on linear stretch.
+		choiceList.update({"nonliner": _("Stretch nonlinear")})
+	if "nonlinear" in policyChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the left/right. Center 50% of picture maintain aspect, left/right 25% lose aspect heaver than on linear stretch.
+		choiceList.update({"nonlinear": _("Stretch nonlinear")})
+	# "auto", "bestfit" and "scale" are aliases for the same "Stretch linear".
+	if "scale" in policyChoicesRaw and "auto" not in policyChoicesRaw and "bestfit" not in policyChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+		choiceList.update({"scale": _("Stretch linear")})
+	if "auto" in policyChoicesRaw and "bestfit" not in policyChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+		choiceList.update({"auto": _("Stretch linear")})
+	if "bestfit" in policyChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+		choiceList.update({"bestfit": _("Stretch linear")})
+	if "full" in policyChoicesRaw:
+		# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (force aspect).
+		choiceList.update({"full": _("Stretch full")})
+
+	config.av.policy_43 = ConfigSelection(default="panscan", choices=choiceList)
 	choiceList = [
 		("cvbs", "CVBS"),
 		("rgb", "RGB"),
