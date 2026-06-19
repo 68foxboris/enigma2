@@ -11,7 +11,6 @@ from socket import AF_INET, SOCK_DGRAM, inet_ntoa, socket
 from struct import pack, unpack
 from sys import maxsize, modules, version as pyversion
 from time import localtime, strftime
-from Tools.HardwareInfo import HardwareInfo
 from Components.SystemInfo import BoxInfo
 from Tools.Directories import fileReadLine, fileReadLines
 
@@ -93,10 +92,6 @@ def getEnigmaVersionString():
 def getKernelVersionString():
 	version = fileReadLine("/proc/version", default="", source=MODULE_NAME)
 	return version.split(" ", 4)[2].split("-", 2)[0] if version else _("Unknown")
-
-
-def getHardwareTypeString():
-	return HardwareInfo().get_device_string()
 
 
 def getImageTypeString():

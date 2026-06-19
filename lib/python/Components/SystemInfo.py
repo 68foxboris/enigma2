@@ -450,13 +450,6 @@ BoxInfo.setItem("FrontpanelLEDColorControl", fileExists("/proc/stb/fp/led_color"
 BoxInfo.setItem("FrontpanelLEDFadeControl", fileExists("/proc/stb/fp/led_fade"))
 BoxInfo.setItem("DM9X0", MODEL in ("dm900", "dm920"))
 
-# Network services.
-BoxInfo.setItem("inadyn", fileExists("/etc/init.d/inadyn-mt"))
-BoxInfo.setItem("minidlna", fileExists("/etc/init.d/minidlna"))
-BoxInfo.setItem("ushare", fileExists("/etc/init.d/ushare"))
-BoxInfo.setItem("samba", fileExists("/etc/init.d/samba"))
-BoxInfo.setItem("zerotier", fileExists("/etc/init.d/zerotier"))
-
 BoxInfo.setMutableItem("SeekStatePlay", False)
 BoxInfo.setMutableItem("StatePlayPause", False)
 BoxInfo.setMutableItem("StandbyState", False)
@@ -469,6 +462,13 @@ BoxInfo.setItem("CiAlternativeCaHandling", MODEL in ("pulse4k",  "pulse4kmini"))
 for ciSlot in range(BoxInfo.getItem("CommonInterface")):
 	BoxInfo.setItem(f"CI{ciSlot}SupportsHighBitrates", fileCheck(f"/proc/stb/tsmux/ci{ciSlot}_tsclk"))
 	BoxInfo.setItem(f"CI{ciSlot}RelevantPidsRoutingSupport", fileCheck(f"/proc/stb/tsmux/ci{ciSlot}_relevant_pids_routing"))
+
+# Network services.
+BoxInfo.setItem("inadyn", exists("/etc/init.d/inadyn-mt"))
+BoxInfo.setItem("minidlna", exists("/etc/init.d/minidlna"))
+BoxInfo.setItem("ushare", exists("/etc/init.d/ushare"))
+BoxInfo.setItem("samba", exists("/etc/init.d/samba"))
+BoxInfo.setItem("zerotier", exists("/etc/init.d/zerotier"))
 
 # AI
 BoxInfo.setItem("AISubs", exists("/etc/init.d/aisocket"))
