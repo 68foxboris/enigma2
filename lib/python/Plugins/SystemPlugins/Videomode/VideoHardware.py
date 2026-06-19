@@ -11,12 +11,13 @@ from os.path import isfile
 MODULE_NAME = __name__.split(".")[-1]
 
 model = BoxInfo.getItem("model")
+AMLOGIC = BoxInfo.getItem("AmlogicFamily")
+BRAND = BoxInfo.getItem("brand")
 has_dvi = BoxInfo.getItem("DreamBoxDVI")
 has_scart = BoxInfo.getItem("HasScart")
 has_yuv = BoxInfo.getItem("yuv")
 has_rca = BoxInfo.getItem("rca")
 has_avjack = BoxInfo.getItem("avjack")
-chipsetstring = getChipsetString()
 
 # The "VideoHardware" is the interface to /proc/stb/video.
 # It generates hotplug events, and gives you the list of
@@ -187,6 +188,40 @@ class VideoHardware:
 		f"2.35:1 {letterbox}"
 	)
 
+	def getOutputAspect(self):
+		ret = (16, 9)
+		port = config.av.videoport.value
+		if port not in config.av.videomode:
+			print("[VideoHardware] Current port not available in getOutputAspect!!! force 16:9")
+		else:
+			mode = config.av.videomode[port].value
+			force_widescreen = self.isWidescreenMode(port, mode)
+			is_widescreen = force_widescreen or config.av.aspect.value in ("16_9", "16_10")
+			is_auto = config.av.aspect.value == "auto"
+			if is_widescreen:
+				if force_widescreen:
+					pass
+				else:
+					aspect = {"16_9": "16:9", "16_10": "16:10"}[config.av.aspect.value]
+					if aspect == "16:10":
+						ret = (16, 10)
+			elif is_auto:
+				if isfile("/proc/stb/vmpeg/0/aspect"):
+					try:
+						aspect_str = open("/proc/stb/vmpeg/0/aspect", "r").read()
+					except IOError:
+						print("[VideoHardware] Read /proc/stb/vmpeg/0/aspect failed!")
+				elif isfile("/sys/class/video/screen_mode"):
+					try:
+						aspect_str = open("/sys/class/video/screen_mode", "r").read()
+					except IOError:
+						print("[VideoHardware] Read /sys/class/video/screen_mode failed!")
+				if aspect_str == "1":  # 4:3
+					ret = (4, 3)
+			else:  # 4:3
+				ret = (4, 3)
+		return ret
+
 	def __init__(self):
 		self.last_modes_preferred = []
 		self.on_hotplug = CList()
@@ -196,19 +231,6 @@ class VideoHardware:
 		self.is24hzAvailable()
 		self.readPreferredModes()
 		self.createConfig()
-
-		# take over old AVSwitch component :)
-		from Components.AVSwitch import AVSwitch
-		config.av.aspectratio.notifiers = []
-		config.av.tvsystem.notifiers = []
-		config.av.wss.notifiers = []
-		AVSwitch.getOutputAspect = self.getOutputAspect
-
-		config.av.aspect.addNotifier(self.updateAspect)
-		config.av.wss.addNotifier(self.updateAspect)
-		config.av.policy_43.addNotifier(self.updateAspect)
-		if hasattr(config.av, "policy_169"):
-			config.av.policy_169.addNotifier(self.updateAspect)
 
 	def readAvailableModes(self):
 		modes = eAVControl.getInstance().getAvailableModes()
@@ -260,35 +282,26 @@ class VideoHardware:
 
 		return self.axis.get(mode, self.axis["720p"])
 
+	def createConfig(self, *args):
 		config.av.videomode = ConfigSubDict()
 		config.av.videorate = ConfigSubDict()
-
-		# create list of output ports
-		portlist = self.getPortList()
-		for port in portlist:
-			descr = port
-			if descr == "HDMI" and has_dvi:
-				descr = "DVI"
-			if descr == "HDMI-PC" and has_dvi:
-				descr = "DVI-PC"
-			if descr == "Scart" and has_rca and not has_scart:
-				descr = "RCA"
-			if descr == "Scart" and has_avjack and not has_scart:
-				descr = "Jack"
-			lst.append((port, descr))
-
-			# create list of available modes
+		portList = []  # Create list of output ports.
+		for port in self.getPortList():
+			if "HDMI" in port:
+				portList.insert(0, (port, port))
+			else:
+				portList.append((port, port))
 			modes = self.getModeList(port)
 			if len(modes):
 				config.av.videomode[port] = ConfigSelection(choices=[mode for (mode, rates) in modes])
 			for (mode, rates) in modes:
-				ratelist = []
+				rateList = []
 				for rate in rates:
 					if rate == "auto" and not BoxInfo.getItem("Has24hz"):
 						continue
-					ratelist.append((rate, rate))
-				config.av.videorate[mode] = ConfigSelection(choices=ratelist)
-		config.av.videoport = ConfigSelection(default="HDMI", choices=lst)
+					rateList.append((rate, rate))
+				config.av.videorate[mode] = ConfigSelection(choices=rateList)
+		config.av.videoport = ConfigSelection(choices=portList)
 		config.av.aspectswitch = ConfigSubsection()
 		config.av.aspectswitch.enabled = ConfigYesNo(default=False)
 		defaults = (  # The preset values for the offset heights.
@@ -455,9 +468,6 @@ class VideoHardware:
 				fileWriteLine("/proc/stb/video/videomode", mode50, source=MODULE_NAME)
 			if BoxInfo.getItem("have24hz"):
 				fileWriteLine("/proc/stb/video/videomode_24hz", mode24, source=MODULE_NAME)
-			if BRAND == "gigablue":  # Use 50Hz mode (if available) for booting.
-				fileWriteLine("/etc/videomode", mode50, source=MODULE_NAME)
-			self.setColorFormat(config.av.colorformat.value)
 		self.current_mode = mode
 		self.current_port = port
 
@@ -467,19 +477,8 @@ class VideoHardware:
 	def setPolicy169(self, configElement):
 		eAVControl.getInstance().setPolicy169(configElement.value, 1)
 
-		success = fileWriteLine("/proc/stb/video/videomode_50hz", mode_50, source=MODULE_NAME)
-		if success:
-			success = fileWriteLine("/proc/stb/video/videomode_60hz", mode_60, source=MODULE_NAME)
-		if not success:  # Fallback if no possibility to setup 50/60 hz mode
-				try:
-					fileWriteLine("/proc/stb/video/videomode", mode_50, source=MODULE_NAME)
-				except:
-					fileWriteLine("/sys/class/display/mode", mode_50, source=MODULE_NAME)
-
-		if BoxInfo.getItem("Has24hz") and mode_24 is not None:
-			fileWriteLine("/proc/stb/video/videomode_24hz", mode_24, source=MODULE_NAME)
-
-		self.updateAspect(None)
+	def setWss(self, configElement):
+		eAVControl.getInstance().setWSS(configElement.value, 1)
 
 	def saveMode(self, port, mode, rate):
 		config.av.videoport.value = port

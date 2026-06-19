@@ -3,7 +3,6 @@
 from Screens.ChannelSelection import ChannelSelection, BouquetSelector, SilentBouquetSelector
 
 from Components.ActionMap import ActionMap, HelpableActionMap, HelpableNumberActionMap, NumberActionMap
-from Components.AVSwitch import avSwitch
 from Components.Harddisk import harddiskmanager, findMountPoint
 from Components.Input import Input
 from Components.Label import Label
@@ -13,6 +12,7 @@ from Components.PluginComponent import plugins
 from Components.ServiceEventTracker import ServiceEventTracker
 from Components.Sources.ServiceEvent import ServiceEvent
 from Components.Sources.Boolean import Boolean
+from Components.AVSwitch import iAVSwitch
 from Components.config import config, ConfigBoolean, ConfigClock, ACTIONKEY_RIGHT
 from Components.SystemInfo import BoxInfo, getBoxDisplayName
 from Components.UsageConfig import preferredInstantRecordPath, defaultMoviePath
@@ -4030,8 +4030,9 @@ class InfoBarAspectSelection:
 		else:
 			aspectSwitchList = []
 			if config.av.aspectswitch.enabled.value:
+				from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
 				for aspect in range(5):
-					aspectSwitchList.append((avSwitch.ASPECT_SWITCH_MSG[aspect], str(aspect + 100)))
+					aspectSwitchList.append((video_hw.ASPECT_SWITCH_MSG[aspect], str(aspect + 100)))
 				aspectSwitchList.append(("--", ""))
 			aspectList = [
 				(_("Resolution"), "resolution"),
@@ -4046,7 +4047,7 @@ class InfoBarAspectSelection:
 				(_("16:9 Letterbox"), "6")
 			]
 		keys = ["green", "", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-		aspect = avSwitch.getAspectRatioSetting()
+		aspect = iAVSwitch.getAspectRatioSetting()
 		selection = 0
 		for item in range(len(aspectList)):
 			if aspectList[item][1] == aspect:
@@ -4055,6 +4056,7 @@ class InfoBarAspectSelection:
 		self.session.openWithCallback(self.aspectSelected, ChoiceBox, title=_("Please select an aspect ratio..."), list=aspectList, keys=keys, selection=selection)
 
 	def changeVideoMode(self, confirmed):
+		from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
 		port = config.av.videoport.value
 		mode = config.av.videomode[port].value
 		rate = config.av.videorate[mode].value
@@ -4063,10 +4065,11 @@ class InfoBarAspectSelection:
 			config.av.videoport.value = self.last_used_video_mode[0]
 			config.av.videomode[self.last_used_video_mode[0]].value = self.last_used_video_mode[1]
 			config.av.videorate[self.last_used_video_mode[1]].value = self.last_used_video_mode[2]
-			avSwitch.setMode(*self.last_used_video_mode)
+			video_hw.setMode(*self.last_used_video_mode)
 
 	def switchTo720p(self):  # use 720p video mode recover signal on your video port
-		avSwitch.setMode("HDMI", "720p", "50Hz")
+		from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
+		video_hw.setMode("HDMI", "720p", "50Hz")
 		self.session.openWithCallback(self.changeVideoMode, MessageBox, _("This function recovers your video signal in case of loss. The video has been changed to 720p.\nIf this is your case, please keep the video at 720P and do the following:\nGo to Menu > Setup > Audio / Video > A/V settings and set the correct resolution.\nDo you want to keep the video at 720p?"), MessageBox.TYPE_YESNO, timeout=30, simple=True)
 
 	def aspectSelected(self, aspect):
@@ -4077,7 +4080,7 @@ class InfoBarAspectSelection:
 				elif aspect[1] == "resolution":
 					self.ExGreen_toggleGreen()
 				else:
-					avSwitch.setAspectRatio(int(aspect[1]))
+					iAVSwitch.setAspectRatio(int(aspect[1]))
 					self.ExGreen_doHide()
 		else:
 			self.ExGreen_doHide()
@@ -4099,9 +4102,10 @@ class InfoBarResolutionSelection:
 		resList.append((_("Video") + ": %dx%d@%gHz" % (xRes, yRes, fps), ""))
 		resList.append(("--", ""))
 		# Do we need a new sorting with this way here or should we disable some choices?
-		modes = eAVControl.getInstance().getAvailableModes()
-		videoModes = modes.split()
-		for videoMode in videoModes:
+		from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
+		videoModes = video_hw.readPreferredModes(readOnly=True)
+		videoModes = [x.replace("pal ", "").replace("ntsc ", "") for x in videoModes]  # Do we need this?
+		for  videoMode in videoModes:
 			video = videoMode
 			if videoMode.endswith("23"):
 				video = "%s.976" % videoMode
@@ -4124,11 +4128,11 @@ class InfoBarResolutionSelection:
 				if videoMode[1] == "exit" or videoMode[1] == "" or videoMode[1] == "auto":
 					self.ExGreen_toggleGreen()
 				if videoMode[1] != "auto":
-					avSwitch.setVideoModeDirect(videoMode[1])
+					from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
+					video_hw.setVideoModeDirect(videoMode[1])
 					self.ExGreen_doHide()
 		else:
 			self.ExGreen_doHide()
-		return
 
 
 class InfoBarTimerButton:
