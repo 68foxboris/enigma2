@@ -22,6 +22,7 @@ dvb_libenigma_dvb_a_SOURCES = \
 	dvb/filepush.cpp \
 	dvb/frontend.cpp \
 	dvb/frontendparms.cpp \
+	dvb/hevc_hdr_detector.cpp \
 	dvb/metaparser.cpp \
 	dvb/opentv.cpp \
 	dvb/pesparse.cpp \
@@ -36,6 +37,7 @@ dvb_libenigma_dvb_a_SOURCES = \
 	dvb/tstools.cpp \
 	dvb/volume.cpp \
 	dvb/streamserver.cpp \
+	dvb/rtspstreamserver.cpp \
 	dvb/pmtparse.cpp \
 	dvb/encoder.cpp \
 	dvb/atsc.cpp \
@@ -67,6 +69,8 @@ dvbinclude_HEADERS = \
 	dvb/filepush.h \
 	dvb/frontend.h \
 	dvb/frontendparms.h \
+	dvb/hevc_hdr_detector.h \
+	dvb/hevc_hdr_parser.h \
 	dvb/idemux.h \
 	dvb/idvb.h \
 	dvb/isection.h \

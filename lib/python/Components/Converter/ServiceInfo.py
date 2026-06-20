@@ -108,6 +108,7 @@ class ServiceInfo(Converter):
 				"SubservicesAvailable": (self.SUBSERVICES_AVAILABLE, (iPlayableService.evStart,)),
 				"VideoWidth": (self.XRES, (iPlayableService.evVideoSizeChanged,)),
 				"VideoHeight": (self.YRES, (iPlayableService.evVideoSizeChanged,)),
+				"VideoInfo": (self.VIDEO_INFORMATION, (iPlayableService.evVideoSizeChanged, iPlayableService.evVideoFramerateChanged, iPlayableService.evVideoProgressiveChanged, iPlayableService.evVideoGammaChanged, iPlayableService.evUpdatedInfo)),
 				"AudioPid": (self.APID, (iPlayableService.evUpdatedInfo,)),
 				"VideoPid": (self.VPID, (iPlayableService.evUpdatedInfo,)),
 				"PcrPid": (self.PCRPID, (iPlayableService.evUpdatedInfo,)),
