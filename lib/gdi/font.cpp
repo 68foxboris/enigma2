@@ -104,16 +104,12 @@ FT_Error fontRenderClass::FTC_Face_Requester(FTC_FaceID	face_id, FT_Face* aface)
 
 int fontRenderClass::getFaceProperties(const std::string &face, FTC_FaceID &id, int &renderflags)
 {
-	for (fontListEntry *f=font; f; f=f->next)
-	{
-		if (f->face == face)
-		{
-			id = (FTC_FaceID)f;
-			renderflags = f->renderflags;
-			return 0;
-		}
-	}
-	return -1;
+	auto it = fontMap.find(face);
+	if (it == fontMap.end())
+		return -1;
+	id          = (FTC_FaceID)it->second;
+	renderflags = it->second->renderflags;
+	return 0;
 }
 
 inline FT_Error fontRenderClass::getGlyphBitmap(FTC_Image_Desc *font, FT_UInt glyph_index, FTC_SBit *sbit)
@@ -170,6 +166,7 @@ std::string fontRenderClass::AddFont(const std::string &filename, const std::str
 	n->next=font;
 	font=n;
 
+	fontMap[name] = n;
 	eDebugNoNewLine(" -> '%s'.\n", n->face.c_str());
 
 	return n->face;
@@ -195,35 +192,33 @@ fontRenderClass::fontRenderClass(): fb(fbClass::getInstance())
 	font=0;
 
 	int maxbytes=4*1024*1024;
-	eDebug("[Font] Intializing font cache, using max. %dMB.", maxbytes/1024/1024);
+	eDebug("[Font] Initializing font cache, using max. %dMB.", maxbytes/1024/1024);
 	fflush(stdout);
+	if (FTC_Manager_New(library, 8, 8, maxbytes, myFTC_Face_Requester, this, &cacheManager))
 	{
-		if (FTC_Manager_New(library, 8, 8, maxbytes, myFTC_Face_Requester, this, &cacheManager))
-		{
-			eDebug("[Font] Initializing font cache failed!");
-			return;
-		}
-		if (!cacheManager)
-		{
-			eDebug("[Font] Initializing font cache manager error!");
-			return;
-		}
-		if (FTC_SBit_Cache_New(cacheManager, &sbitsCache))
-		{
-			eDebug("[Font] Initializing font cache sbit failed!");
-			return;
-		}
-		if (FTC_Image_Cache_New(cacheManager, &imageCache))
-		{
-			eDebug("[Font] Initializing font cache imagecache failed!");
-		}
-		if (FT_Stroker_New(library, &stroker))
-		{
-			eDebug("[Font] Initializing font stroker failed!");
-		}
+		eDebug("[Font] Initializing font cache failed!");
+		return;
 	}
+	if (!cacheManager)
+	{
+		eDebug("[Font] Initializing font cache manager error!");
+		return;
+	}
+	if (FTC_SBit_Cache_New(cacheManager, &sbitsCache))
+	{
+		eDebug("[Font] Initializing font cache sbit failed!");
+		return;
+	}
+	if (FTC_Image_Cache_New(cacheManager, &imageCache))
+	{
+		eDebug("[Font] Initializing font cache imagecache failed!");
+	}
+	if (FT_Stroker_New(library, &stroker))
+	{
+		eDebug("[Font] Initializing font stroker failed!");
+	}
+	
 	strokerRadius = -1;
-	return;
 }
 
 float fontRenderClass::getLineHeight(const gFont& font)
@@ -261,6 +256,8 @@ fontRenderClass::~fontRenderClass()
 		font=font->next;
 		delete f;
 	}
+	fontMap.clear();
+
 //	auskommentiert weil freetype und enigma die kritische masse des suckens ueberschreiten.
 //	FTC_Manager_Done(cacheManager);
 //	FT_Done_FreeType(library);
@@ -416,9 +413,8 @@ int eTextPara::appendGlyph(Font *current_font, FT_Face current_face, FT_UInt gly
 		height = glyph->height;
 	}
 
-	int nx=cursor.x();
+	int nx=cursor.x() + xadvance;
 
-	nx+=xadvance;
 
 	if ((rflags & RS_WRAP) && (nx > area.right()))
 	{
@@ -523,7 +519,7 @@ int eTextPara::appendGlyph(Font *current_font, FT_Face current_face, FT_UInt gly
 
 void eTextPara::calc_bbox()
 {
-	if (!glyphs.size())
+	if (glyphs.empty())
 	{
 		bboxValid = 0;
 		boundBox = eRect();
@@ -650,8 +646,7 @@ void eTextPara::setFont(Font *fnt, Font *replacement, Font *fallback)
 	use_kerning=FT_HAS_KERNING(current_face);
 }
 
-void
-shape (std::vector<unsigned long> &string, const std::vector<unsigned long> &text);
+void shape (std::vector<unsigned long> &string, const std::vector<unsigned long> &text);
 
 int eTextPara::renderString(const char *string, int rflags, int border, int markedpos)
 {
@@ -761,7 +756,10 @@ int eTextPara::renderString(const char *string, int rflags, int border, int mark
 	}
 	uc_visual.assign(target, target+size);
 
-	glyphs.reserve(size);
+	/* Reserve glyph vector capacity upfront, accounting for
+	 * glyphs already present (e.g. when renderString is called multiple
+	 * times on the same eTextPara). */
+	glyphs.reserve(glyphs.size() + (size_t)size);
 
 	unsigned long newcolor = 0;
 	bool activate_newcolor = false;
@@ -949,6 +947,8 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 		eDebug("[eTextPara] FTC_Manager_Lookup_Size failed!");
 		return;
 	}
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wregister"
 
 	ePtr<gPixmap> target;
 	dc.getPixmap(target);
@@ -956,7 +956,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 	gRGB currentforeground = foreground;
 	const gRGB background = (m_blend && surface->bpp == 32 && !marked) ? gRGB(currentforeground.r, currentforeground.g, currentforeground.b, 200) : cbackground;
 
-	int opcode = -1;
+	register int opcode = -1;
 
 	__u32 lookup32_normal[16];
 	__u32 lookup32_invert[16];
@@ -1011,7 +1011,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 					opcode=0;
 				} else
 					opcode=1;
-			}
+			} 
 			else if (surface->bpp == 32)
 			{
 				opcode = (m_blend) ? 4 : 3;
@@ -1035,7 +1035,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 				}
 				for (int i=0; i<16; ++i)
 					lookup32_invert[i]=lookup32_normal[i^0xF];
-			}
+			} 
 			else if (surface->bpp == 16)
 			{
 				opcode=2;
@@ -1060,7 +1060,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 				}
 				for (int i=0; i<16; ++i)
 					lookup16_invert[i]=lookup16_normal[i^0xF];
-			}
+			} 
 			else
 			{
 				eWarning("[eTextPara] Can't render to %dbpp!", surface->bpp);
@@ -1075,7 +1075,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 			lookup8 = lookup8_normal;
 			lookup16 = lookup16_normal;
 			lookup32 = lookup32_normal;
-		}
+		} 
 		else
 		{
 			lookup8 = lookup8_invert;
@@ -1119,7 +1119,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 			int rx = rxbase, ry = rybase;
 			__u8 *d = dbase;
 			__u8 *s = sbase;
-			int sx = sxbase;
+			register int sx = sxbase;
 			int sy = sybase;
 			if ((sy+ry) >= clip.rects[c].bottom())
 				sy = clip.rects[c].bottom()-ry;
@@ -1148,15 +1148,15 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 				{
 				case 0: 		// 4bit lookup to 8bit
 					{
-						int extra_buffer_stride = buffer_stride - sx;
-						__u8 *td=d;
+						register int extra_buffer_stride = buffer_stride - sx;
+						register __u8 *td=d;
 						for (int ay = 0; ay < sy; ay++)
 						{
-							int ax;
+							register int ax;
 
 							for (ax=0; ax<sx; ax++)
 							{
-								int b=(*s++)>>4;
+								register int b=(*s++)>>4;
 								if(b)
 									*td=lookup8[b];
 								++td;
@@ -1168,14 +1168,14 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 					break;
 				case 1:	// 8bit direct
 					{
-						int extra_buffer_stride = buffer_stride - sx;
-						__u8 *td=d;
+						register int extra_buffer_stride = buffer_stride - sx;
+						register __u8 *td=d;
 						for (int ay = 0; ay < sy; ay++)
 						{
-							int ax;
+							register int ax;
 							for (ax=0; ax<sx; ax++)
 							{
-								int b=*s++;
+								register int b=*s++;
 								*td++^=b;
 							}
 							s += extra_source_stride;
@@ -1186,13 +1186,13 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 				case 2: // 16bit
 					{
 						int extra_buffer_stride = (buffer_stride >> 1) - sx;
-						__u16 *td = (__u16*)d;
+						register __u16 *td = (__u16*)d;
 						for (int ay = 0; ay != sy; ay++)
 						{
-								int ax;
+								register int ax;
 								for (ax = 0; ax != sx; ax++)
 								{
-									int b = (*s++) >> 4;
+									register int b = (*s++) >> 4;
 									if (b)
 										*td = lookup16[b];
 									++td;
@@ -1204,14 +1204,14 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 					break;
 				case 3: // 32bit
 					{
-						int extra_buffer_stride = (buffer_stride >> 2) - sx;
-						__u32 *td=(__u32*)d;
+						register int extra_buffer_stride = (buffer_stride >> 2) - sx;
+						register __u32 *td=(__u32*)d;
 						for (int ay = 0; ay < sy; ay++)
 						{
-							int ax;
+							register int ax;
 							for (ax=0; ax<sx; ax++)
 							{
-								int b=(*s++)>>4;
+								register int b=(*s++)>>4;
 								if(b)
 									*td=lookup32[b];
 								++td;
@@ -1223,14 +1223,14 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 					break;
 				case 4: // 32-bit blend
 					{
-						int extra_buffer_stride = (buffer_stride >> 2) - sx;
-						__u32 *td = (__u32 *)d;
+						register int extra_buffer_stride = (buffer_stride >> 2) - sx;
+						register __u32 *td = (__u32 *)d;
 						for (int ay = 0; ay < sy; ay++)
 						{
-							int ax;
+							register int ax;
 							for (ax = 0; ax < sx; ax++)
 							{
-								int b = (*s++) >> 4;
+								register int b = (*s++) >> 4;
 								if (b)
 								{
 									// unsigned char frame_a = (*td) >> 24 & 0xFF;
@@ -1261,6 +1261,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 			}
 		}
 	}
+#pragma GCC diagnostic pop
 }
 
 void eTextPara::realign(int dir, int markedpos, int scrollpos)	// der code hier ist ein wenig merkwuerdig.
