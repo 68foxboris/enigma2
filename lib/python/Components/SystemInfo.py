@@ -337,6 +337,7 @@ BoxInfo.setItem("canchkroot", (BoxInfo.getItem("hasUBIMB") or fileExists("/dev/b
 BoxInfo.setItem("CanNotDoSimultaneousTranscodeAndPIP", MODEL in ("vusolo4k", "gbquad4k", "gbue4k", "gbquad4kpro"))
 BoxInfo.setItem("canRecovery", MODEL in ("hd51", "vs1500", "h7", "h17", "8100s") and ("disk.img", "mmcblk0p1") or MODEL in ("xc7439", "osmio4k", "osmio4kplus", "osmini4k") and ("emmc.img", "mmcblk1p1") or MODEL in ("gbmv200", "sf8008", "sf8008m", "sx988", "ip8", "ustym4kpro", "ustym4kottpremium", "ustym4ks2ottx", "beyonwizv2", "viper4k", "og2ott4k", "og2s4k", "sx88v2", "sx888") and ("usb_update.bin", "none"))
 BoxInfo.setItem("CanUse3DModeChoices", fileExists("/proc/stb/fb/3dmode_choices") and True or False)
+BoxInfo.setItem("ChipsetString", getChipsetString(), immutable=True)
 BoxInfo.setItem("CIPlusHelper", fileExists("/usr/bin/ciplushelper"))
 BoxInfo.setItem("DeepstandbySupport", MODEL != 'dm800')
 BoxInfo.setItem("DefineSat", MODEL in ("ustym4kpro", "beyonwizv2", "viper4k", "sf8008", "gbtrio4k", "gbtrio4kplus", "gbip4k", "qviart5"))
@@ -399,14 +400,11 @@ BoxInfo.setItem("PIPAvailable", BoxInfo.getItem("NumVideoDecoders", 1) > 1)
 BoxInfo.setItem("PowerOffDisplay", MODEL not in "formuler1" and fileCheck("/proc/stb/power/vfd") or fileCheck("/proc/stb/lcd/vfd"))
 BoxInfo.setItem("RecoveryMode", fileCheck("/proc/stb/fp/boot_mode") or MODEL in ("dreamone", "dreamtwo"))
 BoxInfo.setItem("RcTypeChangable", not (MODEL in ("gbue4k", "gbquad4k", "gbquad4kpro", "et8500") or MODEL in "et7") and pathExists("/proc/stb/ir/rc/type"))
-BoxInfo.setItem("VideoDestinationConfigurable", fileExists("/proc/stb/vmpeg/0/dst_left"))
+BoxInfo.setItem("VideoDestinationConfigurable", fileExists("/proc/stb/vmpeg/0/dst_left") or fileExists("/sys/class/video/axis"))
 BoxInfo.setItem("WakeOnLAN", not MODEL.startswith("et8000") and fileCheck("/proc/stb/power/wol") or fileCheck("/proc/stb/fp/wol"))
 BoxInfo.setItem("ZapMode", fileCheck("/proc/stb/video/zapmode") or fileCheck("/proc/stb/video/zapping_mode"))
 
 BoxInfo.setItem("CanAC3Transcode", fileHas("/proc/stb/audio/ac3plus_choices", "force_ac3"))
-BoxInfo.setItem("CanChangeOsdAlpha", eAVControl.getInstance().hasOSDAlpha())
-BoxInfo.setItem("CanChangeOsdPlaneAlpha", access("/sys/class/graphics/fb0/osd_plane_alpha", R_OK) and True or False)
-BoxInfo.setItem("CanChangeOsdPositionAML", access("/sys/class/graphics/fb0/free_scale", R_OK) and True or False)
 BoxInfo.setItem("HasMultichannelPCM", fileCheck("/proc/stb/audio/multichannel_pcm"))
 BoxInfo.setItem("HasAutoVolumeLevel", fileExists("/proc/stb/audio/autovolumelevel_choices") and fileCheck("/proc/stb/audio/autovolumelevel"))
 BoxInfo.setItem("Has3DSurroundSoftLimiter", fileExists("/proc/stb/audio/3dsurround_softlimiter_choices") and fileCheck("/proc/stb/audio/3dsurround_softlimiter"))
@@ -450,13 +448,6 @@ BoxInfo.setItem("FrontpanelLEDColorControl", fileExists("/proc/stb/fp/led_color"
 BoxInfo.setItem("FrontpanelLEDFadeControl", fileExists("/proc/stb/fp/led_fade"))
 BoxInfo.setItem("DM9X0", MODEL in ("dm900", "dm920"))
 
-# Network services.
-BoxInfo.setItem("inadyn", fileExists("/etc/init.d/inadyn-mt"))
-BoxInfo.setItem("minidlna", fileExists("/etc/init.d/minidlna"))
-BoxInfo.setItem("ushare", fileExists("/etc/init.d/ushare"))
-BoxInfo.setItem("samba", fileExists("/etc/init.d/samba"))
-BoxInfo.setItem("zerotier", fileExists("/etc/init.d/zerotier"))
-
 BoxInfo.setMutableItem("SeekStatePlay", False)
 BoxInfo.setMutableItem("StatePlayPause", False)
 BoxInfo.setMutableItem("StandbyState", False)
@@ -469,6 +460,13 @@ BoxInfo.setItem("CiAlternativeCaHandling", MODEL in ("pulse4k",  "pulse4kmini"))
 for ciSlot in range(BoxInfo.getItem("CommonInterface")):
 	BoxInfo.setItem(f"CI{ciSlot}SupportsHighBitrates", fileCheck(f"/proc/stb/tsmux/ci{ciSlot}_tsclk"))
 	BoxInfo.setItem(f"CI{ciSlot}RelevantPidsRoutingSupport", fileCheck(f"/proc/stb/tsmux/ci{ciSlot}_relevant_pids_routing"))
+
+# Network services.
+BoxInfo.setItem("inadyn", exists("/etc/init.d/inadyn-mt"))
+BoxInfo.setItem("minidlna", exists("/etc/init.d/minidlna"))
+BoxInfo.setItem("ushare", exists("/etc/init.d/ushare"))
+BoxInfo.setItem("samba", exists("/etc/init.d/samba"))
+BoxInfo.setItem("zerotier", exists("/etc/init.d/zerotier"))
 
 # AI
 BoxInfo.setItem("AISubs", exists("/etc/init.d/aisocket"))

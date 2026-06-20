@@ -6,6 +6,7 @@ from enigma import eTimer
 
 from skin import findSkinScreen, menus, parameters, menuicons
 from Components.ActionMap import HelpableNumberActionMap, HelpableActionMap
+from Components.AVSwitch import iAVSwitch
 from Components.config import ConfigDictionarySet, NoSave, config, configfile
 from Components.Pixmap import Pixmap
 from Components.PluginComponent import plugins

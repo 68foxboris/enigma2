@@ -12,6 +12,7 @@ from Components.PluginComponent import plugins
 from Components.ServiceEventTracker import ServiceEventTracker
 from Components.Sources.ServiceEvent import ServiceEvent
 from Components.Sources.Boolean import Boolean
+from Components.AVSwitch import iAVSwitch
 from Components.config import config, ConfigBoolean, ConfigClock, ACTIONKEY_RIGHT
 from Components.SystemInfo import BoxInfo, getBoxDisplayName
 from Components.UsageConfig import preferredInstantRecordPath, defaultMoviePath
@@ -64,8 +65,6 @@ from re import match
 from pickle import load as pickle_load, dump as pickle_dump
 
 from RecordTimer import RecordTimer, RecordTimerEntry, findSafeRecordPath, parseEvent
-
-from Components.AVSwitch import iAVSwitch
 
 # hack alert!
 from Screens.Menu import MainMenu, mdom
@@ -4106,7 +4105,7 @@ class InfoBarResolutionSelection:
 		from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
 		videoModes = video_hw.readPreferredModes(readOnly=True)
 		videoModes = [x.replace("pal ", "").replace("ntsc ", "") for x in videoModes]  # Do we need this?
-		for videoMode in videoModes:
+		for  videoMode in videoModes:
 			video = videoMode
 			if videoMode.endswith("23"):
 				video = "%s.976" % videoMode
@@ -4134,7 +4133,6 @@ class InfoBarResolutionSelection:
 					self.ExGreen_doHide()
 		else:
 			self.ExGreen_doHide()
-		return
 
 
 class InfoBarTimerButton:
@@ -4174,6 +4172,8 @@ class InfoBarVmodeButton:
 		policy = config.av.policy_169 if self.isWideScreen() else config.av.policy_43
 		policy.value = policy.choices[(policy.choices.index(policy.value) + 1) % len(policy.choices)]
 		self.VideoMode_window.setText(policy.value)
+		config.av.policy_169.save()
+		config.av.policy_43.save()
 
 	def isWideScreen(self):
 		from Components.Converter.ServiceInfo import WIDESCREEN
