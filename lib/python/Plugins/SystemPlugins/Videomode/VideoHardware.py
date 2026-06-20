@@ -12,7 +12,6 @@ MODULE_NAME = __name__.split(".")[-1]
 
 model = BoxInfo.getItem("model")
 AMLOGIC = BoxInfo.getItem("AmlogicFamily")
-BRAND = BoxInfo.getItem("brand")
 has_dvi = BoxInfo.getItem("DreamBoxDVI")
 has_scart = BoxInfo.getItem("HasScart")
 has_yuv = BoxInfo.getItem("yuv")
@@ -52,92 +51,53 @@ class VideoHardware:
 	rates["Multi"] = {
 		"multi": {50: "pal", 60: "ntsc"}
 	}
-	if AMLOGIC:
-		rates["480i"] = {
-			"60Hz": {60: "480i60hz"}
-		}
-		rates["576i"] = {
-			"50Hz": {50: "576i50hz"}
-		}
-		rates["480p"] = {
-			"60Hz": {60: "480p60hz"}
-		}
-		rates["576p"] = {
-			"50Hz": {50: "576p50hz"}
-		}
-		rates["720p"] = {
-			"50Hz": {50: "720p50hz"},
-			"60Hz": {60: "720p60hz"},
-			"auto": {60: "720p60hz"}
-		}
-		rates["1080i"] = {
-			"50Hz": {50: "1080i50hz"},
-			"60Hz": {60: "1080i60hz"},
-			"auto": {60: "1080i60hz"}
-		}
-		rates["1080p"] = {
-			"50Hz": {50: "1080p50hz"},
-			"60Hz": {60: "1080p60hz"},
-			"30Hz": {30: "1080p30hz"},
-			"25Hz": {25: "1080p25hz"},
-			"24Hz": {24: "1080p24hz"},
-			"auto": {60: "1080p60hz"}
-		}
-		rates["2160p"] = {
-			"50Hz": {50: "2160p50hz"},
-			"60Hz": {60: "2160p60hz"},
-			"30Hz": {30: "2160p30hz"},
-			"25Hz": {25: "2160p25hz"},
-			"24Hz": {24: "2160p24hz"},
-			"auto": {60: "2160p60hz"}
-		}
-		rates["2160p30"] = {
-			"25Hz": {50: "2160p25hz"},
-			"30Hz": {60: "2160p30hz"},
-			"auto": {60: "2160p30hz"}
-		}
-	else:
-		rates["480i"] = {"60Hz": {60: "480i"}}
-		rates["576i"] = {"50Hz": {50: "576i"}}
-		rates["480p"] = {"60Hz": {60: "480p"}}
-		rates["576p"] = {"50Hz": {50: "576p"}}
-		rates["720p"] = {
-			"50Hz": {50: "720p50"},
-			"60Hz": {60: "720p"},
-			"multi": {50: "720p50", 60: "720p"},
-			"auto": {50: "720p50", 60: "720p", 24: "720p24"}
-		}
-		rates["1080i"] = {
-			"50Hz": {50: "1080i50"},
-			"60Hz": {60: "1080i"},
-			"multi": {50: "1080i50", 60: "1080i"},
-			"auto": {50: "1080i50", 60: "1080i", 24: "1080i24"}
-		}
-		rates["1080p"] = {
-			"50Hz": {50: "1080p50"},
-			"60Hz": {60: "1080p"},
-			"multi": {50: "1080p50", 60: "1080p"},
-			"auto": {50: "1080p50", 60: "1080p", 24: "1080p24"}
-		}
-		rates["2160p"] = {
-			"50Hz": {50: "2160p50"},
-			"60Hz": {60: "2160p"},
-			"multi": {50: "2160p50", 60: "2160p"},
-			"auto": {50: "2160p50", 60: "2160p", 24: "2160p24"}
-		}
-		rates["2160p30"] = {
-			"25Hz": {50: "2160p25"},
-			"30Hz": {60: "2160p30"},
-			"multi": {50: "2160p25", 60: "2160p30"},
-			"auto": {50: "2160p25", 60: "2160p30", 24: "2160p24"}
-		}
+	rates["480i"] = {"60Hz": {60: "480i"}}
+	rates["576i"] = {"50Hz": {50: "576i"}}
+	rates["480p"] = {"60Hz": {60: "480p"}}
+	rates["576p"] = {"50Hz": {50: "576p"}}
+	rates["720p"] = {
+		"50Hz": {50: "720p50"},
+		"60Hz": {60: "720p"},
+		"multi": {50: "720p50", 60: "720p"},
+		"auto": {50: "720p50", 60: "720p", 24: "720p24"}
+	}
+	rates["1080i"] = {
+		"50Hz": {50: "1080i50"},
+		"60Hz": {60: "1080i"},
+		"multi": {50: "1080i50", 60: "1080i"},
+		"auto": {50: "1080i50", 60: "1080i", 24: "1080i24"}
+	}
+	rates["1080p"] = {
+		"50Hz": {50: "1080p50"},
+		"60Hz": {60: "1080p"},
+		"30Hz": {30: "1080p30"},
+		"25Hz": {25: "1080p25"},
+		"24Hz": {24: "1080p24"},
+		"multi": {50: "1080p50", 60: "1080p"},
+		"auto": {50: "1080p50", 60: "1080p", 24: "1080p24"}
+	}
+	rates["2160p"] = {
+		"50Hz": {50: "2160p50"},
+		"60Hz": {60: "2160p"},
+		"30Hz": {30: "2160p30"},
+		"25Hz": {25: "2160p25"},
+		"24Hz": {24: "2160p24"},
+		"multi": {50: "2160p50", 60: "2160p"},
+		"auto": {50: "2160p50", 60: "2160p", 24: "2160p24"}
+	}
+	rates["2160p30"] = {
+		"25Hz": {50: "2160p25"},
+		"30Hz": {60: "2160p30"},
+		"multi": {50: "2160p25", 60: "2160p30"},
+		"auto": {50: "2160p25", 60: "2160p30", 24: "2160p24"}
+	}
 	rates["smpte"] = {
-		"50Hz": {50: "smpte50hz"},
-		"60Hz": {60: "smpte60hz"},
-		"30Hz": {30: "smpte30hz"},
-		"25Hz": {25: "smpte25hz"},
-		"24Hz": {24: "smpte24hz"},
-		"auto": {60: "smpte60hz"}
+		"50Hz": {50: "smpte50"},
+		"60Hz": {60: "smpte60"},
+		"30Hz": {30: "smpte30"},
+		"25Hz": {25: "smpte25"},
+		"24Hz": {24: "smpte24"},
+		"auto": {60: "smpte60"}
 	}
 	rates["PC"] = {
 		"1024x768": {60: "1024x768"},
@@ -160,17 +120,7 @@ class VideoHardware:
 		"NTSC",
 		"Multi"
 	]
-	chipSetString = BoxInfo.getItem("ChipsetString")
-	if AMLOGIC:
-		modes["HDMI"] = ["720p", "1080p", "smpte", "2160p30", "2160p", "1080i", "576p", "576i", "480p", "480i"]
-	elif (chipSetString in ("7366", "7376", "5272s", "7444", "7445", "7445s")):
-		modes["HDMI"] = ["720p", "1080p", "2160p", "1080i", "576p", "576i", "480p", "480i"]
-	elif (chipSetString in ("7252", "7251", "7251S", "7252S", "7251s", "7252s", "72604", "7278", "7444s", "3798mv200", "3798mv200h", "3798cv200", "hi3798mv200", "hi3798mv200h", "hi3798cv200", "hi3798mv300", "3798mv300")):
-		modes["HDMI"] = ["720p", "1080p", "2160p", "2160p30", "1080i", "576p", "576i", "480p", "480i"]
-	elif (chipSetString in ("7241", "7358", "7362", "73625", "7346", "7356", "73565", "7424", "7425", "7435", "7552", "7581", "7584", "75845", "7585", "pnx8493", "7162", "7111", "3716mv410", "hi3716mv410", "hi3716mv430", "3716mv430")):
-		modes["HDMI"] = ["720p", "1080p", "1080i", "576p", "576i", "480p", "480i"]
-	else:
-		modes["HDMI"] = ["720p", "1080i", "576p", "576i", "480p", "480i"]
+	modes["HDMI"] = ["720p", "1080p", "smpte", "2160p30", "2160p", "1080i", "576p", "576i", "480p", "480i"]
 	modes["YPbPr"] = modes["HDMI"]
 	if BoxInfo.getItem("scartyuv", False):
 		modes["Scart-YPbPr"] = modes["HDMI"]
@@ -276,6 +226,9 @@ class VideoHardware:
 				mode = config.av.videomode[fallbackPort].value
 				break
 
+		if eAVControl.getInstance().hasVideoAxis():
+			return eAVControl.getInstance().getVideoAxis(mode or "720p")
+
 		if mode not in self.axis:
 			print(f"[AVSwitch] getWindowsAxis: Missing port/mode mapping for port='{port}', mode='{mode}', fallback to 720p.")
 			mode = "720p"
@@ -324,7 +277,7 @@ class VideoHardware:
 			if port != "HDMI":
 				if mode not in availableModes:
 					return False
-			elif mode not in self.modes_preferred:
+			elif mode not in availableModes or mode not in self.modes_preferred:
 				return False
 		return True
 
@@ -410,64 +363,32 @@ class VideoHardware:
 		eAVControl.getInstance().setInput(input, 1)
 
 	def setVideoModeDirect(self, mode):
-		if AMLOGIC:
-			rate = mode[-4:].replace("hz", "Hz")
-			force = int(rate[:-2])
-			mode = mode[:-4]
-			self.setMode("HDMI", mode, rate, force)
-		else:
-			eAVControl.getInstance().setVideoMode(mode)
+		eAVControl.getInstance().setVideoMode(mode)
 
 	def setMode(self, port, mode, rate, force=None):
 		print(f"[AVSwitch] Setting mode for port '{port}', mode '{mode}', rate '{rate}'.")
 		modes = self.rates[mode][rate]
+		selectedMode = next(iter(modes.values()), mode)
 		mode50 = modes.get(50)
 		mode60 = modes.get(60)
 		mode24 = modes.get(24)
 		if mode50 is None or force == 60:
-			mode50 = mode60
+			mode50 = mode60 or selectedMode
 		if mode60 is None or force == 50:
 			mode60 = mode50
 		if mode24 is None or force:
 			mode24 = mode60
 			if force == 50:
 				mode24 = mode50
-		if AMLOGIC:
-			amlmode = list(modes.values())[0]
-			fileWriteLine("/sys/class/display/mode", amlmode, source=MODULE_NAME)
-			print(f"[AVSwitch] Amlogic setting videomode to mode '{amlmode}'.")
-			fileWriteLine("/etc/u-boot.scr.d/000_hdmimode.scr", f"setenv hdmimode {amlmode}", source=MODULE_NAME)
-			fileWriteLine("/etc/u-boot.scr.d/000_outputmode.scr", f"setenv outputmode {amlmode}", source=MODULE_NAME)
-			system("update-autoexec")
-			fileWriteLine("/sys/class/ppmgr/ppscaler", "1", source=MODULE_NAME)
-			fileWriteLine("/sys/class/ppmgr/ppscaler", "0", source=MODULE_NAME)
-			fileWriteLine("/sys/class/video/axis", self.axis[mode], source=MODULE_NAME)
-			stride = fileReadLine("/sys/class/graphics/fb0/stride", default="", source=MODULE_NAME)
-			if self.current_mode is None:
-				self.current_mode = mode
-			if self.axis[self.current_mode] != self.axis[mode]:
-				limits = [int(x) for x in self.axis[mode].split()]
-				config.osd.dst_left.setChoices(default=limits[0], first=limits[0] - 255, last=limits[0] + 255)
-				config.osd.dst_top.setChoices(default=limits[1], first=limits[1] - 255, last=limits[1] + 255)
-				config.osd.dst_width.setChoices(default=limits[2], first=limits[2] - 255, last=limits[2] + 255)
-				config.osd.dst_height.setChoices(default=limits[3], first=limits[3] - 255, last=limits[3] + 255)
-				config.osd.dst_left.setValue(limits[2])
-				config.osd.dst_top.setValue(limits[3])
-				config.osd.dst_width.setValue(limits[0])
-				config.osd.dst_height.setValue(limits[1])
-				config.osd.dst_left.save()
-				config.osd.dst_top.save()
-				config.osd.dst_width.save()
-				config.osd.dst_height.save()
-			print(f"[AVSwitch] Framebuffer mode '{getDesktop(0).size().width()}', stride {stride}, axis '{self.axis[mode]}'.")
-		else:
-			success = fileWriteLine("/proc/stb/video/videomode_50hz", mode50, source=MODULE_NAME)
-			if success:
-				success = fileWriteLine("/proc/stb/video/videomode_60hz", mode60, source=MODULE_NAME)
-			if not success:  # Fallback if no possibility to setup 50/60 hz mode
-				fileWriteLine("/proc/stb/video/videomode", mode50, source=MODULE_NAME)
-			if BoxInfo.getItem("have24hz"):
-				fileWriteLine("/proc/stb/video/videomode_24hz", mode24, source=MODULE_NAME)
+		eAVControl.getInstance().setVideoModeMulti(mode50, mode60, mode24, 1)
+		if eAVControl.getInstance().hasVideoAxis():
+			limits = [int(x) for x in eAVControl.getInstance().getVideoAxis(mode).split()]
+			config.osd.dst_left.setChoices(default=limits[0], first=limits[0] - 255, last=limits[0] + 255)
+			config.osd.dst_top.setChoices(default=limits[1], first=limits[1] - 255, last=limits[1] + 255)
+			config.osd.dst_width.setChoices(default=limits[2], first=limits[2] - 255, last=limits[2] + 255)
+			config.osd.dst_height.setChoices(default=limits[3], first=limits[3] - 255, last=limits[3] + 255)
+			print(f"[AVSwitch] Framebuffer mode '{getDesktop(0).size().width()}', axis '{eAVControl.getInstance().getVideoAxis(mode)}'.")
+		self.setColorFormat(config.av.colorformat.value)
 		self.current_mode = mode
 		self.current_port = port
 
@@ -490,11 +411,6 @@ class VideoHardware:
 			config.av.videorate[mode].value = rate
 			config.av.videorate[mode].save()
 
-	def getAMLMode(self):
-		f = open("/sys/class/display/mode", "r")
-		currentmode = f.read().strip()
-		f.close()
-		return currentmode[:-4]
 
 	def updateAspect(self, cfgelement):
 		port = config.av.videoport.value

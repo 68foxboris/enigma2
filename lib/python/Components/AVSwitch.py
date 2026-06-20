@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from os.path import exists
-from os import W_OK, access, system
+from os import W_OK, access
 from time import sleep
 from os.path import isfile
 import os
 
 from Components.config import config, ConfigSlider, ConfigSelection, ConfigYesNo, ConfigEnableDisable, ConfigOnOff, ConfigSubsection, ConfigBoolean, ConfigSelectionNumber, ConfigText, ConfigSelectionInteger, ConfigNothing, NoSave
-from enigma import eAVSwitch, eAVControl, getDesktop
+from enigma import eAVControl, eAVSwitch, getDesktop
 from Components.SystemInfo import BoxInfo
 from Tools.Directories import fileWriteLine, fileReadLine
 
@@ -112,71 +112,100 @@ def InitAVSwitch():
 	config.av.passthrough_fix_long = ConfigSelection(choices=delayChoices, default=1200)
 	config.av.passthrough_fix_short = ConfigSelection(choices=delayChoices, default=100)
 
-	config.av.osd_alpha = ConfigSlider(default=255, increment=5, limits=(20, 255))  # Make Openpli compatible with some plugins who still use config.av.osd_alpha.
+	config.av.yuvenabled = ConfigBoolean(default=MACHINEBUILD != "vuduo")
+	config.av.osd_alpha = ConfigSlider(default=255, increment=5, limits=(20, 255))  # Make OpenATV compatible with some plugins who still use config.av.osd_alpha.
 
-	if isfile("/proc/stb/video/policy2"):
-		if isfile("/proc/stb/video/policy2_choices"):
-			policy2_choices_proc = "/proc/stb/video/policy2_choices"
-		else:
-			if isfile("/proc/stb/video/policy_choices"):
-				policy2_choices_proc = "/proc/stb/video/policy_choices"
-			else:
-				policy2_choices_proc = None
-		try:
-			policy2_choices_raw = open(policy2_choices_proc, "r").read()
-		except:
-			policy2_choices_raw = "letterbox"
-		policy2_choices = {}
-
-		if policy2_choices_raw and policy2_choices_raw is not None:
-			if "letterbox" in policy2_choices_raw:
-				policy2_choices.update({"letterbox": _("Letterbox")})
-			if "panscan" in policy2_choices_raw:
-				policy2_choices.update({"panscan": _("Pan&scan")})
-			if "nonliner" in policy2_choices_raw and not "nonlinear" in policy2_choices_raw:
-				policy2_choices.update({"nonliner": _("Stretch nonlinear")})
-			if "nonlinear" in policy2_choices_raw:
-				policy2_choices.update({"nonlinear": _("Stretch nonlinear")})
-			if "scale" in policy2_choices_raw and not "auto" in policy2_choices_raw and not "bestfit" in policy2_choices_raw:
-				policy2_choices.update({"scale": _("Stretch linear")})
-			if "full" in policy2_choices_raw:
-				policy2_choices.update({"full": _("Stretch full")})
-			if "auto" in policy2_choices_raw and not "bestfit" in policy2_choices_raw:
-				policy2_choices.update({"auto": _("Stretch linear")})
-			if "bestfit" in policy2_choices_raw:
-				policy2_choices.update({"bestfit": _("Stretch linear")})
-		config.av.policy_169 = ConfigSelection(choices=policy2_choices, default="letterbox")
-
-	if isfile("/proc/stb/video/policy_choices"):
-		policy_choices_proc = "/proc/stb/video/policy_choices"
+	if AMLOGIC:
+		config.av.policy_169 = ConfigSelection(default="11", choices=[
+			("4", _("Stretch nonlinear")),
+			("3", _("Stretch linear")),
+			("1", _("Stretch full")),
+			("10", _("Ignore")),
+			("11", _("Letterbox")),
+			("12", _("Pan&scan")),  # Should be "PanScan" or "Pan & Scan".
+			("13", _("Combined")),
+			("0", _("Pillarbox")),
+		])
+		config.av.policy_43 = ConfigSelection(default="8", choices=[
+			("2", _("Pillarbox")),
+			("6", _("Ignore")),
+			("7", _("Letterbox")),
+			("8", _("Pan&scan")),  # Should be "PanScan" or "Pan & Scan".
+			("9", _("Combined")),
+		])
 	else:
-		policy_choices_proc = None
-	try:
-		policy_choices_raw = open(policy_choices_proc, "r").read()
-	except:
-		policy_choices_raw = "panscan"
-	policy_choices = {}
+		# Some boxes have a redundant proc entry for policy2 choices, but some don't (The choices are from a 16:9 point of view anyways)
+		policy2ChoicesProc = "/proc/stb/video/policy2_choices"
+		if not exists(policy2ChoicesProc):
+			policy2ChoicesProc = "/proc/stb/video/policy_choices"
+		policy2ChoicesRaw = fileReadLine(policy2ChoicesProc, default="letterbox", source=MODULE_NAME)
+		choiceList = {}
+		if "letterbox" in policy2ChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Black bars on top/bottom in doubt, keep English term.
+			choiceList.update({"letterbox": _("Letterbox")})
+		if "panscan" in policy2ChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Cropped content on left/right in doubt, keep English term.
+			choiceList.update({"panscan": _("Pan&scan")})  # Should be "PanScan" or "Pan & Scan".
+		if "nonliner" in policy2ChoicesRaw and "nonlinear" not in policy2ChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the top/bottom. Center of picture maintains aspect, top/bottom lose aspect heaver than on linear stretch.
+			choiceList.update({"nonliner": _("Stretch nonlinear")})
+		if "nonlinear" in policy2ChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the top/bottom. Center of picture maintains aspect, top/bottom lose aspect heaver than on linear stretch.
+			choiceList.update({"nonlinear": _("Stretch nonlinear")})
+		if "scale" in policy2ChoicesRaw and "auto" not in policy2ChoicesRaw and "bestfit" not in policy2ChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+			choiceList.update({"scale": _("Stretch linear")})
+		if "auto" in policy2ChoicesRaw and "bestfit" not in policy2ChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+			choiceList.update({"auto": _("Stretch linear")})  # IanSav: This is duplicated!
+		if "bestfit" in policy2ChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+			choiceList.update({"bestfit": _("Stretch linear")})
+		if "full" in policy2ChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (force aspect).
+			choiceList.update({"full": _("Stretch full")})
+		config.av.policy_169 = ConfigSelection(default="letterbox", choices=choiceList)
+		policyChoicesRaw = fileReadLine("/proc/stb/video/policy_choices", default="panscan", source=MODULE_NAME)
+		choiceList = {}
+		if "pillarbox" in policyChoicesRaw and "panscan" not in policyChoicesRaw:
+			# Very few boxes support "pillarbox" as an alias for "panscan" (Which in fact does pillarbox) so only add "pillarbox" if "panscan" is not listed in choices.
+			#
+			# TRANSLATORS: Aspect ratio policy: Black bars on left/right in doubt, keep English term.
+			choiceList.update({"pillarbox": _("Pillarbox")})
+		if "panscan" in policyChoicesRaw:
+			# DRIVER BUG:	"panscan" in /proc actually does "pillarbox" (That's probably why an alias to it named "pillarbox" existed)!
+			#		Interpret "panscan" setting with a "Pillarbox" text in order to show the correct value in GUI.
+			#
+			# TRANSLATORS: Aspect ratio policy: Black bars on left/right in doubt, keep English term.
+			choiceList.update({"panscan": _("Pillarbox")})
+		if "letterbox" in policyChoicesRaw:
+			# DRIVER BUG:	"letterbox" in /proc actually does pan&scan.
+			#		"letterbox" and 4:3 content on 16:9 TVs is mutually exclusive, as "letterbox" is the method to show wide content on narrow TVs.
+			#		Probably the bug arose as the driver actually does the same here as it would for wide content on narrow TVs (it stretches the picture to fit width).
+			#
+			# TRANSLATORS: Aspect ratio policy: Fit width, cut/crop top and bottom (maintain aspect ratio).
+			choiceList.update({"letterbox": _("Pan&scan")})  # Should be "PanScan" or "Pan & Scan".
+		if "nonliner" in policyChoicesRaw and "nonlinear" not in policyChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the left/right. Center 50% of picture maintain aspect, left/right 25% lose aspect heaver than on linear stretch.
+			choiceList.update({"nonliner": _("Stretch nonlinear")})
+		if "nonlinear" in policyChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching the left/right. Center 50% of picture maintain aspect, left/right 25% lose aspect heaver than on linear stretch.
+			choiceList.update({"nonlinear": _("Stretch nonlinear")})
+		# "auto", "bestfit" and "scale" are aliases for the same "Stretch linear".
+		if "scale" in policyChoicesRaw and "auto" not in policyChoicesRaw and "bestfit" not in policyChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+			choiceList.update({"scale": _("Stretch linear")})
+		if "auto" in policyChoicesRaw and "bestfit" not in policyChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+			choiceList.update({"auto": _("Stretch linear")})
+		if "bestfit" in policyChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (all parts lose aspect).
+			choiceList.update({"bestfit": _("Stretch linear")})
+		if "full" in policyChoicesRaw:
+			# TRANSLATORS: Aspect ratio policy: Display as fullscreen, with stretching all parts of the picture with the same factor (force aspect).
+			choiceList.update({"full": _("Stretch full")})
+		config.av.policy_43 = ConfigSelection(default="panscan", choices=choiceList)
 
-	if policy_choices_raw and policy_choices_raw is not None:
-		if "pillarbox" in policy_choices_raw and not "panscan" in policy_choices_raw:
-			policy_choices.update({"pillarbox": _("Pillarbox")})
-		if "panscan" in policy_choices_raw:
-			policy_choices.update({"panscan": _("Pillarbox")})
-		if "letterbox" in policy_choices_raw:
-			policy_choices.update({"letterbox": _("Pan&scan")})
-		if "nonliner" in policy_choices_raw and not "nonlinear" in policy_choices_raw:
-			policy_choices.update({"nonliner": _("Stretch nonlinear")})
-		if "nonlinear" in policy_choices_raw:
-			policy_choices.update({"nonlinear": _("Stretch nonlinear")})
-		if "scale" in policy_choices_raw and not "auto" in policy_choices_raw and not "bestfit" in policy_choices_raw:
-			policy_choices.update({"scale": _("Stretch linear")})
-		if "full" in policy_choices_raw:
-			policy_choices.update({"full": _("Stretch full")})
-		if "auto" in policy_choices_raw and not "bestfit" in policy_choices_raw:
-			policy_choices.update({"auto": _("Stretch linear")})
-		if "bestfit" in policy_choices_raw:
-			policy_choices.update({"bestfit": _("Stretch linear")})
-	config.av.policy_43 = ConfigSelection(choices=policy_choices, default="panscan")
 	choiceList = [
 		("cvbs", "CVBS"),
 		("rgb", "RGB"),
@@ -212,7 +241,7 @@ def InitAVSwitch():
 
 	config.osd = ConfigSubsection()
 	config.osd.language = ConfigText(default=config.misc.locale.value)
-	if BoxInfo.getItem("AmlogicFamily"):
+	if eAVControl.getInstance().hasVideoAxis():
 		limits = [int(x) for x in avSwitch.getWindowsAxis().split()]
 		config.osd.dst_left = ConfigSelectionInteger(default=limits[0], first=limits[0] - 255, last=limits[0] + 255, step=1, wrap=False)
 		config.osd.dst_top = ConfigSelectionInteger(default=limits[1], first=limits[1] - 255, last=limits[1] + 255, step=1, wrap=False)
@@ -238,8 +267,9 @@ def InitAVSwitch():
 	def setColorFormat(configElement):
 		map = {"cvbs": 0, "rgb": 1, "svideo": 2, "yuv": 3}
 		iAVSwitch.setColorFormat(map[configElement.value])
-
 	config.av.colorformat.addNotifier(setColorFormat)
+
+	iAVSwitch.setInput("encoder")  # Initialize on startup.
 
 	def setAspectRatio(self, value):
 		iAVSwitch.setAspectRatio(value)
@@ -254,8 +284,6 @@ def InitAVSwitch():
 	# this will call the "setup-val" initial
 	config.av.tvsystem.addNotifier(setSystem)
 	config.av.wss.addNotifier(setWSS)
-
-	iAVSwitch.setInput("encoder")  # Initialize on startup.
 
 	BoxInfo.setItem("ScartSwitch", eAVControl.getInstance().hasScartSwitch())
 	bypassEDID = fileReadLine("/proc/stb/hdmi/bypass_edid_checking", default=None, source=MODULE_NAME)
