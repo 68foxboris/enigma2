@@ -184,6 +184,16 @@ extern "C" {
 	}
 
 	static PyObject *
+	eConsolePy_setLineMode(eConsolePy* self, PyObject *args)
+	{
+		int enable = 0;
+		if (!PyArg_ParseTuple(args, "i", &enable))
+			return NULL;
+		self->cont->setLineMode(enable != 0);
+		Py_RETURN_NONE;
+	}
+
+	static PyObject *
 	eConsolePy_write(eConsolePy* self, PyObject *args)
 	{
 		char *data;
@@ -297,7 +307,7 @@ extern "C" {
 		{
 			int fd = open(filename, O_WRONLY|O_CREAT|O_TRUNC, 0644);
 			self->cont->setFileFD(1, fd);
-			eDebug("[eConsoleAppContainer] dumpToFile open(%s, O_WRONLY|O_CREAT|O_TRUNC, 0644)=%d", filename, fd);
+			eDebug("eConsoleAppContainer::dumpToFile open(%s, O_WRONLY|O_CREAT|O_TRUNC, 0644)=%d", filename, fd);
 		}
 		Py_RETURN_NONE;
 	}
@@ -320,12 +330,12 @@ extern "C" {
 				char readbuf[32*1024];
 				int rsize = read(fd, readbuf, 32*1024);
 				self->cont->setFileFD(0, fd);
-				eDebug("[eConsoleAppContainer] readFromFile open(%s, O_RDONLY)=%d, read: %d", filename, fd, rsize);
+				eDebug("eConsoleAppContainer::readFromFile open(%s, O_RDONLY)=%d, read: %d", filename, fd, rsize);
 				self->cont->write(readbuf, rsize);
 			}
 			else
 			{
-				eDebug("[eConsoleAppContainer] readFromFile %s not exist!", filename);
+				eDebug("eConsoleAppContainer::readFromFile %s not exist!", filename);
 				self->cont->setFileFD(0, -1);
 			}
 		}
@@ -338,6 +348,9 @@ extern "C" {
 		},
 		{(char*)"setIONice", (PyCFunction)eConsolePy_setIONice, METH_VARARGS,
 		(char*)"set ionice"
+		},
+		{(char*)"setLineMode", (PyCFunction)eConsolePy_setLineMode, METH_VARARGS,
+		(char*)"enable line-buffered stdout/stderr via /usr/bin/stdbuf"
 		},
 		{(char*)"setCWD", (PyCFunction)eConsolePy_setCWD, METH_VARARGS,
 		(char*)"set working dir"
