@@ -94,6 +94,7 @@ class ServiceInfo(Converter):
 	IS_VIDEO_AVC = 36
 	IS_VIDEO_HEVC = 37
 	IS_SOFTCSA = 38
+	VIDEO_INFORMATION = 39
 
 	def __init__(self, type):
 		Converter.__init__(self, type)
@@ -276,6 +277,15 @@ class ServiceInfo(Converter):
 				return self.getServiceInfoString(info, iServiceInformation.sTransferBPS, lambda x: _("%d kB/s") % (x / 1024))
 			elif self.type == self.HAS_HBBTV:
 				return info.getInfoString(iServiceInformation.sHBBTVUrl)
+			elif self.type == self.VIDEO_INFORMATION:
+				if frameRate > 0:
+					if progressive == "i":
+						frameRate *= 2
+					frameRate = f" {(frameRate + 500) // 1000}Hz"
+				else:
+					frameRate = ""
+				result = f"{videoWidth}x{videoHeight}{progressive}{frameRate}" if videoWidth != -1 and videoHeight != -1 else ""
+
 			elif self.isVideoService(info):
 				if self.type == self.XRES:
 					return self.getServiceInfoString(info, iServiceInformation.sVideoWidth)
