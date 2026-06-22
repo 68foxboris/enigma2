@@ -2421,7 +2421,7 @@ def readSkin(screen, skin, names, desktop):
 					connection = converterClass(args)
 					connection.connect(source)
 				source = connection
-\			for converter in widget.findall("convert"):
+			for converter in widget.findall("convert"):
 				converterType = converter.get("type")
 				nostrip = converter.get("nostrip") and converter.get("nostrip").lower() in ("1", "enabled", "nostrip", "on", "true", "yes")
 				assert converterType, "[Skin] The 'convert' tag needs a 'type' attribute!"
