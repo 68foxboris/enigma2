@@ -2280,8 +2280,8 @@ msgstr "Добавить файлы в плейлист"
 msgid "Add legacy LEFT/RIGHT actions"
 msgstr "Добавить устаревшие действия ВЛЕВО/ВПРАВО"
 
-msgid "Add more slots"
-msgstr "Добавить больше слотов"
+msgid "Add slots"
+msgstr "Добавить слоты"
 
 msgid "Add new tag"
 msgstr "Добавить новый тег"
@@ -2857,9 +2857,6 @@ msgstr ""
 
 msgid "Are you sure you want to delete this?"
 msgstr "Вы уверены, что хотите удалить это?"
-
-msgid "Are you sure you want to disable Chkroot Multiboot?"
-msgstr "Вы уверены, что хотите отключить Chkroot Multiboot?"
 
 msgid "Are you sure you want to exit this wizard?"
 msgstr "Уверены, что хотите выйти из этого мастера?"
@@ -6729,9 +6726,6 @@ msgstr "Удалить образ"
 msgid "Delete only highlighted file"
 msgstr "Удалить только выделенный файл"
 
-msgid "Delete or Wipe the highlighted slot"
-msgstr "Удалить или стереть выделенный слот"
-
 msgid "Delete logfile"
 msgstr "Удалить файл журнала"
 
@@ -6990,6 +6984,9 @@ msgstr "Отключить PiP (картинку в картинке)"
 
 msgid "Disable background scanning"
 msgstr "Отключить фоновый поиск"
+
+msgid "Disable Chkroot Multiboot?"
+msgstr "Отключить мультизагрузку Chkroot?"
 
 msgid "Disable current event but not coming events"
 msgstr "Отключить текущее событие,но не отключать таймер"
@@ -7790,6 +7787,9 @@ msgstr "Пустой слот"
 
 msgid "Empty Trash"
 msgstr "Пустая корзина"
+
+msgid "Empty or Wipe the highlighted slot"
+msgstr "Очистите или удалите выделенный слот"
 
 msgid "Enable"
 msgstr "Включить"
@@ -14283,11 +14283,11 @@ msgstr "Нажмите ОК, чтобы использовать этот язы
 msgid "Press OK to use this locale.  [%s]"
 msgstr "Нажмите OK, чтобы использовать эту локаль.  [%s]"
 
-msgid "Press the UP/DOWN buttons to select a slot and press OK or GREEN to reboot to that image. If available, YELLOW will either delete or wipe the image. A deleted image can be restored with the BLUE button. A wiped image is completely removed and cannot be restored!"
-msgstr "С помощью кнопок «ВВЕРХ»/«ВНИЗ» выберите слот и нажмите кнопку «OK» или ЗЕЛЁНУЮ кнопку, чтобы перезагрузить устройство с этого образа. Если образ доступен, ЖЁЛТАЯ кнопка удалит или сотрёт его. Удалённый образ можно восстановить с помощью СИНЕЙ кнопки. Удалённый образ полностью удаляется и не подлежит восстановлению!"
+msgid "Press the UP/DOWN buttons to select a slot and press OK or GREEN to reboot to that slot. If available, YELLOW will either delete or wipe the slot. A deleted slot can be restored with the BLUE button. A wiped slot is completely removed and cannot be restored!"
+msgstr "Нажмите кнопки ВВЕРХ/ВНИЗ, чтобы выбрать слот, и нажмите OK или ЗЕЛЕНЫЙ, чтобы перезагрузиться в этот слот. Если доступен ЖЕЛТЫЙ, слот будет удален или очищен. Удаленный слот можно восстановить с помощью СИНЕЙ кнопки. Очищенный слот полностью удаляется и не может быть восстановлен!"
 
-msgid "Press the UP/DOWN buttons to select a slot, then press OK or GREEN to reboot into that image. If available, YELLOW will disable Multiboot, delete, or wipe the selected image. Press BLUE to add more slots."
-msgstr "Press the UP/DOWN buttons to select a slot, then press OK or GREEN to reboot into that image. If available, YELLOW will disable Multiboot, delete, or wipe the selected image. Press BLUE to add more slots."
+msgid "Press the UP/DOWN buttons to select a slot, then press OK or GREEN to reboot into that slot. If available, YELLOW will disable MultiBoot, delete, or wipe the selected slot. Press BLUE to add more slots."
+msgstr "Press the UP/DOWN buttons to select a slot, then press OK or GREEN to reboot into that slot. If available, YELLOW will disable MultiBoot, delete, or wipe the selected slot. Press BLUE to add more slots."
 
 msgid "Press OK, save and exit..."
 msgstr "Нажмите ОК, сохранить и выйти..."
@@ -15079,6 +15079,13 @@ msgstr "Переименовать как:"
 #, python-format
 msgid "Renamed %s!"
 msgstr "Переименован в %s!"
+
+#, python-format
+msgid "Rename slot '%s' (leave empty to reset):"
+msgstr "Переименуйте слот в '%s' (оставьте пустым для сброса):"
+
+msgid "Rename the highlighted slot"
+msgstr "Переименуйте выделенный слот"
 
 msgid "Renovation"
 msgstr "Обновление"
