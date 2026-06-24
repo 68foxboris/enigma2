@@ -180,6 +180,8 @@ class MultiBootClass():
 		finally:
 			self.console.ePopen([UMOUNT, UMOUNT, tempDir])
 			rmdir(tempDir)
+		if not name and slotCode.isdecimal():
+			name = f"BuildIn Slot {slotCode}"
 		return name
 
 	def updateDreamBootSection(self, slotCode, setDefault=False):
@@ -619,6 +621,11 @@ class MultiBootClass():
 				self.imageList[self.slotCode]["imagename"] = f"{info.get("displaydistro", info.get("distro"))} {info.get("imgversion")} ({compileDate})"
 				self.imageList[self.slotCode]["imagelogname"] = f"{info.get("displaydistro", info.get("distro"))} {info.get("imgversion")} ({compileDate})"
 				self.imageList[self.slotCode]["status"] = "active"
+			elif isfile(join(imageDir, "usr/bin/enigma2x.bin")):
+				self.imageList[self.slotCode]["detection"] = "Found a disabled enigma2 binary file"
+				self.imageList[self.slotCode]["imagename"] = _("Disabled")
+				self.imageList[self.slotCode]["imagelogname"] = "Disabled"
+				self.imageList[self.slotCode]["status"] = "hidden"
 			else:
 				self.imageList[self.slotCode]["detection"] = "Found no enigma files"
 				self.imageList[self.slotCode]["imagename"] = _("Empty")
@@ -947,6 +954,8 @@ class MultiBootClass():
 			self.callback(3)
 		else:
 			rmdir(self.tempDir)
+			if exists(DREAM_BOOT_FILE):
+				self.updateDreamBootSection(self.slotCode)
 			self.callback(0)
 
 	def isFat32(self, device):
