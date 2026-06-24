@@ -28,7 +28,6 @@ public:
 #ifndef SWIG
 	void operator delete(void *p) { ::operator delete(p); } // NOSONAR - intentional: operator delete delegates to ::operator delete; no custom operator new needed as DEFINE_REF uses standard allocation via "delete this"
 #endif
-#endif
 #ifndef SWIG
 	virtual void AddRef()=0;
 	virtual void Release()=0;
