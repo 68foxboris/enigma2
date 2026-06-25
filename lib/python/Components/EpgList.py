@@ -60,6 +60,7 @@ class EPGList(GUIComponent):
 		self.skinColumns = False
 		self.tw = 120
 		self.dy = 0
+		self.sidesMargin = 0
 
 		if type == EPG_TYPE_SINGLE:
 			self.l.setBuildFunc(self.buildSingleEntry)
@@ -69,6 +70,7 @@ class EPGList(GUIComponent):
 			assert type in (EPG_TYPE_SIMILAR, EPG_TYPE_PARTIAL)
 			self.l.setBuildFunc(self.buildSimilarEntry)
 		self.epgcache = eEPGCache.getInstance()
+		self.catchUpIcon = LoadPixmap(cached=True, path=resolveFilename(SCOPE_GUISKIN, "icons/catchup.png"))
 		main_icons = (
 			"epgclock",
 			"zapclock",
@@ -164,9 +166,9 @@ class EPGList(GUIComponent):
 				x += self.col[1]
 				self.descr_rect = Rect(x + 85, 0, width - x, height)
 			else:
-				self.weekday_rect = Rect(0, 0, width / 20 * 2 - 10, height)
-				self.datetime_rect = Rect(width / 20 * 2, 0, width / 20 * 5 - 15, height)
-				self.descr_rect = Rect(width / 20 * 7, 0, width / 20 * 13, height)
+				self.weekday_rect = Rect(0, 0, width // 20 * 2 - 10, height)
+				self.datetime_rect = Rect(width // 20 * 2, 0, width / 20 * 5 - 15, height)
+				self.descr_rect = Rect(width // 20 * 7, 0, width / 20 * 13, height)
 		elif self.type == EPG_TYPE_MULTI:
 			if self.skinColumns:
 				x = 0
@@ -178,14 +180,14 @@ class EPGList(GUIComponent):
 				self.descr_rect = Rect(x, 0, width - x, height)
 			else:
 				xpos = 0
-				w = width / 10 * 3
+				w = width // 10 * 3
 				self.service_rect = Rect(xpos, 0, w - 10, height)
 				xpos += w
-				w = width / 10 * 2
+				w = width // 10 * 2
 				self.start_end_rect = Rect(xpos, 0, w - 10, height)
 				self.progress_rect = Rect(xpos, 4, w - 10, height - 8)
 				xpos += w
-				w = width / 10 * 5
+				w = width // 10 * 5
 				self.descr_rect = Rect(xpos, 0, width, height)
 		else:  # EPG_TYPE_SIMILAR
 			if self.skinColumns:
@@ -197,23 +199,26 @@ class EPGList(GUIComponent):
 				self.service_rect = Rect(x + 85, 0, width - x, height)
 			else:
 				self.weekday_rect = Rect(0, 0, width / 20 * 2 - 10, height)
-				self.datetime_rect = Rect(width / 20 * 2, 0, width / 20 * 5 - 15, height)
-				self.service_rect = Rect(width / 20 * 7, 0, width / 20 * 13, height)
+				self.datetime_rect = Rect(width // 20 * 2, 0, width // 20 * 5 - 15, height)
+				self.service_rect = Rect(width // 20 * 7, 0, width // 20 * 13, height)
 
 	def gap(self, width):
 		return width - self.colGap
 
-	def getClockTypesForEntry(self, service, eventId, beginTime, duration):
+	def getClockTypesForEntry(self, service, eventId, beginTime, duration, catchUpIcon=None):
 		if not beginTime:
 			return None
+		type = []
 		rec = self.timer.isInTimer(eventId, beginTime, duration, service)
+		if catchUpIcon and self.detectCatchupAvailable(beginTime, service):
+			type = [65]
 		if rec is not None:
-			return rec[1]
+			return (type + rec[1])
 		else:
-			return None
+			return type
 
 	def buildSingleEntry(self, service, eventId, beginTime, duration, EventName):
-		clock_types = self.getClockTypesForEntry(service, eventId, beginTime, duration)
+		clock_types = self.getClockTypesForEntry(service, eventId, beginTime, duration, self.catchUpIcon)
 		r1 = self.weekday_rect
 		r2 = self.datetime_rect
 		r3 = self.descr_rect
@@ -228,6 +233,7 @@ class EPGList(GUIComponent):
 		]
 		if clock_types:
 			for i in range(len(clock_types)):
+				clockIcon = (clock_types[i] == 65 and self.catchUpIcon) or self.clocks[clock_types[i]]
 				res.append((eListboxPythonMultiContent.TYPE_PIXMAP_ALPHABLEND, r3.x + i * self.space, r3.y + self.dy, self.iconSize, self.iconSize, self.clocks[clock_types[i]]))
 			res.append((eListboxPythonMultiContent.TYPE_TEXT, r3.x + (i + 1) * self.space, r3.y, r3.w, r3.h, 0, RT_HALIGN_LEFT | RT_VALIGN_CENTER, EventName))
 		else:
@@ -398,7 +404,7 @@ class EPGList(GUIComponent):
 		index = 0
 		refstr = serviceref.toString()
 		for x in self.list:
-			if CompareWithAlternatives(x[1], serviceref):
+			if CompareWithAlternatives(x[1], refstr):
 				self.instance.moveSelectionTo(index)
 				break
 			index += 1
@@ -455,6 +461,9 @@ class EPGList(GUIComponent):
 				self.skinColumns = True
 			else:
 				warningWrongSkinParameter(attrib)
+
+		def sidesMargin(value):
+			self.sidesMargin = parseScale(value)
 
 		def setColGap(value):
 			self.colGap = int(value)

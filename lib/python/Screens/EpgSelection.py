@@ -752,7 +752,7 @@ class EPGSelection(Screen, HelpableScreen):
 				self["key_play"].setText(_("PLAY"))
 
 	def playCatchup(self):
-		if hasattr(self["list"], "detectCatchupAvailable") and callable(self.catchupPlayerFunc):
+		if self.type == EPG_TYPE_SINGLE and hasattr(self["list"], "detectCatchupAvailable") and callable(self.catchupPlayerFunc):
 			event, service = self["list"].getCurrent()[:2]
 			if event and service:
 				stime = event.getBeginTime()
@@ -836,6 +836,6 @@ class EPGSelection(Screen, HelpableScreen):
 			self.key_green_choice = self.ADD_TIMER
 		if self.parent and eventid and hasattr(self.parent, "setEvent"):
 			self.parent.setEvent(serviceref, eventid)
-		if "key_play" in self:
+		if self.type == EPG_TYPE_SINGLE and "key_play" in self:
 			self.setupKeyPlayButtonDisplay(begin, serviceref)
 		self["list"].l.invalidate()
