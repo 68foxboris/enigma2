@@ -21,7 +21,8 @@ dist_install_DATA = \
 	Roboto-Black.ttf \
 	Roboto-BlackItalic.ttf \
 	Roboto-Bold.ttf \
-	Roboto-BoldItalic.ttf
+	Roboto-BoldItalic.ttf \
+	enigma2icons.ttf
 
 install-data-hook:
 	cd $(DESTDIR)$(datadir)/fonts && \
