@@ -8832,8 +8832,8 @@ msgstr "Фолклендские (Мальвинские) острова"
 msgid "Fallback API did not return a valid result."
 msgstr "Резервный API не вернул допустимый результат."
 
-msgid "Fallback Font *"
-msgstr "Резервный шрифт *"
+msgid "Fallback Font"
+msgstr "Резервный шрифт"
 
 msgid "Fallback Timer"
 msgstr "Резервный удаленный таймер"
@@ -15952,11 +15952,8 @@ msgstr "Выберите 'FBC SCR' ,если Ваш тюнер испрольз�
 msgid "Select 'No' to only write a log message to the debug log file."
 msgstr "Если выключено, то в лог попадёт только сообщение об ошибке."
 
-msgid "Select the access mode for the automatically exported samba shares."
-msgstr "Выберите режим доступа для автоматически экспортируемых общих ресурсов Samba."
-
-msgid "Select 'Yes' to allow each storage device detected to be automatically exported as samba share."
-msgstr "Выберите 'Да', чтобы разрешить автоматически экспортировать каждое обнаруженное устройство хранения данных как общий ресурс Samba."
+msgid "Select the mode of access, Read/Write or Read Only, applied to all automatically exported Samba shares."
+msgstr "Выберите режим доступа: чтение/запись или только чтение, который будет применяться ко всем автоматически экспортируемым общим ресурсам Samba."
 
 msgid "Select 'Yes' to enable the monitoring UI web interface for the DNSCrypt subsystem."
 msgstr "Выберите «Да», чтобы включить веб-интерфейс мониторинга подсистемы DNSCrypt."
@@ -21982,6 +21979,9 @@ msgstr "Какой день недели?"
 
 msgid "What type of service scan do you want?"
 msgstr "Какой тип сканирования Вы хотите выбрать?"
+
+msgid "When enabled, allow each storage device detected to be automatically exported as a Samba share."
+msgstr "При включении этой функции разрешается автоматический экспорт каждого обнаруженного устройства хранения данных в качестве общей папки Samba."
 
 msgid "When enabled a simplified version from the second infobar is shown. This can also be toggled instantly by holding the OK buttin when the second infobar is visible. The infobar will shortly disappear and then shown in the other mode."
 msgstr "При включении отображается упрощенная версия второй информационной панели. Это также можно мгновенно переключить, удерживая кнопку ОК, когда видна вторая информационная панель. Информационная панель вскоре исчезнет, а затем отобразится в другом режиме."
