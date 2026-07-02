@@ -52,7 +52,6 @@ EXTRA_OECONF = "\
 	STAGING_INCDIR=${STAGING_INCDIR} \
 	STAGING_LIBDIR=${STAGING_LIBDIR} \
 	${@bb.utils.contains("MACHINE_FEATURES", "textlcd", "--with-textlcd" , "", d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "hifblayer", "--with-hifblayer" , "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "7segment 7seg", "--with-7segment" , "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "colorlcd", "--with-colorlcd" , "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "colorlcd128", "--with-colorlcd128" , "", d)} \
