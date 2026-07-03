@@ -4,7 +4,7 @@ from os.path import exists, isfile, join
 from re import findall
 from subprocess import PIPE, Popen
 
-from enigma import eDBoxLCD, Misc_Options, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, getE2Rev, eDVBCSAEngine
+from enigma import Misc_Options, eDBoxLCD, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, getE2Rev, eDVBCSAEngine
 
 from process import ProcessList
 from Tools.Directories import SCOPE_LIBDIR, SCOPE_SKIN, isPluginInstalled, fileCheck, fileReadLine, fileReadLines, fileExists, fileHas, pathExists, resolveFilename
