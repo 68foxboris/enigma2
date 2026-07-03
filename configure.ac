@@ -282,16 +282,6 @@ if test x"$withnolcd" != xno ; then
 fi
 AM_CONDITIONAL(NO_LCD, test x"$withnolcd" != xno)
 
-AC_ARG_WITH(hifblayer,
-	AC_HELP_STRING([--with-hifblayer], [use HI FB layer, yes or no]),
-	[[withhifblayer=$withval]],
-	[[withhifblayer=no]]
-)
-if test x"$withhifblayer" != xno ; then
-	AC_DEFINE(HAVE_HIFBLAYER, 1,[Define when using a HI FB layer])
-fi
-AM_CONDITIONAL(HAVE_HIFBLAYER, test x"$withhifblayer" != xno)
-
 AC_ARG_WITH(textlcd,
 	AS_HELP_STRING([--with-textlcd], [use ascii based lcd, yes or no]),
 	[[withtextlcd=$withval]],
