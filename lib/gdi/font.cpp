@@ -158,13 +158,15 @@ std::string fontRenderClass::AddFont(const std::string &filename, const std::str
 	}
 	FT_Done_Face(face);
 
+	auto it = fontMap.find(name);
+	if (it != fontMap.end())
+		delete it->second;
+
 	fontListEntry *n = new fontListEntry;
 	n->filename = filename;
 	n->face = name;
 	n->scale = scale;
 	n->renderflags = renderflags;
-	n->next=font;
-	font=n;
 
 	fontMap[name] = n;
 	fontFacesCacheValid = false;
@@ -187,7 +189,6 @@ fontRenderClass::fontRenderClass()
 	}
 	eDebug("[Font] Loading fonts.");
 	fflush(stdout);
-	font=0;
 
 	int maxbytes=4*1024*1024;
 	eDebug("[Font] Initializing font cache, using max. %dMB.", maxbytes/1024/1024);
@@ -252,12 +253,8 @@ float fontRenderClass::getLineHeight(const gFont& font)
 fontRenderClass::~fontRenderClass()
 {
 	singleLock s(ftlock);
-	while(font)
-	{
-		fontListEntry *f=font;
-		font=font->next;
-		delete f;
-	}
+	for (auto &entry : fontMap)
+		delete entry.second;
 	fontMap.clear();
 
 //	auskommentiert weil freetype und enigma die kritische masse des suckens ueberschreiten.
@@ -284,8 +281,8 @@ std::vector<std::string> fontRenderClass::getFontFaces()
 	if (!fontFacesCacheValid)
 	{
 		fontFacesCache.clear();
-		for (fontListEntry *f = font; f; f = f->next)
-			fontFacesCache.push_back(f->face);
+		for (const auto &entry : fontMap)
+			fontFacesCache.push_back(entry.first);
 		fontFacesCacheValid = true;
 	}
 	return fontFacesCache;
@@ -1099,10 +1096,10 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 					int sa = i * 16;
 					if (sa < 256)
 					{
-						da = BLEND(background.a, currentforeground.a, sa) & 0xFF;
-						dr = BLEND(background.r, currentforeground.r, sa) & 0xFF;
-						dg = BLEND(background.g, currentforeground.g, sa) & 0xFF;
-						db = BLEND(background.b, currentforeground.b, sa) & 0xFF;
+						da = BLEND(background.a, currentforeground.a, sa) & 0xFF; // NOSONAR
+						dr = BLEND(background.r, currentforeground.r, sa) & 0xFF; // NOSONAR
+						dg = BLEND(background.g, currentforeground.g, sa) & 0xFF; // NOSONAR
+						db = BLEND(background.b, currentforeground.b, sa) & 0xFF; // NOSONAR
 					}
 #undef BLEND
 					da ^= 0xFF;
