@@ -167,7 +167,7 @@ def InitSkins():
 	if resolution[0] and resolution[1]:
 		gMainDC.getInstance().setResolution(resolution[0], resolution[1])
 		getDesktop(GUI_SKIN_ID).resize(eSize(resolution[0], resolution[1]))
-	runCallbacks = True  #
+	runCallbacks = True
 	# Load all XML templates.
 	reloadSkinTemplates()
 	resolved = resolveFilename(SCOPE_FONTS, "enigma2icons.ttf")
@@ -1570,27 +1570,6 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 				parameters[name] = list(map(parseParameter, [x.strip() for x in value.split(",")])) if "," in value else parseParameter(value)
 			else:
 				skinError(f"Tag 'parameter' needs a name and value, got name='{name}' and size='{value}'")
-	for tag in domSkin.findall("menuicons"):
-		for menuicon in tag.findall("menuicon"):
-			key = menuicon.attrib.get("key")
-			image = menuicon.attrib.get("image")
-			if key and image is not None:
-				menuicons[key] = image
-				# print(f"[Skin] DEBUG: Menuicon key='{key}', image='{image}'.")
-			else:
-				skinError(f"Tag 'menuicon' needs key and image, got key='{key}' and image='{image}'")
-	for tag in domSkin.findall("screens"):
-		for screen in tag.findall("screen"):
-			image = screen.attrib.get("image")
-			key = screen.attrib.get("key", "")
-			keys = screen.attrib.get("keys", "")
-			if image is not None and (key or keys):
-				keys = [x.strip() for x in keys.split(",")] if keys else [key]
-				for key in keys:
-					screens[key] = image
-					# print(f"[Skin] DEBUG: Screen key='{key}', image='{image}'.")
-			else:
-				skinError(f"Tag 'screen' needs key or keys and image, got key='{key}' keys='{keys}' and image='{image}'")
 	for tag in domSkin.findall("menus"):
 		for menu in tag.findall("menu"):
 			image = menu.attrib.get("image")
@@ -1603,6 +1582,30 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 					# print(f"[Skin] DEBUG: Menu key='{key}', image='{image}'.")
 			else:
 				skinError(f"Tag 'menu' needs key or keys and image, got key='{key}' keys='{keys}' and image='{image}'")
+	for tag in domSkin.findall("menuicons"):
+		for menuicon in tag.findall("menuicon"):
+			image = menuicon.attrib.get("image")
+			key = menuicon.attrib.get("key", "")
+			keys = menuicon.attrib.get("keys", "")
+			if image is not None and (key or keys):
+				keys = [x.strip() for x in keys.split(",")] if keys else [key]
+				for key in keys:
+					menuicon[key] = image
+					# print(f"[Skin] DEBUG: Menuicon key='{key}', image='{image}'.")
+			else:
+				skinError(f"Tag 'menuicon' needs key or keys and image, got key='{key}' keys='{keys}' and image='{image}'")
+	for tag in domSkin.findall("screens"):
+		for screen in tag.findall("screen"):
+			image = screen.attrib.get("image")
+			key = screen.attrib.get("key", "")
+			keys = screen.attrib.get("keys", "")
+			if image is not None and (key or keys):
+				keys = [x.strip() for x in keys.split(",")] if keys else [key]
+				for key in keys:
+					screens[key] = image
+					# print(f"[Skin] DEBUG: Screen key='{key}', image='{image}'.")
+			else:
+				skinError(f"Tag 'screen' needs key or keys and image, got key='{key}' keys='{keys}' and image='{image}'")
 	for tag in domSkin.findall("setups"):
 		for setup in tag.findall("setup"):
 			image = setup.attrib.get("image")
