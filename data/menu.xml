@@ -30,6 +30,7 @@
 		<menu key="information" level="0" text="Information" description="This menu contains selections to display information about the receiver." weight="5">
 			<item key="distribution_info_screen" text="OpenPli Information" weight="5"><screen module="Information" screen="DistributionInformation"/></item>
 			<item key="receiver_info_screen" text="Receiver Information" weight="10"><screen module="Information" screen="ReceiverInformation"/></item>
+			<item key="benchmark_info_screen" level="2" text="Benchmarks" weight="12" conditional="config.usage.informationShowAllMenuScreens.value"><screen module="Information" screen="BenchmarkInformation" /></item>
 			<item key="device_screen" text="Tuner Information" weight="15"><screen module="Information" screen="TunerInformation"/></item>
 			<item key="device_info_screen" text="Storage" weight="25"><screen module="Information" screen="StorageInformation"/></item>
 			<item key="memory_info_screen" text="Memory" weight="30"><screen module="Information" screen="MemoryInformation"/></item>
