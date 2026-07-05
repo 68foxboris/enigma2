@@ -20,4 +20,4 @@ install_PYTHON = \
 	CronTimer.py OScamInfo.py LogManager.py Time.py OSDCalibration.py \
 	FlashManager.py MultiBootManager.py ImageBackup.py SkinSelector.py \
 	SwapManager.py DeviceManager.py Information.py QuadPiP.py RestartNetwork.py \
-	Toast.py
+	Toast.py HDMICEC.py
