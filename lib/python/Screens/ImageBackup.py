@@ -138,16 +138,20 @@ class ImageBackup(Screen):
 		current = self["config"].getCurrent()  # (label, slotCode, recovery, slotDistro, slotVersion)
 		slotDistro = current[0][3] if len(current[0]) > 3 else None
 		slotVersion = current[0][4] if len(current[0]) > 4 else None
-		targets = []
-		choiceList = []  # (label, slotCode, target, recovery, slotDistro, slotVersion)
-		if current[0][1]:  # The MultiBoot enumeration is complete as we now have slotCodes.
-			for target in [join("/media", x) for x in listdir("/media")] + ([join("/media/net", x) for x in listdir("/media/net")] if isdir("/media/net") else []):
-				if Freespace(target) > 300000:
-					targets.append(target)
-					choiceList.append((target, current[0][1], target, current[0][2], slotDistro, slotVersion))
-			choiceList.append((_("Do not backup the image"), False, None, False, None, None))
-			print(f"[ImageBackup] Potential target{"" if len(targets) == 1 else "s"}: '{"', '".join(targets)}'.")
-			self.session.openWithCallback(self.runImageBackup, ChoiceBox, text=_("Please select the target location to save the backup:"), choiceList=choiceList, windowTitle=self.getTitle())
+		if current != None:
+			targets = []
+			choiceList = []  # (label, slotCode, target, recovery, slotDistro, slotVersion)
+			if current[0][1]:  # The MultiBoot enumeration is complete as we now have slotCodes.
+				for target in [join("/media", x) for x in listdir("/media")] + ([join("/media/net", x) for x in listdir("/media/net")] if isdir("/media/net") else []):
+					if Freespace(target) > 300000:
+						targets.append(target)
+						choiceList.append((target, current[0][1], target, current[0][2], slotDistro, slotVersion))
+				choiceList.append((_("Do not backup the image"), False, None, False, None, None))
+				print(f"[ImageBackup] Potential target{"" if len(targets) == 1 else "s"}: '{"', '".join(targets)}'.")
+				self.session.openWithCallback(self.runImageBackup, ChoiceBox, title=_("Please select the target location to save the backup:"), list=choiceList, windowTitle=self.getTitle())
+		else:
+			self.session.open(MessageBox, "You are using different MultiBoot. Not Chkroot MultiBoot.\n\nSorry You can not create backup.", MessageBox.TYPE_ERROR, timeout=10)
+			return
 
 	def keyCloseRecursive(self):
 		self.close(True)
@@ -610,7 +614,7 @@ class ImageBackup(Screen):
 			fileWriteLines(self.runScript, cmdLines, source=MODULE_NAME)
 			chmod(self.runScript, 0o755)
 			print("[ImageBackup] Running the shell script.")
-			self.session.openWithCallback(consoleCallback, Console, title=_("Image Backup To %s") % target, cmdlist=[self.runScript], closeOnSuccess=False, showScripts=False)
+			self.session.openWithCallback(consoleCallback, Console, title=_("Image Backup To %s") % target, cmdlist=[self.runScript], closeOnSuccess=False)
 			config.usage.shutdownOK.setValue(shutdownOK)
 			config.usage.shutdownOK.save()
 			configfile.save()
