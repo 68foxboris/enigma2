@@ -1815,7 +1815,7 @@ class SeekBar(Screen):
 		self["length"].setText(f"{length // 60}:{length % 60:02d}")
 
 	def screenShown(self):
-		for component in self.active_components:
+		for component in self.activeComponents:
 			if isinstance(component, (PositionGauge, Progress)):  # Progress is used for composite widgets like in Metrix.
 				for attribute, value in component.skinAttributes:
 					match attribute:
