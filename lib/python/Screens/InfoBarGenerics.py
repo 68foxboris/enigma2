@@ -1208,7 +1208,7 @@ class InfoBarMenu:
 	def __init__(self):
 		self["MenuActions"] = HelpableActionMap(self, ["InfobarMenuActions"],
 			{
-				"mainMenu": (self.mainMenu, _("Enter main menu...")),
+				"mainMenu": (self.showMainMenu, _("Open Main Menu...")),
 			})
 		self.session.infobar = None
 
