@@ -291,7 +291,8 @@ class PowerKey:
 				except:
 					print("[StartEnigma] Error during executing module %s, screen %s" % (selected[1], selected[2]))
 			elif selected[0] == "Menu":
-				root = mdom.getroot()
+				from Screens.Menu import MainMenu, menuDom
+				root = menuDom()
 				for x in root.findall("menu"):
 					if x.get("key") == "shutdown":
 						self.session.infobar = self
@@ -670,7 +671,7 @@ Screen.globalScreen = Globals()
 
 enigma.eProfileWrite("Standby")
 import Screens.Standby
-from Screens.Menu import MainMenu, mdom
+from Screens.Menu import MainMenu
 
 enigma.eProfileWrite("GlobalActionMap")
 from GlobalActions import globalActionMap

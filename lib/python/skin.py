@@ -225,20 +225,20 @@ def reloadSkins():
 	global colors, domScreens, fonts, menus, menuicons, parameters, screens, setups, switchPixmap
 	domScreens.clear()
 	colors.clear()
-	colors = {
+	colors.update({
 		"key_back": gRGB(0x00313131),
 		"key_blue": gRGB(0x0018188B),
 		"key_green": gRGB(0x001F771F),
 		"key_red": gRGB(0x009F1313),
 		"key_text": gRGB(0x00FFFFFF),
 		"key_yellow": gRGB(0x00A08500)
-	}
+	})
 	gradients.clear()
 	fonts.clear()
-	fonts = {
+	fonts.update({
 		"Body": ("Regular", 18, 22, 16),
 		"ChoiceList": ("Regular", 20, 24, 18)
-	}
+	})
 	menus.clear()
 	menuicons.clear()
 	parameters.clear()
@@ -1588,18 +1588,6 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 					# print(f"[Skin] DEBUG: Menu key='{key}', image='{image}'.")
 			else:
 				skinError(f"Tag 'menu' needs key or keys and image, got key='{key}' keys='{keys}' and image='{image}'")
-	for tag in domSkin.findall("menuicons"):
-		for menuicon in tag.findall("menuicon"):
-			image = menuicon.attrib.get("image")
-			key = menuicon.attrib.get("key", "")
-			keys = menuicon.attrib.get("keys", "")
-			if image is not None and (key or keys):
-				keys = [x.strip() for x in keys.split(",")] if keys else [key]
-				for key in keys:
-					menuicon[key] = image
-					# print(f"[Skin] DEBUG: Menuicon key='{key}', image='{image}'.")
-			else:
-				skinError(f"Tag 'menuicon' needs key or keys and image, got key='{key}' keys='{keys}' and image='{image}'")
 	for tag in domSkin.findall("screens"):
 		for screen in tag.findall("screen"):
 			image = screen.attrib.get("image")
@@ -1624,6 +1612,18 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 					# print(f"[Skin] DEBUG: Setup key='{key}', image='{image}'.")
 			else:
 				skinError(f"Tag 'setup' needs key or keys and image, got key='{key}' keys='{keys}' and image='{image}'")
+	for tag in domSkin.findall("menuicons"):
+		for menuicon in tag.findall("menuicon"):
+			image = menuicon.attrib.get("image")
+			key = menuicon.attrib.get("key", "")
+			keys = menuicon.attrib.get("keys", "")
+			if image is not None and (key or keys):
+				keys = [x.strip() for x in keys.split(",")] if keys else [key]
+				for key in keys:
+					menuicons[key] = image
+					# print(f"[Skin] DEBUG: Menuicon key='{key}', image='{image}'.")
+			else:
+				skinError(f"Tag 'menuicon' needs key or keys and image, got key='{key}' keys='{keys}' and image='{image}'")
 	for tag in domSkin.findall("constant-widgets"):
 		for constant_widget in tag.findall("constant-widget"):
 			name = constant_widget.attrib.get("name")
@@ -2432,11 +2432,8 @@ def readSkin(screen, skin, names, desktop):
 			usedComponents.add(widgetName)
 			try:  # Get corresponding "gui" object.
 				attributes = screen[widgetName].skinAttributes = []
-			except KeyError:
-				# Log warning instead of raising exception for missing widgets
-				if config.crash.debugScreens.value:
-					print(f"[Skin] Warning: Component with name '{widgetName}' was not found in skin of screen '{myName}'. Widget will be skipped.")
-				return  # Skip this widget gracefully
+			except Exception:
+				raise SkinError(f"Component with name '{widgetName}' was not found in skin of screen '{myName}'")
 			# assert screen[widgetName] is not Source
 			collectAttributes(attributes, widget, context, skinPath, ignore=("name",))
 			screen[widgetName] = proccesStackAddition(widget, stack, screen[widgetName])
@@ -2463,10 +2460,7 @@ def readSkin(screen, skin, names, desktop):
 				else:
 					break  # Otherwise, use the source.
 			if source is None:
-				# Log warning instead of raising exception for missing sources
-				if config.crash.debugScreens.value:
-					print(f"[Skin] Warning: The source '{widgetSource}' was not found in screen '{myName}'. Widget will be skipped.")
-				return  # Skip this widget gracefully
+				raise SkinError(f"The source '{widgetSource}' was not found in screen '{myName}'")
 			widgetRenderer = widget.attrib.get("render")
 			if not widgetRenderer:
 				if widgetSource:

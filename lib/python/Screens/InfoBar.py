@@ -250,8 +250,8 @@ class MoviePlayer(InfoBarBase, InfoBarShowHide, InfoBarMenu, InfoBarSeek, InfoBa
 
 		self["actions"] = HelpableActionMap(self, ["MoviePlayerActions"],
 			{
-				"leavePlayer": (self.leavePlayer, _("Leave movie player")),
-				"leavePlayerOnExit": (self.leavePlayerOnExit, _("Leave movie player")),
+				"leavePlayer": (self.leavePlayer, _("Leave movie player")),  # STOP, TV, BACK.
+				"leavePlayerOnExit": (self.leavePlayerOnExit, _("Leave movie player")),  # EXIT, ESC.
 				"channelUp": (self.channelUp, _("when PiPzap enabled zap channel up...")),
 				"channelDown": (self.channelDown, _("when PiPzap enabled zap channel down...")),
 			})
