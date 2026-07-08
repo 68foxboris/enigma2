@@ -318,7 +318,7 @@ class Standby(StandbyScreen):
 class StandbySummary(Screen):
 	skin = """
 	<screen position="0,0" size="132,64">
-		<widget source="global.CurrentTime" render="Label" position="0,0" size="132,64" font="Regular;40" halign="center">
+		<widget source="global.CurrentTime" render="Label" position="0,0" size="132,64" font="Regular;40" horizontalAlignment="center">
 			<convert type="ClockToText" />
 		</widget>
 		<widget source="session.RecordState" render="FixedLabel" text=" " position="0,0" size="132,64" zPosition="1" >
@@ -332,7 +332,7 @@ class QuitMainloopScreen(Screen):
 	def __init__(self, session, retvalue=QUIT_SHUTDOWN):
 		self.skin = """<screen name="QuitMainloopScreen" position="fill" flags="wfNoBorder">
 				<ePixmap pixmap="icons/input_info.png" position="c-27,c-60" size="53,53" alphaTest="on" />
-				<widget name="text" position="center,c+5" size="720,100" font="Regular;22" halign="center" />
+				<widget name="text" position="center,c+5" size="720,100" font="Regular;22" horizontalAlignment="center" />
 			</screen>"""
 		Screen.__init__(self, session)
 		from Components.Label import Label
@@ -350,6 +350,7 @@ class QuitMainloopScreen(Screen):
 
 
 inTryQuitMainloop = False
+quitMainloopCode = 1
 
 
 def getReasons(session, retvalue=QUIT_SHUTDOWN):
@@ -456,24 +457,17 @@ class TryQuitMainloop(MessageBox):
 			self.hide()
 			if self.retval == QUIT_SHUTDOWN:
 				config.misc.DeepStandby.value = True
-				if not inStandby:
-					if isfile("/usr/script/standby_enter.sh"):
-						Console().ePopen("/usr/script/standby_enter.sh")
-					if BoxInfo.getItem("HasHDMI-CEC") and config.hdmicec.enabled.value and ((config.hdmicec.control_tv_standby.value and (config.hdmicec.next_boxes_detect.value or config.hdmicec.ethernet_pc_used.value)) or config.hdmicec.handle_deepstandby_events.value != "no"):
-						if config.hdmicec.control_tv_standby.value and config.hdmicec.next_boxes_detect.value:
-							import Components.HdmiCec
-							Components.HdmiCec.hdmi_cec.secondBoxActive()
-						if not hasattr(self, "quitScreen"):
-							self.quitScreen = self.session.instantiateDialog(QuitMainloopScreen)
-							self.quitScreen.show()
-						self.delay = eTimer()
-						self.delay.timeout.callback.append(self.quitMainloopDelay)
-						self.delay.start(1500, True)
-						return
-			elif not inStandby:
-				config.misc.RestartUI.value = True
-				config.misc.RestartUI.save()
-			self.quitMainloop()
+			self.session.nav.stopService()
+			self.quitScreen = self.session.instantiateDialog(QuitMainloopScreen, retvalue=self.retval)
+			self.quitScreen.show()
+			print("[Standby] quitMainloop #1")
+			quitMainloopCode = self.retval
+			if BoxInfo.getItem("Display") and BoxInfo.getItem("LCDMiniTV"):
+				# set LCDminiTV off / fix a deep-standby-crash on some boxes / gb4k
+				print("[Standby] LCDminiTV off")
+				setLCDModeMinitTV(0)
+
+			quitMainloop(self.retval)
 		else:
 			if self.descramble:
 				from Components.PvrDescrambleConvert import pvr_descramble_convert
