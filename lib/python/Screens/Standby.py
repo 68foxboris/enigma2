@@ -50,8 +50,10 @@ class TVstate:  # load in Navigation
 			import Components.HdmiCec
 			self.hdmicec_instance = Components.HdmiCec.hdmi_cec.instance
 			self.hdmicec_ok = self.hdmicec_instance and config.hdmicec.enabled.value
+			self.hdmicec_pending = self.hdmicec_ok and getattr(self.hdmicec_instance, "tv_state_pending", True)
 		except ImportError:
 			self.hdmicec_ok = False
+			self.hdmicec_pending = False
 
 		if not self.hdmicec_ok:
 			print('[Standby] HDMI-CEC is not enabled or unavailable !!!')
@@ -94,7 +96,7 @@ class TVstate:  # load in Navigation
 		return False
 
 	def setTVstate(self, value):
-		if self.hdmicec_ok:
+		if self.hdmicec_ok and not self.hdmicec_pending:
 			if value == 'on' or (value == 'power' and config.hdmicec.handle_deepstandby_events.value):
 				self.hdmicec_instance.wakeupMessages()
 			elif value == 'standby':
