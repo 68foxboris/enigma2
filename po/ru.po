@@ -4689,6 +4689,9 @@ msgstr ""
 "Проверка тюнера %d\n"
 "DiSEqC порт %s для %s"
 
+msgid "Channel Selection picon set"
+msgstr "Набор значков выбора канала"
+
 msgid "Chichewa / Chewa / Nyanja"
 msgstr "Чичева / Чева / Ньянджа"
 
@@ -9350,6 +9353,9 @@ msgstr "Из :"
 msgid "Front Panel Display"
 msgstr "Дисплей передней панели"
 
+msgid "Front panel/Display picon set"
+msgstr "Набор значков передней панели/дисплея"
+
 msgid "Frontprocessor version: %s"
 msgstr "Версия фронтпроцессора: %s"
 
@@ -10443,6 +10449,9 @@ msgstr "Скорость затухания инфопанели"
 msgid "Infobar frontend data source"
 msgstr "Источник данных интерфейса в инфопанели"
 
+msgid "InfoBar picon set"
+msgstr "Набор иконок информационной панели"
+
 msgid "Information"
 msgstr "Информация"
 
@@ -11069,6 +11078,9 @@ msgstr "Слева"
 
 msgid "Left from servicename"
 msgstr "Слева от названия канала"
+
+msgid "Legacy"
+msgstr "Наследие"
 
 msgid "Legacy mode"
 msgstr "Устаревший режим"
@@ -13155,6 +13167,9 @@ msgstr "Настройки OpenVPN"
 msgid "OpenVpn Log"
 msgstr "Журнал OpenVPN"
 
+msgid "OpenWebif picon set"
+msgstr "Набор иконок OpenWebif"
+
 msgid "OpenVpn Setup"
 msgstr "Настройки OpenVPN"
 
@@ -13468,6 +13483,9 @@ msgstr "Настройка пароля"
 msgid "Password:"
 msgstr "Пароль:"
 
+msgid "Path for picon set %s."
+msgstr "Путь для набора значков picon %s."
+
 msgid "Pause"
 msgstr "Пауза"
 
@@ -13530,6 +13548,18 @@ msgstr "Пикон"
 
 msgid "Picon Packages"
 msgstr "Пакеты пиконов"
+
+msgid "Picon Settings"
+msgstr "Настройки Picon"
+
+msgid "Picon mode"
+msgstr "режим Picon"
+
+msgid "Picon path %s"
+msgstr "Путь к иконке %s"
+
+msgid "Picon set mode"
+msgstr "Режим установки Picon"
 
 msgid "Picon Size"
 msgstr "Размер пикона"
@@ -16307,6 +16337,9 @@ msgstr "Выберите фильм"
 msgid "Select path for logfile"
 msgstr "Выбор пути для файла лога"
 
+msgid "Select Picon Directory"
+msgstr "Выберите каталог Picon"
+
 msgid "Select provider to add..."
 msgstr "Выберите провайдера для добавления..."
 
@@ -16514,6 +16547,21 @@ msgstr ""
 
 msgid "Select the refresh rate to be used on the TV."
 msgstr "Выберите частоту обновления, которая будет использоваться на телевизоре."
+
+msgid "Select the Picon path, from above, to be used for Channel Selection picons."
+msgstr "Выберите путь к значкам Picon, указанный выше, который будет использоваться для значков выбора канала."
+
+msgid "Select the Picon path, from above, to be used for Front panel/Display picons."
+msgstr "Выберите путь к значкам Picon, указанный выше, для использования в качестве значков передней панели/дисплея."
+
+msgid "Select the Picon path, from above, to be used for InfoBar picons."
+msgstr "Выберите путь к значкам, указанный выше, который будет использоваться для значков информационной панели."
+
+msgid "Select the Picon path, from above, to be used for OpenWebif picons."
+msgstr "Выберите путь к значкам сверху, который будет использоваться для значков OpenWebif."
+
+msgid "Select the mode for picon path selection and resolution. 'Legacy' represents the previous mode of operation."
+msgstr "Выберите режим для выбора и разрешения пути к пиктограммам. «Legacy» соответствует предыдущему режиму работы."
 
 msgid "Select video mode"
 msgstr "Выберите видеорежим"
@@ -16963,6 +17011,10 @@ msgstr "Установить тип списка видео."
 
 msgid "Set new MAC address"
 msgstr "Установить новый MAC-адрес"
+
+#, python-format
+msgid "Set Path %s"
+msgstr "Установить путь %s"
 
 msgid "Set pin code persistent"
 msgstr "Установить постоянный пин-код"
@@ -22072,6 +22124,9 @@ msgstr "Какой день месяца?"
 
 msgid "What day of week?"
 msgstr "Какой день недели?"
+
+msgid "What do you want to set as the picon location?"
+msgstr "Где вы хотите указать местоположение значка?"
 
 msgid "What type of service scan do you want?"
 msgstr "Какой тип сканирования Вы хотите выбрать?"
