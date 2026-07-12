@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2026-02-28 18:51+0200\n"
+"PO-Revision-Date: 2026-07-12 16:05+0300\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>=14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 msgid ""
 "\n"
@@ -2118,6 +2118,9 @@ msgstr "Активировать расширение флеш-памяти"
 msgid "Activate HbbTV (RED button)"
 msgstr "Запуск HbbTV (Красная кнопка)"
 
+msgid "Activate a way to send individual or specific internal HDMI-CEC commands from the command line."
+msgstr "Активируйте способ отправки отдельных или определённых внутренних команд HDMI-CEC из командной строки."
+
 msgid "Activate IPv6 configuration"
 msgstr "Активация установок IPv6 конфигурации"
 
@@ -2280,8 +2283,8 @@ msgstr "Добавить файлы в плейлист"
 msgid "Add legacy LEFT/RIGHT actions"
 msgstr "Добавить устаревшие действия ВЛЕВО/ВПРАВО"
 
-msgid "Add slots"
-msgstr "Добавить слоты"
+msgid "Add more slots"
+msgstr "Добавить больше слотов"
 
 msgid "Add new tag"
 msgstr "Добавить новый тег"
@@ -2318,6 +2321,9 @@ msgstr "Добавить канал в фавориты"
 
 msgid "Add services to this bouquet?"
 msgstr "Добавить каналы в этот букет?"
+
+msgid "Add slots"
+msgstr "Добавить слоты"
 
 msgid "Add timer"
 msgstr "Добавить таймер"
@@ -2703,6 +2709,9 @@ msgstr "Amlogic"
 #, python-format
 msgid "Amount %d / Success %d / Failed %d"
 msgstr "Сумма %d / Успех %d / Неудача %d"
+
+msgid "An attempt is made to capture the current TV status. If status messages are incorrect or missing, the receiver may respond unexpectedly. Otherwise, it helps the receiver handle different operating conditions more effectively."
+msgstr "Предпринята попытка зафиксировать текущий статус ТВ. Если это невозможно из-за неправильных или отсутствующих сообщений о состоянии, это может привести к неожиданному ответу получателя. С другой стороны, старается лучше реагировать на разные условия эксплуатации."
 
 msgid "An empty filename is illegal."
 msgstr "Пустое имя недопустимо."
@@ -3219,6 +3228,9 @@ msgstr "Автоматический старт таймшифта через"
 
 msgid "Automatic shares access"
 msgstr "Автоматический доступ к общим папкам"
+
+msgid "Automatically put the TV in Standby whenever the receiver goes into Standby or Deep Standby."
+msgstr "Автоматически переводить телевизор в режим ожидания, когда ресивер переходит в режим ожидания или глубокий режим ожидания."
 
 msgid "Automatically turn on external subtitles"
 msgstr "Автоматически подключать внешние субтитры"
@@ -6735,6 +6747,9 @@ msgstr "Удалить запись из плейлиста"
 msgid "Delete saved playlist"
 msgstr "Удалить сохраненный плейлист"
 
+msgid "Delete this slot?"
+msgstr "Удалить этот слот?"
+
 msgid "Delete the character to the left of text cursor"
 msgstr "Удалить символ слева от текстового курсора"
 
@@ -7834,6 +7849,9 @@ msgstr "Включить графы конвейера GStreamer *"
 msgid "Enable IPv6"
 msgstr "Включить IPv6"
 
+msgid "Enable debug log"
+msgstr "Включить журнал отладки"
+
 msgid "Enable InfoBar fade-out"
 msgstr "Включить затухание инфопанели"
 
@@ -7999,6 +8017,9 @@ msgstr "Включите настройку временного интерва�
 
 msgid "Enable teletext caching"
 msgstr "Включить кэширование телетекста"
+
+msgid "Enable the advanced HDMI-CEC setting options."
+msgstr "Включить расширенные параметры настройки HDMI-CEC."
 
 msgid "Enable this option to add text encoding information to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить информацию о кодировке текста в файл журнала отладки."
@@ -8482,6 +8503,18 @@ msgstr "Европа"
 
 msgid "Event font size (relative to skin size)"
 msgstr "Размер шрифта событий (по отношению к скину)"
+
+msgid "Even if TV has another input active?"
+msgstr "Даже если у ТВ активен другой вход?"
+
+msgid "Even if a 'Wakeup' scheduled task starting?"
+msgstr "Даже если запускается таймер питания 'пробуждения'?"
+
+msgid "Even if a 'Zap and Record' recording timer starting?"
+msgstr "Даже при запуске таймера записи переключающего канал?"
+
+msgid "Even if a 'Zap' recording timer starting?"
+msgstr "Даже если сработает таймер записи?"
 
 msgid "Even if a 'wakeup' power timer starting?"
 msgstr "Даже если запускается таймер питания 'пробуждения'?"
@@ -9681,6 +9714,9 @@ msgstr "HDMI-CEC источник активный"
 msgid "HDMI-CEC Source Inactive"
 msgstr "HDMI-CEC источник неактивный"
 
+msgid "HDMI-CEC Settings"
+msgstr "Настройка HDMI-CEC"
+
 msgid "HDMI-CEC address"
 msgstr "HDMI-CEC адрес"
 
@@ -9720,11 +9756,11 @@ msgstr "Гаити"
 msgid "Handle Python crashes"
 msgstr "Обрабатывать сбои Python"
 
-msgid "Handle standby from TV"
-msgstr "Задействовать команду 'ожидания' от ТВ"
+msgid "Handle Standby from TV"
+msgstr "Уйти в режим ожидания с ТВ"
 
-msgid "Handle wakeup from TV"
-msgstr "Задействовать команду 'включения' от ТВ"
+msgid "Handle wake up from TV"
+msgstr "Реакция на включение ТВ"
 
 msgid "Hard Disk Setup"
 msgstr "Настройки жёсткого диска"
@@ -10133,6 +10169,9 @@ msgstr ""
 "\n"
 "Если DNS других серверов все еще хранятся в маршрутизаторе DHCP, чтобы получить DNS от вашего маршрутизатора, перезагрузите приемник."
 
+msgid "If enabled, a log will be kept of CEC protocol traffic. The log files are located with the other log files but named 'Enigma2-hdmicec-[date].log'."
+msgstr "Если этот параметр включен, будет вестись лог трафика протокола CEC. Файлы логов расположены вместе с другими файлами логов, но имеют имя 'Enigma2-hdmicec- [date] .log'."
+
 msgid "If the text is too long to be displayed on the front panel display, it will be repeated (number of times):"
 msgstr "Если текст слишком длинный для отображения на дисплее передней панели, он будет повторяться (количество раз):"
 
@@ -10193,6 +10232,9 @@ msgid ""
 msgstr ""
 "Недопустимый имидж для прошивки\n"
 "%s"
+
+msgid "Ignore unexpectedly wake up and stay in Standby"
+msgstr "Игнорировать неожиданное пробуждение и оставаться в режиме ожидания"
 
 msgid "Image: "
 msgstr "Имидж: "
@@ -13149,6 +13191,9 @@ msgstr "Включить таймер режима ожидания HDD."
 msgid "Options disable timer"
 msgstr "Варианты отключения таймера"
 
+msgid "Optional delay between CEC commands when sending a series of commands. Leave disabled unless a device requires slower transmission."
+msgstr "Дополнительная задержка между командами CEC при отправке серии команд. Оставьте отключенной, если устройству не требуется более медленная передача."
+
 msgid "Orange"
 msgstr "Апельсин"
 
@@ -14284,10 +14329,10 @@ msgid "Press OK to use this locale.  [%s]"
 msgstr "Нажмите OK, чтобы использовать эту локаль.  [%s]"
 
 msgid "Press the UP/DOWN buttons to select a slot and press OK or GREEN to reboot to that slot. If available, YELLOW will either delete or wipe the slot. A deleted slot can be restored with the BLUE button. A wiped slot is completely removed and cannot be restored!"
-msgstr "Нажмите кнопки ВВЕРХ/ВНИЗ, чтобы выбрать слот, и нажмите OK или ЗЕЛЕНЫЙ, чтобы перезагрузиться в этот слот. Если доступен ЖЕЛТЫЙ, слот будет удален или очищен. Удаленный слот можно восстановить с помощью СИНЕЙ кнопки. Очищенный слот полностью удаляется и не может быть восстановлен!"
+msgstr "Нажимайте кнопки ВВЕРХ/ВНИЗ, для выбора слота, и нажмите OK или ЗЕЛЁНУЮ кнопку для перезагрузки и запуска этого образа. ЖЁЛТАЯ кнопка, если активна, удалит или сотрёт образ. Удалённый образ можно восстановить СИНЕЙ кнопкой. Стёртый образ удаляется окончательно и восстановить его невозможно!"
 
 msgid "Press the UP/DOWN buttons to select a slot, then press OK or GREEN to reboot into that slot. If available, YELLOW will disable MultiBoot, delete, or wipe the selected slot. Press BLUE to add more slots."
-msgstr "Press the UP/DOWN buttons to select a slot, then press OK or GREEN to reboot into that slot. If available, YELLOW will disable MultiBoot, delete, or wipe the selected slot. Press BLUE to add more slots."
+msgstr "С помощью кнопок ВВЕРХ/ВНИЗ выберите слот, затем нажмите кнопку OK или ЗЕЛЁНУЮ кнопку, чтобы перезагрузить устройство в этот образ. ЖЁЛТАЯ кнопка (если доступна) отключит мультизагрузку, удалит или сотрет выбранный образ. Нажмите СИНЮЮ кнопку, чтобы добавить слоты."
 
 msgid "Press OK, save and exit..."
 msgstr "Нажмите ОК, сохранить и выйти..."
@@ -14348,6 +14393,9 @@ msgstr "Ошибка поиска"
 
 msgid "Process"
 msgstr "Процесс"
+
+msgid "Process action from TV"
+msgstr "Обработка ввода с телевизора"
 
 msgid "Processing"
 msgstr "Обработка"
@@ -14478,8 +14526,11 @@ msgstr "Переведите A/V ресивер в режим ожидания."
 msgid "Put A/V receiver to standby too."
 msgstr "Также переведите A/V ресивер в режим ожидания."
 
-msgid "Put TV in standby"
+msgid "Put TV in Standby"
 msgstr "Перевести ТВ в режим ожидания"
+
+msgid "Put your AV Receiver or Soundbar in Standby"
+msgstr "Переведите AV-ресивер или саундбар в режим ожидания"
 
 msgid "Put receiver in standby"
 msgstr "Перевести приемник в режим ожидания"
@@ -14862,7 +14913,7 @@ msgstr "Выбор частоты обновления."
 msgid "Refresh ZeroTier status information"
 msgstr "Обновить информацию о статусе ZeroTier"
 
-msgid "Regard deep standby as standby"
+msgid "Regard Deep Standby as Standby"
 msgstr "Считать выключение как режим ожидания"
 
 msgid "Region"
@@ -15101,6 +15152,12 @@ msgstr "Повтор команд выхода из режима ожидани�
 
 msgid "Repeat playlist"
 msgstr "Повторить плейлист"
+
+msgid "Repeat the sent standby and wake up commands"
+msgstr "Повторять отправленные команды режима ожидания и пробуждения"
+
+msgid "Repeat the standby commands"
+msgstr "Повторить команды режима ожидания"
 
 msgid "Repeat type"
 msgstr "Тип повтора"
@@ -16373,6 +16430,9 @@ msgstr "Выберите предыдущую услугу, закройте с�
 msgid "Select the protocol used by your SCR device. Choices are 'SCR Unicable' (Unicable), or 'SCR JESS' (JESS, also known as Unicable II)."
 msgstr "Выберите формат Вашего SCR устройства. Возможные варианты - 'SCR Unicable' (Unicable) или 'SCR JESS' (JESS/Unicable II)."
 
+msgid "Select the receiver action when the TV switches away from the receiver input."
+msgstr "Выберите действие ресивера, когда телевизор переключается с входа ресивера на другой."
+
 msgid "Select the satellite which is connected to Port-A of your switch. If you are unsure select 'automatic' and the receiver will attempt to determine this for you. If nothing is connected to this port, select 'nothing connected'."
 msgstr "Выберите спутник, подключенный к порту A вашего коммутатора. Если вы не уверены, выберите «автоматически», и приемник попытается определить его самостоятельно. Если к этому порту ничего не подключено, выберите «ничего не подключено»."
 
@@ -16523,6 +16583,9 @@ msgstr "Выберите, следует ли отображать значок 
 
 msgid "Select wireless network"
 msgstr "Выберите беспроводную сеть"
+
+msgid "Select 'Yes' if you want to wake the TV when a 'Wakeup' scheduled task is starting."
+msgstr "Выберите 'Да', если хотите вывести телевизор из спящего режима, так как таймер 'Пробуждение' уже запущен."
 
 msgid "Select your ATSC provider."
 msgstr "Выберите провайдера ATSC."
@@ -17040,6 +17103,9 @@ msgstr "Установка времени окна на 5 часов"
 
 msgid "Set time window to 6 hours"
 msgstr "Установка времени окна на 6 часов"
+
+msgid "Set to 'Yes' to enable sending the same TV commands for Deep Standby as for regular Standby."
+msgstr "Если установлено 'Да', для событий глубокого ожидания на телевизор будут отправляться те же команды, что и во время обычных событий ожидания."
 
 msgid "Set to the desired primetime (hour)."
 msgstr "Выберите нужный прайм-тайм (в часах)"
@@ -18399,6 +18465,9 @@ msgstr "Соломоновы острова"
 msgid "Somalia"
 msgstr "Сомали"
 
+msgid "Some TVs can't switch to the correct input if another HDMI port is active. This setting puts the TV into Standby before switching. If the TV does not turn back on, a slower transmission interval or repeating the wake-up command may be required."
+msgstr "Некоторые телевизионные устройства не могут переключиться на правильный ввод, если активен другой порт HDMI. Эта настройка переводит телевизор в режим ожидания перед переключением. (Если телевизор не включается, может потребоваться более медленный интервал передачи или повторение команд пробуждения.)"
+
 msgid "Some TVs do not wake from standby when they receive the 'Image View On' command. If this is the case try the 'Text View On' command instead."
 msgstr "Некоторые телевизоры не выходят из режима ожидания при получении команды 'Image View On'. В этом случае попробуйте вместо этого команду 'Text View On'."
 
@@ -19112,6 +19181,9 @@ msgstr "Сменить канал вниз"
 msgid "Switch channel up"
 msgstr "Сменить канал вверх"
 
+msgid "Switch off the TV to correct input"
+msgstr "Переключить ТВ на корректный вход"
+
 msgid "Switch on the display during Standby Mode"
 msgstr "Включить дисплей в режиме ожидания"
 
@@ -19293,8 +19365,14 @@ msgstr "НАСТРОЙКА СИГНАЛА"
 msgid "TV"
 msgstr "ТВ"
 
+msgid "TV input and receiver wakeup"
+msgstr "Включение ТВ-входа и ресивера"
+
 msgid "TV physical address report"
 msgstr "Оповещение физического адреса ТВ"
+
+msgid "TV power"
+msgstr "ТВ-питание"
 
 msgid "TXT PID"
 msgstr "TXT PID"
@@ -19759,6 +19837,9 @@ msgstr "Этот букет защищён родительским контро
 msgid "This field allows you to search an additional symbol rate up to %s."
 msgstr "Это поле позволяет искать дополнительную скорость передачи символов до %s."
 
+msgid "This is a workaround for devices that wake up immediately after entering Standby. Wake-up commands from other devices are ignored for a few seconds."
+msgstr "Это обходной путь для некоторых устройств, которые снова выходят из спящего режима после переключения в режим ожидания. Команды пробуждения с других устройств будут игнорироваться в течение нескольких секунд."
+
 #, python-format
 msgid "This is the currently selected language.  [%s]"
 msgstr "Это текущий выбранный язык.  [%s]"
@@ -20152,6 +20233,12 @@ msgstr "Время"
 
 msgid "Time Update in Minutes"
 msgstr "Время обновления в минутах"
+
+msgid "Time delay of the shutdown messages"
+msgstr "Время задержки сообщений о выключении"
+
+msgid "Time delay until Standby or Deep Standby"
+msgstr "Задержка до перехода в режим ожидания"
 
 msgid "Time Update in Minutes:"
 msgstr "Время обновления в минутах:"
@@ -20616,6 +20703,9 @@ msgstr "Пытаемся найти транспондеры, используе
 
 msgid "Try to prevent reboots for software errors and maintain of the availability for the receiver."
 msgstr "Постарайтесь предотвратить перезагрузку из-за программных ошибок и обеспечить доступность приемника."
+
+msgid "Try to send repeated commands if not all commands were executed (e.g. TV wake up, but not switched to correct input)."
+msgstr "Попробуйте отправить повторяющиеся команды, если не все команды выполняются (например, телевизор выходит из спящего режима, но не переключён на правильный вход)."
 
 msgid "Tue"
 msgstr "Вт"
@@ -21699,8 +21789,8 @@ msgstr "Шаги громкости"
 msgid "Volume down"
 msgstr "Тише"
 
-msgid "Volume keys on the receiver remote will control the TV volume."
-msgstr "Кнопки громкости на пульте дистанционного управления ресивера будут регулировать громкость ТВ."
+msgid "Volume keys on the receiver remote will control the TV, AV receiver or soundbar volume over HDMI-CEC. If this feature is not supported the volume keys have no function!"
+msgstr "Кнопки регулировки громкости на пульте дистанционного управления ресивера позволяют управлять громкостью телевизора, AV-ресивера или саундбара через HDMI-CEC. Если эта функция не поддерживается, кнопки регулировки громкости не будут работать!"
 
 msgid "Volume up"
 msgstr "Громче"
@@ -21757,6 +21847,9 @@ msgstr "Включение по сети"
 msgid "Wake up"
 msgstr "Пробуждение"
 
+msgid "Wake up TV from Standby"
+msgstr "Пробудить ТВ из режима ожидания"
+
 msgid "Wakeup A/V receiver from standby."
 msgstr "Включить аудио/видео систему при выходе из ожидания."
 
@@ -21765,6 +21858,9 @@ msgstr "Включить до начала таймера за [мин]"
 
 msgid "Wake up to standby"
 msgstr "Пробуждение в режим ожидания"
+
+msgid "Wake up your AV Receiver or Soundbar from Standby"
+msgstr "Выведите AV-ресивер или саундбар из режима ожидания"
 
 msgid "Wakeup A/V receiver from standby too."
 msgstr "Пробуждает A / V-ресивер из режима ожидания."
@@ -22154,6 +22250,12 @@ msgstr "При включении список выбора каналов бу�
 msgid "When enabled, the infobar will be displayed when a new event starts."
 msgstr "Когда эта опция включена, информационная панель будет отображаться при запуске нового события."
 
+msgid "When enabled, the connected AV receiver or soundbar will automatically be switched off."
+msgstr "При включении этой функции подключенный AV-ресивер или саундбар автоматически выключатся."
+
+msgid "When enabled, the connected AV receiver or soundbar will automatically be switched on."
+msgstr "При включении этой функции подключенный AV-ресивер или саундбар автоматически включатся."
+
 msgid "When enabled, the infobar will be displayed when changing channels."
 msgstr "Если включено, инфобар будет появлятся при переключении каналов."
 
@@ -22169,6 +22271,9 @@ msgstr "Показать длину записей в списке фильмо�
 msgid "When enabled, the length of each recording will be shown in the movielist (this might cause some additional loading time)."
 msgstr "Показать длину записей в списке фильмов (может понадобиться дополнительное время для загрузки списка)."
 
+msgid "When enabled, the receiver will automatically return to Standby when the TV is turned off."
+msgstr "Разрешить автоматический возврат ресивера в режим ожидания при выключении телевизора."
+
 msgid "When enabled, the receiver will automatically use the audio track which you selected before."
 msgstr "Если включено, то ресивер будет использовать аудио дорожку, которая была выбрана ранее."
 
@@ -22180,6 +22285,9 @@ msgstr "Если включено,ресивер больше не будет с
 
 msgid "When enabled, then when changing bouquets, set the cursor on the service from the channel history in the channel selection list."
 msgstr "Если включено, то при смене букетов установить курсор на сервис из истории каналов в списке выбора каналов."
+
+msgid "When enabled, the receiver will automatically wake from Standby when the TV is turned on."
+msgstr "Разрешить автоматический выход ресивера из режима ожидания при включении телевизора."
 
 msgid "When enabled, the receiver will select an AC3 track (when available)."
 msgstr "Если эта функция включена, то ресивер будет использовать AC3 дорожку (если она есть)."
@@ -22253,8 +22361,11 @@ msgstr "Когда изображение на канале имеет соот�
 msgid "When the input cursor reaches this point (percentage of the width, from either side) scroll the text to the cursor."
 msgstr "Когда курсор ввода достигает этой точки (процент ширины с любой стороны), прокрутите текст до курсора."
 
-msgid "When the receiver wakes from standby or deep standby, it will send a command to the TV to bring it out of standby too."
-msgstr "Когда ресивер выходит из режима ожидания или режима глубокого ожидания, он отправляет команду на ТВ, чтобы вывести его из режима ожидания."
+msgid "When the receiver wakes from Standby or Deep Standby it will send a command to the TV to bring it out of Standby."
+msgstr "Когда ресивер выходит из режима ожидания или глубокого ожидания, он будет отправлять телевизору команду также выйти из режима ожидания."
+
+msgid "When the receiver wakes from Standby, send active source, stream path and routing commands so the TV switches to the HDMI input connected to the receiver."
+msgstr "Когда ресивер выйдет из режима ожидания, отправьте команды активного источника, пути потока и маршрутизации, чтобы телевизор переключился на вход HDMI, подключенный к ресиверу."
 
 msgid "When the red box is correctly visible press the GREEN button to save the settings and exit."
 msgstr "Когда красная рамка станет правильно видна, нажмите ЗЕЛЕНУЮ кнопку, чтобы сохранить настройки и выйти."
@@ -22474,6 +22585,9 @@ msgstr "Вы можете установить выбранный каталог
 
 msgid "You can set sorting type for items in movielist."
 msgstr "Вы можете установить тип сортировки для элементов в списке видео."
+
+msgid "You can skip this function and turn off the TV when you wake the receiver from Standby and immediately switch back to Standby."
+msgstr "Вы можете пропустить эту функцию и выключить телевизор, когда выводите ресивер из режима ожидания, и сразу же возвращаете обратно в режим ожидания."
 
 msgid "You cannot delete this!"
 msgstr "Вы не можете удалить это!"
