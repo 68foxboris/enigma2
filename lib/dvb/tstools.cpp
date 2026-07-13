@@ -9,6 +9,21 @@
 
 static const int m_maxrange = 256*1024;
 
+static inline bool isHEVCIrapStructureEntry(unsigned int data)
+{
+	unsigned int nal_type = (data & 0x7E) >> 1;
+	return nal_type >= 16 && nal_type <= 21;
+}
+
+static inline bool isSameHEVCAccessUnitIrap(unsigned long long entry, bool start_is_hevc_frame, bool start_has_pts, unsigned long long start_pts)
+{
+	if (!start_is_hevc_frame || !isHEVCIrapStructureEntry((unsigned int)entry))
+		return false;
+	if (start_has_pts && (entry & 0x1000000ULL))
+		return (entry >> 31) == start_pts;
+	return true;
+}
+
 DEFINE_REF(eTSFileSectionReader);
 
 eTSFileSectionReader::eTSFileSectionReader(eMainloop *context)
@@ -431,10 +446,10 @@ int eDVBTSTools::getOffset(off_t &offset, pts_t &pts, int marg)
 					 * NOTE: the bitrate calculation can be way off, especially when the pts difference is small.
 					 * So the calculated offset might be far ahead of the end of the file.
 					 * When that happens, avoid poisoning our sample list (m_samples) with an invalid value,
-					 * which could eventually cause (timeshift) playback to be stopped.
-					 * Because the file could be growing (timeshift), instead of returning the currently known end
+					 * which could eventually cause (time shift) playback to be stopped.
+					 * Because the file could be growing (time shift), instead of returning the currently known end
 					 * of file offset, we return an offset 1MB ahead of the end of the file.
-					 * This allows jumping to the live point of the timeshift, for instance.
+					 * This allows jumping to the live point of the time shift, for instance.
 					 */
 					offset = m_offset_end + 1024 * 1024;
 					return 0;
@@ -805,6 +820,9 @@ int eDVBTSTools::findFrame(off_t &_offset, size_t &len, int &direction, int fram
 		offset--;
 
 	unsigned long long longdata;
+	bool start_is_hevc_frame = false;
+	bool start_has_pts = false;
+	unsigned long long start_pts = 0;
 	if (m_streaminfo.getStructureEntryFirst(offset, longdata) != 0)
 	{
 		eDebug("[eDVBTSTools] findFrame getStructureEntryFirst failed");
@@ -824,15 +842,18 @@ int eDVBTSTools::findFrame(off_t &_offset, size_t &len, int &direction, int fram
 			/* we know that we aren't recording startcode 0x09 for mpeg2, so this is safe */
 			/* TODO: check frame_types */
 		// is_frame
-		if (((data & 0xFF) == 0x0009) || ((data & 0xFF) == 0x00) || ((data & 0x7E) == 0x0046)) /* H.264 UAD or H.265 UAD or MPEG2 start code */
+		if (((data & 0xFF) == 0x0009) || ((data & 0xFF) == 0x00) || ((data & 0x7E) == 0x0046) || isHEVCIrapStructureEntry(data)) /* H.264 UAD, H.265 AUD/IRAP or MPEG2 start code */
 		{
 			++nr_frames;
 			if ((data & 0xE0FF) == 0x0009)		/* H.264 NAL unit access delimiter with I-frame*/
 			{
 				break;
 			}
-			if ((data & 0xE07E) == 0x0046) 		/* H.265 NAL unit access delimiter with I-frame*/
+			if (((data & 0xE07E) == 0x0046) || isHEVCIrapStructureEntry(data)) 		/* H.265 AUD I-frame or IRAP */
 			{
+				start_is_hevc_frame = true;
+				start_has_pts = (longdata & 0x1000000ULL) != 0;
+				start_pts = longdata >> 31;
 				break;
 			}
 			if ((data & 0x3800FF) == 0x080000)	/* MPEG2 picture start code with I-frame */
@@ -859,18 +880,18 @@ int eDVBTSTools::findFrame(off_t &_offset, size_t &len, int &direction, int fram
 		data = ((unsigned int)longdata);
 		count_passes++;
 	}
-	while (((data & 0xff) != 0x09) && ((data & 0xff) != 0x00) && ((data & 0x7E) != 0x46)); /* next frame */
+	while (((data & 0xff) != 0x09) && ((data & 0xff) != 0x00) && ((data & 0x7E) != 0x46) && (!isHEVCIrapStructureEntry(data) || isSameHEVCAccessUnitIrap(longdata, start_is_hevc_frame, start_has_pts, start_pts))); /* next frame */
 
 	if (is_mpeg2)
 	{
-		// First we have to get back to where we were when we set start!
-		// getStructureEntryNext() has a private variable to remember where it was at
-		// the end of the last call, and getStructureEntryFirst() sets it.
+// First we have to get back to where we were when we set start!
+// getStructureEntryNext() has a private variable to remember where it was at
+// the end of the last call, and getStructureEntryFirst() sets it.
 		if (m_streaminfo.getStructureEntryFirst(start, longdata) != 0)
 		{
 			eDebug("[eDVBTSTools] findFrame getStructureEntryFirst for is_mpeg2 failed");
 			return -1;
-		}
+        }
 		// Seek back to sequence start (appears to be needed for e.g. a few TCM streams)
 		// length calculation changes m_streaminfo -> reset it to start offset
 		while (count_passes)
@@ -927,21 +948,17 @@ int eDVBTSTools::findNextPicture(off_t &offset, size_t &len, int &distance, int 
 	size_t new_len = len;
 	int first = 1;
 
-	if (distance > 0)
-	{
+	if (distance > 0) {
 		direction = 0;
-		nr_frames = 0;
-	}
-	else
-	{
+                nr_frames = 0;
+        } else {
 		direction = -1;
-		nr_frames = -1;
+                nr_frames = -1;
 		distance = -distance+1;
-	}
-
+        }
 	while (distance > 0)
 	{
-		// Save this for possible reset and 1-frame change retry.
+// Save this for possible reset and 1-frame change retry.
 		off_t loop_start_frame = new_offset/m_packet_size;
 
 		int dir = direction;
@@ -951,9 +968,9 @@ int eDVBTSTools::findNextPicture(off_t &offset, size_t &len, int &distance, int 
 			return -1;
 		}
 
-		// Check that we are moving in the right direction.
-		// If not, try again with a 1 frame change
-		// All done before we change distance...
+// Check that we are moving in the right direction.
+// If not, try again with a 1 frame change
+// All done before we change distance...
 		int retry_frame_offset = 0;
 		off_t new_frame = new_offset/m_packet_size;
 		if (direction < 0)
