@@ -744,7 +744,6 @@
 		<item level="0" text="Info bar timeout" description="Configure for how long the infobar will remain visible after activation.">config.usage.infobar_timeout</item>
 		<item level="0" text="Show InfoBar picons" description="Option to disable picons on the Infobar.">config.usage.showpicon</item>
 		<item level="0" text="Show picon background color" description="This option allows you choose the background color of transparent picons.">config.usage.show_picon_bkgrn</item>
-		<item level="0" text="Show picon folder name" description="This option allows you choose the name of folder picons." restart="gui">config.picon.foldername</item>
 		<if requires="CanChangeOsdAlpha">
 			<item level="0" text="Enable InfoBar fade-out" description="Fade the InfoBar on hide.">config.usage.show_infobar_do_dimming</item>
 			<item level="0" text="InfoBar fade-out speed" description="Control the InfoBar fading speed." conditional="config.usage.show_infobar_do_dimming.value">config.usage.show_infobar_dimming_speed</item>
