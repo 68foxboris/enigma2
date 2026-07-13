@@ -836,6 +836,10 @@ msgid "%d KB"
 msgstr "%d Кб"
 
 #, python-format
+msgid "%d Hz"
+msgstr "%d Гц"
+
+#, python-format
 msgid "%d MB"
 msgstr "%d Мб"
 
@@ -1118,6 +1122,10 @@ msgid_plural "%d wireless networks found!"
 msgstr[0] "%d беспроводная сеть найдена!"
 msgstr[1] "%d беспроводные сети найдены!"
 msgstr[2] "%d беспроводных сетей найдено!"
+
+#, python-format
+msgid "%s DMIPS per core"
+msgstr "%s DMIPS на ядро"
 
 msgid "%d+%b_"
 msgstr "%d+%b_"
@@ -1768,6 +1776,9 @@ msgstr "=НЕТ СТРИМА\n"
 
 msgid "A"
 msgstr "A"
+
+msgid "AC4"
+msgstr "AC4"
 
 msgid "A color filter can be used for better readability of DVB subtitles."
 msgstr "Для лучшей читаемости субтитров DVB можно использовать цветной фильтр."
@@ -3575,6 +3586,9 @@ msgstr "Бельгия"
 msgid "Belize"
 msgstr "Белиз"
 
+msgid "Benchmarks"
+msgstr "Контрольные показатели"
+
 msgid "Benchmark Information"
 msgstr "Контрольная информация"
 
@@ -3913,6 +3927,9 @@ msgstr "CCcam ECM инфо"
 msgid "CCcam Info"
 msgstr "CCcam инфо"
 
+msgid "CPU memory clock"
+msgstr "Тактовая частота памяти процессора"
+
 #, python-format
 msgid ""
 "CCcam Info %s\n"
@@ -4113,6 +4130,9 @@ msgstr "Рассчитать"
 
 msgid "Calculate all positions"
 msgstr "Рассчитать все позиции"
+
+msgid "Calculating clock..."
+msgstr "Расчет времени..."
 
 msgid "Calculating benchmark..."
 msgstr "Вычисление контрольного показателя..."
@@ -16607,6 +16627,9 @@ msgstr "Выберите, следует ли перекодировать ау�
 
 msgid "Select whether AC3 audio tracks should be downmixed to stereo."
 msgstr "Выберите, следует ли преобразовывать аудиодорожки AC3 в стерео."
+
+msgid "Select whether AC4 (Dolby Atmos) audio tracks should be passed through to the AVR, downmixed to stereo, or auto-routed based on HDMI sink capability."
+msgstr "Выберите, следует ли передавать аудиодорожки AC4 (Dolby Atmos) на AV-ресивер, преобразовывать их в стерео или автоматически маршрутизировать в зависимости от возможностей HDMI-приемника."
 
 msgid "Select whether DTS channel audio tracks should be downmixed or transcoded."
 msgstr "Выберите, следует ли выполнять понижение микширования или перекодирование аудиодорожек DTS-каналов."
