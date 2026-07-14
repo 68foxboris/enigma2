@@ -62,9 +62,8 @@ class Session:
 		from Components.FrontPanelLed import frontPanelLed
 		frontPanelLed.init(self)
 		from Tools.Notifications import notificationCenter
-		notificationCenter.session = self
 		self.allDialogs = []
-
+		notificationCenter.setup(self)
 		for plugin in plugins.getPlugins(PluginDescriptor.WHERE_SESSIONSTART):
 			try:
 				plugin(reason=0, session=self)
