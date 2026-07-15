@@ -4709,8 +4709,8 @@ msgstr ""
 "Проверка тюнера %d\n"
 "DiSEqC порт %s для %s"
 
-msgid "Channel Selection picon set"
-msgstr "Набор значков выбора канала"
+msgid "Channel Selection picon path"
+msgstr "Путь к значку выбора канала"
 
 msgid "Chichewa / Chewa / Nyanja"
 msgstr "Чичева / Чева / Ньянджа"
@@ -7829,6 +7829,12 @@ msgstr "Пустая корзина"
 msgid "Empty or Wipe the highlighted slot"
 msgstr "Очистите или удалите выделенный слот"
 
+msgid "Enable NFSv3"
+msgstr "Включить NFSv3"
+
+msgid "Enable NFSv4"
+msgstr "Включить NFSv4"
+
 msgid "Enable"
 msgstr "Включить"
 
@@ -8080,6 +8086,9 @@ msgstr "Включите этот параметр, чтобы добавить 
 msgid "Enable this option to add keyboard key map data to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить данные раскладки клавиатуры в файл лога отладки."
 
+msgid "Enable this option to add network information to the debug log file."
+msgstr "Включите эту опцию, чтобы добавлять информацию о сети в файл журнала отладки."
+
 msgid "Enable this option to add opkg output data to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить выходные данные opkg в файл лога отладки."
 
@@ -8252,6 +8261,9 @@ msgstr "Введите порт FTP хост-приемника (обычно «
 msgid "Enter the FTP username of the host receiver (normally 'root')."
 msgstr "Введите имя пользователя FTP получателя хоста (обычно «root»)."
 
+msgid "Enter the IP address or subnet (e.g. 192.168.1.0/24) to which NFS host access is granted. Enter '*', the default, for all host access."
+msgstr "Введите IP-адрес или подсеть (например, 192.168.1.0/24), к которой предоставлен доступ хостам NFS. Для доступа ко всем хостам введите '*' (значение по умолчанию)."
+
 msgid "Enter the IP address of the host receiver."
 msgstr "Введите IP-адрес хост-получателя."
 
@@ -8266,6 +8278,9 @@ msgstr "Введите частоту, с которой LNB переключа�
 
 msgid "Enter the frequency step size for the tuner to use when searching for cable multiplexes. For more information consult your cable provider's documentation."
 msgstr "Введите размер шага частоты для тюнера, который будет использоваться при поиске кабельных мультиплексов. Для получения дополнительной информации обратитесь к документации Вашего кабельного провайдера."
+
+msgid "Enter the number of NFS server threads to be allocated/used. Higher values improve performance with multiple clients but use more memory."
+msgstr "Введите количество потоков NFS-сервера, которые будут выделены/использованы. Более высокие значения повышают производительность при работе с несколькими клиентами, но потребляют больше памяти."
 
 msgid "Enter the number stored in the positioner that corresponds to this satellite."
 msgstr "Введите номер, сохраненный в позиционере, который соответствует этому спутнику."
@@ -9373,8 +9388,8 @@ msgstr "Из :"
 msgid "Front Panel Display"
 msgstr "Дисплей передней панели"
 
-msgid "Front panel/Display picon set"
-msgstr "Набор значков передней панели/дисплея"
+msgid "Front panel/Display picon path"
+msgstr "Путь к значку передней панели/дисплея"
 
 msgid "Frontprocessor version: %s"
 msgstr "Версия фронтпроцессора: %s"
@@ -10385,6 +10400,9 @@ msgstr "Включить данные EPG"
 msgid "Include MultiBoot data *"
 msgstr "Включить данные мультизагрузки *"
 
+msgid "Include network data"
+msgstr "Включить сетевые данные"
+
 msgid "Include SDT, BAT in http streams"
 msgstr "Включить SDT, BAT в потоки http"
 
@@ -10469,8 +10487,8 @@ msgstr "Скорость затухания инфопанели"
 msgid "Infobar frontend data source"
 msgstr "Источник данных интерфейса в инфопанели"
 
-msgid "InfoBar picon set"
-msgstr "Набор иконок информационной панели"
+msgid "InfoBar picon path"
+msgstr "Путь к значку информационной панели"
 
 msgid "Information"
 msgstr "Информация"
@@ -12461,6 +12479,12 @@ msgstr "Нигерия"
 msgid "Niue"
 msgstr "Ниуэ"
 
+msgid "NFS Settings"
+msgstr "Настройки NFS"
+
+msgid "NFS threads"
+msgstr "NFS-потоки"
+
 msgid "No"
 msgstr "Нет"
 
@@ -13187,8 +13211,8 @@ msgstr "Настройки OpenVPN"
 msgid "OpenVpn Log"
 msgstr "Журнал OpenVPN"
 
-msgid "OpenWebif picon set"
-msgstr "Набор иконок OpenWebif"
+msgid "OpenWebif picon path"
+msgstr "Путь к значку OpenWebif"
 
 msgid "OpenVpn Setup"
 msgstr "Настройки OpenVPN"
@@ -13575,8 +13599,9 @@ msgstr "Настройки Picon"
 msgid "Picon mode"
 msgstr "режим Picon"
 
-msgid "Picon path %s"
-msgstr "Путь к иконке %s"
+#, python-format
+msgid "Picon set %s"
+msgstr "Набор Picon %s"
 
 msgid "Picon set mode"
 msgstr "Режим установки Picon"
@@ -15511,6 +15536,9 @@ msgstr "Корневой каталог"
 msgid "Root directory"
 msgstr "Корневая директория"
 
+msgid "Root squash"
+msgstr "Подавление root-прав"
+
 msgid "Rotor step position:"
 msgstr "Шаг позиции ротора:"
 
@@ -16459,6 +16487,9 @@ msgstr "Выберите локаль из меню"
 msgid "Select the manufacturer of your SCR device. If the manufacturer is not listed, set 'SCR' to 'user defined' and enter the device parameters manually according to its spec sheet."
 msgstr "Выберите производителя вашего устройства SCR. Если производителя нет в списке, установите для параметра «SCR» значение «определено пользователем» и введите параметры устройства вручную в соответствии со спецификацией."
 
+msgid "Select the mode of access, Read/Write or Read Only, applied to all exported directories."
+msgstr "Выберите режим доступа: чтение/запись или только чтение, который будет применяться ко всем экспортируемым каталогам."
+
 msgid "Select the location where the picon files will be installed."
 msgstr "Выберите каталог, куда будут устанавливаться файлы пиконов."
 
@@ -16568,17 +16599,17 @@ msgstr ""
 msgid "Select the refresh rate to be used on the TV."
 msgstr "Выберите частоту обновления, которая будет использоваться на телевизоре."
 
-msgid "Select the Picon path, from above, to be used for Channel Selection picons."
-msgstr "Выберите путь к значкам Picon, указанный выше, который будет использоваться для значков выбора канала."
+msgid "Select the Picon path, from the option(s) above, to be used for Channel Selection picons."
+msgstr "Выберите путь к значку Picon из предложенных выше вариантов, который будет использоваться для значков выбора канала."
 
-msgid "Select the Picon path, from above, to be used for Front panel/Display picons."
-msgstr "Выберите путь к значкам Picon, указанный выше, для использования в качестве значков передней панели/дисплея."
+msgid "Select the Picon path, from the option(s) above, to be used for Front panel/Display picons."
+msgstr "Выберите путь к значкам Picon из предложенных выше вариантов, который будет использоваться для значков передней панели/дисплея."
 
-msgid "Select the Picon path, from above, to be used for InfoBar picons."
-msgstr "Выберите путь к значкам, указанный выше, который будет использоваться для значков информационной панели."
+msgid "Select the Picon path, from the option(s) above, to be used for InfoBar picons."
+msgstr "Выберите путь к значкам из приведенных выше вариантов, который будет использоваться для значков информационной панели."
 
-msgid "Select the Picon path, from above, to be used for OpenWebif picons."
-msgstr "Выберите путь к значкам сверху, который будет использоваться для значков OpenWebif."
+msgid "Select the Picon path, from the option(s) above, to be used for OpenWebif picons."
+msgstr "Выберите путь к значкам из предложенных выше вариантов, который будет использоваться для значков OpenWebif."
 
 msgid "Select the mode for picon path selection and resolution. 'Legacy' represents the previous mode of operation."
 msgstr "Выберите режим для выбора и разрешения пути к пиктограммам. «Legacy» соответствует предыдущему режиму работы."
@@ -22154,6 +22185,12 @@ msgstr "Где вы хотите указать местоположение з�
 msgid "What type of service scan do you want?"
 msgstr "Какой тип сканирования Вы хотите выбрать?"
 
+msgid "When enabled, allow usage of the NFS version 3 protocols."
+msgstr "При включении этой опции разрешается использование протоколов NFS версии 3."
+
+msgid "When enabled, allow usage of the NFS version 4 protocols."
+msgstr "При включении этой опции разрешается использование протоколов NFS версии 4."
+
 msgid "When enabled, allow each storage device detected to be automatically exported as a Samba share."
 msgstr "При включении этой функции разрешается автоматический экспорт каждого обнаруженного устройства хранения данных в качестве общей папки Samba."
 
@@ -22162,6 +22199,9 @@ msgstr "При включении отображается упрощенная 
 
 msgid "When enabled enigma2 will load unlinked userbouquets. This means that userbouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are updated"
 msgstr "Если это включено, то при старте энигма2 будут загружены доступные букеты, которые не включены в списки bouquets.tv или bouquets.radio"
+
+msgid "When enabled, map root to nobody (more secure). When disabled, full root access is available."
+msgstr "При включении этой функции права root передаются никому (более безопасно). При отключении предоставляется полный доступ с правами root."
 
 msgid "When enabled the Picture in Picture window can be closed with 'exit' button."
 msgstr "При включении окно «Картинка в картинке» можно закрыть кнопкой «Выход»."
