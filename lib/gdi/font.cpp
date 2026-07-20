@@ -160,7 +160,10 @@ std::string fontRenderClass::AddFont(const std::string &filename, const std::str
 
 	auto it = fontMap.find(name);
 	if (it != fontMap.end())
+	{
+		FTC_Manager_RemoveFaceID(cacheManager, (FTC_FaceID)it->second);
 		delete it->second;
+	}
 
 	fontListEntry *n = new fontListEntry;
 	n->filename = filename;
@@ -173,6 +176,25 @@ std::string fontRenderClass::AddFont(const std::string &filename, const std::str
 	eDebugNoNewLine(" -> '%s'.\n", n->face.c_str());
 
 	return n->face;
+}
+
+void fontRenderClass::ClearFonts()
+{
+	singleLock s(ftlock);
+	for (auto &entry : fontMap)
+	{
+		FTC_Manager_RemoveFaceID(cacheManager, (FTC_FaceID)entry.second);
+		delete entry.second;
+	}
+	fontMap.clear();
+	fontFacesCacheValid = false;
+	eTextPara::setReplacementFont("");
+	eTextPara::setFallbackFont("");
+}
+
+void clearFonts()
+{
+	fontRenderClass::getInstance()->ClearFonts();
 }
 
 fontRenderClass::fontListEntry::~fontListEntry() = default;
@@ -220,7 +242,7 @@ fontRenderClass::fontRenderClass()
 	{
 		eDebug("[Font] Initializing font stroker failed!");
 	}
-	
+
 	strokerRadius = -1;
 }
 
@@ -1104,7 +1126,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 					opcode=0;
 				} else
 					opcode=1;
-			} 
+			}
 			else if (surface->bpp == 32)
 			{
 				opcode = (m_blend) ? 4 : 3;
@@ -1128,7 +1150,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 				}
 				for (int i=0; i<16; ++i)
 					lookup32_invert[i]=lookup32_normal[i^0xF];
-			} 
+			}
 			else if (surface->bpp == 16)
 			{
 				opcode=2;
@@ -1153,7 +1175,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 				}
 				for (int i=0; i<16; ++i)
 					lookup16_invert[i]=lookup16_normal[i^0xF];
-			} 
+			}
 			else
 			{
 				eWarning("[eTextPara] Can't render to %dbpp!", surface->bpp);
@@ -1168,7 +1190,7 @@ void eTextPara::blit(gDC &dc, const ePoint &offset, const gRGB &cbackground, con
 			lookup8 = lookup8_normal;
 			lookup16 = lookup16_normal;
 			lookup32 = lookup32_normal;
-		} 
+		}
 		else
 		{
 			lookup8 = lookup8_invert;
