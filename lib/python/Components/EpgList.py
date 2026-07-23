@@ -161,26 +161,26 @@ class EPGList(GUIComponent):
 		if self.type == EPG_TYPE_SINGLE:
 			if self.skinColumns:
 				x = 0
-				self.weekday_rect = Rect(0, 0, self.gap(self.col[0] + 100), height)
+				self.weekday_rect = Rect(0, 0, self.gap(self.col[0]), height)
 				x += self.col[0]
-				self.datetime_rect = Rect(x + 75, 0, self.gap(self.col[1] + 15), height)
+				self.datetime_rect = Rect(x, 0, self.gap(self.col[1]), height)
 				x += self.col[1]
 				if self.sorting == 2:
 					rating_w = 60
-					self.descr_rect = Rect(x + 85, 0, width - x - rating_w, height)
+					self.descr_rect = Rect(x, 0, width - x - rating_w, height)
 					self.rating_rect = Rect(width - rating_w, 0, rating_w, height)
 				else:
 					self.descr_rect = Rect(x, 0, width - x, height)
 			else:
-				self.weekday_rect = Rect(0, 0, width / 20 * 2 - 10, height)
-				self.datetime_rect = Rect(width / 20 * 2, 0, width / 20 * 5 - 15, height)
+				self.weekday_rect = Rect(0, 0, width // 20 * 2 - 10, height)
+				self.datetime_rect = Rect(width // 20 * 2, 0, width // 20 * 5 - 15, height)
 				if self.sorting == 2:
-					descr_x = width / 20 * 7
+					descr_x = width // 20 * 7
 					rating_w = 60
 					self.descr_rect = Rect(descr_x, 0, width - descr_x - rating_w, height)
 					self.rating_rect = Rect(width - rating_w, 0, rating_w, height)
 				else:
-					self.descr_rect = Rect(width / 20 * 7, 0, width / 20 * 13, height)
+					self.descr_rect = Rect(width // 20 * 7, 0, width // 20 * 13, height)
 		elif self.type == EPG_TYPE_MULTI:
 			if self.skinColumns:
 				x = 0
@@ -210,7 +210,7 @@ class EPGList(GUIComponent):
 				x += self.col[1]
 				self.service_rect = Rect(x + 85, 0, width - x, height)
 			else:
-				self.weekday_rect = Rect(0, 0, width / 20 * 2 - 10, height)
+				self.weekday_rect = Rect(0, 0, width // 20 * 2 - 10, height)
 				self.datetime_rect = Rect(width // 20 * 2, 0, width // 20 * 5 - 15, height)
 				self.service_rect = Rect(width // 20 * 7, 0, width // 20 * 13, height)
 
