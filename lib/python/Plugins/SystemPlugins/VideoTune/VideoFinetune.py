@@ -18,7 +18,7 @@ class OverscanTestScreen(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 
-		self.skin = """<screen position="fill">
+		self.skin = """<screen position="fill" flags="wfNoBorder">
 				<ePixmap pixmap="%s" position="0,0" size="%s,%s" zPosition="2" alphaTest="on"/>
 			</screen>""" % (getDesktop(0).size().height() == 1080 and ("overscan1920x1080.png", 1920, 1080) or ("overscan1280x720.png", 1280, 720))
 
@@ -48,7 +48,7 @@ class OverscanTestScreen(Screen):
 
 class FullHDTestScreen(OverscanTestScreen):
 	skin = """
-		<screen position="fill">
+		<screen position="fill" flags="wfNoBorder">
 			<ePixmap pixmap="testscreen.png" position="0,0" size="1920,1080" zPosition="2" alphaTest="on"/>
 		</screen>"""
 
@@ -82,7 +82,7 @@ class FullHDTestScreen(OverscanTestScreen):
 
 
 class FullUHDTestScreen(OverscanTestScreen):
-	skin = """<screen position="0,0" size="0,0"/>"""
+	skin = """<screen position="0,0" size="0,0" flags="wfNoBorder"/>"""
 
 	def __init__(self, session):
 		Screen.__init__(self, session)
@@ -113,7 +113,7 @@ class FullUHDTestScreen(OverscanTestScreen):
 
 class VideoFinetune(Screen):
 	skin = """
-		<screen position="fill">
+		<screen position="fill" flags="wfNoBorder">
 			<widget source="Canvas" render="Canvas" position="fill" zPosition="2"/>
 		</screen>"""
 
@@ -428,7 +428,7 @@ class VideoFinetune(Screen):
 
 class PixelsTestScreen(Screen):
 	skin = """
-		<screen position="fill">
+		<screen position="fill" flags="wfNoBorder">
 			<widget source="Canvas" render="Canvas" position="fill" zPosition="2"/>
 		</screen>"""
 
