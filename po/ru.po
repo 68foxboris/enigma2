@@ -2564,6 +2564,9 @@ msgstr "Разрешить 10 бит"
 msgid "Allow 12bit"
 msgstr "Разрешить 12 бит"
 
+msgid "Allow guest access"
+msgstr "Предоставить гостевой доступ"
+
 msgid "Allow quitting movie player with exit"
 msgstr "Выход из видеопроигрывателя по кнопке 'EXIT'"
 
@@ -6197,6 +6200,9 @@ msgstr "Настройки DNS"
 msgid "DNS data source"
 msgstr "Источник данных DNS"
 
+msgid "DNS override"
+msgstr "DNS-переопределение"
+
 msgid "DNS protocol mode"
 msgstr "Режим протокола DNS"
 
@@ -6509,6 +6515,9 @@ msgstr "Глубокий режим ожидания"
 msgid "Deep standby"
 msgstr "Глубокий режим ожидания"
 
+msgid "(Deep) Standby only"
+msgstr "(Глубокий) Только режим ожидания"
+
 msgid "Default"
 msgstr "По умолчанию"
 
@@ -6526,6 +6535,9 @@ msgstr "По умолчанию"
 
 msgid "Default duration: %d mins"
 msgstr "Продолжительность по умолчанию: %d минут"
+
+msgid "Default gateway"
+msgstr "Шлюз по умолчанию"
 
 msgid "Default movie location"
 msgstr "Дефолтное место записей"
@@ -8225,6 +8237,9 @@ msgstr "Введите IP-адрес DNS (сервер динамических 
 msgid "Enter IP address"
 msgstr "Ввод IP-адреса"
 
+msgid "Enter the IP address to be used as the gateway to other networks for this adapter. Typically this is the IP address of your router."
+msgstr "Введите IP-адрес, который будет использоваться в качестве шлюза для связи с другими сетями для этого адаптера. Обычно это IP-адрес вашего маршрутизатора."
+
 msgid "Enter PIN"
 msgstr "Ввод пин-кода"
 
@@ -8242,6 +8257,9 @@ msgstr "Ввод где Вы находитесь в восточном или �
 
 msgid "Enter if you are north or south of the equator."
 msgstr "Ввод где Вы находитесь на севере или к югу от экватора."
+
+msgid "Enter the fixed/static IPv4 address to be used for this network adapter."
+msgstr "Введите фиксированный/статический IPv4-адрес, который будет использоваться для этого сетевого адаптера."
 
 msgid "Enter main menu..."
 msgstr "Войти в главное меню..."
@@ -8279,14 +8297,32 @@ msgstr "Введите частоту, с которой LNB переключа�
 msgid "Enter the frequency step size for the tuner to use when searching for cable multiplexes. For more information consult your cable provider's documentation."
 msgstr "Введите размер шага частоты для тюнера, который будет использоваться при поиске кабельных мультиплексов. Для получения дополнительной информации обратитесь к документации Вашего кабельного провайдера."
 
-msgid "Enter the number of NFS server threads to be allocated/used. Higher values improve performance with multiple clients but use more memory."
+msgid "Enter the number of NFS server threads to be allocated/used. Higher values improve performance with multiple clients but uses more memory."
 msgstr "Введите количество потоков NFS-сервера, которые будут выделены/использованы. Более высокие значения повышают производительность при работе с несколькими клиентами, но потребляют больше памяти."
 
 msgid "Enter the number stored in the positioner that corresponds to this satellite."
 msgstr "Введите номер, сохраненный в позиционере, который соответствует этому спутнику."
 
+msgid "Enter the password, pass-phrase or pre-shared key for the selected wireless network."
+msgstr "Введите пароль, кодовую фразу или предварительно заданный ключ для выбранной беспроводной сети."
+
+msgid "Enter the primary IPv4 DNS setting for this adapter."
+msgstr "Введите основные настройки DNS IPv4 для этого адаптера."
+
+msgid "Enter the primary IPv6 DNS setting for this adapter. (Optional)"
+msgstr "Введите основные параметры DNS IPv6 для этого адаптера. (Необязательно)"
+
+msgid "Enter the secondary IPv4 DNS setting for this adapter. (Optional)"
+msgstr "Введите дополнительные параметры DNS IPv4 для этого адаптера. (Необязательно)"
+
+msgid "Enter the secondary IPv6 DNS setting for this adapter. (Optional)"
+msgstr "Введите дополнительные параметры DNS IPv6 для этого адаптера. (Необязательно)"
+
 msgid "Enter the service PIN"
 msgstr "Ввод пин-код сервиса"
+
+msgid "Enter the subnet mask to be used for this network adapter. (e.g. 255.255.255.0)"
+msgstr "Введите маску подсети, которая будет использоваться для этого сетевого адаптера. (например, 255.255.255.0)"
 
 msgid "Enter the ZeroTier Network ID. The ID should be exactly 16 characters in length."
 msgstr "Введите идентификатор сети ZeroTier. Идентификатор должен состоять ровно из 16 символов."
@@ -8296,6 +8332,9 @@ msgstr "Введите ONID/TSID транспондера"
 
 msgid "Enter the streaming port of the host receiver (normally '8001')."
 msgstr "Введите потоковый порт хост-получателя (обычно «8001»)."
+
+msgid "Enter the workgroup name to be used by this receiver for Samba based connections. (Default is 'WORKGROUP'.)"
+msgstr "Введите имя рабочей группы, которое будет использоваться этим приемником для подключений на основе Samba. (По умолчанию — 'WORKGROUP'.)"
 
 msgid "Enter your current latitude. This is the number of degrees you are from the equator as a decimal."
 msgstr "Введите текущую широту. Это число градусов от экватора как десятичное."
@@ -9271,6 +9310,9 @@ msgstr "Всегда использовать прогрессивную раз�
 msgid "Force frame"
 msgstr ""
 
+msgid "Force a specific network link speed/duplex mode instead of auto-negotiation. Only change this if you have a specific reason as an incorrect setting can break network connectivity."
+msgstr "Вместо автоматического согласования принудительно установите определенную скорость/режим дуплекса сетевого соединения. Изменяйте эти параметры только при наличии веской причины, так как неправильная настройка может нарушить сетевое соединение."
+
 msgid "Force legacy signal stats"
 msgstr "Статистика уровня snr/db из E2(если поддерживается)"
 
@@ -10075,9 +10117,6 @@ msgstr "Венгерский"
 msgid "Hungary"
 msgstr "Венгрия"
 
-msgid "I"
-msgstr "I"
-
 msgid "I do not want to perform any service scans"
 msgstr "Я не хочу выполнять никакое сканирование"
 
@@ -10099,12 +10138,6 @@ msgstr "Кнопка INFO"
 msgid "INFO-Panel..."
 msgstr "Инфопанель..."
 
-msgid "INS"
-msgstr "INS"
-
-msgid "IP"
-msgstr "IP"
-
 msgid "IP address"
 msgstr "IP-адрес"
 
@@ -10117,11 +10150,8 @@ msgstr "IP-адрес сервера Stream Relay, используемого д
 msgid "IP of fallback remote receiver"
 msgstr "IP запасного удаленного ресивера"
 
-msgid "IP: "
-msgstr "IP: "
-
-msgid "IPv6"
-msgstr "IPv6"
+msgid "IP protocol"
+msgstr "IP-протокол"
 
 msgid "IPv6 setup"
 msgstr "Настройки IPv6"
@@ -11184,6 +11214,9 @@ msgstr "Ссылка:"
 msgid "Link detected"
 msgstr "Обнаружена ссылка"
 
+msgid "Link speed"
+msgstr "Скорость соединения"
+
 msgid "Linked titles with a DVD menu"
 msgstr "Названия, связанные с DVD меню"
 
@@ -12213,9 +12246,6 @@ msgstr "NCam webif отключен"
 msgid "NEXT"
 msgstr "ДАЛЕЕ"
 
-msgid "NFS"
-msgstr "NFS"
-
 msgid "NFS setup"
 msgstr "Настройки NFS"
 
@@ -12228,14 +12258,8 @@ msgstr "НЕТ"
 msgid "NOW"
 msgstr "СЕЙЧАС"
 
-msgid "NTP"
-msgstr "NTP"
-
 msgid "NTP server"
 msgstr "Сервер NTP"
-
-msgid "NTSC"
-msgstr "NTSC"
 
 msgid "Name"
 msgstr "Имя"
@@ -12292,6 +12316,9 @@ msgstr "Действия с сетевым адаптером"
 msgid "Network Adapter Selection"
 msgstr "Выбор сетевого адаптера"
 
+msgid "Network Adapter Settings"
+msgstr "Настройки сетевого адаптера"
+
 msgid "Network Adapter Setting Actions"
 msgstr "Действия по настройке сетевого адаптера"
 
@@ -12321,6 +12348,9 @@ msgstr "Сетевой лог"
 
 msgid "Network Log Actions"
 msgstr "Действия с сетевым логом"
+
+msgid "Network metric"
+msgstr "Сетевые показатели"
 
 msgid "Network Speed:"
 msgstr "Скорость сети:"
@@ -13329,20 +13359,8 @@ msgstr "Перезаписывать файлы конфигурации?"
 msgid "Own"
 msgstr "Собственный"
 
-msgid "PAL"
-msgstr "PAL"
-
-msgid "PCM"
-msgstr "PCM"
-
 msgid "PCM Multichannel"
 msgstr "Вывод звука в PCM"
-
-msgid "PCR PID"
-msgstr "PCR PID"
-
-msgid "PDC"
-msgstr "PDC"
 
 msgid "PGS File"
 msgstr "PGS файл"
@@ -13511,6 +13529,9 @@ msgstr "Задержка обработки сквозного звука AC3+"
 
 msgid "Password"
 msgstr "Пароль"
+
+msgid "Password / Key"
+msgstr "Пароль / Ключ"
 
 msgid "Password (httpwd)"
 msgstr "Пароль (httpwd)"
@@ -14262,6 +14283,9 @@ msgstr "Предпочитать субтитры для людей с нару�
 msgid "Prefer subtitles stored by service"
 msgstr "Предпочитать запомненную дорожку субтитров канала"
 
+msgid "Preferred connection priority when multiple Wi-Fi profiles are configured. Lower numbers have a higher priority."
+msgstr "При настройке нескольких профилей Wi-Fi устанавливается приоритет подключения. Чем меньше число, тем выше приоритет."
+
 msgid "Preferred tuner"
 msgstr "Приоритетный тюнер"
 
@@ -14444,6 +14468,12 @@ msgstr "Превью выбранного канала"
 
 msgid "Primary DNS"
 msgstr "Первичный DNS"
+
+msgid "Primary DNS (IPv4)"
+msgstr "Основной DNS (IPv4)"
+
+msgid "Primary DNS (IPv6)"
+msgstr "Основной DNS (IPv6)"
 
 msgid "Prime time"
 msgstr "Прайм-тайм"
@@ -15557,6 +15587,9 @@ msgstr "Гребля"
 msgid "Rugby"
 msgstr "Регби"
 
+msgid "Running only"
+msgstr "Только во время движения"
+
 msgid "Round start time on"
 msgstr "Около времени начала на"
 
@@ -16006,6 +16039,12 @@ msgstr "Второй кабель от позиционера"
 msgid "Secondary DNS"
 msgstr "Вторичный DNS"
 
+msgid "Secondary DNS (IPv4)"
+msgstr "Вторичный DNS (IPv4)"
+
+msgid "Secondary DNS (IPv6)"
+msgstr "Вторичный DNS (IPv6)"
+
 msgid "Security Packages"
 msgstr "Пакеты безопасности"
 
@@ -16089,6 +16128,15 @@ msgstr "Если выключено, то в лог попадёт только 
 
 msgid "Select the mode of access, Read/Write or Read Only, applied to all automatically exported Samba shares."
 msgstr "Выберите режим доступа: чтение/запись или только чтение, который будет применяться ко всем автоматически экспортируемым общим ресурсам Samba."
+
+msgid "Select the network metric for this adapter. When multiple adapters are active, the one with the lowest network metric is used as the default route for network traffic."
+msgstr "Выберите сетевую метрику для этого адаптера. Если активно несколько адаптеров, в качестве маршрута по умолчанию для сетевого трафика будет использоваться тот, у которого самая низкая сетевая метрика."
+
+msgid "Select the network name (SSID) of the wireless network to which the receiver should connect."
+msgstr "Select the network name (SSID) of the wireless network to which the receiver should connect."
+
+msgid "Select the Zap timer prerequisite conditions. The Zap timer will only activate in the state selected."
+msgstr "Выберите предварительные условия для таймера Zap. Таймер Zap активируется только в выбранном состоянии."
 
 msgid "Select 'Yes' to enable the monitoring UI web interface for the DNSCrypt subsystem."
 msgstr "Выберите «Да», чтобы включить веб-интерфейс мониторинга подсистемы DNSCrypt."
@@ -16239,6 +16287,9 @@ msgstr "Выберите быстрый DiSEqC, если Ваша система
 
 msgid "Select HDD"
 msgstr "Выбрать жёсткий диск"
+
+msgid "Select the security protocol that will be used to access the selected wireless network."
+msgstr "Выберите протокол безопасности, который будет использоваться для доступа к выбранной беспроводной сети."
 
 msgid "Select the sort order of the Extension Menu entries."
 msgstr "Выберите порядок сортировки записей меню расширений."
@@ -16643,6 +16694,9 @@ msgstr "Выберите порт видеовыхода с помощью кн�
 
 msgid "Select video input with up/down buttons"
 msgstr "Выберите видеовход кнопками вверх/вниз"
+
+msgid "Select which IP protocols can be used with this adapter."
+msgstr "Выберите, какие IP-протоколы можно использовать с этим адаптером."
 
 msgid "Select whether your SCR device is externally powered."
 msgstr "Выберите, имеет ли Ваше устройство SCR внешнее питание."
@@ -18739,8 +18793,8 @@ msgstr "Установите окончание экстра периода дл
 msgid "Specify the extra start time when the inactivity sleeptimer should be ignored"
 msgstr "Установите начало экстра периода для игнорирования действия таймера неактивности"
 
-msgid "Specify the network DNS suffix to be applied when only the host name is provided. This helps the DNS resolver find the requested host."
-msgstr "Укажите сетевой DNS-суффикс, который будет применяться, если указано только имя хоста. Это поможет DNS-резолверу найти запрошенный хост."
+msgid "Specify the network domain name suffix to be applied when only the host name is provided. This helps the DNS resolver find the requested host."
+msgstr "Укажите суффикс доменного имени сети, который будет применяться, если указано только имя хоста. Это поможет DNS-серверу найти запрошенный хост."
 
 msgid "Specify the start time to ignore the shutdown timer when the receiver is in standby mode"
 msgstr "Установите начало периода для игнорирования действия выключения ресивера в режиме ожидания"
@@ -19120,6 +19174,9 @@ msgstr "Полосы"
 
 msgid "Style:"
 msgstr "Стиль:"
+
+msgid "Subnet mask"
+msgstr "Маска подсети"
 
 msgid "Subscription Packages"
 msgstr "Пакеты с подпиской"
@@ -21947,8 +22004,11 @@ msgstr "Ожидание монтирования"
 msgid "Waiting for partition"
 msgstr "Ожидание раздела"
 
-msgid "Wake On LAN"
-msgstr "Включение по сети"
+msgid "Wake-on-LAN"
+msgstr ""
+
+msgid "Wake-on-WiFi"
+msgstr ""
 
 msgid "Wake up"
 msgstr "Пробуждение"
@@ -22185,6 +22245,15 @@ msgstr "Где вы хотите указать местоположение з�
 msgid "What type of service scan do you want?"
 msgstr "Какой тип сканирования Вы хотите выбрать?"
 
+msgid "When enabled, allow Samba network access without a password."
+msgstr "При включении этой функции разрешать доступ к сети Samba без пароля."
+
+msgid "When enabled, allow connection to access points that don't broadcast their SSID."
+msgstr "Если этот параметр включен, разрешите подключение к точкам доступа, которые не передают свой SSID."
+
+msgid "When enabled, allow the receiver to be powered on by a remote Wake-on-LAN network signal (Magic Packet)."
+msgstr "При включении этой функции разрешите включение приемника с помощью удаленного сетевого сигнала Wake-on-LAN (Magic Packet)."
+
 msgid "When enabled, allow usage of the NFS version 3 protocols."
 msgstr "При включении этой опции разрешается использование протоколов NFS версии 3."
 
@@ -22194,14 +22263,26 @@ msgstr "При включении этой опции разрешается и�
 msgid "When enabled, allow each storage device detected to be automatically exported as a Samba share."
 msgstr "При включении этой функции разрешается автоматический экспорт каждого обнаруженного устройства хранения данных в качестве общей папки Samba."
 
+msgid "When enabled, connection via saved network is attempted when the Wi-Fi adapter connects."
+msgstr "Если эта функция включена, при подключении Wi-Fi-адаптера будет предпринята попытка подключения через сохраненную сеть."
+
 msgid "When enabled a simplified version from the second infobar is shown. This can also be toggled instantly by holding the OK buttin when the second infobar is visible. The infobar will shortly disappear and then shown in the other mode."
 msgstr "При включении отображается упрощенная версия второй информационной панели. Это также можно мгновенно переключить, удерживая кнопку ОК, когда видна вторая информационная панель. Информационная панель вскоре исчезнет, а затем отобразится в другом режиме."
 
 msgid "When enabled enigma2 will load unlinked userbouquets. This means that userbouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are updated"
 msgstr "Если это включено, то при старте энигма2 будут загружены доступные букеты, которые не включены в списки bouquets.tv или bouquets.radio"
 
+msgid "When enabled, keep the Wi-Fi adapter in low-power scan mode during Standby to allow the receiver to be powered on by a remote network signal (Magic Packet)."
+msgstr "При включении этой функции оставляйте адаптер Wi-Fi в режиме сканирования с низким энергопотреблением в режиме ожидания, чтобы приемник мог включаться от сигнала удаленной сети (Magic Packet)."
+
 msgid "When enabled, map root to nobody (more secure). When disabled, full root access is available."
 msgstr "При включении этой функции права root передаются никому (более безопасно). При отключении предоставляется полный доступ с правами root."
+
+msgid "When enabled, obtain the IP address, subnet mask, gateway, and DNS settings automatically via DHCP."
+msgstr "When enabled, obtain the IP address, subnet mask, gateway, and DNS settings automatically via DHCP."
+
+msgid "When enabled, specify custom DNS settings for this adapter instead of the global DNS settings."
+msgstr "При включении этой функции можно указывать пользовательские параметры DNS для данного адаптера вместо глобальных параметров DNS."
 
 msgid "When enabled the Picture in Picture window can be closed with 'exit' button."
 msgstr "При включении окно «Картинка в картинке» можно закрыть кнопкой «Выход»."
@@ -22229,6 +22310,12 @@ msgstr "При включении таймер от резервного при�
 
 msgid "When enabled then when you select a new channel in the channel selection the channel selection will not close. It will only close when you select the current playing service. This is a kind of preview mode"
 msgstr "Если включено,то при выборе нового канала, список выбора каналов не закроется. Он закроется кнопкой ОК только при выборе текущего игрового сервиса. Это является своего рода режимом предварительного просмотра"
+
+msgid "When enabled, this Wi-Fi adapter is kept in Wake-on-WiFi mode only and will not be used to connect to any network."
+msgstr "Если этот адаптер Wi-Fi включен, он остается только в режиме Wake-on-WiFi и не будет использоваться для подключения к какой-либо сети."
+
+msgid "When enabled, this adapter is initialized and activated at boot time."
+msgstr "При включении этот адаптер инициализируется и активируется при загрузке системы."
 
 msgid "When enabled you can control the volume with the arrow buttons instead of getting the channel selection list"
 msgstr "Если включено,то вы можете регулировать управление громкостью на кнопках (лево/право, вверх/вниз) около кнопки OK, вместо списка выбора каналов"
@@ -22500,6 +22587,9 @@ msgstr "Белый"
 msgid "Width"
 msgstr "Ширина"
 
+msgid "Wi-Fi Connection Settings"
+msgstr "Настройки подключения к Wi-Fi"
+
 msgid "Wireless LAN"
 msgstr "Беспроводная сеть"
 
@@ -22547,6 +22637,12 @@ msgstr "Настройки мастера"
 
 msgid "Wizard to arrange the overscan"
 msgstr "Мастер организации переразвертки"
+
+msgid "WoW only"
+msgstr "Только WoW"
+
+msgid "Workgroup name"
+msgstr "Название рабочей группы"
 
 msgid "Would you save the entered пин %s persistent?"
 msgstr "Вы хотите сохранить введенный пин-код %s как постоянный?"
@@ -23019,6 +23115,9 @@ msgstr "Переключить на канал, прежде чем продол
 
 msgid "Zap bouquets blindly on zap buttons"
 msgstr "Смена букетов без выбора канала"
+
+msgid "Zap condition"
+msgstr ""
 
 msgid "Zap down"
 msgstr "Переключить вниз"
