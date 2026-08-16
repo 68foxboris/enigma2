@@ -8270,6 +8270,9 @@ msgstr "Введите частоту, с которой LNB переключа�
 msgid "Enter the frequency step size for the tuner to use when searching for cable multiplexes. For more information consult your cable provider's documentation."
 msgstr "Введите размер шага частоты для тюнера, который будет использоваться при поиске кабельных мультиплексов. Для получения дополнительной информации обратитесь к документации Вашего кабельного провайдера."
 
+msgid "Enter the network domain name suffix to be added to the hostname above. This helps the DNS resolver find other network devices on the network."
+msgstr "Введите суффикс доменного имени сети, который будет добавлен к указанному выше имени хоста. Это поможет DNS-серверу находить другие сетевые устройства в сети."
+
 msgid "Enter the number of NFS server threads to be allocated/used. Higher values improve performance with multiple clients but uses more memory."
 msgstr "Введите количество потоков NFS-сервера, которые будут выделены/использованы. Более высокие значения повышают производительность при работе с несколькими клиентами, но потребляют больше памяти."
 
@@ -8279,17 +8282,17 @@ msgstr "Введите номер, сохраненный в позиционе�
 msgid "Enter the password, pass-phrase or pre-shared key for the selected wireless network."
 msgstr "Введите пароль, кодовую фразу или предварительно заданный ключ для выбранной беспроводной сети."
 
-msgid "Enter the primary IPv4 DNS setting for this adapter."
-msgstr "Введите основные настройки DNS IPv4 для этого адаптера."
+msgid "Enter the primary IPv4 DNS server for this adapter."
+msgstr "Введите основной DNS-сервер IPv4 для этого адаптера."
 
-msgid "Enter the primary IPv6 DNS setting for this adapter. (Optional)"
-msgstr "Введите основные параметры DNS IPv6 для этого адаптера. (Необязательно)"
+msgid "Enter the primary IPv6 DNS server for this adapter. (Optional)"
+msgstr "Введите основной DNS-сервер IPv6 для этого адаптера. (Необязательно)"
 
-msgid "Enter the secondary IPv4 DNS setting for this adapter. (Optional)"
-msgstr "Введите дополнительные параметры DNS IPv4 для этого адаптера. (Необязательно)"
+msgid "Enter the secondary IPv4 DNS server for this adapter. (Optional)"
+msgstr "Введите дополнительный DNS-сервер IPv4 для этого адаптера. (Необязательно)"
 
-msgid "Enter the secondary IPv6 DNS setting for this adapter. (Optional)"
-msgstr "Введите дополнительные параметры DNS IPv6 для этого адаптера. (Необязательно)"
+msgid "Enter the secondary IPv6 DNS server for this adapter. (Optional)"
+msgstr "Укажите дополнительный DNS-сервер IPv6 для этого адаптера. (Необязательно)"
 
 msgid "Enter the service PIN"
 msgstr "Ввод пин-код сервиса"
@@ -8306,8 +8309,8 @@ msgstr "Введите ONID/TSID транспондера"
 msgid "Enter the streaming port of the host receiver (normally '8001')."
 msgstr "Введите потоковый порт хост-получателя (обычно «8001»)."
 
-msgid "Enter the workgroup name to be used by this receiver for Samba based connections. (Default is 'WORKGROUP'.)"
-msgstr "Введите имя рабочей группы, которое будет использоваться этим приемником для подключений на основе Samba. (По умолчанию — 'WORKGROUP'.)"
+msgid "Enter the workgroup name to be used by this server for Samba based connections. (Default is 'WORKGROUP'.)"
+msgstr "Введите имя рабочей группы, которая будет использоваться этим сервером для подключений на основе Samba. (По умолчанию — 'WORKGROUP'.)"
 
 msgid "Enter your current latitude. This is the number of degrees you are from the equator as a decimal."
 msgstr "Введите текущую широту. Это число градусов от экватора как десятичное."
@@ -9247,8 +9250,8 @@ msgstr "Всегда использовать прогрессивную раз�
 msgid "Force frame"
 msgstr ""
 
-msgid "Force a specific network link speed/duplex mode instead of auto-negotiation. Only change this if you have a specific reason as an incorrect setting can break network connectivity."
-msgstr "Вместо автоматического согласования принудительно установите определенную скорость/режим дуплекса сетевого соединения. Изменяйте эти параметры только при наличии веской причины, так как неправильная настройка может нарушить сетевое соединение."
+msgid "Force a specific network link speed/duplex mode instead of auto-negotiation. Only change this if you have a specific reason for the change as an incorrect setting can break network connectivity."
+msgstr "Вместо автоматического согласования принудительно установите определенную скорость/режим дуплекса сетевого соединения. Изменяйте этот параметр только в том случае, если у вас есть для этого веская причина, поскольку неправильная настройка может нарушить сетевое соединение."
 
 msgid "Force legacy signal stats"
 msgstr "Статистика уровня snr/db из E2(если поддерживается)"
@@ -14704,7 +14707,7 @@ msgstr "Рейтинг неопределен"
 msgid "Read Userdata from oscam.conf"
 msgstr "Данные пользователя из oscam.conf"
 
-msgid "Read Only"
+msgid "Read-Only"
 msgstr "Только для чтения"
 
 msgid "Read/Write"
@@ -16448,7 +16451,10 @@ msgstr "Выберите локаль из меню"
 msgid "Select the manufacturer of your SCR device. If the manufacturer is not listed, set 'SCR' to 'user defined' and enter the device parameters manually according to its spec sheet."
 msgstr "Выберите производителя вашего устройства SCR. Если производителя нет в списке, установите для параметра «SCR» значение «определено пользователем» и введите параметры устройства вручную в соответствии со спецификацией."
 
-msgid "Select the mode of access, Read/Write or Read Only, applied to all exported directories."
+msgid "Select the mode of access, Read/Write or Read-Only, applied to all automatically exported Samba shares."
+msgstr "Выберите режим доступа: чтение/запись или только чтение, который будет применяться ко всем автоматически экспортируемым общим ресурсам Samba."
+
+msgid "Select the mode of access, Read/Write or Read-Only, applied to all exported directories."
 msgstr "Выберите режим доступа: чтение/запись или только чтение, который будет применяться ко всем экспортируемым каталогам."
 
 msgid "Select the location where the picon files will be installed."
@@ -16514,8 +16520,8 @@ msgstr "Выберите порядок сортировки пунктов ме
 msgid "Select the sort order of the menu entries. User defined also allows the menu entries to be hidden."
 msgstr "Выберите порядок сортировки пунктов меню. Определяемый пользователем также позволяет скрывать пункты меню."
 
-msgid "Select the DNS server(s) that will be used to lookup the host name to resolve the IP address."
-msgstr "Выберите DNS-сервер(ы), которые будут использоваться для поиска имени хоста и разрешения IP-адреса."
+msgid "Select the DNS server(s) that will be used to lookup hostnames to resolve IP addresses."
+msgstr "Выберите DNS-сервер(ы), которые будут использоваться для поиска имен хостов с целью разрешения IP-адресов."
 
 msgid "Select the shifted character set for the next character only"
 msgstr "Выберите набор символов со сдвигом виртуальной клавиатуры только для следующего символа"
@@ -16611,8 +16617,8 @@ msgstr "Выберите, какие IP-протоколы можно испол
 msgid "Select whether your SCR device is externally powered."
 msgstr "Выберите, имеет ли Ваше устройство SCR внешнее питание."
 
-msgid "Select whether IPv4, IPv6, or both protocols should be used. If both are enabled then which should be preferred."
-msgstr "Выберите, какой протокол следует использовать: IPv4, IPv6 или оба. Если оба протокола включены, то какой из них следует предпочесть."
+msgid "Select whether IPv4, IPv6, or both protocols should be used. If both are enabled then select which should be preferred."
+msgstr "Выберите, следует ли использовать протоколы IPv4, IPv6 или оба протокола. Если оба протокола включены, выберите тот, которому следует отдать предпочтение."
 
 msgid "Select whether AAC audio tracks should be transcoded."
 msgstr "Выберите, следует ли перекодировать аудиодорожки в формате AAC."
@@ -16958,7 +16964,7 @@ msgstr "Соотношение сторон сервисных пиконов"
 msgid "Service picons downsize"
 msgstr "Сервисные иконки уменьшены"
 
-msgid "Server must not enforce its own blocklist. Some servers may implement their own blacklists to block sites for parental control, ad blocking, etc. reasons."
+msgid "Server must not enforce its own blacklist. Some servers may implement their own blacklists to block sites for parental control, ad blocking, etc. reasons."
 msgstr "Сервер не должен применять собственный черный список. Некоторые серверы могут использовать собственные черные списки для блокировки сайтов в целях родительского контроля, блокировки рекламы и т.д."
 
 msgid "Server must not log user queries (declarative). This can improve the privacy of DNS lookups by not logging the request on the server providing the data."
@@ -18708,9 +18714,6 @@ msgstr "Установите окончание экстра периода дл
 
 msgid "Specify the extra start time when the inactivity sleeptimer should be ignored"
 msgstr "Установите начало экстра периода для игнорирования действия таймера неактивности"
-
-msgid "Specify the network domain name suffix to be applied when only the host name is provided. This helps the DNS resolver find the requested host."
-msgstr "Укажите суффикс доменного имени сети, который будет применяться, если указано только имя хоста. Это поможет DNS-серверу найти запрошенный хост."
 
 msgid "Specify the start time to ignore the shutdown timer when the receiver is in standby mode"
 msgstr "Установите начало периода для игнорирования действия выключения ресивера в режиме ожидания"
@@ -22197,8 +22200,8 @@ msgstr "При включении этой функции права root пер
 msgid "When enabled, obtain the IP address, subnet mask, gateway, and DNS settings automatically via DHCP."
 msgstr "When enabled, obtain the IP address, subnet mask, gateway, and DNS settings automatically via DHCP."
 
-msgid "When enabled, specify custom DNS settings for this adapter instead of the global DNS settings."
-msgstr "При включении этой функции можно указывать пользовательские параметры DNS для данного адаптера вместо глобальных параметров DNS."
+msgid "When enabled, specify custom DNS settings for this adapter instead of using the global DNS settings."
+msgstr "При включении этой функции можно указать пользовательские параметры DNS для данного адаптера вместо использования глобальных параметров DNS."
 
 msgid "When enabled the Picture in Picture window can be closed with 'exit' button."
 msgstr "При включении окно «Картинка в картинке» можно закрыть кнопкой «Выход»."
@@ -22230,8 +22233,8 @@ msgstr "Если включено,то при выборе нового кана
 msgid "When enabled, this Wi-Fi adapter is kept in Wake-on-WiFi mode only and will not be used to connect to any network."
 msgstr "Если этот адаптер Wi-Fi включен, он остается только в режиме Wake-on-WiFi и не будет использоваться для подключения к какой-либо сети."
 
-msgid "When enabled, this adapter is initialized and activated at boot time."
-msgstr "При включении этот адаптер инициализируется и активируется при загрузке системы."
+msgid "When enabled, this adapter will be initialized and activated at boot time."
+msgstr "При включении этот адаптер будет инициализирован и активирован при загрузке системы."
 
 msgid "When enabled you can control the volume with the arrow buttons instead of getting the channel selection list"
 msgstr "Если включено,то вы можете регулировать управление громкостью на кнопках (лево/право, вверх/вниз) около кнопки OK, вместо списка выбора каналов"
