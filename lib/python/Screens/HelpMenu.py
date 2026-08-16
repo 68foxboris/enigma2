@@ -363,7 +363,7 @@ class HelpMenuList(List):
 				# print("[HelpMenu] HelpMenuList DEBUG: Headings found.")
 				formatFlags |= self.HEADINGS
 			for (action, helpText) in actions:  # DEBUG: Should helpText be response?
-				helpTags = []  # if mapFlag else [pgettext("Abbreviation of 'Disabled'", "Disabled")]
+				helpTags = [_("Disabled")] if action in actionMap.disbledActions else []
 				if callable(helpText):
 					helpText = helpText()
 					helpTags.append(pgettext("Abbreviation of 'Configurable'", "Configurable"))
@@ -457,7 +457,7 @@ class HelpMenuList(List):
 
 	def select(self):
 		item = self.getCurrent()  # A list entry has a "private" tuple as first entry...
-		if item is not None:
+		if item is not None and item[2] not in item[0].disbledActions:  # Highlighting/navigation stays enabled, but OK does nothing for disabled actions.
 			self.callback(item[0], item[1], item[2])  # ...containing (Actionmap, Context, Action, Buttondata). We returns this tuple to the callback.
 
 
@@ -468,6 +468,7 @@ class HelpableScreen:  # Stub for deprecated manual help definitions used by old
 				"displayHelp": self.showHelp
 			}, prio=0)
 			self["key_help"] = StaticText(_("HELP"))
+
 
 class XMLHelp(Screen):
 	skin = """
@@ -487,6 +488,7 @@ class XMLHelp(Screen):
 			<convert type="ConditionalShowHide" />
 		</widget>
 	</screen>"""
+
 	def __init__(self, session, pages, title="", additionalSkin=""):
 		Screen.__init__(self, session, enableHelp=True)
 		self.pages = pages
@@ -517,8 +519,10 @@ class XMLHelp(Screen):
 		self.curPage = 0
 		self.numPages = len(pages) - 1
 		self.onLayoutFinish.append(self.layoutFinished)
+
 	def layoutFinished(self):
 		self.setPage(0)
+
 	def setPage(self, newPage):
 		if 0 <= newPage <= self.numPages:
 			page = self.pages[newPage]
@@ -544,14 +548,20 @@ class XMLHelp(Screen):
 		self["key_blue"].setText(blueText)
 		self["actions"].setEnabledAction("blue", blueText != "")
 		self["actions"].setEnabledAction("right", blueText != "")
+
 	def firstPage(self):
 		self.setPage(0)
+
 	def prevPage(self):
 		self.setPage(self.curPage - 1)
+
 	def nextPage(self):
 		self.setPage(self.curPage + 1)
+
 	def lastPage(self):
 		self.setPage(self.numPages)
+
+
 def showDocumentation(session, filename, translateFunc, callback=None):
 	dom = fileReadXML(filename)
 	if dom is not None and translateFunc and callable(translateFunc):
@@ -563,6 +573,8 @@ def showDocumentation(session, filename, translateFunc, callback=None):
 			session.openWithCallback(callback, XMLHelp, pages, title=title, additionalSkin=additionalSkin)
 		else:
 			session.open(XMLHelp, pages, title=title, additionalSkin=additionalSkin)
+
+
 class XMLHelpPage:
 	def __init__(self, node, translateFunc):
 		heading = node.get("heading", node.get("title", ""))
@@ -575,7 +587,9 @@ class XMLHelpPage:
 		else:
 			self.heading = ""
 			self.text = ""
+
 	def getHeading(self):
 		return self.heading
+
 	def getText(self):
 		return self.text
