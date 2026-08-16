@@ -3240,9 +3240,6 @@ msgstr "Автоматическое сканирование"
 msgid "Automatically start timeshift after"
 msgstr "Автоматический старт таймшифта через"
 
-msgid "Automatic shares access"
-msgstr "Автоматический доступ к общим папкам"
-
 msgid "Automatically put the TV in Standby whenever the receiver goes into Standby or Deep Standby."
 msgstr "Автоматически переводить телевизор в режим ожидания, когда ресивер переходит в режим ожидания или глубокий режим ожидания."
 
@@ -3269,6 +3266,9 @@ msgstr "Доступный"
 
 msgid "Available locales are:"
 msgstr "Доступные локали:"
+
+msgid "Available tuner types"
+msgstr "Доступные типы тюнеров"
 
 msgid "Axas E4HD Ultra"
 msgstr "Axas E4HD Ultra"
@@ -3801,6 +3801,9 @@ msgstr "Системы вещания"
 msgid "Broadcom"
 msgstr "Broadcom"
 
+msgid "Broadcom default"
+msgstr "Broadcom по умолчанию"
+
 msgid "Browse, install or remove plugins on a one by one basis."
 msgstr "Просматривайте, устанавливайте или удаляйте плагины по одному."
 
@@ -3975,9 +3978,6 @@ msgstr "Меню CCcam"
 msgid "CF Drive"
 msgstr "CF привод"
 
-msgid "CH"
-msgstr "К"
-
 #, python-format
 msgid "CH%s"
 msgstr "К. %s"
@@ -4004,17 +4004,8 @@ msgstr "Основные настройки CI"
 msgid "CI Helper Settings"
 msgstr "Настройки CIHelper"
 
-msgid "CI Legacy"
-msgstr "CI"
-
 msgid "CI Operation Mode"
 msgstr "Режим работы CI"
-
-msgid "CI Plus 1.2"
-msgstr "CI Plus 1.2"
-
-msgid "CI Plus 1.3"
-msgstr "CI Plus 1.3"
 
 msgid "CI Boot Delay"
 msgstr "Задержка загрузки CI"
@@ -4101,11 +4092,14 @@ msgstr "ЦП: "
 msgid "CPU: %s"
 msgstr "ЦП: %s"
 
-msgid "CVBS"
-msgstr "CVBS"
+msgid "C/T input"
+msgstr "Вход C/T"
 
-msgid "CaID: "
-msgstr "CAID: "
+msgid "C/T input switching"
+msgstr "Входное переключение C/T"
+
+msgid "C/T input switching: external 5V coax switch"
+msgstr "Переключение входа C/T: внешний коаксиальный переключатель 5 В."
 
 msgid "Cable"
 msgstr "Кабельное"
@@ -4113,11 +4107,11 @@ msgstr "Кабельное"
 msgid "Cable Scan"
 msgstr "Поиск кабельных каналов"
 
+msgid "Cable input"
+msgstr "Кабельный вход"
+
 msgid "Cable scan executable utility not found '%s'!"
 msgstr "Исполняемая утилита сканирования кабеля не найдена '%s'!"
-
-msgid "Cabo Verde"
-msgstr "Cabo Verde"
 
 msgid "Cache thumbnails"
 msgstr "Кэширование эскизов"
@@ -5220,6 +5214,9 @@ msgstr "Настройка дополнительной задержки для 
 msgid "Configure an additional delay to improve subtitle synchronization."
 msgstr "Настройка дополнительной задержки для улучшения синхронизации субтитров."
 
+msgid "Configure cable reception on this input."
+msgstr "Настройте прием кабельного сигнала на этом входе."
+
 msgid "Configure default type for new timers."
 msgstr "Настройте тип по умолчанию для новых таймеров."
 
@@ -5315,6 +5312,12 @@ msgstr ""
 
 msgid "Configure remote control type"
 msgstr "Настройка типа пульта"
+
+msgid "Configure satellite reception on the separate SAT input."
+msgstr "Настройте прием спутникового сигнала через отдельный SAT-вход."
+
+msgid "Configure terrestrial reception on this input."
+msgstr "Настройте прием наземного сигнала на этом входе."
 
 msgid "Configure separator type used in full description for separate short and extended descriptions."
 msgstr "Настройте тип разделителя, используемый в полном описании, для отдельных кратких и расширенных описаний."
@@ -6176,15 +6179,6 @@ msgstr "Чешская Республика"
 msgid "Czechia"
 msgstr "Чехия"
 
-msgid "D"
-msgstr "D"
-
-msgid "DAC"
-msgstr "DAC"
-
-msgid "DHCP"
-msgstr "DHCP"
-
 msgid "DLNA support"
 msgstr "Поддержка DLNA"
 
@@ -6209,15 +6203,6 @@ msgstr "Режим протокола DNS"
 msgid "DNS name or IP address"
 msgstr "DNS-имя или IP-адрес"
 
-msgid "DNS suffix"
-msgstr "DNS-суффикс"
-
-msgid "DNSCrypt"
-msgstr "DNSCrypt"
-
-msgid "DNSCrypt Resolver"
-msgstr "DNSCrypt Resolver"
-
 msgid "DNS.WATCH (Uncensored)"
 msgstr "DNS.WATCH (без цензуры)"
 
@@ -6227,9 +6212,6 @@ msgid ""
 msgstr ""
 "НЕ ВЫКЛЮЧАЙТЕ ПИТАНИЕ ВО ВРЕМЯ ОБНОВЛЕНИЯ!\n"
 "Обновить сейчас?"
-
-msgid "DTS"
-msgstr "DTS"
 
 msgid "DTS downmix"
 msgstr "Микшировать DTS в стерео"
@@ -6242,9 +6224,6 @@ msgstr "DTS/DTS-HD HR/DTS-HD MA/DTS:X"
 
 msgid "DUAL LAYER DVD"
 msgstr "Двухслойный DVD"
-
-msgid "DVB API: "
-msgstr "DVB API: "
 
 msgid "DVB CI Delay"
 msgstr "Задержка DVB CI"
@@ -6934,9 +6913,6 @@ msgstr "Имя устройства:"
 msgid "Devices"
 msgstr "Устройства"
 
-msgid "DiSEqC"
-msgstr "DiSEqC"
-
 msgid "DiSEqC 1.0 command"
 msgstr "Команда DiSEqC 1.0"
 
@@ -6945,12 +6921,6 @@ msgstr "Команда DiSEqC 1.1"
 
 msgid "DiSEqC 1.1 repeats"
 msgstr "DiSEqC 1.1 повторы"
-
-msgid "DiSEqC A/B"
-msgstr "DiSEqC A/B"
-
-msgid "DiSEqC A/B/C/D"
-msgstr "DiSEqC A/B/C/D"
 
 msgid "DiSEqC Tester"
 msgstr "Тестер DiSEqC"
@@ -7411,6 +7381,9 @@ msgstr "Dolby"
 
 msgid "Domain"
 msgstr "Домен"
+
+msgid "Domain name"
+msgstr "Доменное имя"
 
 msgid "Dominica"
 msgstr "Доминика"
@@ -8814,32 +8787,14 @@ msgstr "Начало экстра периода времени игнориро
 msgid "Extrude from left"
 msgstr "Выталкивать слева"
 
-msgid "F1"
-msgstr "F1"
-
 msgid "F1 long"
 msgstr "F2 долгая"
-
-msgid "F1/F3/F4/F4-TURBO/TRIPLEX"
-msgstr "F1/F3/F4/F4-TURBO/TRIPLEX"
-
-msgid "F1/LAN"
-msgstr "F1/LAN"
-
-msgid "F2"
-msgstr "F2"
 
 msgid "F2 long"
 msgstr "F2 долгая"
 
-msgid "F3"
-msgstr "F3"
-
 msgid "F3 long"
 msgstr "F3 долгая"
-
-msgid "F4"
-msgstr "F4"
 
 msgid "F4 long"
 msgstr "F4 долгая"
@@ -8867,32 +8822,14 @@ msgstr ""
 "FBC автоматически\n"
 "неактивен"
 
-msgid "FCC 1953"
-msgstr "FCC 1953"
-
 msgid "FCC enabled"
 msgstr "FCC включён"
-
-msgid "FEC"
-msgstr "FEC"
-
-msgid "FEC:"
-msgstr "FEC:"
-
-msgid "FHD"
-msgstr "FHD"
 
 msgid "FLASH"
 msgstr "Флеш-память"
 
 msgid "FSBL Update Check"
 msgstr "FSBL Update Check"
-
-msgid "FTA"
-msgstr "FTA"
-
-msgid "FTP"
-msgstr "FTP"
 
 msgid "FTP connection failure"
 msgstr "Сбой FTP-соединения"
@@ -9593,6 +9530,9 @@ msgstr "Гана"
 msgid "Gibraltar"
 msgstr "Гибралтар"
 
+msgid "GigaBlue optimized"
+msgstr "Оптимизировано GigaBlue"
+
 msgid "Go down the list"
 msgstr "Перейти вниз списка"
 
@@ -9731,12 +9671,6 @@ msgstr "Гвинея-Бисау"
 msgid "Guyana"
 msgstr "Гайана"
 
-msgid "H"
-msgstr "H"
-
-msgid "H7/H9/H9COMBO/H10 new model"
-msgstr "H7/H9/H9COMBO/H10 new model"
-
 msgid "H: = Hourly / D: = Daily / W: = Weekly / M: = Monthly"
 msgstr "H: = Ежечасно / D: = Ежедневно / W: = Еженедельно / M: = Ежемесячно"
 
@@ -9746,23 +9680,14 @@ msgstr "Ч:мм"
 msgid "H:mm:ss"
 msgstr "Ч:мм:сс"
 
-msgid "HD"
-msgstr "HD"
-
 msgid "HD list"
 msgstr "Список HD"
-
-msgid "HD2400"
-msgstr "HD2400"
 
 msgid "HD60/HD66SE/Multibox/Multibox SE"
 msgstr "HD60/HD66SE/Multibox/Multibox SE"
 
 msgid "HDD"
 msgstr "Жёсткий диск"
-
-msgid "HDMI"
-msgstr "HDMI"
 
 msgid "HDMI Colordepth"
 msgstr "Глубина цвета HDMI"
@@ -9806,11 +9731,11 @@ msgstr "HDMI-CEC адрес"
 msgid "HDMI-CEC setup"
 msgstr "Настройки HDMI-CEC"
 
-msgid "HDR10"
-msgstr "HDR10"
-
 msgid "HDR10 support"
 msgstr "HDR10 поддержка"
+
+msgid "HDR OSD adjustment"
+msgstr "Настройка HDR OSD"
 
 msgid "HELP"
 msgstr "ПОМОЩЬ"
@@ -10961,6 +10886,9 @@ msgstr "Киев"
 
 msgid "Kiribati"
 msgstr "Kiribati"
+
+msgid "Kodi Add-on Packages"
+msgstr "Дополнительные пакеты Kodi"
 
 msgid "Korea (Democratic People's Republic of)"
 msgstr "Korea (Democratic People's Republic of)"
@@ -12440,6 +12368,9 @@ msgstr "Мастер настройки сети"
 msgid "Network:"
 msgstr "Сеть:"
 
+msgid "Network Wi-Fi Settings"
+msgstr "Настройки сети Wi-Fi"
+
 msgid "NetworkBrowser"
 msgstr "Браузер Сети"
 
@@ -12509,8 +12440,8 @@ msgstr "Нигерия"
 msgid "Niue"
 msgstr "Ниуэ"
 
-msgid "NFS Settings"
-msgstr "Настройки NFS"
+msgid "NFS Server Settings"
+msgstr "Настройки NFS-сервера"
 
 msgid "NFS threads"
 msgstr "NFS-потоки"
@@ -15630,38 +15561,20 @@ msgstr "Российская Федерация"
 msgid "Rwanda"
 msgstr "Руанда"
 
+msgid "SAT input"
+msgstr "Вход SAT"
+
 msgid "S-Video"
 msgstr "S-Видео"
 
 msgid "SCPC optimized search range"
 msgstr "SCPC оптимизированный диапазон поиска"
 
-msgid "SCR (Unicable/JESS)"
-msgstr "SCR (Unicable/JESS"
-
-msgid "SCR JESS"
-msgstr "SCR JESS"
-
-msgid "SCR Unicable"
-msgstr "SCR Unicable"
-
-msgid "SDR"
-msgstr "SDR"
-
 msgid "SINGLE LAYER DVD"
 msgstr "Однослойный DVD"
 
 msgid "SMS style QuickSelect entry selection"
 msgstr "Выбор записи QuickSelect в стиле SMS"
-
-msgid "SNR"
-msgstr "SNR"
-
-msgid "SNR:"
-msgstr "SNR:"
-
-msgid "SPDIF"
-msgstr "SPDIF"
 
 msgid "SRT File"
 msgstr "SRT Файл"
@@ -15674,9 +15587,6 @@ msgstr "SSA Файл"
 
 msgid "SSA file"
 msgstr "SSA файл"
-
-msgid "SSID:"
-msgstr "SSID:"
 
 msgid "Saint Barthelemy"
 msgstr "Сен-Бартельми"
@@ -15705,8 +15615,8 @@ msgstr "Самба-клиент"
 msgid "Samba Server"
 msgstr "Самба-сервер"
 
-msgid "Samba Settings"
-msgstr "Настройки Samba"
+msgid "Samba Server Settings"
+msgstr "Настройки сервера Samba"
 
 msgid "Samba log"
 msgstr "Журнал Samba"
@@ -16819,6 +16729,9 @@ msgstr "Выберите «Да», чтобы информационная па�
 msgid "Select 'Yes' to shut down immediately instead of starting the descramble."
 msgstr "Выберите «Да», чтобы немедленно завершить работу, не запуская декодирование."
 
+msgid "Select 'Yes' to show Kodi add-on packages in the Download Plugins screen."
+msgstr "Выберите «Да», чтобы отобразить пакеты дополнений Kodi на экране загрузки плагинов."
+
 msgid "Selects video source displayed on the LCD."
 msgstr "Выбор источника видео для показа на LCD дисплее."
 
@@ -17616,6 +17529,9 @@ msgstr "Показать EIT сейчас/след в инфопанели"
 
 msgid "Show Extension packages"
 msgstr "Показать пакеты расширений"
+
+msgid "Show Kodi Add-on packages"
+msgstr "Показать пакеты дополнений Kodi"
 
 msgid "Show Kernel packages"
 msgstr "Показать пакеты ядра"
@@ -19661,6 +19577,9 @@ msgstr "Калибровка экрана"
 msgid "Testscreens that are helpfull to fine-tune your display"
 msgstr "Тестовые изображения помогут точно настроить ваш экран"
 
+msgid "Terrestrial input"
+msgstr "Наземный ввод"
+
 msgid "Text"
 msgstr "Текст"
 
@@ -20032,11 +19951,17 @@ msgstr "Это порядок, в котором команды DiSEqC отпр�
 msgid "This is the prefix of each entry in the debug log. 'boot time' is the number of seconds since the receiver was last booted."
 msgstr "Это префикс каждой записи в журнале отладки. «время загрузки» - это количество секунд с момента последней загрузки получателя."
 
+msgid "This is one reception type of a single tuner. Enabled reception types are switched automatically and scanned separately."
+msgstr "Это один из типов приема одного тюнера. Включенные типы приема переключаются автоматически и сканируются отдельно."
+
 msgid "This not valid ONID/TSID"
 msgstr "Недействительные ONID/TSID"
 
 msgid "This offset will only be used if the channel does not have its own volume offset."
 msgstr "Это значение будет использовано только в том случае, если канал не имеет индивидуальной настройки громкости."
+
+msgid "This option adjusts SDR graphics and OSD colors while the HDMI output is in HDR mode."
+msgstr "Эта опция регулирует графику SDR и цвета экранного меню, когда выход HDMI находится в режиме HDR."
 
 msgid "This option allows to reduce the block-noise in the picture. Obviously this is at the cost of the picture's sharpness."
 msgstr "Эта опция позволяет уменьшить блок-шум изображения. Очевидно ценой резкости картинки."
@@ -21976,15 +21901,6 @@ msgstr "Беспроводная сеть WLAN"
 msgid "WMA Pro downmix"
 msgstr "Микширование WMA Pro"
 
-msgid "WSS on 4:3"
-msgstr "WSS в 4:3"
-
-msgid "WWIO 4K"
-msgstr "WWIO 4K"
-
-msgid "WWIO_BRE2ZE_TC"
-msgstr "WWIO_BRE2ZE_TC"
-
 msgid "Wait please while creating swapfile..."
 msgstr "Ждите, идёт создание файла подкачки..."
 
@@ -22586,9 +22502,6 @@ msgstr "Белый"
 
 msgid "Width"
 msgstr "Ширина"
-
-msgid "Wi-Fi Connection Settings"
-msgstr "Настройки подключения к Wi-Fi"
 
 msgid "Wireless LAN"
 msgstr "Беспроводная сеть"
