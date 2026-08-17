@@ -41,7 +41,9 @@ class WizardStart(Wizard, ShowRemoteControl):
 		self.xmlfile = ["startwizard.xml"]
 		Wizard.__init__(self, session, showSteps=False)
 		ShowRemoteControl.__init__(self)
-		self.skinName.insert(0, "StartWizard")
+		self.skinName = ["StartWizard"]
+		if isinstance(self.skinName, str):
+			self.skinName.insert(0, "StartWizard")
 		self["wizard"] = Pixmap()
 		self.nwSelectedIface = None
 		self.nwIpFound = ""

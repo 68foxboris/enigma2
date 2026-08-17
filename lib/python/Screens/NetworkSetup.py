@@ -564,7 +564,7 @@ class NetworkOverview(Screen):
 			if adapter.isWiFi:
 				menu.append((_("Scan Wi-Fi Networks"), "scan"))
 				menu.append((_("Add Wi-Fi Manually"), "addManual"))
-			self.session.openWithCallback(lambda choice: self.contextCb(choice, conn, adapter), ChoiceBox, windowTitle=title, choiceList=menu)
+			self.session.openWithCallback(lambda choice: self.contextCb(choice, conn, adapter), ChoiceBox, windowTitle=title, list=menu)
 
 		adapter = self.currentAdapter()
 		if adapter:
