@@ -4,7 +4,7 @@ SUBDIRS = SoftwareManager PositionerSetup Satfinder \
 	SatelliteEquipmentControl Videomode VideoTune Hotplug \
 	DefaultServicesScanner DiseqcTester CommonInterfaceAssignment \
 	CableScan FastScan OSDPositionSetup OSD3DSetup VideoClippingSetup \
-	WirelessLan NetworkWizard LCNScanner OSDCalibration
+	LCNScanner OSDCalibration
 
 if HAVE_LIBVUGLES2
 SUBDIRS += AnimationSetup
