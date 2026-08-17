@@ -657,8 +657,8 @@ enigma.eProfileWrite("AutoRunPlugins")
 # Initialize autorun plugins and plugin menu entries.
 from Components.PluginComponent import plugins
 
-enigma.eProfileWrite("StartWizard")
-from Screens.StartWizard import *
+enigma.eProfileWrite("WizardStart")
+from Screens.WizardStart import *
 from Tools.BoundFunction import boundFunction
 from Plugins.Plugin import PluginDescriptor
 

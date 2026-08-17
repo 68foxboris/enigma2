@@ -4,7 +4,8 @@ from Components.ConfigList import ConfigListScreen, ConfigList
 from Components.ActionMap import ActionMap
 from Components.Sources.StaticText import StaticText
 from Components.config import config, ConfigSubsection, ConfigBoolean, ConfigSelection, ConfigYesNo, ConfigIP, ConfigNothing
-from Components.Network import iNetwork
+from Components.NetworkManager import networkManager
+from Tools.ServiceAction import ServiceAction
 from Components.Opkg import OpkgComponent
 from enigma import eDVBDB
 
@@ -14,7 +15,7 @@ config.misc.installwizard.opkgloaded = ConfigBoolean(default=False)
 config.misc.installwizard.channellistdownloaded = ConfigBoolean(default=False)
 
 
-class InstallWizard(ConfigListScreen, Screen):
+class WizardInstall(ConfigListScreen, Screen):
 
 	STATE_UPDATE = 0
 	STATE_CHOISE_CHANNELLIST = 1
@@ -121,11 +122,11 @@ class InstallWizard(ConfigListScreen, Screen):
 
 	def run(self):
 		if self.index == self.STATE_UPDATE and config.misc.installwizard.hasnetwork.value:
-			self.session.open(InstallWizardOpkgUpdater, self.index, _('Please wait (updating packages)'), OpkgComponent.CMD_UPDATE)
+			self.session.open(WizardInstallOpkgUpdater, self.index, _('Please wait (updating packages)'), OpkgComponent.CMD_UPDATE)
 			self.doNextStep = True
 		elif self.index == self.STATE_CHOISE_CHANNELLIST:
 			if self.enabled.value:
-				self.session.open(InstallWizardOpkgUpdater, self.index, _('Please wait (downloading channel list)'), OpkgComponent.CMD_REMOVE, {'package': 'enigma2-plugin-settings-hans-' + self.channellist_type.value})
+				self.session.open(WizardInstallOpkgUpdater, self.index, _('Please wait (downloading channel list)'), OpkgComponent.CMD_REMOVE, {'package': 'enigma2-plugin-settings-hans-' + self.channellist_type.value})
 			self.doNextStep = True
 		elif self.index == self.INSTALL_PLUGINS:
 			if self["config"].getCurrent()[1] == self.doplugins:
@@ -149,14 +150,14 @@ class InstallWizard(ConfigListScreen, Screen):
 				self.doNextStep = True
 
 
-class InstallWizardOpkgUpdater(Screen):
+class WizardInstallOpkgUpdater(Screen):
 	skin = """
 	<screen position="c-300,c-25" size="600,50" title=" ">
 		<widget source="statusbar" render="Label" position="10,5" zPosition="10" size="e-10,30" halign="center" valign="center" font="Regular;22" transparent="1" shadowColor="black" shadowOffset="-1,-1" />
 	</screen>"""
 
 	def __init__(self, session, index, info, cmd, pkg=None):
-		self.skin = InstallWizardOpkgUpdater.skin
+		self.skin = WizardInstallOpkgUpdater.skin
 		Screen.__init__(self, session)
 
 		self["statusbar"] = StaticText(info)
