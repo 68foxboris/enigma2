@@ -1899,14 +1899,12 @@ class InformationStreaming(InformationBase):
 	def keyStopStreams(self):
 		if eStreamServer.getInstance().getConnectedClients():
 			eStreamServer.getInstance().stopStream()
-		if eRTSPStreamServer.getInstance().getConnectedClients():
-			eRTSPStreamServer.getInstance().stopStream()
 
 	def displayInformation(self):
 		info = []
 		info.append(self.formatLine("H", _("Streaming tuner information for %s %s") % getBoxDisplayName()))
 		info.append("")
-		clientList = eStreamServer.getInstance().getConnectedClients() + eRTSPStreamServer.getInstance().getConnectedClients()
+		clientList = eStreamServer.getInstance().getConnectedClients()
 		if clientList:
 			self["key_blue"].setText(_("Stop Streams"))
 			self["streamActions"].setEnabled(True)
