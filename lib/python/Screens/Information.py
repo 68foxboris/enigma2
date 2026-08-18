@@ -608,7 +608,6 @@ class InformationDistribution(InformationBase):
 		if override:
 			info.append(self.formatLine("P1", _("Info file override"), _("Defined / Active")))
 		info.append(self.formatLine("P1", _("Distribution version"), BoxInfo.getItem("imgversion")))
-		info.append(self.formatLine("P1", _("Distribution revision"), formatDate(BoxInfo.getItem("imgrevision"))))
 		info.append(self.formatLine("P1", _("Distribution language"), BoxInfo.getItem("imglanguage")))
 		info.append(self.formatLine("P1", _("OEM model"), BoxInfo.getItem("platform", _("Unknown"))))
 		slotCode, bootCode = MultiBoot.getCurrentSlotAndBootCodes()
@@ -646,7 +645,7 @@ class InformationDistribution(InformationBase):
 		info.append(self.formatLine("S", _("Enigma2 information")))
 		if self.extraSpacing:
 			info.append("")
-		enigmaVersion = str(BoxInfo.getItem("imageversion"))
+		enigmaVersion = about.getEnigmaVersionString()
 		enigmaVersion = enigmaVersion.rsplit("-", enigmaVersion.count("-") - 2)
 		if len(enigmaVersion) == 3:
 			enigmaVersion = f"{enigmaVersion[0]} ({enigmaVersion[2]}-{enigmaVersion[1].capitalize()})"
@@ -657,8 +656,8 @@ class InformationDistribution(InformationBase):
 		info.append(self.formatLine("P1", _("%s version") % "Enigma2", enigmaVersion))
 		info.append(self.formatLine("P1", _("Enigma2 revision"), getE2Rev()))
 		compileDate = str(BoxInfo.getItem("compiledate"))
-		info.append(self.formatLine("P1", _("Last update"), formatDate(f"{compileDate[:4]}{compileDate[4:6]}{compileDate[6:]}")))
-		info.append(self.formatLine("P1", _("Last flash"), formatDate(about.getFlashDateString())))
+		info.append(self.formatLine("P1", _("Last update"), formatDate(about.getUpdateDateString())))
+		info.append(self.formatLine("P1", _("Last flash"), formatDate(about.getBuildDateString())))
 		info.append(self.formatLine("P1", _("Enigma2 (re)starts"), config.misc.startCounter.value))
 		info.append(self.formatLine("P1", _("Enigma2 debug level"), eGetEnigmaDebugLvl()))
 		mediaService = BoxInfo.getItem("mediaservice")
@@ -681,7 +680,7 @@ class InformationDistribution(InformationBase):
 		upxVersion = BoxInfo.getItem("upx")
 		info.append(self.formatLine("P1", _("File compression"), f"{_("Enabled")} / {_("%s version") % "UPX"} {upxVersion}" if upxVersion else _("Disabled")))
 		info.append(self.formatLine("P1", _("Feed URL"), BoxInfo.getItem("feedsurl")))
-		info.append(self.formatLine("P1", _("Compiled by"), BoxInfo.getItem("developername")))
+		info.append(self.formatLine("P1", _("Compiled by"), BoxInfo.getItem("maintainer")))
 		info.append("")
 		info.append(self.formatLine("S", _("Software information")))
 		if self.extraSpacing:
@@ -1956,6 +1955,7 @@ class InformationSystem(InformationBase):
 			("Kernel Modules", None, "/proc/modules"),
 			("Kernel Messages", ("/bin/dmesg", "/bin/dmesg"), None),
 			("System Messages", None, "/home/root/logs/messages"),
+			("Enigma Info", None, "/usr/lib/enigma.info"),
 			("Network Interfaces", ("/sbin/ifconfig", "/sbin/ifconfig"), None),
 			("Disk Usage", ("/bin/df", "/bin/df", "-h"), None),
 			("Mounted Volumes", ("/bin/mount", "/bin/mount"), None),
