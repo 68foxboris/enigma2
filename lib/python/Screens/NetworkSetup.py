@@ -779,7 +779,6 @@ class NetworkAdapterSetup(Setup):
 		self.adapter = adapter
 		self.conn = networkManager.getBaseConnection(adapter.name)
 		self.buildConfigObjects()
-		self.hasWakeOnLan = adapter.name == "eth0" and BoxInfo.getItem("wol") and BoxInfo.getItem("WakeOnLAN")
 		Setup.__init__(self, session=session, setup="NetworkAdapter")
 		self.setTitle(_("Network Adapter '%s' Settings") % adapter.name)
 		self["key_info"] = StaticText(_("INFO"))
@@ -881,9 +880,6 @@ class NetworkAdapterSetup(Setup):
 		if adapter.adapterEnabled != wasEnabled:
 			change |= CHANGE_ADAPTER_ENABLED if adapter.adapterEnabled else CHANGE_ADAPTER_DISABLED
 		applyAdapterChange(adapter.name, change, lambda: self.close((False, True)))
-
-		if self.hasWakeOnLan:
-			config.network.wol.save()
 
 
 class NetworkWiFi(Setup):
