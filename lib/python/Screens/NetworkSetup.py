@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -778,6 +779,7 @@ class NetworkAdapterSetup(Setup):
 		self.adapter = adapter
 		self.conn = networkManager.getBaseConnection(adapter.name)
 		self.buildConfigObjects()
+		self.hasWakeOnLan = adapter.name == "eth0" and BoxInfo.getItem("wol") and BoxInfo.getItem("WakeOnLAN")
 		Setup.__init__(self, session=session, setup="NetworkAdapter")
 		self.setTitle(_("Network Adapter '%s' Settings") % adapter.name)
 		self["key_info"] = StaticText(_("INFO"))
@@ -879,6 +881,9 @@ class NetworkAdapterSetup(Setup):
 		if adapter.adapterEnabled != wasEnabled:
 			change |= CHANGE_ADAPTER_ENABLED if adapter.adapterEnabled else CHANGE_ADAPTER_DISABLED
 		applyAdapterChange(adapter.name, change, lambda: self.close((False, True)))
+
+		if self.hasWakeOnLan:
+			config.network.wol.save()
 
 
 class NetworkWiFi(Setup):
@@ -1544,13 +1549,15 @@ class NetworkTest(Screen):
 			ServiceAction.ping(self.interface, host, done)
 
 		def testDns():
+			dnsDetail = config.usage.dns.getText()
+
 			def done(exitCode: int):
 				ok = exitCode == 0
 				if not hasattr(self, "generation") or self.generation != gen:
 					return
-				setRow(self.ROW_DNS, self.STATE_OK if ok else self.STATE_FAIL, _("Available") if ok else _("Unavailable"), "Found Google")
+				setRow(self.ROW_DNS, self.STATE_OK if ok else self.STATE_FAIL, _("Available") if ok else _("Unavailable"), dnsDetail)
 
-			setRow(self.ROW_DNS, self.STATE_BUSY, _("Resolving..."), "google.com")
+			setRow(self.ROW_DNS, self.STATE_BUSY, _("Resolving..."), dnsDetail)
 			gen = self.generation
 			ServiceAction.resolve("google.com", done)
 
@@ -1628,11 +1635,10 @@ class DNSSettings(Setup):
 		def defaultGateway() -> list[int]:
 			result = [0, 0, 0, 0]
 			for interface in sorted(networkManager.adapters.keys()):
-				if networkManager.adapters[interface].netInfo.up:
-					connection = networkManager.activeConnection(interface)
-					if connection:
-						result = list(connection.gateway)
-						break
+				adapter = networkManager.adapters[interface]
+				if adapter.netInfo.up and adapter.netInfo.gateway and list(adapter.netInfo.gateway) != [0, 0, 0, 0]:
+					result = list(adapter.netInfo.gateway)
+					break
 			return result
 
 		dnsInitial = list(networkManager.nameserverConfig.servers)
@@ -1663,13 +1669,11 @@ class DNSSettings(Setup):
 		for addr in dnsInitial:
 			if isinstance(addr, list) and len(addr) == 4 and v4pos < 2:
 				self.dnsOptions["custom"]["v4"][v4pos] = addr
-				self.dnsOptions["dhcp-router"]["v4"][v4pos] = addr
 				v4pos += 1
 			elif isinstance(addr, str):
 				try:
 					if ip_address(addr).version == 6 and v6pos < 2:
 						self.dnsOptions["custom"]["v6"][v6pos] = addr
-						self.dnsOptions["dhcp-router"]["v6"][v6pos] = addr
 						v6pos += 1
 				except ValueError:
 					pass
@@ -1768,6 +1772,7 @@ class DNSSettings(Setup):
 			for val in self.dnsServersV4 + self.dnsServersV6:
 				if val:
 					servers.append(val)
+		networkManager.nameserverConfig.mode = config.usage.dns.value
 		networkManager.setNameservers(servers)
 		networkManager.save()
 		if config.usage.dns.value == "dnscrypt":
@@ -1781,7 +1786,14 @@ class DNSSettings(Setup):
 				break
 		if hasChanges:
 			self.saveAll()
-		self.close()
+
+		def done(*_args):
+			Processing.instance.hideProgress()
+			self.close()
+
+		Processing.instance.setDescription(_("Please wait..."))
+		Processing.instance.showProgress(endless=True)
+		networkManager.restartNetwork(callback=done)
 
 	def writeDnsCryptToml(self):  # DNSCrypt TOML helpers.
 		def insertSectionKey(lines, sectionName, key, rhs, anchorKeys, foundSet):
