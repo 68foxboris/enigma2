@@ -1785,7 +1785,8 @@ class DNSSettings(Setup):
 
 		def done(*_args):
 			Processing.instance.hideProgress()
-			self.close()
+			if getattr(self, "execing", False):
+				self.close()
 
 		Processing.instance.setDescription(_("Please wait..."))
 		Processing.instance.showProgress(endless=True)

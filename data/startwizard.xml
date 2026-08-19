@@ -49,7 +49,7 @@ self.nwShowStatus()
 	<step id="nwdns">
 		<text value="Configure or verify your DNS (Dynamic Name Server) settings by adjusting the values shown.\n\nWhen the settings are correct press OK to continue." />
 		<displaytext value="Configure DNS (Dynamic Name Server)" />
-		<config screen="DNSSettings" module="NetworkSetup" type="ConfigList" />
+		<config screen="DNSSettings" module="NetworkSetup" type="standalone" />
 		<code>
 self.clearSelectedKeys()
 self.selectKey("OK")
