@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from os import chmod, remove
 from os.path import exists
 from re import sub

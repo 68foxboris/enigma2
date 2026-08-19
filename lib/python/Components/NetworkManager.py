@@ -9,9 +9,7 @@ from os.path import basename, exists, isdir, ismount, realpath
 from pickle import dump as pickleDump, load as pickleLoad
 from re import compile, match
 from shutil import copy2
-from fcntl import ioctl
-from struct import pack
-from socket import AF_INET, AF_UNIX, SOCK_DGRAM, SOCK_STREAM, gethostbyname, gethostname, inet_ntoa, socket
+from socket import AF_UNIX, SOCK_STREAM, gethostbyname, gethostname, socket
 from subprocess import DEVNULL, check_output
 from uuid import uuid4
 from collections.abc import Callable
@@ -44,10 +42,6 @@ netEventSocketPath = "/var/run/daemon_net.socket"
 netinfoPath = "/var/run/netinfo"
 netscanPath = "/var/run/netscan"
 netrestarterBin = "/usr/sbin/netrestarter"
-
-SIOCGIFADDR = 0x8915
-SIOCGIFNETMASK = 0x891b
-SIOCGIFBRDADDR = 0x8919
 
 MODULE_NAME = __name__.split(".")[-1]
 
@@ -82,6 +76,8 @@ apiZydas = "zydas"
 # Central access point for all network configuration.
 class NetworkManager:
 	ADAPTER_BLACKLIST = frozenset((
+		"atml0",
+		"bnep0",
 		"ip6_vti0",
 		"ip6tnl0",
 		"ip_vti0",
@@ -92,6 +88,7 @@ class NetworkManager:
 		"tap0",
 		"tun0",
 		"tunl0",
+		"usb0",
 		"wg0",
 		"wifi0",
 		"wmaster0"
@@ -324,7 +321,7 @@ class NetworkManager:
 			driverFlags = f"-D {api}" if api != apiNl80211 else ""
 			return [
 				f"pre-up {ifconfigBin} {interface} up || true",
-				f"pre-up [ -S /var/run/wpa_supplicant/{interface} ] || {wpaSupplicantBin} -i{interface} -c{adapter.wpaConfPath} -B {driverFlags} -P{adapter.wpaPidPath} || true",
+				f"pre-up {wpaSupplicantBin} -i{interface} -c{adapter.wpaConfPath} -B {driverFlags} -P{adapter.wpaPidPath} || true",
 				f"pre-down {wpaCliBin} -i{interface} terminate 2>/dev/null; true",
 			]
 
@@ -1320,9 +1317,7 @@ class NameserverFiles:
 			return prefix + nsLines
 
 		lines = build(ns)
-		if anyDhcpActive and ns.mode == "dhcp-router":
-			fileWriteLines(resolvFile, [], source=MODULE_NAME)
-		else:
+		if not anyDhcpActive:
 			fileWriteLines(resolvFile, lines, source=MODULE_NAME)
 		if ns.mode != "dhcp-router":
 			fileWriteLines(nameserverFile, lines, source=MODULE_NAME)
@@ -1366,68 +1361,14 @@ class WiFiRuntime:
 		return [f"iwconfig {self.adapter.name}"]
 
 
-def _ifaceIoctlAddr(sock, name: str, request: int) -> str:
-	try:
-		res = ioctl(sock.fileno(), request, pack("256s", name.encode("utf-8")[:15]))
-		return inet_ntoa(res[20:24])
-	except OSError:
-		return ""
-
-
-def _readDefaultGateways() -> dict:
-	"""{iface: gatewayIp} for every default route (dest 00000000) in /proc/net/route."""
-	gateways: dict = {}
-	for line in fileReadLines("/proc/net/route", default=[], source=MODULE_NAME)[1:]:
-		parts = line.split()
-		if len(parts) < 4 or parts[1] != "00000000":
-			continue
-		try:
-			if not (int(parts[3], 16) & 0x2):  # RTF_GATEWAY
-				continue
-			gwBytes = bytes.fromhex(parts[2])
-			gateways.setdefault(parts[0], ".".join(str(b) for b in reversed(gwBytes)))
-		except ValueError:
-			continue
-	return gateways
-
-
 def readNetinfoInterfaces() -> dict:
-	"""Live per-interface state read directly from the kernel.
-
-	This image has no socketdaemon writing /var/run/netinfo, so we gather
-	the same fields ourselves via sysfs/ioctl/proc instead of relying on it.
-	"""
-	interfaces: dict = {}
-	defaultGw = _readDefaultGateways()
+	"""Raw "interfaces" dictionary from socketdaemon's /var/run/netinfo, {} if missing/invalid."""
 	try:
-		names = [x for x in listdir(sysfsNet) if x not in NetworkManager.ADAPTER_BLACKLIST]
-	except OSError:
-		return interfaces
-
-	sock = socket(AF_INET, SOCK_DGRAM)
-	try:
-		for name in names:
-			base = f"{sysfsNet}/{name}"
-			operstate = fileReadLine(f"{base}/operstate", default="down", source=MODULE_NAME).strip().lower()
-			carrier = fileReadLine(f"{base}/carrier", default="", source=MODULE_NAME).strip()
-			mtu = fileReadLine(f"{base}/mtu", default="0", source=MODULE_NAME).strip()
-			speed = fileReadLine(f"{base}/speed", default="-1", source=MODULE_NAME).strip()
-			duplex = fileReadLine(f"{base}/duplex", default="", source=MODULE_NAME).strip()
-			interfaces[name] = {
-				"up": operstate != "down",
-				"link": carrier == "1",
-				"ip4": _ifaceIoctlAddr(sock, name, SIOCGIFADDR),
-				"mask": _ifaceIoctlAddr(sock, name, SIOCGIFNETMASK),
-				"brd": _ifaceIoctlAddr(sock, name, SIOCGIFBRDADDR),
-				"gw": defaultGw.get(name, ""),
-				"defgw": name in defaultGw,
-				"mtu": int(mtu) if mtu.lstrip("-").isdigit() else 0,
-				"speed": int(speed) if speed.lstrip("-").isdigit() else -1,
-				"duplex": duplex,
-			}
-	finally:
-		sock.close()
-	return interfaces
+		with open(netinfoPath, encoding="utf-8") as fd:
+			info = loads(fd.read())
+	except (OSError, JSONDecodeError):
+		return {}
+	return info.get("interfaces", {})
 
 
 def isWirelessName(iface: str) -> bool:

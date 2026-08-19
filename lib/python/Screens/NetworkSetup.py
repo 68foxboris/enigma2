@@ -107,12 +107,12 @@ class NetworkOverview(Screen):
 		<widget source="adapterList" render="Listbox" position="10,10" size="e-20,250">
 			<template name="Default" colors="#0000CC00,#00CC0000,#00CCCCCC,#00003300,#00330000,#00333333" fonts="Regular;25,enigma2icons;38,Regular;24,Regular;18,enigma2icons;20" itemHeight="50">
 				<rowtemplate>
-					<text index="AdapterName" position="0,0" size="240,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="StatusText" position="280,0" size="170,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="MAC" position="450,0" size="170,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="IPAddress" position="620,0" size="150,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Gateway" position="770,0" size="140,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Speed" position="910,0" size="140,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
+					<text index="AdapterName" position="0,0" size="240,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="StatusText" position="280,0" size="170,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="MAC" position="450,0" size="170,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="IPAddress" position="620,0" size="150,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Gateway" position="770,0" size="140,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Speed" position="910,0" size="140,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
 				</rowtemplate>
 				<rowtemplate>
 					<text index="AdapterGlyph" position="0,6" size="48,38" font="1" horizontalAlignment="center" padding="5,0" verticalAlignment="center" />
@@ -127,18 +127,18 @@ class NetworkOverview(Screen):
 				</rowtemplate>
 			</template>
 		</widget>
-		<widget source="savedLabel" render="Label" position="10,270" size="e-20,25" foregroundColor="#005a5a5a" padding="10,0" verticalAlignment="center" widgetBorderColor="#005a5a5a" widgetBorderWidth="1">
+		<widget source="savedLabel" render="Label" position="10,270" size="e-20,25" foregroundColor="gray" padding="10,0" verticalAlignment="center" widgetBorderColor="gray" widgetBorderWidth="1">
 			<convert type="ConditionalShowHide" />
 		</widget>
 		<widget source="savedList" render="Listbox" position="10,305" size="e-20,175">
 			<template name="Default" colors="#0000CC00,#00CC0000,#00CCCCCC,#00003300,#00330000,#00333333" fonts="Regular;25,Regular;20" itemHeight="35">
 				<rowtemplate>
-					<text index="SSID" position="0,0" size="280,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="StatusText" position="280,0" size="170,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="BSSID" position="450,0" size="210,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Frequency" position="660,0" size="120,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Channel" position="780,0" size="120,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Encryption" position="900,0" size="150,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
+					<text index="SSID" position="0,0" size="280,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="StatusText" position="280,0" size="170,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="BSSID" position="450,0" size="210,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Frequency" position="660,0" size="120,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Channel" position="780,0" size="120,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Encryption" position="900,0" size="150,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
 				</rowtemplate>
 				<rowtemplate>
 					<text index="SSID" position="0,0" size="280,35" font="1" padding="5,0" verticalAlignment="center" />
@@ -779,6 +779,7 @@ class NetworkAdapterSetup(Setup):
 		self.adapter = adapter
 		self.conn = networkManager.getBaseConnection(adapter.name)
 		self.buildConfigObjects()
+		self.hasWakeOnLan = adapter.name == "eth0" and BoxInfo.getItem("wol") and BoxInfo.getItem("WakeOnLAN")
 		Setup.__init__(self, session=session, setup="NetworkAdapter")
 		self.setTitle(_("Network Adapter '%s' Settings") % adapter.name)
 		self["key_info"] = StaticText(_("INFO"))
@@ -880,6 +881,9 @@ class NetworkAdapterSetup(Setup):
 		if adapter.adapterEnabled != wasEnabled:
 			change |= CHANGE_ADAPTER_ENABLED if adapter.adapterEnabled else CHANGE_ADAPTER_DISABLED
 		applyAdapterChange(adapter.name, change, lambda: self.close((False, True)))
+
+		if self.hasWakeOnLan:
+			config.network.wol.save()
 
 
 class NetworkWiFi(Setup):
@@ -1043,7 +1047,7 @@ class NetworkWiFiScan(Screen):
 				</mode>
 			</template>
 		</widget>
-		<widget name="description" position="10,e-85" size="e-20,25" padding="5,0" verticalAlignment="center" widgetBorderColor="#005a5a5a" widgetBorderWidth="1" />
+		<widget name="description" position="10,e-85" size="e-20,25" padding="5,0" verticalAlignment="center" widgetBorderColor="gray" widgetBorderWidth="1" />
 		<widget source="key_red" render="Label" position="10,e-50" size="180,40" backgroundColor="key_red" font="Regular;20" foregroundColor="key_text" horizontalAlignment="center" wrap="off" verticalAlignment="center">
 			<convert type="ConditionalShowHide" />
 		</widget>
@@ -1545,15 +1549,13 @@ class NetworkTest(Screen):
 			ServiceAction.ping(self.interface, host, done)
 
 		def testDns():
-			dnsDetail = config.usage.dns.getText()
-
 			def done(exitCode: int):
 				ok = exitCode == 0
 				if not hasattr(self, "generation") or self.generation != gen:
 					return
-				setRow(self.ROW_DNS, self.STATE_OK if ok else self.STATE_FAIL, _("Available") if ok else _("Unavailable"), dnsDetail)
+				setRow(self.ROW_DNS, self.STATE_OK if ok else self.STATE_FAIL, _("Available") if ok else _("Unavailable"), "Found Google")
 
-			setRow(self.ROW_DNS, self.STATE_BUSY, _("Resolving..."), dnsDetail)
+			setRow(self.ROW_DNS, self.STATE_BUSY, _("Resolving..."), "google.com")
 			gen = self.generation
 			ServiceAction.resolve("google.com", done)
 
@@ -1631,10 +1633,11 @@ class DNSSettings(Setup):
 		def defaultGateway() -> list[int]:
 			result = [0, 0, 0, 0]
 			for interface in sorted(networkManager.adapters.keys()):
-				adapter = networkManager.adapters[interface]
-				if adapter.netInfo.up and adapter.netInfo.gateway and list(adapter.netInfo.gateway) != [0, 0, 0, 0]:
-					result = list(adapter.netInfo.gateway)
-					break
+				if networkManager.adapters[interface].netInfo.up:
+					connection = networkManager.activeConnection(interface)
+					if connection:
+						result = list(connection.gateway)
+						break
 			return result
 
 		dnsInitial = list(networkManager.nameserverConfig.servers)
@@ -1665,11 +1668,13 @@ class DNSSettings(Setup):
 		for addr in dnsInitial:
 			if isinstance(addr, list) and len(addr) == 4 and v4pos < 2:
 				self.dnsOptions["custom"]["v4"][v4pos] = addr
+				self.dnsOptions["dhcp-router"]["v4"][v4pos] = addr
 				v4pos += 1
 			elif isinstance(addr, str):
 				try:
 					if ip_address(addr).version == 6 and v6pos < 2:
 						self.dnsOptions["custom"]["v6"][v6pos] = addr
+						self.dnsOptions["dhcp-router"]["v6"][v6pos] = addr
 						v6pos += 1
 				except ValueError:
 					pass
@@ -1768,7 +1773,6 @@ class DNSSettings(Setup):
 			for val in self.dnsServersV4 + self.dnsServersV6:
 				if val:
 					servers.append(val)
-		networkManager.nameserverConfig.mode = config.usage.dns.value
 		networkManager.setNameservers(servers)
 		networkManager.save()
 		if config.usage.dns.value == "dnscrypt":
@@ -1782,15 +1786,7 @@ class DNSSettings(Setup):
 				break
 		if hasChanges:
 			self.saveAll()
-
-		def done(*_args):
-			Processing.instance.hideProgress()
-			if getattr(self, "execing", False):
-				self.close()
-
-		Processing.instance.setDescription(_("Please wait..."))
-		Processing.instance.showProgress(endless=True)
-		networkManager.restartNetwork(callback=done)
+		self.close()
 
 	def writeDnsCryptToml(self):  # DNSCrypt TOML helpers.
 		def insertSectionKey(lines, sectionName, key, rhs, anchorKeys, foundSet):
