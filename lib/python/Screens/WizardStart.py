@@ -272,6 +272,8 @@ class AutoRestoreWizard(MessageBox):
 				open('/etc/.doAutoinstall', 'w')
 				MessageBox.close(self, 43)
 		MessageBox.close(self)
+
+
 class AutoInstallWizard(Screen):
 	skin = """<screen name="AutoInstall" position="fill" flags="wfNoBorder">
 		<panel position="left" size="5%,*"/>
@@ -283,6 +285,7 @@ class AutoInstallWizard(Screen):
 		<eLabel position="top" size="*,2"/>
 		<widget name="AboutScrollLabel" font="Fixed;20" position="fill"/>
 	</screen>"""
+
 	def __init__(self, session):
 		Screen.__init__(self, session)
 		self["progress"] = ProgressBar()
@@ -290,11 +293,13 @@ class AutoInstallWizard(Screen):
 		self["progress"].setValue(0)
 		self["AboutScrollLabel"] = ScrollLabel("", showscrollbar=False)
 		self["header"] = Label(_("Autoinstalling please wait for packages being updated"))
+
 		self.logfile = open('/home/root/autoinstall.log', 'w')
 		self.container = eConsoleAppContainer()
 		self.container.appClosed.append(self.appClosed)
 		self.container.dataAvail.append(self.dataAvail)
 		self.package = None
+
 		import glob
 		mac_address = open('/sys/class/net/eth0/address', 'r').readline().strip().replace(":", "")
 		autoinstallfiles = glob.glob('/media/*/backup/autoinstall%s' % mac_address) + glob.glob('/media/net/*/backup/autoinstall%s' % mac_address)
@@ -310,7 +315,9 @@ class AutoInstallWizard(Screen):
 					# make sure we have a valid package list before attempting to restore packages
 					self.container.execute("opkg update")
 					return
+
 		self.abort()
+
 	def run_console(self):
 		self["progress"].setValue(100 * (self.number_of_packages - len(self.packages)) / self.number_of_packages)
 		try:
@@ -325,11 +332,13 @@ class AutoInstallWizard(Screen):
 				self.appClosed(True)
 		except Exception as e:
 			self.appClosed(True)
+
 	def dataAvail(self, data):
 		if isinstance(data, bytes):
 			data = data.decode()
 		self["AboutScrollLabel"].appendText(data)
 		self.logfile.write(data)
+
 	def appClosed(self, retval=False):
 		if retval:
 			if self.package:
@@ -347,6 +356,7 @@ class AutoInstallWizard(Screen):
 			self.delay.callback.append(self.abort)
 			eActionMap.getInstance().bindAction('', 0, self.abort)
 			self.delay.startLongTimer(5)
+
 	def abort(self, key=None, flag=None):
 		if hasattr(self, 'delay'):
 			self.delay.stop()
@@ -357,11 +367,16 @@ class AutoInstallWizard(Screen):
 		self.logfile.close()
 		os.unlink("/etc/.doAutoinstall")
 		self.close(44)
+
+
 class IncorrectBoxInfoWizard(MessageBox):
 	def __init__(self, session):
 		MessageBox.__init__(self, session, _("The enigma.info file for the boxinformation is not available or the content is invalid.\nPress any key to continue?"), type=MessageBox.TYPE_WARNING, timeout=20, simple=True)
+
 	def close(self, value):
 		MessageBox.close(self)
+
+
 class WizardLanguage(Wizard, ShowRemoteControl):
 	def __init__(self, session, silent=True, showSteps=False, neededTag=None):
 		self.xmlfile = ["wizardlanguage.xml"]
@@ -393,8 +408,8 @@ if config.misc.firstrun.value:
 wizardManager.registerWizard(IncorrectBoxInfoWizard, not BoxInfo.getItem("checksum"), priority=0)
 wizardManager.registerWizard(AutoInstallWizard, os.path.isfile("/etc/.doAutoinstall"), priority=0)
 wizardManager.registerWizard(AutoRestoreWizard, config.misc.wizardLanguageEnabled.value and config.misc.firstrun.value and checkForAvailableAutoBackup(), priority=0)
-# wizardManager.registerWizard(LocaleSelection, config.misc.wizardLanguageEnabled.value, priority=10)
-wizardManager.registerWizard(TimeWizard, config.misc.firstrun.value, priority=20)
-# if OverscanWizard:
-# wizardManager.registerWizard(OverscanWizard, config.misc.do_overscanwizard.value, priority=30)
-wizardManager.registerWizard(WizardStart, config.misc.firstrun.value, priority=40)
+#wizardManager.registerWizard(LocaleSelection, config.misc.wizardLanguageEnabled.value, priority=10)
+if OverscanWizard:
+	wizardManager.registerWizard(OverscanWizard, config.misc.do_overscanwizard.value, priority=30)
+wizardManager.registerWizard(WizardStart, config.misc.firstrun.value, priority=30)
+#wizardManager.registerWizard(TimeWizard, config.misc.firstrun.value, priority=40)
