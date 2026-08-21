@@ -19,8 +19,8 @@ install_PYTHON = \
 	Element.py Playlist.py ParentalControl.py \
 	Opkg.py SelectionList.py Scanner.py SystemInfo.py PackageInfo.py \
 	Task.py Console.py ResourceManager.py TuneTest.py \
-	Sensors.py FanControl.py HdmiCec.py \
-	Netlink.py InputHotplug.py updatecheck.py \
+	Sensors.py FanControl.py HdmiCec.py updatecheck.py \
 	ImportChannels.py PowerOffTimer.py EpgLoadSave.py StackTrace.py \
 	HdmiRecord.py NetworkTime.py VfdSymbols.py FrontPanelLed.py International.py \
-	Storage.py PvrDescrambleConvert.py ScrambledRecordings.py Genres.py
+	Storage.py PvrDescrambleConvert.py ScrambledRecordings.py Genres.py \
+	NetworkManager.py
