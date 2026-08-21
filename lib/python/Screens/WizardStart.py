@@ -41,9 +41,7 @@ class WizardStart(Wizard, ShowRemoteControl):
 		self.xmlfile = ["startwizard.xml"]
 		Wizard.__init__(self, session, showSteps=False)
 		ShowRemoteControl.__init__(self)
-		self.skinName = ["StartWizard"]
-		if isinstance(self.skinName, str):
-			self.skinName.insert(0, "StartWizard")
+		self.skinName = ["WizardStart", "StartWizard"]
 		self["wizard"] = Pixmap()
 		self.nwSelectedIface = None
 		self.nwIpFound = ""
@@ -356,6 +354,7 @@ class AutoInstallWizard(Screen):
 			self.delay.callback.append(self.abort)
 			eActionMap.getInstance().bindAction('', 0, self.abort)
 			self.delay.startLongTimer(5)
+			Time.setNTP(self)  # set NTP if necessary.
 
 	def abort(self, key=None, flag=None):
 		if hasattr(self, 'delay'):
@@ -408,8 +407,8 @@ if config.misc.firstrun.value:
 wizardManager.registerWizard(IncorrectBoxInfoWizard, not BoxInfo.getItem("checksum"), priority=0)
 wizardManager.registerWizard(AutoInstallWizard, os.path.isfile("/etc/.doAutoinstall"), priority=0)
 wizardManager.registerWizard(AutoRestoreWizard, config.misc.wizardLanguageEnabled.value and config.misc.firstrun.value and checkForAvailableAutoBackup(), priority=0)
-#wizardManager.registerWizard(LocaleSelection, config.misc.wizardLanguageEnabled.value, priority=10)
-if OverscanWizard:
-	wizardManager.registerWizard(OverscanWizard, config.misc.do_overscanwizard.value, priority=30)
-wizardManager.registerWizard(WizardStart, config.misc.firstrun.value, priority=30)
-#wizardManager.registerWizard(TimeWizard, config.misc.firstrun.value, priority=40)
+# wizardManager.registerWizard(LocaleSelection, config.misc.wizardLanguageEnabled.value, priority=10)
+wizardManager.registerWizard(TimeWizard, config.misc.firstrun.value, priority=20)
+# if OverscanWizard:
+# wizardManager.registerWizard(OverscanWizard, config.misc.do_overscanwizard.value, priority=30)
+wizardManager.registerWizard(StartWizard, config.misc.firstrun.value, priority=40)

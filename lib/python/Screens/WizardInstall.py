@@ -12,9 +12,6 @@ from enigma import eDVBDB
 config.misc.installwizard = ConfigSubsection()
 config.misc.installwizard.hasnetwork = ConfigBoolean(default=False)
 config.misc.installwizard.opkgloaded = ConfigBoolean(default=False)
-config.misc.installwizard.downloadchannellist = ConfigBoolean(default=False)
-config.misc.installwizard.selectedchannellist = ConfigSelection(choices={"19e-23e-basis": "Astra1 Astra3 basis", "19e-23e": "Astra 1 Astra 3", "19e-23e-28e": "Astra 1 Astra 2 Astra 3",
-	"13e-19e-23e-28e": "Astra 1 Astra 2 Astra 3 Hotbird", "9e-13e-19e-23e-28e-rotating": "Rotating", "kabelnl": "Kabel-NL"}, default="19e-23e-basis")
 config.misc.installwizard.channellistdownloaded = ConfigBoolean(default=False)
 
 
@@ -27,7 +24,7 @@ class WizardInstall(ConfigListScreen, Screen):
 
 	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-
+		self.skinName = ["WizardInstall", "InstallWizard"]
 		self.index = args
 		self.list = []
 		self.doNextStep = False
@@ -41,8 +38,9 @@ class WizardInstall(ConfigListScreen, Screen):
 			self.adapters = [adapter for adapter in iNetwork.getAdapterList() if adapter in ('eth0', 'eth1')]
 			self.checkNetwork()
 		elif self.index == self.STATE_CHOISE_CHANNELLIST:
-			self.enabled = config.misc.installwizard.downloadchannellist
-			self.channellist_type = config.misc.installwizard.selectedchannellist
+			self.enabled = ConfigYesNo(default=True, graphic=False)
+			modes = {"19e-23e-basis": "Astra1 Astra3 basis", "19e-23e": "Astra 1 Astra 3", "19e-23e-28e": "Astra 1 Astra 2 Astra 3", "13e-19e-23e-28e": "Astra 1 Astra 2 Astra 3 Hotbird", "9e-13e-19e-23e-28e-rotating": "Rotating", "kabelnl": "Kabel-NL"}
+			self.channellist_type = ConfigSelection(choices=modes, default="19e-23e-basis")
 			self.createMenu()
 		elif self.index == self.INSTALL_PLUGINS:
 			self.noplugins = ConfigNothing()
@@ -205,9 +203,7 @@ class WizardInstallSmallBox(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session, enableHelp=True)
 		self.setTitle(_("Small Box Preparation"))
-		self.skinName = ["InstallWizardSmallBox"]
-		if isinstance(self.skinName, str):
-			self.skinName.insert(0, "InstallWizardSmallBox")
+		self.skinName = ["WizardInstallSmallBox", "InstallWizardSmallBox"]
 		self["actions"] = HelpableActionMap(self, ["SelectCancelActions"], {
 			"cancel": (self.close, _("Close the screen")),
 			"select": (self.close, _("Close the screen"))
