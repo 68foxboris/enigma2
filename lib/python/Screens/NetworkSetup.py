@@ -107,12 +107,12 @@ class NetworkOverview(Screen):
 		<widget source="adapterList" render="Listbox" position="10,10" size="e-20,250">
 			<template name="Default" colors="#0000CC00,#00CC0000,#00CCCCCC,#00003300,#00330000,#00333333" fonts="Regular;25,enigma2icons;38,Regular;24,Regular;18,enigma2icons;20" itemHeight="50">
 				<rowtemplate>
-					<text index="AdapterName" position="0,0" size="240,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="StatusText" position="280,0" size="170,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="MAC" position="450,0" size="170,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="IPAddress" position="620,0" size="150,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Gateway" position="770,0" size="140,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Speed" position="910,0" size="140,50" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
+					<text index="AdapterName" position="0,0" size="240,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="StatusText" position="280,0" size="170,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="MAC" position="450,0" size="170,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="IPAddress" position="620,0" size="150,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Gateway" position="770,0" size="140,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Speed" position="910,0" size="140,50" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
 				</rowtemplate>
 				<rowtemplate>
 					<text index="AdapterGlyph" position="0,6" size="48,38" font="1" horizontalAlignment="center" padding="5,0" verticalAlignment="center" />
@@ -127,18 +127,18 @@ class NetworkOverview(Screen):
 				</rowtemplate>
 			</template>
 		</widget>
-		<widget source="savedLabel" render="Label" position="10,270" size="e-20,25" foregroundColor="#005a5a5a" padding="10,0" verticalAlignment="center" widgetBorderColor="#005a5a5a" widgetBorderWidth="1">
+		<widget source="savedLabel" render="Label" position="10,270" size="e-20,25" foregroundColor="gray" padding="10,0" verticalAlignment="center" widgetBorderColor="gray" widgetBorderWidth="1">
 			<convert type="ConditionalShowHide" />
 		</widget>
 		<widget source="savedList" render="Listbox" position="10,305" size="e-20,175">
 			<template name="Default" colors="#0000CC00,#00CC0000,#00CCCCCC,#00003300,#00330000,#00333333" fonts="Regular;25,Regular;20" itemHeight="35">
 				<rowtemplate>
-					<text index="SSID" position="0,0" size="280,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="StatusText" position="280,0" size="170,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="BSSID" position="450,0" size="210,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Frequency" position="660,0" size="120,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Channel" position="780,0" size="120,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
-					<text index="Encryption" position="900,0" size="150,35" font="0" foregroundColor="#005a5a5a" padding="5,0" verticalAlignment="center" />
+					<text index="SSID" position="0,0" size="280,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="StatusText" position="280,0" size="170,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="BSSID" position="450,0" size="210,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Frequency" position="660,0" size="120,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Channel" position="780,0" size="120,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
+					<text index="Encryption" position="900,0" size="150,35" font="0" foregroundColor="gray" padding="5,0" verticalAlignment="center" />
 				</rowtemplate>
 				<rowtemplate>
 					<text index="SSID" position="0,0" size="280,35" font="1" padding="5,0" verticalAlignment="center" />
@@ -1043,7 +1043,7 @@ class NetworkWiFiScan(Screen):
 				</mode>
 			</template>
 		</widget>
-		<widget name="description" position="10,e-85" size="e-20,25" padding="5,0" verticalAlignment="center" widgetBorderColor="#005a5a5a" widgetBorderWidth="1" />
+		<widget name="description" position="10,e-85" size="e-20,25" padding="5,0" verticalAlignment="center" widgetBorderColor="gray" widgetBorderWidth="1" />
 		<widget source="key_red" render="Label" position="10,e-50" size="180,40" backgroundColor="key_red" font="Regular;20" foregroundColor="key_text" horizontalAlignment="center" wrap="off" verticalAlignment="center">
 			<convert type="ConditionalShowHide" />
 		</widget>
