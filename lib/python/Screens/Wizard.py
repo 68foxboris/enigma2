@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from xml.sax import make_parser
 from xml.sax.handler import ContentHandler
 
@@ -390,7 +389,7 @@ class Wizard(Screen):
 			self.currStep = self.stepHistory[-2]
 			self.stepHistory = self.stepHistory[:-2]
 		else:
-			self.session.openWithCallback(self.exitWizardQuestion, MessageBox, (_("Are you sure you want to exit this wizard?")), title=self.getTitle())
+			self.session.openWithCallback(self.exitWizardQuestion, MessageBox, (_("Are you sure you want to exit this wizard?")), windowTitle=self.getTitle())
 		if self.currStep < 1:
 			self.currStep = 1
 		print("[Wizard] The current step is %d and the current step history is %s." % (self.currStep, self.stepHistory))
@@ -681,6 +680,9 @@ class Wizard(Screen):
 
 	def finished(self, gotoStep=None, *args, **kwargs):
 		print("[Wizard] Running finished() code.")
+		if not hasattr(self, "onShown"):
+			print("[Wizard] DEBUG: Screen already torn down, ignoring finished().")
+			return
 		currStep = self.currStep
 		if self.updateValues not in self.onShown:
 			self.onShown.append(self.updateValues)
@@ -721,6 +723,9 @@ class Wizard(Screen):
 		return False
 
 	def afterAsyncCode(self):
+		if not hasattr(self, "onShown"):
+			print("[Wizard] DEBUG: Screen already torn down, ignoring afterAsyncCode().")
+			return
 		if self.updateValues not in self.onShown:
 			self.onShown.append(self.updateValues)
 		if self.codeAfter:
@@ -772,10 +777,7 @@ class Wizard(Screen):
 						if self.wizard[self.currStep]["config"]["args"] is None:
 							self.screenInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"])
 						else:
-							try:
-								self.screenInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"], eval(self.wizard[self.currStep]["config"]["args"]))
-							except:
-								self.screenInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"], self.wizard[self.currStep]["config"]["args"])
+							self.screenInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"], eval(self.wizard[self.currStep]["config"]["args"]))
 						self.screenInstance.setAnimationMode(0)
 						self["config"].setList(self.screenInstance["config"].getList())
 						callbacks = self.screenInstance["config"].onSelectionChanged[:]
