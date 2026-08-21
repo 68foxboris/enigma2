@@ -411,4 +411,4 @@ wizardManager.registerWizard(AutoRestoreWizard, config.misc.wizardLanguageEnable
 wizardManager.registerWizard(TimeWizard, config.misc.firstrun.value, priority=20)
 # if OverscanWizard:
 # wizardManager.registerWizard(OverscanWizard, config.misc.do_overscanwizard.value, priority=30)
-wizardManager.registerWizard(StartWizard, config.misc.firstrun.value, priority=40)
+wizardManager.registerWizard(WizardStart, config.misc.firstrun.value, priority=40)
