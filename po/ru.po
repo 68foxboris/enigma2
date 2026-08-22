@@ -2081,6 +2081,9 @@ msgstr "Более 200 Мбит/с"
 msgid "About"
 msgstr "Информация"
 
+msgid "About OpenPLi"
+msgstr "Версия OpenPLi"
+
 msgid "About Information"
 msgstr "Информация"
 
@@ -14817,6 +14820,10 @@ msgstr "Перезагрузить %s %s сейчас?"
 msgid "Rec"
 msgstr "Запись"
 
+msgid "Receiver"
+msgstr "Ресивер"
+
+
 msgid "REC symbol"
 msgstr "символ REC"
 
@@ -15266,6 +15273,9 @@ msgstr "Сброс"
 
 msgid "Reset Feeds"
 msgstr "Сбросить каналы"
+
+msgid "Reset HDMI-CEC settings to default"
+msgstr "Сбросить настройки HDMI-CEC по умолчанию"
 
 msgid "Reset Order"
 msgstr "Порядок по умолчанию"
@@ -19005,6 +19015,9 @@ msgstr "Информация о хранилище/диске"
 msgid "Storage / Disk information for %s %s"
 msgstr "Сведения о хранилищах/дисках %s %s"
 
+msgid "Storage / Disks"
+msgstr "Хранилище/Диски"
+
 msgid "Storage / Drive information"
 msgstr "Информация о хранилище/диске"
 
@@ -20864,6 +20877,9 @@ msgstr "Состояние тюнера:"
 
 msgid "Tuner type"
 msgstr "Тип тюнера"
+
+msgid "Tuners"
+msgstr "Тюнеры"
 
 msgid "Type Tuner"
 msgstr "Тип Тюнер"
