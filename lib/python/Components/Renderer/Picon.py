@@ -3,10 +3,10 @@ from os import listdir
 from os.path import exists, getmtime, getsize, isdir, join
 from re import sub
 from enigma import ePixmap, eServiceCenter, eServiceReference, iServiceInformation
-import NavigationInstance
 from Components.config import config, ConfigSubsection, ConfigSelection
 from Components.Harddisk import harddiskmanager
 from Components.Renderer.Renderer import Renderer
+import NavigationInstance
 from ServiceReference import ServiceReference
 from Tools.Alternatives import GetWithAlternative
 from Tools.Directories import SCOPE_SKIN_IMAGE, SCOPE_CURRENT_SKIN, resolveFilename, sanitizeFilename
@@ -142,7 +142,7 @@ def getDABImage(serviceName):
 	service = NavigationInstance.instance.getCurrentService()
 	info = service and service.info()
 	image = info and info.getInfoString(iServiceInformation.sTagImage) or ""
-	return image if image and pathExists(image) else ""
+	return image if image and exists(image) else ""
 
 
 class Picon(Renderer):

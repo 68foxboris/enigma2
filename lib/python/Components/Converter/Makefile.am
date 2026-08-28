@@ -11,4 +11,4 @@ install_PYTHON = \
 	RotorPosition.py VfdDisplay.py AnalogClock.py HddState.py HbbtvApplicationInfo.py TrackInfo.py \
 	BoxInfo.py VtiInfo.py VtiTempFan.py Audio.py ServiceInfoEX.py CaidInfo2.py CpuUsage.py ProgressDiskSpaceInfo.py \
 	VAudioInfo.py Bitrate2.py ServiceName2.py RefString.py XmlMultiContent.py ConfigEntryTestVisible.py EventInfo.py \
-	VNetSpeedInfo.py
+	VNetSpeedInfo.py ExtendedServiceInfo.py ExtremeInfo.py

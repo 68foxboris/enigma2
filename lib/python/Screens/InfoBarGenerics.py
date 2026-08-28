@@ -409,6 +409,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.__state = self.STATE_SHOWN
 		self.__locked = 0
 
+		self["RdsDecoder"] = RdsDecoder(self.session.nav)
 		self.DimmingTimer = eTimer()
 		self.DimmingTimer.callback.append(self.doDimming)
 		self.unDimmingTimer = eTimer()

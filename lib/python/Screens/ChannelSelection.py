@@ -2943,6 +2943,7 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		self.onClose.append(self.__onClose)
 		self.onExecBegin.append(self.__onExecBegin)
 		self.onExecEnd.append(self.__onExecEnd)
+		self.onShown.append(self.info.show)
 
 	def __onClose(self):
 		lastservice = eServiceReference(config.tv.lastservice.value)
@@ -3024,7 +3025,7 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 	def onCreate(self):
 		self.setRadioMode()
 		self.restoreRoot()
-		currentservice = self.session.nav.getCurrentlyPlayingServiceOrGroup()		
+		currentservice = self.session.nav.getCurrentlyPlayingServiceOrGroup()
 		if isRadioServiceReference(currentservice):
 			lastservice = currentservice
 			config.radio.lastservice.value = lastservice.toString()
