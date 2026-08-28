@@ -20,6 +20,7 @@ from Components.VolumeControl import VolumeControl
 from Components.Renderer.PositionGauge import PositionGauge
 from Components.Renderer.Progress import Progress
 from Components.Sources.StaticText import StaticText
+from Components.Sources.RdsDecoder import RdsDecoder
 from Components.Task import job_manager
 from Screens.EpgSelection import EPGSelection
 from Plugins.Plugin import PluginDescriptor
@@ -1595,6 +1596,7 @@ class InfoBarRdsDecoder:
 	"""provides RDS and Rass support/display"""
 
 	def __init__(self):
+		self["RdsDecoder"] = RdsDecoder(self.session.nav)
 		self.rds_display = self.session.instantiateDialog(RdsInfoDisplay)
 		self.session.instantiateSummaryDialog(self.rds_display)
 		self.rds_display.setAnimationMode(0)
