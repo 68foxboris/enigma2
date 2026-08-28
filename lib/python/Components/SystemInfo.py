@@ -1,6 +1,6 @@
 from ast import literal_eval
 from hashlib import md5
-from os.path import exists, isfile, join
+from os.path import exists, isfile, join, listdir
 from re import findall
 
 from enigma import Misc_Options, eDBoxLCD, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, getE2Rev, eDVBCSAEngine
@@ -218,6 +218,15 @@ def getChipsetString():
 	return chipset
 
 
+def hasInitCam():
+	result = False
+	for cam in listdir("/etc/init.d"):
+		if cam.startswith("softcam.") and not cam.endswith("None"):
+			result = True
+			break
+	return result
+
+
 def getBoxName():
 	box = MACHINEBUILD
 	machinename = DISPLAYMODEL.lower()
@@ -342,6 +351,7 @@ BoxInfo.setItem("HasGPT", MODEL in ("dreamone", "dreamtwo") and pathExists("/dev
 BoxInfo.setItem("HasMMC", fileHas("/proc/cmdline", "root=/dev/mmcblk") or MultiBoot.canMultiBoot() and fileHas("/proc/cmdline", "root=/dev/sda"))
 BoxInfo.setItem("HasSDmmc", MultiBoot.canMultiBoot() and "sd" in MultiBoot.getBootSlots().get("2", "") and "mmcblk" in MTDROOTFS)
 BoxInfo.setItem("HasSDswap", MODEL in ("h9", "i55plus") and pathExists("/dev/mmcblk0p1"))
+BoxInfo.setItem("HAVEINITCAM", hasInitCam())
 BoxInfo.setItem("HasSoftCSA", eDVBCSAEngine.isAvailable())
 BoxInfo.setItem("HasSoftcamInstalled", hassoftcaminstalled())
 BoxInfo.setItem("HaveCISSL", fileCheck("/etc/ssl/certs/customer.pem") and fileCheck("/etc/ssl/certs/device.pem"))

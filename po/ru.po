@@ -18493,8 +18493,8 @@ msgstr "Семейство SoC"
 msgid "SocketMMI"
 msgstr "SocketMMI"
 
-msgid "SoftCSA Settings"
-msgstr "Настройки SoftCSA"
+msgid "NDS CSA"
+msgstr "NDS CSA"
 
 msgid "SoftCam / CI"
 msgstr "Эмуляторы / CI"
@@ -18520,8 +18520,8 @@ msgstr "ПО"
 msgid "Software MultiBoot"
 msgstr "Мультизагрузка ПО"
 
-msgid "Software descrambling"
-msgstr "Расшифровка ПО"
+msgid "CSA descrambling"
+msgstr "Расшифровка CSA"
 
 msgid "Software management"
 msgstr "Менеджер управления ПО"
