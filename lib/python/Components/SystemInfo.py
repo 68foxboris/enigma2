@@ -1,6 +1,7 @@
 from ast import literal_eval
 from hashlib import md5
-from os.path import exists, isfile, join, listdir
+from os import R_OK, access, listdir
+from os.path import exists, isfile, join
 from re import findall
 
 from enigma import Misc_Options, eDBoxLCD, eDVBCIInterfaces, eDVBResourceManager, eGetEnigmaDebugLvl, getE2Rev, eDVBCSAEngine
