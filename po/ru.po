@@ -6358,7 +6358,7 @@ msgstr "Обозреватель файлов DVD"
 msgid "DVD media toolbox"
 msgstr "DVD - утилиты медиа"
 
-msgid "DVD player"
+msgid "DVD Player"
 msgstr "Проигрыватель DVD"
 
 msgid "DVD titlelist"
