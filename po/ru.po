@@ -1781,6 +1781,9 @@ msgstr "<неизвестный>"
 msgid "=NO STREAM\n"
 msgstr "=НЕТ СТРИМА\n"
 
+msgid "A DAB+ scan cannot run while a recording is in progress."
+msgstr "Сканирование DAB+ невозможно запустить во время выполнения записи."
+
 msgid "A color filter can be used for better readability of DVB subtitles."
 msgstr "Для лучшей читаемости субтитров DVB можно использовать цветной фильтр."
 
@@ -6263,6 +6266,12 @@ msgstr "Чешская Республика"
 
 msgid "Czechia"
 msgstr "Чехия"
+
+msgid "DAB+ Scan"
+msgstr "Сканирование DAB+"
+
+msgid "DAB+ scan failed; existing bouquets were kept."
+msgstr "Сбой сканирования DAB+; существующие списки каналов (букеты) были сохранены."
 
 msgid "DLNA support"
 msgstr "Поддержка DLNA"
@@ -10941,11 +10950,24 @@ msgstr "Интервал задержки кнопок между повтора
 msgid "Invalid"
 msgstr "Недопустимый"
 
+msgid "Invalid DAB feed file root element"
+msgstr "Недопустимый корневой элемент файла ленты DAB"
+
 msgid "Invalid directory selected: %s"
 msgstr "Выбран неправильный каталог: %s"
 
+#, python-format
+msgid "Invalid bouquet file name '%s'"
+msgstr "Недопустимое имя файла букета «%s»"
+
 msgid "Invalid location"
 msgstr "Неправильное расположение"
+
+msgid "Invalid multicast port"
+msgstr "Недопустимый порт многоадресной рассылки"
+
+msgid "Invalid orbital position"
+msgstr "Недопустимое положение на орбите"
 
 msgid "Invalid type"
 msgstr "Неверный тип"
@@ -12000,6 +12022,13 @@ msgstr "Минуты:"
 msgid "Missing "
 msgstr "Отсутствует "
 
+#, python-format
+msgid "Missing attribute '%s'"
+msgstr "Отсутствует атрибут «%s»"
+
+msgid "Missing multicast address"
+msgstr "Отсутствует адрес многоадресной рассылки"
+
 msgid "Mode"
 msgstr "Режим"
 
@@ -13033,6 +13062,12 @@ msgstr "Нет, никогда"
 msgid "No, only download"
 msgstr "Нет, только загрузить"
 
+msgid "No supported DAB+ feeds are available for the satellite positions configured on this box."
+msgstr "Для спутниковых позиций, настроенных на этом устройстве, отсутствуют поддерживаемые потоки DAB+."
+
+msgid "No valid DAB+ feeds configured. Check /etc/enigma2/dab.xml."
+msgstr "Не настроено ни одного корректного потока DAB+. Проверьте файл /etc/enigma2/dab.xml."
+
 msgid "None"
 msgstr "Ничего"
 
@@ -13855,6 +13890,10 @@ msgstr "Разделы"
 
 msgid "Pass"
 msgstr ""
+
+#, python-format
+msgid "Pass %d/%d"
+msgstr "Проход %d/%d"
 
 msgid "Passthrough"
 msgstr "Прямой звук"
@@ -16357,6 +16396,17 @@ msgstr "Сканирование сетевых ресурсов..."
 
 msgid "Scanning..."
 msgstr "Сканирование..."
+
+msgid "Scanning DAB+ feed; waiting for live FIC data..."
+msgstr "Сканирование потока DAB+; ожидание данных FIC в реальном времени..."
+
+#, python-format
+msgid "Scanning completed, %d DAB+ services found."
+msgstr "Сканирование завершено, найдено %d служб DAB+."
+
+#, python-format
+msgid "Scanning: %d services found; validating live result (%d/%d)..."
+msgstr "Сканирование: найдено служб — %d; проверка актуального результата (%d/%d)..."
 
 #. TRANSLATORS: The receiver is performing a service scan, progress percentage is printed in '%d' (and '%%' will show a single '%' symbol).
 #, python-format
@@ -19348,6 +19398,9 @@ msgstr "Запустить %s"
 msgid "Starting %s failed (exit code %s)"
 msgstr "Не удалось запустить %s (код завершения %s)"
 
+msgid "Starting DAB+ scan..."
+msgstr "Запуск сканирования DAB+..."
+
 msgid "Start cut"
 msgstr "Начать резать"
 
@@ -20927,6 +20980,9 @@ msgstr "Стиль времени"
 msgid "Timer"
 msgstr "Таймер"
 
+msgid "Timeout waiting for FIC service data"
+msgstr "Истекло время ожидания данных службы FIC"
+
 msgid "Timer Defaults And Retention"
 msgstr "Настройки таймера по умолчанию и сохранение данных"
 
@@ -21555,6 +21611,9 @@ msgstr "Невозможно изменить пароль!"
 msgid "Unable to initialize Kexec MultiBoot!"
 msgstr "Не удалось инициализировать Kexec MultiBoot!"
 
+msgid "Unable to start the DAB+ feed"
+msgstr "Не удалось запустить поток DAB+"
+
 msgid "Unable to complete - Kexec Multiboot files missing!"
 msgstr "Невозможно выполнить - отсутствуют файлы Vu+ мультибута!"
 
@@ -21642,6 +21701,9 @@ msgstr "Универсальный LNB"
 
 msgid "Unknown"
 msgstr "Неизвестный"
+
+msgid "Unknown feed"
+msgstr "Неизвестная лента"
 
 msgid "Unmark service as dedicated 3D service"
 msgstr "Удалить маркировку сервиса как 3D сервис"
