@@ -77,6 +77,17 @@ def getBuildDateString():
 
 
 def getUpdateDateString():
+	# Получить дату последнего изменённого файла в /var/lib/opkg/
+	try:
+		opkg_files = glob("/var/lib/opkg/info/*.control")
+		if opkg_files:
+			latest_file = max(opkg_files, key=lambda f: stat(f).st_mtime)
+			mtime = localtime(stat(latest_file).st_mtime)
+			return strftime(_("%Y-%m-%d"), mtime)
+	except Exception:
+		pass
+
+	# Fallback на compiledate, если /var/lib/opkg не доступен
 	build = BoxInfo.getItem("compiledate")
 	return f"{build[:4]}-{build[4:6]}-{build[6:]}" if build and build.isdigit() else _("Unknown")
 
