@@ -9,7 +9,7 @@ from Components.EpgList import Rect
 from Components.Sources.Event import Event
 from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaBlend
 from Components.TimerList import TimerList
-from Components.Renderer.Picon import getPiconName
+from Components.Renderer.Picon import getChannelSelectionPiconName
 from Components.Sources.ServiceEvent import ServiceEvent
 from Components.Sources.StaticText import StaticText
 from Components.UsageConfig import preferredTimerPath
@@ -569,7 +569,7 @@ class EPGList(GUIComponent):
 				backcolor=serviceBackColor if bgpng is None else None, backcolor_sel=serviceBackColor if bgpng is None else None))
 		if self.showPicon:
 			if picon is None:  # go find picon and cache its location
-				picon = getPiconName(service)
+				picon = getChannelSelectionPiconName(service)
 				curIdx = self.l.getCurrentSelectionIndex()
 				self.list[curIdx] = (service, service_name, events, picon, serviceref)
 			piconWidth = self.picon_size.width()

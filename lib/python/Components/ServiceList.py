@@ -13,7 +13,7 @@ from enigma import eLabel, eRect, eSize, eServiceReference, gFont, eListbox, eSe
 from Components.GUIComponent import GUIComponent
 from Components.config import config
 from Components.MultiContent import MultiContentEntryProgress, MultiContentEntryText, MultiContentEntryRectangle, MultiContentEntryLinearGradient, MultiContentEntryLinearGradientAlphaBlend
-from Components.Renderer.Picon import getPiconName
+from Components.Renderer.Picon import getChannelSelectionPiconName
 import NavigationInstance
 from ServiceReference import ServiceReference, isRadioServiceReference
 from skin import componentTemplates, getcomponentTemplate, parseColor, parseFont, parseListOrientation, reloadSkinTemplates, SizeTuple, SkinContext, SkinContextStack, TemplateParser
@@ -709,22 +709,22 @@ class ServiceListLegacy(ServiceListBase):
 			self.ItemHeight = int(value)
 
 		def serviceNameFont(value):
-			font = parseFont(value, ((1, 1), (1, 1)))
+			font = parseFont(value, parent.scale)
 			self.ServiceNameFontName = font.family
 			self.ServiceNameFontSize = font.pointSize
 
 		def serviceInfoFont(value):
-			font = parseFont(value, ((1, 1), (1, 1)))
+			font = parseFont(value, parent.scale)
 			self.ServiceInfoFontName = font.family
 			self.ServiceInfoFontSize = font.pointSize
 
 		def serviceNumberFont(value):
-			font = parseFont(value, ((1, 1), (1, 1)))
+			font = parseFont(value, parent.scale)
 			self.ServiceNumberFontName = font.family
 			self.ServiceNumberFontSize = font.pointSize
 
 		def progressInfoFont(value):
-			font = parseFont(value, ((1, 1), (1, 1)))
+			font = parseFont(value, parent.scale)
 			self.progressInfoFontName = font.family
 			self.progressInfoFontSize = font.pointSize
 
@@ -748,6 +748,12 @@ class ServiceListLegacy(ServiceListBase):
 
 		def nonplayableMargins(value):
 			self.l.setNonplayableMargins(int(value))
+
+		def sidesMargin(value):
+			self.sidesMargin = int(value)
+
+		def textSeparator(value):
+			self.l.setTextSeparator(value)
 
 		def itemsDistances(value):
 			self.itemsDistances = int(value)
@@ -821,7 +827,7 @@ class ServiceListLegacy(ServiceListBase):
 		self.l.setShowTwoLines(twoLines)
 
 		if config.usage.service_icon_enable.value:
-			self.l.setGetPiconNameFunc(getPiconName)
+			self.l.setGetPiconNameFunc(getChannelSelectionPiconName)
 		else:
 			self.l.setGetPiconNameFunc(None)
 
@@ -1087,7 +1093,7 @@ class ServiceList(ServiceListBase, ServiceListTemplateParser):
 			service_str = first_in_alternative.toString() if first_in_alternative else service.toString()
 		else:
 			service_str = service.toString()
-		picon = getPiconName(service_str)
+		picon = getChannelSelectionPiconName(service_str)
 		if exists(picon):
 			return loadPNG(picon)
 		return None
