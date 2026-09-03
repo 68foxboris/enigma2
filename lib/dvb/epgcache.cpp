@@ -93,6 +93,13 @@ const eServiceReference &handleGroup(const eServiceReference &ref)
 	return ref;
 }
 
+static void getEPGServiceIds(const eServiceReference &ref, int &tsidonid, int &sid)
+{
+	const uniqueEPGKey key(handleGroup(ref));
+	tsidonid = ((key.tsid & 0xffff) << 16) | (key.onid & 0xffff);
+	sid = key.sid;
+}
+
 static uint32_t calculate_crc_hash(const uint8_t *data, int size)
 {
 	uint32_t crc = 0;
@@ -1278,8 +1285,9 @@ RESULT eEPGCache::lookupEventTime(const eServiceReference &service, time_t t, eP
 	{
 		Event *ev = new Event((uint8_t*)data->get());
 		result = new eServiceEvent();
-		const eServiceReferenceDVB &ref = (const eServiceReferenceDVB&)service;
-		ret = result->parseFrom(ev, (ref.getTransportStreamID().get()<<16)|ref.getOriginalNetworkID().get());
+		int tsidonid, sid;
+		getEPGServiceIds(service, tsidonid, sid);
+		ret = result->parseFrom(ev, tsidonid);
 		delete ev;
 	}
 	return ret;
@@ -1367,8 +1375,9 @@ RESULT eEPGCache::lookupEventId(const eServiceReference &service, int event_id, 
 	{
 		Event ev((uint8_t*)data->get());
 		result = new eServiceEvent();
-		const eServiceReferenceDVB &ref = (const eServiceReferenceDVB&)service;
-		ret = result->parseFrom(&ev, (ref.getTransportStreamID().get()<<16)|ref.getOriginalNetworkID().get());
+		int tsidonid, sid;
+		getEPGServiceIds(service, tsidonid, sid);
+		ret = result->parseFrom(&ev, tsidonid);
 	}
 	return ret;
 }
@@ -1379,7 +1388,7 @@ RESULT eEPGCache::startTimeQuery(const eServiceReference &service, time_t begin,
 
 	if (m_timeQueryRef)
 		delete m_timeQueryRef;
-	m_timeQueryRef = (eServiceReferenceDVB*)new eServiceReference(handleGroup(service));
+	m_timeQueryRef = new eServiceReference(handleGroup(service));
 
 	if (begin == -1)
 		begin = ::time(0);
@@ -1502,7 +1511,8 @@ RESULT eEPGCache::getNextTimeEntry(ePtr<eServiceEvent> &result)
 		{
 			Event ev((uint8_t*)timemap_it->second->get());
 			result = new eServiceEvent();
-			int currentQueryTsidOnid = (m_timeQueryRef->getTransportStreamID().get()<<16) | m_timeQueryRef->getOriginalNetworkID().get();
+			int currentQueryTsidOnid, currentQuerySid;
+			getEPGServiceIds(*m_timeQueryRef, currentQueryTsidOnid, currentQuerySid);
 			m_timeQueryCount++;
 			return result->parseFrom(&ev, currentQueryTsidOnid);
 		}
@@ -1769,9 +1779,10 @@ PyObject *eEPGCache::lookupEvent(ePyObject list, ePyObject convertFunc)
 				stime = ::time(0);
 
 			eServiceReference ref(handleGroup(eServiceReference(PyUnicode_AsUTF8(service))));
-			// redirect subservice querys to parent service
-			eServiceReferenceDVB &dvb_ref = (eServiceReferenceDVB &)ref;
-			if (dvb_ref.getParentTransportStreamID().get()) // linkage subservice
+			// Redirect DVB linkage subservices to their parent. Other service
+			// types reuse these data words for their own identifiers.
+			eServiceReferenceDVB &dvb_ref = (eServiceReferenceDVB&)ref;
+			if (ref.type == eServiceReference::idDVB && dvb_ref.getParentTransportStreamID().get())
 			{
 				eServiceCenterPtr service_center;
 				if (!eServiceCenter::getPrivInstance(service_center))
@@ -1868,9 +1879,10 @@ PyObject *eEPGCache::lookupEvent(ePyObject list, ePyObject convertFunc)
 					}
 					if (ev_data)
 					{
-						const eServiceReferenceDVB &dref = (const eServiceReferenceDVB &)ref;
 						Event ev((uint8_t *)ev_data->get());
-						evt.parseFrom(&ev, (dref.getTransportStreamID().get() << 16) | dref.getOriginalNetworkID().get());
+						int tsidonid, sid;
+						getEPGServiceIds(ref, tsidonid, sid);
+						evt.parseFrom(&ev, tsidonid);
 					}
 				}
 				if (ev_data)
@@ -1945,21 +1957,31 @@ void eEPGCache::submitEventData(const std::vector<eServiceReferenceDVB>& service
 	long duration, const char* title, const char* short_summary,
 	const char* long_description, std::vector<uint8_t> event_types, std::vector<eit_parental_rating> parental_ratings, uint16_t eventId)
 {
+	std::vector<eServiceReference> refs(serviceRefs.begin(), serviceRefs.end());
+	submitEventData(refs, start, duration, title, short_summary, long_description,
+		event_types, parental_ratings, eventId);
+}
+
+void eEPGCache::submitEventData(const std::vector<eServiceReference>& serviceRefs, long start,
+	long duration, const char* title, const char* short_summary,
+	const char* long_description, std::vector<uint8_t> event_types, std::vector<eit_parental_rating> parental_ratings, uint16_t eventId)
+{
 	std::vector<int> sids;
 	std::vector<eDVBChannelID> chids;
 	chids.reserve(serviceRefs.size());
-	for (std::vector<eServiceReferenceDVB>::const_iterator serviceRef = serviceRefs.begin();
+	for (std::vector<eServiceReference>::const_iterator serviceRef = serviceRefs.begin();
 		serviceRef != serviceRefs.end();
 		++serviceRef)
 	{
-		eDVBChannelID chid;
-		serviceRef->getChannelID(chid);
-		chids.push_back(chid);
-		sids.push_back(serviceRef->getServiceID().get());
+		const uniqueEPGKey key(*serviceRef);
+		chids.push_back(eDVBChannelID(eDVBNamespace(0),
+			eTransportStreamID(key.tsid), eOriginalNetworkID(key.onid)));
+		sids.push_back(key.sid);
 
 		// disable EIT event parsing when using EPG_IMPORT
 		ePtr<eDVBService> service;
-		if (!eDVBDB::getInstance()->getService(*serviceRef, service) && service->useEIT())
+		if (serviceRef->type == eServiceReference::idDVB &&
+			!eDVBDB::getInstance()->getService((const eServiceReferenceDVB &)*serviceRef, service) && service->useEIT())
 		{
 			service->m_flags |= eDVBService::dxNoEIT;
 		}
@@ -2217,18 +2239,18 @@ void eEPGCache::importEvent(ePyObject serviceReference, ePyObject list)
  */
 void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 {
-	std::vector<eServiceReferenceDVB> refs;
+	std::vector<eServiceReference> refs;
+	const char *refstr;
 
 	if (PyUnicode_Check(serviceReferences))
 	{
-		const char *refstr;
 		refstr = PyUnicode_AsUTF8(serviceReferences);
 		if (!refstr)
 		{
 			eDebug("[eEPGCache:import] serviceReferences string is 0, aborting");
 			return;
 		}
-		refs.push_back(eServiceReferenceDVB(refstr));
+		refs.push_back(eServiceReference(refstr));
 	}
 	else if (PyTuple_Check(serviceReferences))
 	{
@@ -2250,7 +2272,6 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 			PyObject* item = PyList_GET_ITEM(serviceReferences, i);
 			if (PyUnicode_Check(item))
 			{
-				const char *refstr;
 				refstr = PyUnicode_AsUTF8(item);
 				if (!refstr)
 				{
@@ -2258,7 +2279,7 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 				}
 				else
 				{
-					refs.push_back(eServiceReferenceDVB(refstr));
+					refs.push_back(eServiceReference(refstr));
 				}
 			}
 			else if (PyTuple_Check(item))

@@ -31,9 +31,9 @@ struct uniqueEPGKey
 {
 	int sid, onid, tsid;
 	uniqueEPGKey( const eServiceReference &ref )
-		:sid( ref.type != eServiceReference::idInvalid ? ((eServiceReferenceDVB&)ref).getServiceID().get() : -1 )
-		,onid( ref.type != eServiceReference::idInvalid ? ((eServiceReferenceDVB&)ref).getOriginalNetworkID().get() : -1 )
-		,tsid( ref.type != eServiceReference::idInvalid ? ((eServiceReferenceDVB&)ref).getTransportStreamID().get() : -1 )
+		:sid( ref.type == eServiceReference::idServiceDAB ? (ref.getUnsignedData(6) & 0xffff) : (ref.type != eServiceReference::idInvalid ? ((eServiceReferenceDVB&)ref).getServiceID().get() : -1) )
+		,onid( ref.type == eServiceReference::idServiceDAB ? (ref.getUnsignedData(3) & 0xffff) : (ref.type != eServiceReference::idInvalid ? ((eServiceReferenceDVB&)ref).getOriginalNetworkID().get() : -1) )
+		,tsid( ref.type == eServiceReference::idServiceDAB ? ((ref.getUnsignedData(7) ? ref.getUnsignedData(7) : ref.getUnsignedData(2)) & 0xffff) : (ref.type != eServiceReference::idInvalid ? ((eServiceReferenceDVB&)ref).getTransportStreamID().get() : -1) )
 	{
 	}
 	uniqueEPGKey()
@@ -167,7 +167,7 @@ private:
 	void submitEventData(const std::vector<int>& sids, const std::vector<eDVBChannelID>& chids, long start, long duration, const char* title, const char* short_summary, const char* long_description, std::vector<uint8_t> event_types, std::vector<eit_parental_rating> parental_ratings, int event_id, int source);
 	void clearCompleteEPGCache();
 
-	eServiceReferenceDVB *m_timeQueryRef;
+	eServiceReference *m_timeQueryRef;
 	time_t m_timeQueryBegin;
 	int m_timeQueryMinutes;
 	int m_timeQueryCount;  // counts the returned events; getNextTimeEntry returns always the m_timeQueryCount'th event
@@ -203,8 +203,6 @@ private:
 	RESULT lookupEventTime(const eServiceReference &service, time_t, const eventData *&, int direction=0);
 
 public:
-	/* Only used by servicedvbrecord.cpp to write the EIT file */
-	RESULT saveEventToFile(const char* filename, const eServiceReference &service, int eit_event_id, time_t begTime, time_t endTime);
 
 	// Events are parsed epg events.. it's safe to use them after cache unlock
 	// after use the Event pointer must be released using "delete".
@@ -212,6 +210,9 @@ public:
 	RESULT lookupEventTime(const eServiceReference &service, time_t, Event* &, int direction=0);
 	RESULT getNextTimeEntry(Event *&);
 #endif
+	/* Used by servicedvbrecord.cpp, time shift, etc. to write the EIT file */
+	RESULT saveEventToFile(const char* filename, const eServiceReference &service, int eit_event_id, time_t begTime, time_t endTime);
+
 	enum {
 		SIMILAR_BROADCASTINGS_SEARCH,
 		EXAKT_TITLE_SEARCH,
@@ -266,7 +267,9 @@ public:
 	unsigned int getEpgSources();
 	unsigned int getEpgmaxdays();
 
-	void submitEventData(const std::vector<eServiceReferenceDVB>& serviceRefs, long start, long duration, const char* title, const char* short_summary, const char* long_description, std::vector<uint8_t> event_types, std::vector<eit_parental_rating> parental_ratings, uint16_t eventId=0);
+
+	void submitEventData(const std::vector<eServiceReferenceDVB>& serviceRefs, long start, long duration, const char* title, const char* short_summary, const char* long_description, std::vector<uint8_t> event_types, std::vector<eit_parental_rating> parental_ratings, uint16_t event_id=0);
+	void submitEventData(const std::vector<eServiceReference>& serviceRefs, long start, long duration, const char* title, const char* short_summary, const char* long_description, std::vector<uint8_t> event_types, std::vector<eit_parental_rating> parental_ratings, uint16_t event_id=0);
 
 	void importEvents(SWIG_PYOBJECT(ePyObject) serviceReferences, SWIG_PYOBJECT(ePyObject) list);
 	void importEvent(SWIG_PYOBJECT(ePyObject) serviceReference, SWIG_PYOBJECT(ePyObject) list);
