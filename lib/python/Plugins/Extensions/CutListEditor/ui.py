@@ -193,6 +193,9 @@ class CutListEditor(Screen, InfoBarBase, InfoBarSeek, InfoBarCueSheetSupport, He
 		self.cut_service = service
 		session.nav.playService(service, adjust=False)
 
+		if config.seek.arrowSkipMode.value != "t":
+			self["SeekActionsArrows"].setEnabled(False)
+
 		service = session.nav.getCurrentService()
 		cue = service and service.cueSheet()
 		if cue is not None:
