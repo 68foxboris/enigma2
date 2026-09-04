@@ -337,6 +337,8 @@ def runScreenTest():
 	nav = Navigation()
 	session = Session(desktop=enigma.getDesktop(0), summaryDesktop=enigma.getDesktop(1), navigation=nav)
 	CiHandler.setSession(session)
+	from Components.RTLSDR import initRTLSDR
+	initRTLSDR(session)
 	from Screens.SwapManager import SwapAutostart
 	SwapAutostart()
 	enigma.eProfileWrite("Processing Screen")
