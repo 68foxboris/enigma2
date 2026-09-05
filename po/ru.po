@@ -10608,6 +10608,9 @@ msgstr "Включать AIT в записи"
 msgid "Include CI assignment"
 msgstr "Включить назначение CI"
 
+msgid "Include DAB+ data"
+msgstr "Включить данные DAB+"
+
 msgid "Include DVB details"
 msgstr "Включить данные DVB"
 
@@ -10655,6 +10658,9 @@ msgstr "Включить выходные данные opkg"
 
 msgid "Include remote control data"
 msgstr "Указать тип пульта управления"
+
+msgid "Include seek data"
+msgstr "Включить данные поиска"
 
 msgid "Include storage device data"
 msgstr "Включить данные устройства хранения"
