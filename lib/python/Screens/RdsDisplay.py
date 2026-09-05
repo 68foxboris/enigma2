@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from os import stat
 from os.path import exists
 
@@ -12,7 +11,7 @@ from Components.Pixmap import Pixmap
 from Components.config import config
 from Components.Label import Label
 from Components.Sources.StaticText import StaticText
-from Tools.Directories import resolveFilename, SCOPE_CURRENT_SKIN
+from Tools.Directories import resolveFilename, SCOPE_GUISKIN
 from Tools.LoadPixmap import LoadPixmap
 
 
@@ -40,7 +39,7 @@ class DABSlideDisplay(Screen):
 		})
 		self.onLayoutFinish.append(self.layoutFinished)
 		self.onClose.append(self.removeNotifier)
-		config.dab.rtlsdr.slideshow.addNotifier(self.slideshowChanged, initial_call=False)
+		config.dab.slideshow.addNotifier(self.slideshowChanged, initial_call=False)
 
 	def layoutFinished(self):
 		self.hide()
@@ -115,9 +114,7 @@ class DABSlideDisplay(Screen):
 		self["picture"].instance.resize(eSize(targetWidth, targetHeight))
 
 	def isEnabled(self, reference):
-		# The setting belongs to the optional USB receiver.  Satellite DAB uses
-		# the normal DAB radio behaviour and remains enabled.
-		return not reference.getPath().startswith("dab://rtlsdr/") or config.dab.rtlsdr.slideshow.value
+		return config.dab.slideshow.value
 
 	def updateSlide(self):
 		reference = self.session.nav.getCurrentlyPlayingServiceReference()
@@ -148,7 +145,7 @@ class DABSlideDisplay(Screen):
 		self.hide()
 
 	def removeNotifier(self):
-		config.dab.rtlsdr.slideshow.removeNotifier(self.slideshowChanged)
+		config.dab.slideshow.removeNotifier(self.slideshowChanged)
 
 
 class RdsInfoDisplaySummary(Screen):
@@ -288,10 +285,10 @@ class RassInteractive(Screen):
 			9: self["subpages_9"]}
 
 		self.subpage_png = {
-			1: LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "icons/rass_page1.png")),
-			2: LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "icons/rass_page2.png")),
-			3: LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "icons/rass_page3.png")),
-			4: LoadPixmap(resolveFilename(SCOPE_CURRENT_SKIN, "icons/rass_page4.png"))}
+			1: LoadPixmap(resolveFilename(SCOPE_GUISKIN, "icons/rass_page1.png")),
+			2: LoadPixmap(resolveFilename(SCOPE_GUISKIN, "icons/rass_page2.png")),
+			3: LoadPixmap(resolveFilename(SCOPE_GUISKIN, "icons/rass_page3.png")),
+			4: LoadPixmap(resolveFilename(SCOPE_GUISKIN, "icons/rass_page4.png"))}
 
 		self.current_page = 0
 		self.current_subpage = 0

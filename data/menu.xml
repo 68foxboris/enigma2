@@ -54,7 +54,7 @@
 				<item key="auto_scan"  text="Automatic scan" conditional="nimmanager.somethingConnected()"><screen module="ScanSetup" screen="ScanSimple"/></item>
 				<item key="manual_scan" text="Manual scan" conditional="nimmanager.somethingConnected()"><screen module="ScanSetup"/></item>
 				<item key="dab_scan" level="0" text="DAB+ Scan" weight="15" requires="CanScanDAB"><screen module="DABScan" screen="DABScan" /></item>
-				<item key="dab_usb_setup" level="0" text="DAB+ USB Tuner Settings" weight="16" requires="HasRTLSDR"><screen module="RTLSDRSetup" screen="RTLSDRSetup" /></item>
+				<item key="dab_usb_setup" level="0" text="DAB+ Settings" weight="16" requires="HasDABSettings"><screen module="RTLSDRSetup" screen="RTLSDRSetup" /></item>
 				<item key="fallbacktuner_settings" text="Fallback remote receiver setup"><screen module="SetupFallbacktuner"/></item>
 			</menu>
 			<menu key="system" weight="5" level="0" text="System">
