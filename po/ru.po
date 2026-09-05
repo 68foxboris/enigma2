@@ -8238,6 +8238,9 @@ msgstr "Включите этот параметр, чтобы добавить 
 msgid "Enable this option to add bouquet database information to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить информацию о базе данных букета в файл журнала отладки."
 
+msgid "Enable this option to add detailed DAB+ receiver, packet, MOT and SPI information to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить подробную информацию о приемнике DAB+, пакетах, MOT и SPI в файл журнала отладки."
+
 msgid "Enable this option to add extra DVB details to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить дополнительные сведения о DVB в файл журнала отладки."
 
@@ -8271,6 +8274,9 @@ msgstr "Включите этот параметр, чтобы добавить 
 msgid "Enable this option to add screen names and resolution data to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить имена экранов и данные о разрешении в файл лога отладки."
 
+msgid "Enable this option to add seek/time shift debugging data to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить данные отладки, связанные со сдвигом во времени/поиском, в файл журнала отладки."
+
 msgid "Enable this option to add skin load information detected during system boot to the debug log file."
 msgstr "Включите эту опцию, чтобы добавить информацию о загрузке скина, обнаруженную во время загрузки системы, в файл журнала отладки."
 
@@ -8279,6 +8285,9 @@ msgstr "Включите эту опцию, чтобы добавить в фа�
 
 msgid "Enable this option to add timer debugging data to the debug log file."
 msgstr "Включите этот параметр, чтобы добавить данные отладки таймера в файл лога отладки."
+
+msgid "Enable this option to add verbose SEC/DiSEqC debug data to the debug log file."
+msgstr "Включите эту опцию, чтобы добавить подробные отладочные данные SEC/DiSEqC в файл журнала отладки."
 
 msgid "Enable this option to show all the available Information screens in the Information menu item list."
 msgstr "Включите эту опцию, чтобы отобразить все доступные информационные экраны в списке пунктов меню 'Информация'."
@@ -10634,6 +10643,9 @@ msgstr "Включить данные мультизагрузки *"
 
 msgid "Include network data"
 msgstr "Включить сетевые данные"
+
+msgid "Include SEC/DiSEqC data"
+msgstr "Включить данные SEC/DiSEqC"
 
 msgid "Include SDT, BAT in http streams"
 msgstr "Включить SDT, BAT в потоки http"
