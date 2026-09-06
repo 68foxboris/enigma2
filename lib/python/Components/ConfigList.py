@@ -353,7 +353,7 @@ class ConfigListScreen:
 			self.keyToggle()
 		elif isinstance(self.getCurrentItem(), ConfigSelection):
 			self.keySelection()
-		elif isinstance(self.getCurrentItem(), ConfigText) and not isinstance(self.getCurrentItem(), (ConfigMACText, ConfigNumber)) and not self.getCurrentItem().isReadOnly():
+		elif isinstance(self.getCurrentItem(), ConfigText) and not isinstance(self.getCurrentItem(), (ConfigMacText, ConfigNumber)) and not self.getCurrentItem().isReadOnly():
 			self.keyText()
 		else:
 			self["config"].handleKey(ACTIONKEY_SELECT, self.entryChanged)
