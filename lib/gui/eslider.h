@@ -21,14 +21,14 @@ public:
 	// Border functions needs to be override because we using local variables for slider and the paint of the widget should not use the local variables
 	void setBorderWidth(int width) override { setWidgetBorderWidth(width); }
 	void setBorderColor(const gRGB &color) override { setWidgetBorderColor(color); }
-	void setWidgetBorderWidth(int width) override { 
-			m_slider_border_width = width; 
-			invalidate(); 
+	void setWidgetBorderWidth(int width) override {
+			m_slider_border_width = width;
+			invalidate();
 		}
-	void setWidgetBorderColor(const gRGB &color) override { 
+	void setWidgetBorderColor(const gRGB &color) override {
 			m_slider_border_color = color;
 			m_have_slider_border_color = true;
-			invalidate(); 
+			invalidate();
 		}
 	void setForegroundColor(const gRGB &color);
 	void setBackgroundColor(const gRGB &color) override;
@@ -39,6 +39,7 @@ public:
 	void setPixmapScale(int flags);
 	void setAlphatest(int alphatest); /* 1 for alphatest, 2 for alphablend */
 	void setIsScrollbar();
+	void setGradientMode(bool explicitMode);
 	static void setDefaultBorderWidth(int borderwidth)
 	{
 		defaultSliderBorderWidth = borderwidth;
@@ -89,6 +90,7 @@ private:
 	static int defaultSliderBorderWidth;
 
 	bool m_background_gradient_set = false;
+	bool m_explicit_gradients = false;
 	bool m_background_gradient_alphablend = false;
 	uint8_t m_background_gradient_direction = 0;
 	std::vector<gRGB> m_background_gradient_colors;
