@@ -9,7 +9,7 @@ from enigma import BT_ALPHABLEND, BT_ALPHATEST, BT_HALIGN_CENTER, BT_HALIGN_LEFT
 from Components.config import ConfigEnableDisable, ConfigSelection, ConfigSubsection, ConfigText, config
 from Components.SystemInfo import BoxInfo
 from Components.Sources.Source import ObsoleteSource
-from Tools.Directories import SCOPE_CONFIG, SCOPE_LCDSKIN, SCOPE_GUISKIN, SCOPE_FONTS, SCOPE_SKINS, pathExists, resolveFilename, fileReadLines, fileReadXML
+from Tools.Directories import SCOPE_LCDSKIN, SCOPE_GUISKIN, SCOPE_FONTS, SCOPE_SKINS, pathExists, resolveFilename, fileReadXML, clearResolveLists
 from Tools.Import import my_import
 from Tools.LoadPixmap import LoadPixmap
 
@@ -18,13 +18,13 @@ MODULE_NAME = __name__.split(".")[-1].capitalize()
 DEFAULT_SKIN = BoxInfo.getItem("HasFullHDSkinSupport") and "PLi-FullHD/skin.xml"
 EMERGENCY_SKIN = "skin_default/skin.xml"
 EMERGENCY_NAME = "Default"
-DEFAULT_DISPLAY_SKIN = "skin_default/skin_display.xml"
+DEFAULT_DISPLAY_SKIN = "skin_display.xml"
 USER_SKIN = "skin_user.xml"
 USER_SKIN_TEMPLATE = "skin_user_%s.xml"
 SUBTITLE_SKIN = "skin_subtitles.xml"
 
 GUI_SKIN_ID = 0  # Main frame-buffer.
-DISPLAY_SKIN_ID = 1  # Front panel / display / LCD.
+DISPLAY_SKIN_ID = 2 if BoxInfo.getItem("model").startswith("dm") else 1  # Front panel / display / LCD.
 
 # MANDATORY_WIDGETS AUTOGENERATION
 # START
@@ -98,7 +98,7 @@ runCallbacks = False
 # E.g. "MySkin/skin_display.xml"
 #
 def InitSkins():
-	global currentPrimarySkin, currentDisplaySkin, resolutions
+	global currentPrimarySkin, currentDisplaySkin
 	# #################################################################################################
 	if isfile("/etc/.restore_skins"):
 		unlink("/etc/.restore_skins")
@@ -223,7 +223,6 @@ def loadSkin(filename, scope=SCOPE_SKINS, desktop=getDesktop(GUI_SKIN_ID), scree
 
 
 def reloadSkins():
-	global colors, domScreens, fonts, menus, menuicons, parameters, screens, setups, switchPixmap
 	for styleID in windowStyles:  # Reset window styles so a new skin without its own <windowstyle> doesn't inherit the previous skin's fonts/colors.
 		eWindowStyleManager.getInstance().setStyle(styleID, eWindowStyleSkinned())
 	domScreens.clear()
@@ -244,10 +243,17 @@ def reloadSkins():
 	})
 	menus.clear()
 	menuicons.clear()
-	parameters.clear()
 	screens.clear()
+	parameters.clear()
 	setups.clear()
 	switchPixmap.clear()
+	windowStyles.clear()
+	scrollLabelStyle.clear()
+	subtitleFonts.clear()
+	constantWidgets.clear()
+	layouts.clear()
+	variables.clear()
+	clearResolveLists()
 	clearFonts()
 	InitSkins()
 
@@ -338,6 +344,21 @@ def parseOptions(options, attribute, value, default):
 		skinError(f"The '{attribute}' parser is not correctly initialized, using '{default}'")
 		value = default
 	return value
+
+
+def parseValuePair(value, scale, object=None, desktop=None, size=None):
+	if value in variables:
+		value = variables[value]
+	(xValue, yValue) = value.split(",")  # These values will be stripped in parseCoordinate().
+	parentsize = eSize()
+	if object and ("c" in xValue or "c" in yValue or "e" in xValue or "e" in yValue or "%" in xValue or "%" in yValue):  # Need parent size for 'c', 'e' and '%'.
+		parentsize = getParentSize(object, desktop)
+	# x = xValue
+	# y = yValue
+	xValue = parseCoordinate(xValue, parentsize.width(), size and size.width() or 0, None, scale[0])
+	yValue = parseCoordinate(yValue, parentsize.height(), size and size.height() or 0, None, scale[1])
+	# print(f"[Skin] parseValuePair DEBUG: Scaled pair X {x} -> {xValue}, Y {y} -> {yValue}.")
+	return (xValue, yValue)
 
 
 def parseAlphaTest(value):
@@ -583,16 +604,6 @@ def parseItemAlignment(value):
 	return parseOptions(options, "itemAlignment", value, eListbox.itemAlignLeftTop)
 
 
-def parseScrollbarLength(value, default):
-	if value and value.isdigit():
-		return int(value)
-	options = {
-		"full": 0,
-		"auto": -1
-	}
-	return options.get(value, default)
-
-
 def parseListOrientation(value):
 	options = {
 		"vertical": 0b01,
@@ -682,9 +693,22 @@ def parseRadius(value):
 		edgeValue = 0
 		for edge in edges:
 			edgeValue += edgesMask.get(edge, 0)
-		return int(data[0]), edgeValue
+		value = int(data[0]), edgeValue
 	else:
-		return int(data[0]), eWidget.RADIUS_ALL
+		value = int(data[0]), eWidget.RADIUS_ALL
+	return value
+
+
+def parseScrollbarLength(value, default):
+	if value and value.isdigit():
+		value = int(value)
+	else:
+		options = {
+			"full": 0,
+			"auto": -1
+		}
+		value = options.get(value, default)
+	return value
 
 
 def parseSize(value, scale, object=None, desktop=None):
@@ -700,21 +724,6 @@ def parseTabWidth(value, default):
 		}
 		value = options.get(value, default)
 	return value
-
-
-def parseValuePair(value, scale, object=None, desktop=None, size=None):
-	if value in variables:
-		value = variables[value]
-	(xValue, yValue) = value.split(",")  # These values will be stripped in parseCoordinate().
-	parentsize = eSize()
-	if object and ("c" in xValue or "c" in yValue or "e" in xValue or "e" in yValue or "%" in xValue or "%" in yValue):  # Need parent size for 'c', 'e' and '%'.
-		parentsize = getParentSize(object, desktop)
-	# x = xValue
-	# y = yValue
-	xValue = parseCoordinate(xValue, parentsize.width(), size and size.width() or 0, None, scale[0])
-	yValue = parseCoordinate(yValue, parentsize.height(), size and size.height() or 0, None, scale[1])
-	# print(f"[Skin] parseValuePair DEBUG: Scaled pair X {x} -> {xValue}, Y {y} -> {yValue}.")
-	return (xValue, yValue)
 
 
 def parseScale(value):
@@ -976,8 +985,7 @@ class AttributeParser:
 		self.scaleTuple = scale
 
 	def applyAll(self, attributes):
-		# Apply 'pixmap' last so 'size' is already set when SVGs rasterize.
-		attributes.sort(key=lambda x: {"pixmap": 1}.get(x[0], 0))
+		# attributes.sort(key=lambda x: {"pixmap": 1}.get(x[0], 0))  # For SVG pixmap scale required the size, so sort pixmap last.
 		for attribute, value in attributes:
 			self.applyOne(attribute, value)
 
@@ -1448,7 +1456,6 @@ def applyAllAttributes(guiObject, desktop, attributes, scale=((1, 1), (1, 1))):
 def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN):
 	"""Loads skin data like colors, windowstyle etc."""
 	assert domSkin.tag == "skin", "root element in skin must be 'skin'!"
-	global colors, fonts, menus, parameters, setups, screens, switchPixmap, resolutions, scrollLabelStyle, subtitleFonts
 	for tag in domSkin.findall("output"):
 		scrnID = parseInteger(tag.attrib.get("id", GUI_SKIN_ID), GUI_SKIN_ID)
 		if scrnID == GUI_SKIN_ID:

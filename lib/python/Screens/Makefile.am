@@ -18,7 +18,7 @@ install_PYTHON = \
 	InputDeviceSetup.py DVD.py SoftwareUpdate.py AutoDiseqc.py WizardInstall.py ScreenSaver.py \
 	Hotkey.py StreamingClientsInfo.py SoftcamSetup.py SetupFallbacktuner.py \
 	CronTimer.py OScamInfo.py LogManager.py Time.py OSDCalibration.py \
-	FlashManager.py MultiBootManager.py ImageBackup.py SkinSelector.py \
+	FlashManager.py MultiBootManager.py ImageBackup.py \
 	SwapManager.py DeviceManager.py Information.py QuadPiP.py RestartNetwork.py \
 	Toast.py HDMICEC.py Picon.py NetworkServices.py NetworkMounts.py \
-	DABScan.py RTLSDRSetup.py
+	DABScan.py RTLSDRSetup.py SkinSelection.py
