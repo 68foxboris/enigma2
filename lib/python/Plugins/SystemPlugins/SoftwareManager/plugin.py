@@ -4,18 +4,14 @@ from os.path import exists, isfile, dirname, isdir
 import time
 from stat import ST_MTIME
 from pickle import dump
-from Plugins.Plugin import PluginDescriptor
 from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Screens.Standby import TryQuitMainloop
-from Screens.Opkg import Opkg
 from Screens.SoftwareUpdate import SoftwareUpdate
 from Screens.MultiBootManager import MultiBootManager
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.Input import Input
-from Components.Opkg import OpkgComponent
-from Components.Sources.StaticText import StaticText
 from Components.ScrollLabel import ScrollLabel
 from Components.SystemInfo import BoxInfo
 from Components.Pixmap import Pixmap
@@ -25,7 +21,6 @@ from Components.Harddisk import harddiskmanager  # noqa F401
 from Components.config import config, ConfigSubsection, ConfigText, ConfigLocations, ConfigYesNo, ConfigSelection
 from Components.ConfigList import ConfigListScreen
 from Components.Console import Console
-from Components.SelectionList import SelectionList
 from Components.PluginComponent import plugins  # noqa F401
 from Components.PackageInfo import PackageInfoHandler
 from Components.Language import language
@@ -54,12 +49,11 @@ config.plugins.softwaremanager.restoremode = ConfigSelection(default="turbo", ch
 		("fast", _("fast")),
 		("slow", _("slow"))
 	])
-config.plugins.softwaremanager.overwriteConfigFiles = ConfigSelection(
-				[
-					("Y", _("Yes, always")),
-					("N", _("No, never")),
-					("ask", _("Always ask"))
-				], "Y")
+config.plugins.softwaremanager.overwriteConfigFiles = ConfigSelection(default="Y", choices=[
+		("Y", _("Yes, always")),
+		("N", _("No, never")),
+		("ask", _("Always ask"))
+	])
 config.plugins.softwaremanager.onSetupMenu = ConfigYesNo(default=True)
 config.plugins.softwaremanager.onBlueButton = ConfigYesNo(default=False)
 config.plugins.softwaremanager.epgcache = ConfigYesNo(default=False)
@@ -1836,19 +1830,6 @@ class OpkgInstaller(Screen):
 		self.session.open(Opkg, cmdList=cmdList)
 
 
-def filescan_open(list, session, **kwargs):
-	filelist = [x.path for x in list]
-	session.open(OpkgInstaller, filelist)  # List.
-
-
-def filescan(**kwargs):
-	from Components.Scanner import Scanner, ScanPath
-	return Scanner(mimetypes=["application/x-debian-package"], paths_to_scan=[
-		ScanPath(path="ipk", with_subdirs=True),
-		ScanPath(path="", with_subdirs=False),
-	], name="Opkg", description=_("Install extensions."), openfnc=filescan_open)
-
-
 def UpgradeMain(session, **kwargs):
 	session.open(UpdatePluginMenu)
 
@@ -1874,7 +1855,6 @@ def Plugins(path, **kwargs):
 	list = [
 		PluginDescriptor(where = PluginDescriptor.WHERE_SESSIONSTART, fnc = sessionStart), # starts AFTER the Enigma2 booting (For updatecheck)
 		PluginDescriptor(name=_("Software management"), description=_("Manage your receiver's software"), where=PluginDescriptor.WHERE_MENU, needsRestart=False, fnc=startSetup),
-		PluginDescriptor(name=_("Opkg"), where=PluginDescriptor.WHERE_FILESCAN, needsRestart=False, fnc=filescan)
 	]
 	if not config.plugins.softwaremanager.onSetupMenu.value and not config.plugins.softwaremanager.onBlueButton.value:
 		list.append(PluginDescriptor(name=_("Software management"), description=_("Manage your receiver's software"), where=PluginDescriptor.WHERE_PLUGINMENU, needsRestart=False, fnc=UpgradeMain))

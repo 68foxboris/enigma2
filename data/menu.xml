@@ -182,6 +182,7 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 			<item key="flash_online" level="0" text="Flash image Online" description="Download and flash images on your %s %s." weight="13"><screen module="FlashManager" screen="FlashManager" /></item>
 			<item key="software_update" level="0" text="Software Update" description="Online update of your %s %s software." weight="11"><screen module="SoftwareUpdate" screen="SoftwareUpdate" /></item>
 			<item key="backup_image" level="0" text="Image Backup" description="Backup your running %s %s image to HDD or USB." weight="19"><screen module="ImageBackup" screen="ImageBackup" /></item>
+			<item key="upgrade_source" level="2" text="Select Upgrade Source" description="Edit the upgrade source address." weight="16"><screen module="Opkg" screen="PackageFeedSelection" /></item>
 		</menu>
 
 		<menu key="shutdown" text="Standby / restart">
