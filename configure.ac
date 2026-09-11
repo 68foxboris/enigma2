@@ -121,6 +121,7 @@ AM_CONDITIONAL(VUZERO4K, test "$BOXTYPE" == vuzero4k)
 AM_CONDITIONAL(VUDUO2, test "$BOXTYPE" == vuduo2)
 AM_CONDITIONAL(VUDUO4K, test "$BOXTYPE" == vuduo4k)
 AM_CONDITIONAL(VUDUO4KSE, test "$BOXTYPE" == vuduo4kse)
+AM_CONDITIONAL(VUDUO4KLITE, test "$BOXTYPE" == vuduo4klite)
 AM_CONDITIONAL(VUZERO, test "$BOXTYPE" == vuzero)
 AM_CONDITIONAL(HAVE_COLORLCD3, test "$BOXTYPE" == dm7080)
 AM_CONDITIONAL(HAVE_COLORLCD240, test "$BOXTYPE" == dreamtwo)
@@ -177,6 +178,7 @@ AS_IF([test "$BOXTYPE" == "ustym4kpro"],[AC_DEFINE(HWUSTYM4KPRO, 1,[ustym4kpro])
 AS_IF([test "$BOXTYPE" == "vuduo2"],[AC_DEFINE(HWVUDUO2, 1,[vuduo2])])
 AS_IF([test "$BOXTYPE" == "vuduo4k"],[AC_DEFINE(HWVUDUO4K, 1,[vuduo4k])])
 AS_IF([test "$BOXTYPE" == "vuduo4kse"],[AC_DEFINE(HWVUDUO4KSE, 1,[vuduo4kse])])
+AS_IF([test "$BOXTYPE" == "vuduo4klite"],[AC_DEFINE(HWVUDUO4KLITE, 1,[vuduo4klite])])
 AS_IF([test "$BOXTYPE" == "vusolo2"],[AC_DEFINE(HWVUSOLO2, 1,[vusolo2])])
 AS_IF([test "$BOXTYPE" == "vusolo4k"],[AC_DEFINE(HWVUSOLO4K, 1,[vusolo4k])])
 AS_IF([test "$BOXTYPE" == "vusolose"],[AC_DEFINE(HWVUSOLOSE, 1,[vusolose])])
@@ -595,6 +597,12 @@ if test "$BOXTYPE" == "formuler1" -o "$BOXTYPE" == "formuler3" -o "$BOXTYPE" == 
 	AC_DEFINE(KEY_LAST_TO_KEY_BACK, 1,[define when rc sends a KEY_LAST event for its KEY_BACK key])
 	AC_DEFINE(KEY_BOOKMARKS_TO_KEY_MEDIA, 1,[define when rc Playlist sends a KEY_BOOKMARKS event for its KEY_MEDIA key])
 	AC_DEFINE(KEY_VIDEO_TO_KEY_FAVORITES, 1,[define when rc FAV key sends a KEY_VIDEO event for its KEY_FAVORITES key])
+fi
+
+if test "$BOXTYPE" == "vuduo4klite"; then
+	AC_DEFINE(KEY_HELP_TO_KEY_INFO, 1,[define when rc sends a KEY_HELP event we need KEY_INFO])
+	AC_DEFINE(KEY_INFO_TO_KEY_EPG, 1,[define when rc sends a KEY_INFO event for its KEY_EPG key])
+	AC_DEFINE(KEY_EDIT_TO_KEY_TIME, 1,[define when rc sends a KEY_TIME event for its KEY_EDIT key])
 fi
 
 if test "$BOXTYPE" == "vuduo" -o "$BOXTYPE" == "vusolo" -o "$BOXTYPE" == "vuduo2" -o "$BOXTYPE" == "vusolo2" -o "$BOXTYPE" == "vuuno" -o "$BOXTYPE" == "vuultimo" -o "$BOXTYPE" == "vusolose" -o "$BOXTYPE" == "vuzero" -o "$BOXTYPE" == "vusolo4k" -o "$BOXTYPE" == "vuuno4k" -o "$BOXTYPE" == "vuuno4kse" -o "$BOXTYPE" == "vuultimo4k" -o "$BOXTYPE" == "vuzero4k" -o "$BOXTYPE" == "vuduo4k" -o "$BOXTYPE" == "vuduo4kse"; then
