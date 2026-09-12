@@ -624,7 +624,8 @@ def InitUsageConfig():
 	config.usage.startup_to_standby = ConfigSelection(default="no", choices=[
 		("no", _("No")),
 		("yes", _("Yes")),
-		("except", _("No, except Wakeup timer"))
+		("except", _("No, except Wakeup timer")),
+		("restart", _("After any restart")),
 	])
 
 	config.usage.wakeup_enabled = ConfigSelection(default="no", choices=[
