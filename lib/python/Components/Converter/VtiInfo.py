@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 from Components.config import config
 from Components.Converter.Converter import Converter
 from enigma import iServiceInformation, iPlayableService
@@ -94,7 +97,7 @@ class VtiInfo(Poll, Converter):
                                  decode,
                                  response,
                                  provider)
-        return textvalue
+        return textvalue or ''
 
     text = property(getText)
 
@@ -127,6 +130,8 @@ class VtiInfo(Poll, Converter):
 
             if ecm:
                 for line in ecm:
+                    if not isinstance(line, str):
+                        line = line.decode('utf-8', 'ignore')
                     x = line.lower().find('msec')
                     if x != -1:
                         info['ecm time'] = line[0:x + 4]
@@ -141,32 +146,55 @@ class VtiInfo(Poll, Converter):
                                 if y != -1:
                                     info['caid'] = line[x + 5:y]
 
-                if info and info.get("from") and config.softcam.hideServerName.value:
+                if info and info.get("from") and config.misc.softcam_hideServerName.value:
                     info["from"] = "".join(["\u2022"] * len(info.get("from")))
         return info
 
     def tempfile(self):
-        temp = ''
-        unit = ''
+        try:
+            with open('/sys/class/thermal/thermal_zone0/temp', 'rb') as fd:
+                temp = fd.readline().strip()
+
+            if temp:
+                temp = int(temp)
+                if temp >= 1000:
+                    temp = temp / 1000.0
+                return 'TEMP: %.1f\u00B0C' % temp
+        except (IOError, OSError, ValueError):
+            pass
+
         try:
             with open('/proc/stb/sensors/temp0/value', 'rb') as fd:
                 temp = fd.readline().strip()
             with open('/proc/stb/sensors/temp0/unit', 'rb') as fd:
                 unit = fd.readline().strip()
-            tempinfo = 'TEMP: %s %s%s' % (str(temp), "\u00B0", str(unit))
-            return tempinfo
-        except Exception:
-            pass
+
+            if not temp:
+                return ''
+
+            if not isinstance(temp, str):
+                temp = temp.decode('utf-8', 'ignore')
+            if not isinstance(unit, str):
+                unit = unit.decode('utf-8', 'ignore')
+
+            return 'TEMP: %s\u00B0%s' % (temp, unit)
+        except (IOError, OSError, ValueError):
+            return ''
 
     def fanfile(self):
-        fan = ''
         try:
             with open('/proc/stb/fp/fan_speed', 'rb') as fd:
                 fan = fd.readline().strip()
-            faninfo = f'FAN: {fan}'
-            return faninfo
-        except OSError:
-            pass
+
+            if not fan:
+                return ''
+
+            if not isinstance(fan, str):
+                fan = fan.decode('utf-8', 'ignore')
+
+            return 'FAN: %s' % fan
+        except (IOError, OSError):
+            return ''
 
     def pingtest(self):
         pingpath = '/tmp/.pingtest.info'
@@ -178,6 +206,8 @@ class VtiInfo(Poll, Converter):
 
         if pingtestresult is not None:
             for line in pingtestresult:
+                if not isinstance(line, str):
+                    line = line.decode('utf-8', 'ignore')
                 x = line.lower().find('0')
                 print(x)
                 if x == 0:
