@@ -13,7 +13,7 @@ from Components.Slider import Slider
 from Components.Sources.StaticText import StaticText
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
-from Screens.VirtualKeyBoard import VirtualKeyboard
+from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Tools.Directories import fileReadLines, fileWriteLines
 
 MODULE_NAME = __name__.split(".")[-1]
@@ -275,11 +275,14 @@ class PackageFeedSelection(Screen):
 		self.session.open(PackageFeedEditor, join(self.PACKAGE_PATH, self["feeds"].getCurrent()))
 
 
-class PackageFeedEditor(VirtualKeyboard):
+class PackageFeedEditor(VirtualKeyBoard):
 	def __init__(self, session, configFile=None):
 		self.configFile = configFile
 		self.lines = fileReadLines(configFile, default=[], source=MODULE_NAME) if configFile else []
-		VirtualKeyboard.__init__(self, session, title=_("Edit the feed URL:"), text=self.lines[0] if self.lines else "", style=VirtualKeyboard.VKB_SAVE_ICON, windowTitle=_("Package Feed Editor"))
+		VirtualKeyBoard.__init__(self, session, title=_("Edit the feed URL:"), text=self.lines[0] if self.lines else "", style=VirtualKeyBoard.VKB_SAVE_ICON, windowTitle=_("Package Feed Editor"))
+		self.skinName = "VirtualKeyBoard"
+		if hasattr(self, "skin") and hasattr(self.skin, "replace"):
+			self.skin = self.skin.replace('name="VirtualKeyBoard"', 'name="PackageFeedEditor"')
 
 	def save(self):  # This is a redefinition of the method in VirtualKeyboard.
 		self.smsGotChar()  # Commit any pending SMS character before the text is read.
@@ -288,4 +291,4 @@ class PackageFeedEditor(VirtualKeyboard):
 			if fileWriteLines(self.configFile, [text] + self.lines[1:], source=MODULE_NAME) == 0:  # Only the first line is edited, keep the others.
 				self.session.open(MessageBox, _("Error: There was a problem writing '%s'!") % self.configFile, MessageBox.TYPE_ERROR, windowTitle=self.getTitle())
 				return  # Keep the screen open so the edit is not lost.
-		VirtualKeyboard.save(self)
+		VirtualKeyBoard.save(self)
