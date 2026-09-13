@@ -4,14 +4,18 @@ from os.path import exists, isfile, dirname, isdir
 import time
 from stat import ST_MTIME
 from pickle import dump
+from Plugins.Plugin import PluginDescriptor
 from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Screens.Standby import TryQuitMainloop
+from Screens.Opkg import Opkg
 from Screens.SoftwareUpdate import SoftwareUpdate
 from Screens.MultiBootManager import MultiBootManager
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.Input import Input
+from Components.Opkg import OpkgComponent
+from Components.Sources.StaticText import StaticText
 from Components.ScrollLabel import ScrollLabel
 from Components.SystemInfo import BoxInfo
 from Components.Pixmap import Pixmap
@@ -21,6 +25,7 @@ from Components.Harddisk import harddiskmanager  # noqa F401
 from Components.config import config, ConfigSubsection, ConfigText, ConfigLocations, ConfigYesNo, ConfigSelection
 from Components.ConfigList import ConfigListScreen
 from Components.Console import Console
+from Components.SelectionList import SelectionList
 from Components.PluginComponent import plugins  # noqa F401
 from Components.PackageInfo import PackageInfoHandler
 from Components.Language import language

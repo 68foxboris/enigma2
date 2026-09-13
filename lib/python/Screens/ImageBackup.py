@@ -170,7 +170,7 @@ class ImageBackup(Screen):
 					choiceList.append((target, current[0][1], target, current[0][2], slotDistro, slotVersion))
 			choiceList.append((_("Do not backup the image"), False, None, False, None, None))
 			print(f"[ImageBackup] Potential target{"" if len(targets) == 1 else "s"}: '{"', '".join(targets)}'.")
-			self.session.openWithCallback(self.runImageBackup, ChoiceBox, text=_("Please select the target location to save the backup:"), choiceList=choiceList, windowTitle=self.getTitle())
+			self.session.openWithCallback(self.runImageBackup, ChoiceBox, title=_("Please select the target location to save the backup:"), list=choiceList, windowTitle=self.getTitle())
 
 	def keyCloseRecursive(self):
 		self.close(True)
@@ -651,7 +651,7 @@ class ImageBackup(Screen):
 			fileWriteLines(self.runScript, cmdLines, source=MODULE_NAME)
 			chmod(self.runScript, 0o755)
 			print("[ImageBackup] Running the shell script.")
-			self.session.openWithCallback(consoleCallback, Console, title=_("Image Backup To %s") % target, cmdlist=[self.runScript], closeOnSuccess=False, showScripts=False)
+			self.session.openWithCallback(consoleCallback, Console, title=_("Image Backup To %s") % target, cmdlist=[self.runScript], closeOnSuccess=False)
 			config.usage.shutdownOK.setValue(shutdownOK)
 			config.usage.shutdownOK.save()
 			configfile.save()
