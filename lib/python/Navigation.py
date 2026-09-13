@@ -122,7 +122,13 @@ class Navigation:
 			print("=" * 100)
 			print("[Navigation] Receiver did not start from Deep Standby. Skip wake up detection.")
 			print("=" * 100)
-			self.gotopower()
+			if config.usage.startup_to_standby.value in ("yes", "restart"):
+				print("[Navigation] Startup to standby is enabled, go to standby now.")
+				self.standbytimer = eTimer()
+				self.standbytimer.callback.append(self.gotostandby)
+				self.standbytimer.start(15000, True)
+			else:
+				self.gotopower()
 			return
 		remove("/etc/enigma2/.deep")
 		now = time()  # Wakeup data.
@@ -196,10 +202,12 @@ class Navigation:
 		else:
 			self.wakeupCheck(False)
 		# TODO
-		# if config.usage.remote_fallback_import_restart.value:
-		#	ImportChannels()
-		# if config.usage.remote_fallback_import.value and not config.usage.remote_fallback_import_restart.value:
-		#	ImportChannels()
+		"""
+		if config.usage.remote_fallback_import_restart.value:
+			ImportChannels()
+		if config.usage.remote_fallback_import.value and not config.usage.remote_fallback_import_restart.value:
+			ImportChannels()
+		"""
 
 	def wakeupCheck(self, runCheck=True):
 		now = time()
@@ -239,6 +247,9 @@ class Navigation:
 			elif self.wakeuptyp == 3:
 				if not self.forcerecord:
 					print(f"[Navigation] Timer starts at '{ctime(self.timertime)}'.")
+			if config.usage.startup_to_standby.value == "except" and self.wakeuptyp == 2:
+				print("[Navigation] Startup to standby (except Wakeup timer) is enabled, go to standby now.")
+				self.getstandby = 1
 			# Check for standby.
 			cec = (
 				(self.wakeuptyp == 0 and (Screens.Standby.TVinStandby.getTVstandby("zapandrecordtimer"))) or
