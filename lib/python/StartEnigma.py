@@ -334,6 +334,7 @@ def runScreenTest():
 	plugins.readPluginList(resolveFilename(SCOPE_PLUGINS))
 	enigma.resumeInit()
 	enigma.eProfileWrite("Session")
+	nav = Navigation()
 	toast = Toast()  # noqa F841
 
 	session = Session(desktop=enigma.getDesktop(0), summaryDesktop=enigma.getDesktop(1), navigation=nav)
