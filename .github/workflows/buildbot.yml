@@ -8,21 +8,20 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
 
     steps:
-
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: 'develop'
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
-          python-version: '3.13'
+          python-version: '3.14'
 
-      - name: Build python CI
+      - name: Build python 3.14
         run: |
           sudo apt-get -q update
           sudo apt-get install dos2unix
-          pip install --upgrade pip autopep8
+          pip install --upgrade pip autopep8 future
           ./CI/build.sh
