@@ -164,7 +164,7 @@ cmdline = {k: v.strip('"') for k, v in findall(r'(\S+)=(".*?"|\S+)', cmdline)}
 
 def getDemodVersion():
 	version = None
-	if exists("/proc/stb/info/nim_firmware_version"):
+	if fileExists("/proc/stb/info/nim_firmware_version"):
 		version = fileReadLine("/proc/stb/info/nim_firmware_version")
 	return version and version.strip()
 
@@ -191,7 +191,7 @@ def getRCFile(ext):
 
 
 def hassoftcaminstalled():
-	softcams = fileExists("/etc/init.d/softcam") or exists("/etc/init.d/cardserver")
+	softcams = fileExists("/etc/init.d/softcam") or fileExists("/etc/init.d/cardserver")
 	return softcams
 
 
@@ -307,7 +307,7 @@ BoxInfo.setItem("3DMode", fileCheck("/proc/stb/fb/3dmode") or fileCheck("/proc/s
 BoxInfo.setItem("3DZNorm", fileCheck("/proc/stb/fb/znorm") or fileCheck("/proc/stb/fb/primary/zoffset"))
 BoxInfo.setItem("HasQuadpip", fileCheck("/proc/stb/video/decodermode"))
 BoxInfo.setItem("7segment", DISPLAYTYPE in ("7segment",))
-BoxInfo.setItem("AmlogicFamily", SOC_FAMILY.startswith(("aml", "meson")) or exists("/proc/device-tree/amlogic-dt-id") or exists("/usr/bin/amlhalt") or exists("/sys/module/amports"))
+BoxInfo.setItem("AmlogicFamily", SOC_FAMILY.startswith(("aml", "meson")) or fileExists("/proc/device-tree/amlogic-dt-id") or fileExists("/usr/bin/amlhalt") or fileExists("/sys/module/amports"))
 BoxInfo.setItem("AndroidMode", BoxInfo.getItem("RecoveryMode") and MODEL == "multibox" or BRAND == "wetek" or PLATFORM == "dmamlogic")
 BoxInfo.setItem("ArchIsARM64", ARCHITECTURE == "aarch64" or "64" in ARCHITECTURE)
 BoxInfo.setItem("ArchIsARM", ARCHITECTURE.startswith(("arm", "cortex")))
@@ -319,7 +319,7 @@ BoxInfo.setItem("canFlashWithOfgwrite", not (MODEL.startswith("dm")))
 BoxInfo.setItem("CanMeasureFrontendInputPower", eDVBResourceManager.getInstance().canMeasureFrontendInputPower())
 BoxInfo.setItem("canDualBoot", fileExists("/dev/block/by-name/flag"))
 BoxInfo.setItem("canMultiBoot", MultiBoot.canMultiBoot())
-BoxInfo.setItem("HasNewNativeMultiboot", exists("/.newMB"))
+BoxInfo.setItem("HasNewNativeMultiboot", fileExists("/.newMB"))
 BoxInfo.setItem("canRecovery", MODEL in ("hd51", "vs1500", "h7", "8100s") and ("disk.img", "mmcblk0p1") or MODEL in ("xc7439", "osmio4k", "osmio4kplus", "osmini4k") and ("emmc.img", "mmcblk1p1") or MODEL in ("gbmv200", "sf8008", "sf8008m", "sx988", "ip8", "ustym4kpro", "ustym4kottpremium", "ustym4ks2ottx", "beyonwizv2", "viper4k", "og2ott4k", "og2s4k", "sx88v2", "sx888") and ("usb_update.bin", "none"))
 BoxInfo.setItem("Display", BoxInfo.getItem("FrontpanelDisplay") or BoxInfo.getItem("StandbyLED"))
 BoxInfo.setItem("DM9X0", MODEL in ("dm900", "dm920"))
@@ -379,7 +379,7 @@ BoxInfo.setItem("HasComposite", MODEL not in ("i55", "gbquad4k", "gbue4k", "gbqu
 BoxInfo.setItem("hasXcoreVFD", MODEL in ("osmega", "spycat4k", "spycat4kmini", "spycat4kcombo") and fileCheck("/sys/module/brcmstb_%s/parameters/pt6302_cgram" % MODEL))
 BoxInfo.setItem("HasOfflineDecoding", MODEL not in ("osmini", "osminiplus", "et7000mini", "et11000", "mbmicro", "mbtwinplus", "mbmicrov2", "et7000", "et8500"))
 BoxInfo.setItem("HasTranscoding", pathExists("/proc/stb/encoder/0") or fileCheck("/dev/bcm_enc0"))
-BoxInfo.setItem("HiSilicon", SOC_FAMILY.startswith("hisi") or exists("/proc/hisi") or exists("/usr/bin/hihalt") or exists("/usr/lib/hisilicon"))
+BoxInfo.setItem("HiSilicon", SOC_FAMILY.startswith("hisi") or fileExists("/proc/hisi") or fileExists("/usr/bin/hihalt") or fileExists("/usr/lib/hisilicon"))
 BoxInfo.setItem("MaxPIPSize", MODEL in ("hd51", "h7", "vs1500", "e4hd") and (360, 288) or (540, 432))
 BoxInfo.setItem("NimExceptionVuSolo2", MODEL == "vusolo2")
 BoxInfo.setItem("NimExceptionVuDuo2", MODEL == "vuduo2")
@@ -461,15 +461,15 @@ for ciSlot in range(BoxInfo.getItem("CommonInterface")):
 	BoxInfo.setItem(f"CI{ciSlot}RelevantPidsRoutingSupport", fileCheck(f"/proc/stb/tsmux/ci{ciSlot}_relevant_pids_routing"))
 
 # Network services.
-BoxInfo.setItem("inadyn", exists("/etc/init.d/inadyn-mt"))
-BoxInfo.setItem("minidlna", exists("/etc/init.d/minidlna"))
-BoxInfo.setItem("ushare", exists("/etc/init.d/ushare"))
-BoxInfo.setItem("nfsserver", exists("/etc/init.d/nfsserver"))
-BoxInfo.setItem("samba", exists("/etc/init.d/samba"))
-BoxInfo.setItem("zerotier", exists("/etc/init.d/zerotier"))
+BoxInfo.setItem("inadyn", fileExists("/etc/init.d/inadyn-mt"))
+BoxInfo.setItem("minidlna", fileExists("/etc/init.d/minidlna"))
+BoxInfo.setItem("ushare", fileExists("/etc/init.d/ushare"))
+BoxInfo.setItem("nfsserver", fileExists("/etc/init.d/nfsserver"))
+BoxInfo.setItem("samba", fileExists("/etc/init.d/samba"))
+BoxInfo.setItem("zerotier", fileExists("/etc/init.d/zerotier"))
 
 # AI
-BoxInfo.setItem("AISubs", exists("/etc/init.d/aisocket"))
+BoxInfo.setItem("AISubs", fileExists("/etc/init.d/aisocket"))
 
 # Vu+ EAC3Fix
 BoxInfo.setItem("VuEAC3Fix", MODEL in ("vuultimo4k", "vuduo4kse"))
