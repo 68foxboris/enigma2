@@ -21,4 +21,4 @@ install_PYTHON = \
 	FlashManager.py MultiBootManager.py ImageBackup.py SkinSelector.py \
 	SwapManager.py DeviceManager.py Information.py QuadPiP.py RestartNetwork.py \
 	Toast.py HDMICEC.py Picon.py NetworkServices.py NetworkMounts.py \
-	DABScan.py RTLSDRSetup.py
+	DABScan.py RTLSDRSetup.py SkinIcon.py
