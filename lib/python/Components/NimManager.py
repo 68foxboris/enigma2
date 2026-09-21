@@ -776,7 +776,12 @@ class NIM:
 		return False
 
 	def isEnabled(self):
-		return self.config_mode != "nothing" or self.isFBCLinkEnabled()
+		return False if not self.isSupported() or self.empty else (
+			(self.canBeCompatible("DVB-S") and (self.config_mode_dvbs != "nothing" or self.isFBCLinkEnabled())) or
+			(self.canBeCompatible("DVB-C") and self.config_mode_dvbc != "nothing") or
+			(self.canBeCompatible("DVB-T") and self.config_mode_dvbt != "nothing") or
+			(self.canBeCompatible("ATSC") and self.config_mode_atsc != "nothing")
+		)
 
 	slot_id = property(getSlotID)
 	slot_name = property(getSlotName)
