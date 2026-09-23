@@ -347,10 +347,10 @@ void eListboxPythonStringContent::paint(gPainter &painter, eWindowStyle &style, 
 		{
 			if (local_style->m_gradient_set[0])
 
+			{
+				alphablendtext = local_style->m_gradient_set[0];
 				painter.setGradient(local_style->m_gradient_colors[0], local_style->m_gradient_direction[0], local_style->m_gradient_alphablend[0]);
-
-			alphablendtext = true;
-
+			}
 			if (radius)
 				painter.setRadius(radius, edges);
 			painter.drawRectangle(itemRect);
@@ -930,10 +930,10 @@ void eListboxPythonConfigContent::paint(gPainter &painter, eWindowStyle &style, 
 		{
 			if (local_style->m_gradient_set[0])
 
+			{
+				alphablendtext = local_style->m_gradient_set[0];
 				painter.setGradient(local_style->m_gradient_colors[0], local_style->m_gradient_direction[0], local_style->m_gradient_alphablend[0]);
-
-			alphablendtext = true;
-
+			}
 			if (radius)
 				painter.setRadius(radius, edges);
 			painter.drawRectangle(itemRect);
