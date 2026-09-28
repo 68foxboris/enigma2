@@ -77,7 +77,10 @@ class PluginDescriptor:
 	WHERE_BUTTONSETUP = 20
 
 	# Override internal RecordTimer navigation instance fnc must return the custom instance or None to skip it.
-	WHERE_RECORDTIMER = 20
+	WHERE_RECORDTIMER = 21
+
+	# Called after a GUI skin change and reload. Argument: session.
+	WHERE_SKINCHANGE = 22
 
 	DO_CLOSE = 1
 
