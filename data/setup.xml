@@ -679,13 +679,18 @@
 		<item text="Use power measurement" description="When enabled, measure power consumption to detect when the rotor stops turning (when supported by the tuner).">config.sat.diseqcc</item>
 	</setup>
 	<setup key="Skin" title="Skin Settings">
-		<item text="GUI Skin" description="Choose the skin to be used for the graphical user interface (GUI). Press 'GREEN' to activate the skin.">config.skin.guiSkin</item>
-		<item text="LCD/Front panel" description="Choose the skin to be used for the LCD/front panel interface. Press 'GREEN' to activate the skin." requires="LCDSKINSetup">config.skin.lcdSkin</item>
+		<if conditional="config.usage.fastSkinReload.value">
+			<item text="GUI Skin" description="Choose the skin to be used for the graphical user interface (GUI). Press 'GREEN' to activate the skin.">config.skin.guiSkin</item>
+		<else />
+			<item text="GUI Skin" description="Choose the skin to be used for the graphical user interface (GUI). Press 'GREEN' to activate the skin." restart="gui">config.skin.guiSkin</item>
+		</if>
+		<item text="LCD/Front panel" description="Choose the skin to be used for the LCD/front panel interface. Press 'GREEN' to activate the skin." requires="LCDSKINSetup" restart="gui">config.skin.lcdSkin</item>
 		<item text="Fallback Font" description="Choose the fallback font.">config.skin.FallbackFont</item>
 		<item text="Channel Selection Screen" description="Select the screen layout, from the options provided by the skin, to be used for the ChannelSelection screen." conditional="len(config.channelSelection.screenStyle.choices) > 1">config.channelSelection.screenStyle</item>
 		<item text="Channel Selection List" description="Select the layout of the information in the services list, from the options provided by the skin, displayed within the ChannelSelection screen." conditional="config.channelSelection.screenStyle.value">config.channelSelection.widgetStyle</item>
 		<item text="AutoRefresh" description="Enable autorefresh templates." requires="CanRefreshTemplates">config.skin.autorefresh</item>
-	</setup> 
+		<item text="Fast Skin Reload" description="Reload the skin without restarting the GUI when switching skins.">config.usage.fastSkinReload</item>
+	</setup>
 	<setup key="SoftCSA" title="NDS CSA">
 		<item level="0" text="Activation of NDS CSA" description="Disable NDS CSA descrambling(Off), enable NDS CSA decryption by whitelist(Whitelist) or use automatic detection of NDS CSA descrambling(Auto).">config.misc.softcam_softcsa</item>
 		<item level="0" conditional="config.misc.softcam_softcsa.value != 0" text="Decoder release strategy" description="How to release the hardware decoder when switching to software descrambling. 'Quick' releases immediately (faster zapping). 'Normal' performs clean shutdown first (more stable on some boxes).">config.softcsa.decoderRelease</item>
