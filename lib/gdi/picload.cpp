@@ -1046,8 +1046,12 @@ void ePicLoad::decodeThumb() {
 			char crcstr[16];
 			*crcstr = 0;
 
-			while (count-- > 0 && (c = getc(f)) != EOF)
+			while (count-- > 0) {
+				c = getc(f);
+				if (c == EOF)
+					break;
 				crc32 = crc32_table[((crc32) ^ (c)) & 0xFF] ^ ((crc32) >> 8);
+			}
 
 			fclose(f);
 			crc32 = ~crc32;
@@ -1401,7 +1405,7 @@ int ePicLoad::getData(ePtr<gPixmap>& result) {
 	// after aspect calc : scrx, scry
 	// center image      : xoff, yoff
 	// Aspect ratio calculation
-	int orientation = m_conf.auto_orientation ? (m_exif && m_exif->m_exifinfo->Orient ? m_exif->m_exifinfo->Orient : 1) : 1;
+	int orientation = m_conf.auto_orientation ? (m_exif && m_exif->m_exifinfo && m_exif->m_exifinfo->Orient ? m_exif->m_exifinfo->Orient : 1) : 1;
 	if ((m_conf.aspect_ratio > -0.1) && (m_conf.aspect_ratio < 0.1)) // do not keep aspect ratio but just fill the destination area
 	{
 		scrx = m_filepara->max_x;
