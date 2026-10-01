@@ -755,7 +755,7 @@ readPluginBlacklist()
 
 
 def isPluginInstalled(pluginName, pluginFile="plugin", pluginType=None):
-	if pluginname in pluginBlacklist:
+	if pluginName in pluginBlacklist:
 		return False
 	types = ["Extensions", "SystemPlugins"]
 	if pluginType:
