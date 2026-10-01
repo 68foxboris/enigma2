@@ -33,7 +33,7 @@ class ConfigList(GUIComponent):
 
 	def execBegin(self):
 		rcinput = eRCInput.getInstance()
-		rcinput.setKeyboardMode(rcinput.kmAscii if not config.misc.remotecontrol_text_support.value else rcinput.kmNone)
+		rcinput.setKeyboardMode(rcinput.kmAscii)
 		self.timer.callback.append(self.timeout)
 
 	def execEnd(self):
