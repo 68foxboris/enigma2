@@ -238,6 +238,23 @@ class NumericalTextInput:
 		self.lastKey = -1
 		self.pos = -1
 
+	def setMode(self, mode):
+		index = self.MODES.get(str(mode).upper(), 0)
+		self.mapping = []
+		for num in range(10):
+			self.mapping.append((self.MAPPINGS[num][index]))
+		locale = self.LOCALES.get(international.getLocale(), None)
+		if locale is not None and index in list(range(6)):
+			index = index % 3
+			for num in range(10):
+				if locale[num][index] is not None:
+					self.mapping[num] = locale[num][index]
+		self.mapping = tuple(self.mapping)
+
+	def stopTimer(self):
+		if self.timer:
+			self.timer.stop()
+
 	def timeout(self):
 		if self.lastKey != -1:
 			self.nextChar()
