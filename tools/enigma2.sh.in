@@ -44,7 +44,39 @@ if [ -e /proc/stb/info/boxtype ]; then
 		fi
 	fi
 fi
+# Show backdrop on enigma2 start.
+if [ -x "@bindir@/showiframe" ]; then
+	if [ -e /proc/stb/info/boxtype ]; then
+		stbcheck=`cat /proc/stb/info/boxtype | cut -c1-2`
+		if [ ! $stbcheck == "u5" ] && [ ! $stbcheck == "u4" ]; then
+			killall -9 showiframe; sleep 1
+		fi
+	else
+		killall -9 showiframe; sleep 1
+	fi
+	SKIN=`sed -En 's|^config\.skin\.primary_skin=(.+)/skin\.xml$|\1|p' "@sysconfdir@/enigma2/settings"`
+	if [ -n "${SKIN}" ]; then
+		SEARCHDIRS="@sysconfdir@/enigma2/$SKIN @sysconfdir@/enigma2/skin_common @sysconfdir@/enigma2 @datadir@/enigma2/$SKIN @datadir@/enigma2/skin_default @datadir@/enigma2 @datadir@"
+	else
+		SEARCHDIRS="@sysconfdir@/enigma2/skin_common @sysconfdir@/enigma2 @datadir@/enigma2/skin_default @datadir@/enigma2 @datadir@"
+	fi
+	for DIR in $SEARCHDIRS; do
+		if [ -d "${DIR}" ] && [ -f "${DIR}/bootlogo.mvi" ]; then
+			"@bindir@/showiframe" "${DIR}/bootlogo.mvi"
+			break
+		fi
+	done
+fi
 
+# hook to execute dhcp wait script
+if [ -x @bindir@/enigma2_dhcp_wait.sh ]; then
+	@bindir@/enigma2_dhcp_wait.sh
+fi
+
+# hook to execute scripts always before enigma2 start
+if [ -x @bindir@/enigma2_pre_start.sh ]; then
+	@bindir@/enigma2_pre_start.sh
+fi
 if [ -d /home/root ]; then
 	export HOME=/home/root
 	cd
@@ -102,41 +134,6 @@ if [ -f /proc/stb/fp/nec_ir ]; then
 	[ -f /sys/class/remote/amremote/protocol ] && echo "2" > /sys/class/remote/amremote/protocol
 fi
 
-# hook to execute dhcp wait script
-if [ -x /usr/bin/enigma2_dhcp_wait.sh ]; then
-	/usr/bin/enigma2_dhcp_wait.sh
-fi
-
-# hook to execute scripts always before enigma2 start
-if [ -x /usr/bin/enigma2_pre_start.sh ]; then
-	/usr/bin/enigma2_pre_start.sh
-fi
-
-# Show backdrop on enigma2 start.
-if [ -x "/usr/bin/exteplayer3" -o -x "/usr/bin/showiframe" ]; then
-	# show bootlogo on enigma2 start
-	SKIN=`sed -En 's|^config\.skin\.primary_skin=(.+)/skin\.xml$|\1|p' "/etc/enigma2/settings"`
-	if [ -z "${SKIN}" ]; then
-		SKIN=`strings -n 10 "/usr/lib/enigma2/python/skin.pyc" | egrep -o -m 1 ".+/skin.xml" | sed 's|/skin.xml.*||'`
-	fi
-	if [ -n "${SKIN}" ]; then
-		SEARCHDIRS="/etc/enigma2/$skin /etc/enigma2/skin_common /etc/enigma2 /usr/share/enigma2/$skin /usr/share/enigma2/skin_default /usr/share/enigma2 /usr/share"
-	else
-		SEARCHDIRS="/etc/enigma2/skin_common /etc/enigma2 /usr/share/enigma2/skin_default /usr/share/enigma2 /usr/share"
-	fi
-
-	for DIR in $SEARCHDIRS
-	do
-		if [ -d ${DIR} ] && [ -f ${DIR}/backdrop.mp4 ]; then
-			"/usr/bin/exteplayer3" "${DIR}/bootlogo.mp4"
-			break
-		elif [ -d ${DIR} ] && [ -f ${DIR}/backdrop.mvi ]; then
-			"/usr/bin/showiframe" "${DIR}/backdrop.mvi"
-			break
-		fi
-	done
-fi
-
 # start enigma
 sync
 
@@ -148,7 +145,7 @@ if [ "$time" = 1970 ]; then
 fi
 
 # Set time format used to prefix each line in the debug logs.
-DEBUGTIME=`sed -En 's|^config\.crash\.debugTimeFormat=(.+)$|\1|p' "/etc/enigma2/settings"`
+DEBUGTIME=`sed -En 's|^config\.crash\.debugTimeFormat=(.+)$|\1|p' "@sysconfdir@/enigma2/settings"`
 [ -n "${DEBUGTIME}" ] || DEBUGTIME="2"
 DEBUG_TIME="${DEBUGTIME}"
 
@@ -198,11 +195,27 @@ fi
 ulimit -n 16384 2>/dev/null || ulimit -n 8192
 # Clear page cache and dentries/inodes
 echo 3 > /proc/sys/vm/drop_caches
+# ORM follows the start of enigma2 and steps in when it fails.
+ORM=@bindir@/recovery-manager
+ORM_RESULT=/tmp/orm.result
+ormpid=
+enigma2bin=@bindir@/enigma2
+if [ -x $ORM ]; then
+	if [ -e @sysconfdir@/enigma2/.orm-once ]; then
+		# Once instead of enigma2, e.g. for later calls via enigma2 menu
+		rm -f @sysconfdir@/enigma2/.orm-once
+		enigma2bin="$ORM --manual"
+	else
+		[ -e $ORM_RESULT ] && mv -f $ORM_RESULT $ORM_RESULT.last
+		ormpid=$($ORM --watch $ORM_RESULT 2>/dev/null)
+	fi
+fi
+
 # Start enigma2 with or without debug
 if [ -n "$ENIGMA_DEBUG" ]; then
-	(LD_PRELOAD=$LIBS ENIGMA_DEBUG_LVL=$DEBUG_LVL ENIGMA_DEBUG_TIME="${DEBUG_TIME}" @bindir@/enigma2 >> ${LOGFOLDER}$(date +%Y%m%d-%H%M%S)-enigma2-debug.log 2>&1) &
+	(LD_PRELOAD=$LIBS ENIGMA_DEBUG_LVL=$DEBUG_LVL ENIGMA_DEBUG_TIME="${DEBUG_TIME}" $enigma2bin >> ${LOGFOLDER}$(date +%Y%m%d-%H%M%S)-enigma2-debug.log 2>&1) &
 else
-	(LD_PRELOAD=$LIBS ENIGMA_DEBUG_LVL=$DEBUG_LVL ENIGMA_DEBUG_TIME="${DEBUG_TIME}" @bindir@/enigma2) &
+	(LD_PRELOAD=$LIBS ENIGMA_DEBUG_LVL=$DEBUG_LVL ENIGMA_DEBUG_TIME="${DEBUG_TIME}" $enigma2bin) &
 fi
 
 enigma2pid=$!
@@ -234,6 +247,15 @@ wait ${enigma2pid}
 # >128 signal
 
 ret=$?
+
+# ORM ends its watch and decides whether its GUI is needed; it answers like enigma2: 1 halt, 2 reboot.
+if [ -n "$ormpid" ]; then
+	$ORM --crash $ORM_RESULT $ormpid
+	action=$?
+	if [ "$action" = "1" ] || [ "$action" = "2" ]; then
+		ret=$action
+	fi
+fi
 if [ "$ret" -ne "1" ]; then
 	if [ -e /proc/stb/info/boxtype ]; then
 		stbcheck=`cat /proc/stb/info/boxtype | cut -c1-2`

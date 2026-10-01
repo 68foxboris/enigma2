@@ -387,6 +387,10 @@ def runScreenTest():
 	enigma.eProfileWrite("RunReactor")
 	enigma.eProfileDone()
 	from Components.FrontPanelLed import frontPanelLed
+
+	ormTimer = enigma.eTimer()  # ORM, started by enigma2.sh, learns that the main loop runs.
+	ormTimer.callback.append(lambda: enigma.eProfileNotify("ready"))
+	ormTimer.start(0, True)
 	runReactor()
 	session.shutdown = True
 	frontPanelLed.shutdown()
