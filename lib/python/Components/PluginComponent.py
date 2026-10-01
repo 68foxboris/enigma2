@@ -54,8 +54,8 @@ class PluginComponent:
 			for pluginname in os.listdir(directory_category):
 				if pluginname == "__pycache__":
 					continue
-				if pluginName in blacklist:
-					print("[PluginComponent] Plugin '%s/%s' is blacklisted, skipping." % (pluginDirectory, pluginName))
+				if pluginname in blacklist:
+					print("[PluginComponent] Plugin '%s/%s' is blacklisted, skipping." % (pluginDirectory, pluginname))
 					continue
 				path = os.path.join(directory_category, pluginname)
 				if os.path.isdir(path):
