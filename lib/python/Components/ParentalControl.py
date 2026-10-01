@@ -7,7 +7,7 @@ from Tools.BoundFunction import boundFunction
 from ServiceReference import ServiceReference
 from Tools.Directories import resolveFilename, SCOPE_CONFIG
 from Tools.Notifications import AddPopup, AddNotificationParentalControl, RemovePopup
-from enigma import eTimer, eServiceCenter, iServiceInformation, eServiceReference, eDVBDB
+from enigma import eTimer, eServiceCenter, iServiceInformation, eServiceReference, eDVBDB, getDVBIMinimumAge
 import time
 
 TYPE_SERVICE = "SERVICE"
@@ -88,6 +88,7 @@ class ParentalControl:
 			rating = event and event.getParentalData()
 			age = rating and rating.getRating()
 			age = age and age <= 15 and age + 3 or 0
+			age = max(age, getDVBIMinimumAge(ref))
 		return (age and age >= int(config.ParentalControl.age.value)) or service and service in self.blacklist
 
 	def isServicePlayable(self, ref, callback, session=None):
