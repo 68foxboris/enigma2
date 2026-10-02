@@ -15,7 +15,7 @@ from Components.ActionMap import NumberActionMap, ActionMap
 from Components.NimManager import nimmanager
 from Components.MenuList import MenuList
 from Components.ScrollLabel import ScrollLabel
-from Components.config import config, ConfigSatlist, ConfigNothing, ConfigSelection, ConfigSubsection, ConfigInteger, ConfigFloat, KEY_LEFT, KEY_RIGHT, KEY_0, NoSave
+from Components.config import config, ConfigSatlist, ConfigNothing, ConfigSelection, ConfigSubsection, ConfigInteger, ConfigFloat, ActionKeys, NoSave
 from Components.TuneTest import Tuner
 from Components.Pixmap import Pixmap
 from Tools.Transponder import ConvertToHumanReadable
@@ -495,17 +495,17 @@ class PositionerSetup(Screen):
 	def keyNumberGlobal(self, number):
 		if self.frontend is None:
 			return
-		self["list"].handleKey(KEY_0 + number)
+		self["list"].handleKey(ActionKeys.NUMBER_0 + number)
 
 	def keyLeft(self):
 		if self.frontend is None:
 			return
-		self["list"].handleKey(KEY_LEFT)
+		self["list"].handleKey(ActionKeys.LEFT)
 
 	def keyRight(self):
 		if self.frontend is None:
 			return
-		self["list"].handleKey(KEY_RIGHT)
+		self["list"].handleKey(ActionKeys.RIGHT)
 
 	def updateColors(self, entry):
 		if self.frontend is None:
