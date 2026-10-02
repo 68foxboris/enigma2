@@ -402,8 +402,10 @@ class Menu(Screen, ProtectedScreen):
 					return
 			elif not BoxInfo.getItem(requires, False):
 				return
-		text = self.processDisplayedText(menu.get("text"))
 		key = menu.get("key", "undefined")
+		if not any(child.tag in ("item", "menu") for child in menu) and not plugins.getPluginsForMenu(key):  # Hide empty menus.
+			return
+		text = self.processDisplayedText(menu.get("text"))
 		weight = menu.get("weight", 50)
 		description = self.processDisplayedText(menu.get("description"))
 		if not E2DarkOS():
@@ -414,7 +416,6 @@ class Menu(Screen, ProtectedScreen):
 			module = boundFunction(self.session.openWithCallback, self.menuClosedWithConfigFlush, self.__class__, menu)
 		else:
 			module = boundFunction(self.session.openWithCallback, self.menuClosed, self.__class__, menu)
-		# TODO: Add check if !empty(menu.childNodes).
 		return (text, module, key, weight, description, image)
 
 	def processDisplayedText(self, text):
