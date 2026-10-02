@@ -16434,6 +16434,9 @@ msgstr[0] "Сканирование: %d%% завершено"
 msgstr[1] "Сканирование: %d%% завершено"
 msgstr[2] "Сканирование: %d%% завершено"
 
+msgid "Scan the QR code to open the manual:"
+msgstr "Отсканируйте QR-код, чтобы открыть руководство:"
+
 msgid "Scans default lamedbs sorted by satellite with a connected dish positioner"
 msgstr "Сканирование записей lamedb с сортировкой по спутникам при использовании позиционера"
 
@@ -19841,6 +19844,9 @@ msgstr "Вс"
 msgid "Sunday"
 msgstr "Воскресенье"
 
+msgid "Support"
+msgstr "Поддержка"
+
 msgid ""
 "Sundtek - hardware blind scan in progress.\n"
 "Please wait(3-20 min) for the scan to finish."
@@ -20602,6 +20608,9 @@ msgstr "Это префикс каждой записи в журнале отл
 
 msgid "This is one reception type of a single tuner. Enabled reception types are switched automatically and scanned separately."
 msgstr "Это один из типов приема одного тюнера. Включенные типы приема переключаются автоматически и сканируются отдельно."
+
+msgid "This menu contains selections to get help and report problems."
+msgstr "В этом меню представлены пункты для получения помощи и сообщения о проблемах."
 
 msgid "This not valid ONID/TSID"
 msgstr "Недействительные ONID/TSID"
@@ -22126,6 +22135,9 @@ msgstr "Пользовательский ID"
 
 msgid "User Mode"
 msgstr "Пользовательский режим"
+
+msgid "User Manual"
+msgstr "Руководство пользователя"
 
 msgid "User Mode Setup"
 msgstr "Пользовательский режим"
