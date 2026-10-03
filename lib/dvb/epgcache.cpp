@@ -8,6 +8,7 @@
 
 #include <fcntl.h>
 #include <fstream>
+#include <iterator>
 #include <sys/vfs.h> // for statfs
 #include <lib/base/encoding.h>
 #include <lib/base/estring.h>
@@ -116,6 +117,7 @@ eventData::eventData(const eit_event_struct* e, int size, int _type, int tsidoni
 
 	uint32_t descr[65];
 	uint32_t *pdescr=descr;
+	uint32_t *descr_end = std::end(descr);
 
 	uint8_t *data = (uint8_t*)e;
 	int ptr=12;
@@ -138,6 +140,8 @@ eventData::eventData(const eit_event_struct* e, int size, int _type, int tsidoni
 				case PARENTAL_RATING_DESCRIPTOR:
 				case PDC_DESCRIPTOR:
 				{
+					if (pdescr == descr_end)
+						break;
 					uint32_t crc = calculate_crc_hash(descr, descr_len);
 					DescriptorMap::iterator it = descriptors.find(crc);
 					if ( it == descriptors.end() )
@@ -185,7 +189,7 @@ eventData::eventData(const eit_event_struct* e, int size, int _type, int tsidoni
 					//Rebuild the short event descriptor with UTF-8 strings
 
 					//Save the title first
-					if( eventNameUTF8len > 0 ) //only store the data if there is something to store
+					if( eventNameUTF8len > 0 && pdescr < descr_end ) //only store the data if there is something to store
 					{
 						/*this will actually cause us to save some memory
 						 previously some descriptors didnt match because there text was different and titles the same.
@@ -223,7 +227,7 @@ eventData::eventData(const eit_event_struct* e, int size, int _type, int tsidoni
 					}
 
 					//save text with UTF-8/original encoding
-					if( eventTextlen > 0 ) //only store the data if there is something to store
+					if( eventTextlen > 0 && pdescr < descr_end ) //only store the data if there is something to store
 					{
 						if (!isCyrillic)
 							eventTextlen = truncateUTF8(eventText, 255 - 6);
@@ -325,10 +329,11 @@ eventData::~eventData()
 			if (p.reference_count == 0)
 			{
 				eDebug("[eEPGCache] Eventdata reference count is already zero!");
+				continue;
 			}
 			if (!--p.reference_count) // no more used descriptor
 			{
-				CacheSize -= it->second.data[1];
+				CacheSize -= it->second.data[1] + 2;
 				delete [] it->second.data;  	// free descriptor memory
 				descriptors.erase(it);	// remove entry from descriptor map
 			}
@@ -366,9 +371,11 @@ void eventData::load(FILE *f)
 		DescriptorMap::iterator it = descriptors.find(id);
 		if (it != descriptors.end())
 		{
+			CacheSize -= it->second.data[1] + 2;
 			delete [] it->second.data; // free descriptor memory
 		}
 		descriptors[id] = p;
+		CacheSize += bytes;
 		--size;
 	}
 	(void)ret;
@@ -929,6 +936,7 @@ eEPGCache::~eEPGCache()
 	messages.send(Message::quit);
 	kill(); // waiting for thread shutdown
 	singleLock s(cache_lock);
+	delete m_timeQueryRef;
 	for (eventCache::iterator evIt = eventDB.begin(); evIt != eventDB.end(); evIt++)
 		for (eventMap::iterator It = evIt->second.byEvent.begin(); It != evIt->second.byEvent.end(); It++)
 			delete It->second;
@@ -1241,6 +1249,8 @@ RESULT eEPGCache::lookupEventTime(const eServiceReference &service, time_t t, co
 		{
 			if ( direction < 0 || (direction == 0 && i->first > t) )
 			{
+				if (i == It->second.byTime.begin())
+					return -1;
 				timeMap::iterator x = i;
 				--x;
 				if ( x != It->second.byTime.end() )
@@ -1403,7 +1413,7 @@ RESULT eEPGCache::startTimeQuery(const eServiceReference &service, time_t begin,
 		timeMap::iterator timemap_it = It->second.byTime.lower_bound(m_timeQueryBegin);
 		if ( timemap_it != It->second.byTime.end() )
 		{
-			if ( timemap_it->first != m_timeQueryBegin )
+			if ( timemap_it->first != m_timeQueryBegin && timemap_it != It->second.byTime.begin() )
 			{
 				timeMap::iterator x = timemap_it;
 				--x;
@@ -1436,7 +1446,7 @@ RESULT eEPGCache::getNextTimeEntry(Event *&result)
 		timeMap::iterator timemap_it = It->second.byTime.lower_bound(m_timeQueryBegin);
 		if ( timemap_it != It->second.byTime.end() )
 		{
-			if ( timemap_it->first != m_timeQueryBegin )
+			if ( timemap_it->first != m_timeQueryBegin && timemap_it != It->second.byTime.begin() )
 			{
 				timeMap::iterator x = timemap_it;
 				--x;
@@ -1481,7 +1491,7 @@ RESULT eEPGCache::getNextTimeEntry(ePtr<eServiceEvent> &result)
 		timeMap::iterator timemap_it = It->second.byTime.lower_bound(m_timeQueryBegin);
 		if ( timemap_it != It->second.byTime.end() )
 		{
-			if ( timemap_it->first != m_timeQueryBegin )
+			if ( timemap_it->first != m_timeQueryBegin && timemap_it != It->second.byTime.begin() )
 			{
 				timeMap::iterator x = timemap_it;
 				--x;
@@ -1590,7 +1600,7 @@ void fillTuple(ePyObject tuple, const char *argstring, int argcount, ePyObject s
 		}
 		if (inc_refcount)
 			Py_INCREF(tmp);
-		PyTuple_SET_ITEM(tuple, tpos++, tmp);
+		PyTuple_SetItem(tuple, tpos++, tmp);
 	}
 }
 
@@ -1847,11 +1857,19 @@ PyObject *eEPGCache::lookupEvent(ePyObject list, ePyObject convertFunc)
 							returnTenItemsCount++;
 						}
 						if (handleEvent(evt, dest_list, argstring, argcount, service, nowTime, service_name, convertFunc, convertFuncArgs))
+						{
+							if (service_changed)
+								Py_DECREF(service);
 							return 0; // error
+						}
 					}
 				}
 				else if (forceReturnOne && handleEvent(0, dest_list, argstring, argcount, service, nowTime, service_name, convertFunc, convertFuncArgs))
+				{
+					if (service_changed)
+						Py_DECREF(service);
 					return 0; // error
+				}
 			}
 			else
 			{
@@ -1888,10 +1906,18 @@ PyObject *eEPGCache::lookupEvent(ePyObject list, ePyObject convertFunc)
 				if (ev_data)
 				{
 					if (handleEvent(&evt, dest_list, argstring, argcount, service, nowTime, service_name, convertFunc, convertFuncArgs))
-						return 0; // error
+					{
+						if (service_changed)
+							Py_DECREF(service);
+						return 0;  // error
+					}
 				}
 				else if (forceReturnOne && handleEvent(0, dest_list, argstring, argcount, service, nowTime, service_name, convertFunc, convertFuncArgs))
+				{
+					if (service_changed)
+						Py_DECREF(service);
 					return 0; // error
+				}
 			}
 			if (service_changed)
 				Py_DECREF(service);
@@ -2084,7 +2110,7 @@ void eEPGCache::submitEventData(const std::vector<int>& sids, const std::vector<
 			count = max_etypes;
 
 		x[0] = CONTENT_DESCRIPTOR;
-		x[1] = 2 * event_types.size();
+		x[1] = 2 * count;
 		x += 2;
 		for (std::vector<uint8_t>::const_iterator event_type = event_types.begin();
 			event_type != event_types.end();
@@ -2383,7 +2409,7 @@ void eEPGCache::importEvents(ePyObject serviceReferences, ePyObject list)
 						return;
 					}
 					const char* country = getStringFromPython(PyTuple_GET_ITEM(parentalInfo, 0));
-					if (strlen(country) != 3)
+					if (!country || strlen(country) != 3)
 					{
 						eDebug("[eEPGCache:import] parental rating country code must be of length 3, aborting");
 						return;
@@ -2997,7 +3023,8 @@ void eEPGCache::privateSectionRead(const uniqueEPGKey &current_service, const ui
 			}
 			else
 			{
-				*pdescr++=data+ptr;
+				if (pdescr < &descriptors[65])
+					*pdescr++=data+ptr;
 				ptr += 2;
 				ptr += descr_len;
 			}
