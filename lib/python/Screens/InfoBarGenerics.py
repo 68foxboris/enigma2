@@ -13,7 +13,7 @@ from Components.ServiceEventTracker import ServiceEventTracker
 from Components.Sources.ServiceEvent import ServiceEvent
 from Components.Sources.Boolean import Boolean
 from Components.AVSwitch import iAVSwitch
-from Components.config import config, ConfigBoolean, ConfigClock
+from Components.config import config, ConfigBoolean, ConfigClock, ACTIONKEY_RIGHT
 from Components.SystemInfo import BoxInfo, getBoxDisplayName
 from Components.UsageConfig import preferredInstantRecordPath, defaultMoviePath
 from Components.VolumeControl import VolumeControl
