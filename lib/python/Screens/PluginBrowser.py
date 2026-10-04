@@ -27,7 +27,7 @@ from Screens.Processing import Processing
 from Screens.Screen import Screen, ScreenSummary
 from Screens.Setup import Setup
 from Screens.Toast import Toast
-from Screens.VirtualKeyBoard import VirtualKeyboard
+from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Tools.Directories import SCOPE_GUISKIN, SCOPE_PLUGINS, fileAccess, fileReadLines, fileWriteLine, fileWriteLines, resolveFilename
 from Tools.LoadPixmap import LoadPixmap
 from Tools.NumericalTextInput import NumericalTextInput
