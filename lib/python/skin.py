@@ -2493,13 +2493,12 @@ def readSkin(screen, skin, names, desktop):
 		if widgetName:
 			# print(f"[Skin] DEBUG: Widget name='{widgetName}'.")
 			usedComponents.add(widgetName)
-			try:  # Get corresponding "gui" object.
+			if widgetName in screen:  # Check if component exists
 				attributes = screen[widgetName].skinAttributes = []
-			except Exception:
-				raise SkinError(f"Component with name '{widgetName}' was not found in skin of screen '{myName}'")
-			# assert screen[widgetName] is not Source
-			collectAttributes(attributes, widget, context, skinPath, ignore=("name",))
-			screen[widgetName] = proccesStackAddition(widget, stack, screen[widgetName])
+				collectAttributes(attributes, widget, context, skinPath, ignore=("name",))
+				screen[widgetName] = proccesStackAddition(widget, stack, screen[widgetName])
+			else:
+				print(f"[Skin] Warning: Component '{widgetName}' referenced in skin '{myName}' is not available in screen class")
 		elif widgetSource:
 			# print(f"[Skin] DEBUG: Widget source='{widgetSource}'.")
 			while True:  # Get corresponding source until we found a non-obsolete source.
