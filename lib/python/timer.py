@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 from bisect import insort
-from datetime import datetime, timedelta
-from functools import total_ordering
-from time import localtime, mktime, time
+from time import time, localtime, mktime
+from enigma import eTimer
+import datetime
 
 
-@total_ordering
 class TimerEntry:
 	StateWaiting = 0
 	StatePrepared = 1

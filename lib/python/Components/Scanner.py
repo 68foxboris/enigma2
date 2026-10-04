@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from functools import total_ordering
 from mimetypes import guess_type, add_type
 from os import walk
 from os.path import join
@@ -104,7 +103,6 @@ class Scanner:
 			self.openfnc(list, *args, **kwargs)
 
 
-@total_ordering
 class ScanPath:
 	def __init__(self, path, with_subdirs=False):
 		self.path = path
