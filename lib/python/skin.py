@@ -243,8 +243,8 @@ def reloadSkins():
 	})
 	menus.clear()
 	menuicons.clear()
-	parameters.clear()
 	screens.clear()
+	parameters.clear()
 	setups.clear()
 	switchPixmap.clear()
 	windowStyles.clear()
@@ -256,7 +256,10 @@ def reloadSkins():
 	clearResolveLists()
 	clearFonts()
 	clearPixmapCache()
+	componentTemplates.clear()
 	InitSkins()
+	from Components.UsageConfig import refreshChannelSelectionStyleChoices
+	refreshChannelSelectionStyleChoices()
 
 
 # Method to load a skinTemplates.xml if one exists or load the templates from the screens.
@@ -1879,11 +1882,10 @@ class ComponentTemplates:
 	def clear(self):
 		self.templates = {}
 		self.changedTimes = {}
+		BoxInfo.setMutableItem("CanRefreshTemplates", False)
 
 	def get(self, component, name):
-		if component in self.templates and self.templates[component][name] is not None:
-			return self.templates[component][name]
-		return None
+		return self.templates.get(component, {}).get(name)
 
 	def names(self, component):
 		if component in self.templates:

@@ -1166,6 +1166,8 @@ class ServiceList(ServiceListBase, ServiceListTemplateParser):
 			self.readTemplate(config.channelSelection.widgetStyle.value)
 
 	def applySkin(self, desktop, parent):
+		if self.skinAttributes is None:
+			return GUIComponent.applySkin(self, desktop, parent)
 		attribs = []
 
 		attributeMapping = {
