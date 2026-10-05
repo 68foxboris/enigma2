@@ -16373,6 +16373,9 @@ msgstr "Сканирование наземных LCN и создание бук
 msgid "Scan options"
 msgstr "Параметры поиска"
 
+msgid "Scan the QR code to open the manual:"
+msgstr "Отсканируйте QR-код, чтобы открыть руководство:"
+
 msgid "Scan state"
 msgstr "Состояние поиска"
 
@@ -19851,6 +19854,9 @@ msgstr ""
 msgid "Suriname"
 msgstr "Суринам"
 
+msgid "Support"
+msgstr "Поддержка"
+
 msgid "Svalbard and Jan Mayen"
 msgstr "Свальбард и Ян-Майен"
 
@@ -20605,6 +20611,9 @@ msgstr "Это один из типов приема одного тюнера. 
 
 msgid "This not valid ONID/TSID"
 msgstr "Недействительные ONID/TSID"
+
+msgid "This menu contains selections to get help and report problems."
+msgstr "В этом меню представлены пункты для получения помощи и сообщения о проблемах."
 
 msgid "This offset will only be used if the channel does not have its own volume offset."
 msgstr "Это значение будет использовано только в том случае, если канал не имеет индивидуальной настройки громкости."
@@ -22159,6 +22168,9 @@ msgstr "Имя пользователя (httpuser)"
 
 msgid "Username:"
 msgstr "Имя пользователя:"
+
+msgid "User Manual"
+msgstr "Руководство пользователя"
 
 msgid "Using DNS"
 msgstr "Using DNS"
