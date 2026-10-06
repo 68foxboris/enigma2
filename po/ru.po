@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: enigma2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-01 11:29+0330\n"
-"PO-Revision-Date: 2026-08-30 12:52+0300\n"
+"PO-Revision-Date: 2026-10-06 21:13+0300\n"
 "Last-Translator: foxbob <boris.fox.solovyev@gmail.com>\n"
 "Language-Team: RU locale edited by foxbob\n"
 "Language: ru\n"
@@ -966,8 +966,8 @@ msgstr "%d фидов находятся на недоступных спутн�
 msgid "%d host found."
 msgid_plural "%d hosts found."
 msgstr[0] "Хост %d найден."
-msgstr[1] "Найдено %d хоста."
-msgstr[2] "Найдены %d хоста."
+msgstr[1] "Найдено %d хостов."
+msgstr[2] "Найдены %d хостов."
 
 #, python-format
 msgid "%d jobs are running in the background!"
@@ -2549,6 +2549,9 @@ msgstr "Все возрасты"
 
 msgid "All frequency"
 msgstr "Все частоты"
+
+msgid "All packages"
+msgstr "Все пакеты"
 
 msgid "All resolutions"
 msgstr "Любое разрешение"
@@ -4483,8 +4486,14 @@ msgstr "Изменить запись (Время окончания)"
 msgid "Change repeat and delay settings?"
 msgstr "Изменить настройки повтора и задержки?"
 
+msgid "Change search"
+msgstr "Изменить поиск"
+
 msgid "Change skin"
 msgstr "Сменить скин"
+
+msgid "Change slots"
+msgstr "Сменить слоты"
 
 msgid "Change step size"
 msgstr "Изменение размера шага"
@@ -4568,6 +4577,9 @@ msgstr "Экран выбора канала"
 
 msgid "Channel Selection Settings"
 msgstr "Настройки списка каналов"
+
+msgid "Channel Selection picon path"
+msgstr "Путь к пиконам для выбора каналов"
 
 msgid "Channel Zapping And Keys"
 msgstr "Переключение каналов и кнопки"
@@ -4710,6 +4722,9 @@ msgstr "Проверка, установка обновлений (требуе�
 msgid "Checking Feeds"
 msgstr "Проверка фидов"
 
+msgid "Checking ONID/TSID ..."
+msgstr "Проверка ONID/TSID ..."
+
 msgid "Checking ONID/TSID"
 msgstr "Проверка ONID/TSID"
 
@@ -4729,9 +4744,6 @@ msgid ""
 msgstr ""
 "Проверка тюнера %d\n"
 "DiSEqC порт %s для %s"
-
-msgid "Channel Selection picon path"
-msgstr "Путь к значку выбора канала"
 
 msgid "Chichewa / Chewa / Nyanja"
 msgstr "Чичева / Чева / Ньянджа"
@@ -4934,6 +4946,9 @@ msgstr "Очистить перед поиском"
 msgid "Clear fixed"
 msgstr "Очистить"
 
+msgid "Clear search"
+msgstr "Очистить поиск"
+
 msgid "Clear log"
 msgstr "Очистить лог"
 
@@ -5017,6 +5032,9 @@ msgstr "Закрыть список букетов."
 
 msgid "Close dialog"
 msgstr "Закрыть окно"
+
+msgid "Close network test and exit all menus"
+msgstr "Завершите сетевое тестирование и выйдите из всех меню"
 
 msgid "Close screen"
 msgstr "Закрыть экран"
@@ -5104,14 +5122,14 @@ msgstr "Комедия"
 msgid "Command '%s' is unknown"
 msgstr "Команда '%s' неизвестна"
 
+msgid "Command execution..."
+msgstr "Выполнение команды..."
+
 msgid "Command finished."
 msgid_plural "Commands finished."
 msgstr[0] "Команда закончена."
 msgstr[1] "Команды закончены."
 msgstr[2] "Команд закончено."
-
-msgid "Command execution..."
-msgstr "Выполнение команды..."
 
 msgid "Command order"
 msgstr "Очерёдность команд"
@@ -6270,8 +6288,46 @@ msgstr "Чехия"
 msgid "DAB+ Scan"
 msgstr "Сканирование DAB+"
 
+msgid "DAB+ Settings"
+msgstr "Настройки DAB+"
+
+msgid "DAB+ Settings Actions"
+msgstr "Настройки и действия DAB+"
+
+msgid "DAB+ USB support could not be installed from the feed."
+msgstr "Поддержку DAB+ USB не удалось установить из репозитория."
+
+msgid "DAB+ USB support was installed. You can now enable the receiver in Reception settings."
+msgstr "Добавлена ​​поддержка DAB+ через USB. Теперь вы можете включить приемник в настройках приема."
+
+msgid "DAB+ USB: bouquet could not be written"
+msgstr "DAB+ USB: не удалось записать букет"
+
+msgid "DAB+ audio decoding"
+msgstr "Декодирование аудио DAB+"
+
+msgid "DAB+ channel"
+msgstr "Канал DAB+"
+
+#, python-format
+msgid "DAB+ channel %s"
+msgstr ""
+
+msgid "DAB+ decoder back end not installed"
+msgstr ""
+
 msgid "DAB+ scan failed; existing bouquets were kept."
 msgstr "Сбой сканирования DAB+; существующие списки каналов (букеты) были сохранены."
+
+#, python-format
+msgid "DAB+ service information for '%s'"
+msgstr "Информация о службе DAB+ для «%s»"
+
+msgid "DAB+ signal detected; waiting for FIC service data..."
+msgstr "Обнаружен сигнал DAB+; ожидание данных службы FIC..."
+
+msgid "DAC"
+msgstr "DAC"
 
 msgid "DLNA support"
 msgstr "Поддержка DLNA"
@@ -6296,6 +6352,9 @@ msgstr "DNS-переопределение"
 
 msgid "DNS protocol mode"
 msgstr "Режим протокола DNS"
+
+msgid "DNSCrypt Resolver"
+msgstr "DNSCrypt Resolver"
 
 msgid "DNS name or IP address"
 msgstr "DNS-имя или IP-адрес"
@@ -7052,6 +7111,15 @@ msgstr "DiSEqC режим"
 #, python-format
 msgid "DiSEqC port %s: %s"
 msgstr "Порт DiSEqC %s: %s"
+
+msgid "DiSEqC port by polarization"
+msgstr "Порт DiSEqC по поляризации"
+
+msgid "DiSEqC port for horizontal"
+msgstr "Порт DiSEqC для горизонтали"
+
+msgid "DiSEqC port for vertical"
+msgstr "Порт DiSEqC для вертикали"
 
 msgid "DiSEqC-tester settings"
 msgstr "Настройки DiSEqC-тестера"
@@ -12888,6 +12956,9 @@ msgstr "Жёсткий диск не найден или не отформати
 msgid "No IP address"
 msgstr "IP-адрес отсутствует"
 
+msgid "No Internet connection available!"
+msgstr "Нет подключения к Интернету!"
+
 msgid ""
 "No IP address was received.\n"
 "\n"
@@ -14816,8 +14887,8 @@ msgstr "Нажмите ОК, чтобы использовать этот язы
 msgid "Press OK to use this locale.  [%s]"
 msgstr "Нажмите OK, чтобы использовать эту локаль.  [%s]"
 
-msgid "Press the UP/DOWN buttons to select a slot and press OK or GREEN to reboot to that slot. If available, YELLOW will either delete or wipe the slot. A deleted slot can be restored with the BLUE button. A wiped slot is completely removed and cannot be restored!"
-msgstr "Нажимайте кнопки ВВЕРХ/ВНИЗ, для выбора слота, и нажмите OK или ЗЕЛЁНУЮ кнопку для перезагрузки и запуска этого образа. ЖЁЛТАЯ кнопка, если активна, удалит или сотрёт образ. Удалённый образ можно восстановить СИНЕЙ кнопкой. Стёртый образ удаляется окончательно и восстановить его невозможно!"
+msgid "Press the UP/DOWN buttons to select a slot and press OK or GREEN to reboot to that slot. Press YELLOW to delete the selected image or hold YELLOW to permanently wipe it. A deleted image can be restored with BLUE, but a wiped image cannot. Press INFO to show or hide empty slots."
+msgstr "Нажимайте кнопки «ВВЕРХ»/«ВНИЗ» для выбора слота и нажмите OK или «ЗЕЛЕНУЮ» кнопку, чтобы перезагрузиться с использованием этого слота. Нажмите «ЖЕЛТУЮ» кнопку, чтобы удалить выбранный образ, или удерживайте ее, чтобы безвозвратно стереть его. Удаленный образ можно восстановить с помощью «СИНЕЙ» кнопки, но безвозвратно стертый — нет. Нажмите кнопку INFO, чтобы показать или скрыть пустые слоты."
 
 msgid "Press the UP/DOWN buttons to select a slot, then press OK or GREEN to reboot into that slot. If available, YELLOW will disable MultiBoot, delete, or wipe the selected slot. Press BLUE to add more slots."
 msgstr "С помощью кнопок ВВЕРХ/ВНИЗ выберите слот, затем нажмите кнопку OK или ЗЕЛЁНУЮ кнопку, чтобы перезагрузить устройство в этот образ. ЖЁЛТАЯ кнопка (если доступна) отключит мультизагрузку, удалит или сотрет выбранный образ. Нажмите СИНЮЮ кнопку, чтобы добавить слоты."
@@ -16180,6 +16251,9 @@ msgstr "Поиск спутников"
 msgid "Satellite"
 msgstr "Спутник"
 
+msgid "Satellite DAB+ feeds cannot be scanned while a recording is in progress, and no USB receiver is available."
+msgstr "Сканирование спутниковых сигналов DAB+ невозможно во время выполнения записи, если не используется USB-приемник."
+
 msgid "Satellite configuration mode"
 msgstr "Режим настройки спутника"
 
@@ -16376,6 +16450,9 @@ msgstr "Параметры поиска"
 msgid "Scan the QR code to open the manual:"
 msgstr "Отсканируйте QR-код, чтобы открыть руководство:"
 
+msgid "Scan the USB tuner, available DAB+ satellite feeds, or both."
+msgstr "Выполните сканирование для USB-тюнера, доступных спутниковых каналов DAB+ или обоих вариантов."
+
 msgid "Scan state"
 msgstr "Состояние поиска"
 
@@ -16394,6 +16471,13 @@ msgstr "Сканер"
 #, python-format
 msgid "Scanning %s..."
 msgstr "Сканирование %s ..."
+
+msgid "Scanning DAB+ feed; waiting for live FIC data..."
+msgstr "Сканирование потока DAB+; ожидание данных FIC в реальном времени..."
+
+#, python-format
+msgid "Scanning completed, %d DAB+ services found."
+msgstr "Сканирование завершено, найдено %d служб DAB+."
 
 #, python-format
 msgid "Scanning completed, %d channel found"
@@ -16417,13 +16501,6 @@ msgstr "Сканирование сетевых ресурсов..."
 
 msgid "Scanning..."
 msgstr "Сканирование..."
-
-msgid "Scanning DAB+ feed; waiting for live FIC data..."
-msgstr "Сканирование потока DAB+; ожидание данных FIC в реальном времени..."
-
-#, python-format
-msgid "Scanning completed, %d DAB+ services found."
-msgstr "Сканирование завершено, найдено %d служб DAB+."
 
 #, python-format
 msgid "Scanning: %d services found; validating live result (%d/%d)..."
@@ -16476,6 +16553,9 @@ msgstr "Поиск кода"
 msgid "Search TMBD"
 msgstr "Поиск TMBD"
 
+msgid "Search all packages"
+msgstr "Поиск по всем пакетам"
+
 msgid "Search east"
 msgstr "Поиск на востоке"
 
@@ -16487,6 +16567,12 @@ msgstr "Поиск общих сетевых ресурсов"
 
 msgid "Search for similar events"
 msgstr "Поиск похожих передач"
+
+msgid "Search in the current view"
+msgstr "Поиск в текущем представлении"
+
+msgid "Search packages by name or description"
+msgstr "Поиск пакетов по названию или описанию"
 
 msgid "Search the epg for current event."
 msgstr "Поиск по ТВ-гиду текущей передачи."
@@ -21620,6 +21706,19 @@ msgstr "Украина"
 msgid "Ukrainian"
 msgstr "Украинский"
 
+#, python-format
+msgid "Unable to check HDD replacement: %s"
+msgstr "Не удалось проверить замену жесткого диска: %s"
+
+msgid "Error: Unable to check existing mounts so the HDD replacement has not be changed!"
+msgstr "Ошибка: не удалось проверить существующие точки монтирования, поэтому замена жесткого диска не была выполнена!"
+
+msgid "Error: Unable to create the additional STARTUP files!"
+msgstr ""
+
+msgid "Error: Unable to create the new manufacturer STARTUP files!"
+msgstr "Ошибка: не удалось создать новые файлы производителя STARTUP!"
+
 msgid "UltraDNS Public (Family Secure)"
 msgstr "UltraDNS Public (Семейная безопасность)"
 
@@ -21635,8 +21734,36 @@ msgstr "Не удалось выполнить бекап настроек, та
 msgid "Unable to change password!"
 msgstr "Невозможно изменить пароль!"
 
+msgid "Unable to load package information!"
+msgstr "Не удалось загрузить информацию о пакете!"
+
 msgid "Unable to initialize Kexec MultiBoot!"
 msgstr "Не удалось инициализировать Kexec MultiBoot!"
+
+msgid "Error: Unable to read the UUID of the new MultiBoot partition so the STARTUP files has not been changed!"
+msgstr "Ошибка: не удалось считать UUID нового раздела MultiBoot, поэтому файлы запуска не были изменены!"
+
+#, python-format
+msgid "Unable to read the manufacturer STARTUP file '%s'!"
+msgstr "Не удалось прочитать файл запуска производителя «%s»!"
+
+msgid "Unable to reconnect to the stream. Please try the channel again later."
+msgstr "Не удалось восстановить соединение с трансляцией. Пожалуйста, попробуйте подключиться к каналу позже."
+
+msgid "Unable to register the DAB+ transponder"
+msgstr "Не удалось зарегистрировать DAB+-транспондер"
+
+msgid "Unable to remove the obsolete additional STARTUP files!"
+msgstr "Не удалось удалить устаревшие дополнительные файлы автозагрузки!"
+
+msgid "Unable to save network configuration!"
+msgstr "Не удалось сохранить конфигурацию сети!"
+
+msgid "Unable to save network mount configuration!"
+msgstr "Не удалось сохранить конфигурацию сетевого монтирования!"
+
+msgid "Error: Unable to select the nominated audio channel!"
+msgstr "Ошибка: Не удалось выбрать указанный аудиоканал!"
 
 msgid "Unable to start the DAB+ feed"
 msgstr "Не удалось запустить поток DAB+"
