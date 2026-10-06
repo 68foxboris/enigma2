@@ -1251,21 +1251,38 @@ void eDVBDB::saveServicelist()
 
 void eDVBDB::saveIptvServicelist()
 {
-	std::ofstream outputFile("/etc/enigma2/config_av");
-	for(std::vector<eIPTVDBItem>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
-		std::string line = it->s_ref + "|"
-				+ std::to_string(it->v_pid) + "|"
-				+ std::to_string(it->ampeg_pid) + "|"
-				+ std::to_string(it->aac3_pid) + "|"
-				+ std::to_string(it->aac4_pid) + "|"
-				+ std::to_string(it->addp_pid) + "|"
-				+ std::to_string(it->aaach_pid) + "|"
-				+ std::to_string(it->aaac_pid) + "|"
-				+ std::to_string(it->adra_pid) + "|"
-				+ std::to_string(it->subtitle_pid);
-		outputFile << line << '\n';
+	saveIptvServicelist(eEnv::resolve("${sysconfdir}/enigma2/iptvcache").c_str());
+}
+
+void eDVBDB::saveIptvServicelist(const char *file)
+{
+	std::string filename = file;
+
+	CFile f((filename + ".writing").c_str(), "w");
+	if (!f)
+		eFatal("[eDVBDB] couldn't save iptv cache file!");
+	else
+	{
+		if(m_debug)
+			eDebug("[eDVBDB] saveIptvServicelist");
+		for(std::vector<ePtr<eDVBService>>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it)
+		{
+			if(m_debug)
+				eDebug("[eDVBDB] saveIptvServicelist %s",(*it)->m_reference_str.c_str());
+			fprintf(f, "s:%s", (*it)->m_reference_str.c_str());
+			for (int x=0; x < eDVBService::cacheMax; ++x)
+			{
+				// write cached pids
+				int entry = (*it)->getCacheEntry((eDVBService::cacheID)x);
+				if (entry != -1) {
+					fprintf(f, ",c:%02d%x", x, entry);
+				}
+			}
+			fprintf(f, "\n");
+		}
+		f.sync();
+		rename((filename + ".writing").c_str(), filename.c_str());
 	}
-	outputFile.close();
 }
 
 void eDVBDB::deleteBouquet(const std::string filename)
@@ -1652,34 +1669,8 @@ eDVBDB::eDVBDB()
 	instance = this;
 	m_numbering_mode = eSimpleConfig::getInt("config.usage.numberMode", 0);
 	m_debug = eSimpleConfig::getBool("config.crash.debugDVBDB", false);
-	iptv_services.clear();
-	std::ifstream iptv_services_store_file;
-	iptv_services_store_file.open("/etc/enigma2/config_av");
-	std::string line = "";
-	while(getline(iptv_services_store_file, line))
-	{
-		line = replace_all(line, "\n", "");
-		std::vector<std::string> ref_split = split(line, "|");
-		std::vector<std::string> ref_split_r(ref_split.begin() + 1, ref_split.end());
-		std::string ref_s;
-		join_str(ref_split_r, '|', ref_s);
-		std::string s_ref = ref_split[0];
-		int ampeg_pid = -1;
-		int aac3_pid = -1;
-		int aac4_pid = -1;
-		int addp_pid = -1;
-		int aaach_pid = -1;
-		int aaac_pid = -1;
-		int adra_pid = -1;
-		int subtitle_pid = -1;
-		int video_pid = -1;
-		sscanf(ref_s.c_str(), "%d|%d|%d|%d|%d|%d|%d|%d|%d", &video_pid, &ampeg_pid, &aac3_pid, &aac4_pid, &addp_pid, &aaach_pid, &aaac_pid, &adra_pid, &subtitle_pid);
-		eIPTVDBItem iptvDBItem(s_ref, ampeg_pid, aac3_pid, aac4_pid, addp_pid, aaach_pid, aaac_pid, adra_pid, subtitle_pid, video_pid);
-		iptv_services.push_back(iptvDBItem);
-		line = "";
-	}
-	iptv_services_store_file.close();
 	reloadServicelist();
+	loadIPTVCachefile(eEnv::resolve("${sysconfdir}/enigma2/iptvcache").c_str());
 }
 
 PyObject *eDVBDB::readSatellites(ePyObject sat_list, ePyObject sat_dict, ePyObject tp_dict)
