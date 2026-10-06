@@ -1112,7 +1112,7 @@ eServiceMP3::eServiceMP3(eServiceReference ref)
 		for(std::vector<eIPTVDBItem>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
 			if (sref.find(it->s_ref) != std::string::npos) {
 				if (eSettings::audio_usecache)
-					m_initialAudioStream = (*it)->getCacheEntry(eDVBService::cMPEGAPID);
+					m_initialAudioStream = it->ampeg_pid;
 				m_currentSubtitleStream = it->subtitle_pid;
 				m_cachedSubtitleStream = m_currentSubtitleStream;
 			}
