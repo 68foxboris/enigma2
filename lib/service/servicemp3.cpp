@@ -1108,16 +1108,13 @@ eServiceMP3::eServiceMP3(eServiceReference ref)
 
 	std::string sref = ref.toString();
 	if (!sref.empty()) {
-		sref = replace_all(sref, ",", "_");
-		std::vector<ePtr<eDVBService>>& iptv_services = eDVBDB::getInstance()->iptv_services;
-		for (std::vector<ePtr<eDVBService>>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
-			// eDebug("[eServiceMP3] iptv_services m_reference_str : %s", (*it)->m_reference_str.c_str());
-			if (sref.find((*it)->m_reference_str) != std::string::npos) {
+		std::vector<eIPTVDBItem> &iptv_services = eDVBDB::getInstance()->iptv_services;
+		for(std::vector<eIPTVDBItem>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
+			if (sref.find(it->s_ref) != std::string::npos) {
 				if (eSettings::audio_usecache)
 					m_initialAudioStream = (*it)->getCacheEntry(eDVBService::cMPEGAPID);
-				m_currentSubtitleStream = (*it)->getCacheEntry(eDVBService::cSUBTITLE);
+				m_currentSubtitleStream = it->subtitle_pid;
 				m_cachedSubtitleStream = m_currentSubtitleStream;
-				break;
 			}
 		}
 	}
@@ -1636,21 +1633,28 @@ DEFINE_REF(GstMessageContainer);
  */
 void eServiceMP3::setCacheEntry(bool isAudio, int pid) {
 	// eDebug("[eServiceMP3] setCacheEntry %d %d / %s", isAudio, pid, m_ref.toString().c_str());
-	std::string ref = replace_all(m_ref.toString(), ",", "_");
 	bool hasFoundItem = false;
-	std::vector<ePtr<eDVBService>>& iptv_services = eDVBDB::getInstance()->iptv_services;
-	for (std::vector<ePtr<eDVBService>>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
-		if (ref.find((*it)->m_reference_str) != std::string::npos) {
+	std::vector<eIPTVDBItem> &iptv_services = eDVBDB::getInstance()->iptv_services;
+	for(std::vector<eIPTVDBItem>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
+		if (m_ref.toString().find(it->s_ref) != std::string::npos) {
 			hasFoundItem = true;
-			(*it)->setCacheEntry(isAudio ? eDVBService::cMPEGAPID : eDVBService::cSUBTITLE, pid);
+			if (isAudio) {
+				it->ampeg_pid = pid;
+			}
+			else
+			{
+				it->subtitle_pid = pid;
+			}
 			break;
 		}
 	}
 	if (!hasFoundItem) {
-		ePtr<eDVBService> s = new eDVBService;
-		s->m_reference_str = ref;
-		s->setCacheEntry(isAudio ? eDVBService::cMPEGAPID : eDVBService::cSUBTITLE, pid);
-		iptv_services.push_back(s);
+		std::vector<std::string> ref_split = split(m_ref.toString(), ":");
+		std::vector<std::string> ref_split_r(ref_split.begin(), ref_split.begin() + 10);
+		std::string ref_s;
+		join_str(ref_split_r, ':', ref_s);
+		eIPTVDBItem item(ref_s, isAudio ? pid : -1, -1, -1, -1, -1, -1, -1, isAudio ? -1 : pid, -1);
+		iptv_services.push_back(item);
 	}
 }
 
@@ -3521,13 +3525,13 @@ void eServiceMP3::gstBusCall(GstMessage* msg) {
 						gst_buffer_unmap(buf_image, &map);
 						close(fd);
 						m_coverart = true;
-						m_event((iPlayableService*)this, evUpdateIDv3Cover);
+						m_event((iPlayableService*)this, evUser+13);
 						eDebug("[eServiceMP3] /tmp/.id3coverart %d bytes written ", ret);
 					}
 				}
 			}
 			gst_tag_list_free(tags);
-			m_event((iPlayableService*)this, evUpdateTags);
+			m_event((iPlayableService*)this, evUpdatedEventInfo);
 			break;
 		}
 		/* TOC entry intercept used for chapter support CVR */
@@ -3807,35 +3811,30 @@ void eServiceMP3::gstBusCall(GstMessage* msg) {
 				 * (in which case the sink will not produce data while paused, so we won't
 				 * recover from an empty buffer)
 				 */
-				if (m_use_prefillbuffer && !m_is_live && !m_sourceinfo.is_hls)
-				{
-					--m_ignore_buffering_messages;
-					if (m_ignore_buffering_messages <= 0)
-					{
-						if (m_bufferInfo.bufferPercent == 100) {
-							GstState state, pending;
-							/* avoid setting to play while still in async state change mode */
-							gst_element_get_state(m_gst_playbin, &state, &pending, 5 * GST_SECOND);
-							if (state != GST_STATE_PLAYING && !m_first_paused) {
-								eDebug("[eServiceMP3] *** PREFILL BUFFER action start playing *** pending state was %s",
-									   pending == GST_STATE_VOID_PENDING ? "NO_PENDING" : "A_PENDING_STATE");
-								gst_element_set_state(m_gst_playbin, GST_STATE_PLAYING);
-							}
-							/*
-							 * when we start the pipeline, the contents of the buffer will immediately drain
-							 * into the (hardware buffers of the) sinks, so we will receive low buffer level
-							 * messages right away.
-							 * Ignore the first few buffering messages, giving the buffer the chance to recover
-							 * a bit, before we start handling empty buffer states again.
-							 */
-							m_ignore_buffering_messages = 10;
-						} else if (m_bufferInfo.bufferPercent == 0 && !m_first_paused) {
-							eDebug("[eServiceMP3] *** PREFILLBUFFER action start pause ***");
-							gst_element_set_state(m_gst_playbin, GST_STATE_PAUSED);
-							m_ignore_buffering_messages = 0;
-						} else {
-							m_ignore_buffering_messages = 0;
+				if (m_use_prefillbuffer && !m_is_live && !m_sourceinfo.is_hls && --m_ignore_buffering_messages <= 0) {
+					if (m_bufferInfo.bufferPercent == 100) {
+						GstState state, pending;
+						/* avoid setting to play while still in async state change mode */
+						gst_element_get_state(m_gst_playbin, &state, &pending, 5 * GST_SECOND);
+						if (state != GST_STATE_PLAYING && !m_first_paused) {
+							eDebug("[eServiceMP3] *** PREFILL BUFFER action start playing *** pending state was %s",
+								   pending == GST_STATE_VOID_PENDING ? "NO_PENDING" : "A_PENDING_STATE");
+							gst_element_set_state(m_gst_playbin, GST_STATE_PLAYING);
 						}
+						/*
+						 * when we start the pipeline, the contents of the buffer will immediately drain
+						 * into the (hardware buffers of the) sinks, so we will receive low buffer level
+						 * messages right away.
+						 * Ignore the first few buffering messages, giving the buffer the chance to recover
+						 * a bit, before we start handling empty buffer states again.
+						 */
+						m_ignore_buffering_messages = 10;
+					} else if (m_bufferInfo.bufferPercent == 0 && !m_first_paused) {
+						eDebug("[eServiceMP3] *** PREFILLBUFFER action start pause ***");
+						gst_element_set_state(m_gst_playbin, GST_STATE_PAUSED);
+						m_ignore_buffering_messages = 0;
+					} else {
+						m_ignore_buffering_messages = 0;
 					}
 				}
 			}
@@ -4051,8 +4050,6 @@ void eServiceMP3::handleElementAdded(GstBin* bin, GstElement* element, gpointer 
 	eServiceMP3* _this = (eServiceMP3*)user_data;
 	if (_this) {
 		gchar* elementname = gst_element_get_name(element);
-		bool is_uridecodebin = g_str_has_prefix(elementname, "uridecodebin");
-		bool is_decodebin = g_str_has_prefix(elementname, "decodebin");
 
 		if (g_str_has_prefix(elementname, "queue2")) {
 			if (_this->m_download_buffer_path != "") {
@@ -4060,7 +4057,7 @@ void eServiceMP3::handleElementAdded(GstBin* bin, GstElement* element, gpointer 
 			} else {
 				g_object_set(G_OBJECT(element), "temp-template", NULL, NULL);
 			}
-		} else if (is_uridecodebin || is_decodebin) {
+		} else if (g_str_has_prefix(elementname, "uridecodebin") || g_str_has_prefix(elementname, "decodebin")) {
 			/*
 			 * Listen for queue2 element added to uridecodebin/decodebin2 as well.
 			 * Ignore other bins since they may have unrelated queues
@@ -4181,7 +4178,7 @@ void eServiceMP3::gstCBsubtitleAvail(GstElement* subsink, GstBuffer* buffer, gpo
 	/* Note: No bounds check on m_subtitleStreams here - this callback runs on
 	 * the GStreamer thread and m_subtitleStreams can be modified by the main
 	 * thread during stream re-enumeration. The bounds check is done in
-	 * pullSubtitle() which runs on the main thread via the pump. */	
+	 * pullSubtitle() which runs on the main thread via the pump. */
 	_this->m_pump.send(new GstMessageContainer(2, nullptr, nullptr, buffer, _this->m_subtitle_generation.load()));
 }
 
@@ -4296,6 +4293,9 @@ void eServiceMP3::pullSubtitle(GstBuffer* buffer) {
 						}
 
 						if (decoder_pts >= 0) {
+							// Both values are in 90kHz
+							const uint64_t pts_mask = (1ULL << 33) - 1; // 33-bit mask
+
 							// Calculate delta based on MPEGTS difference
 							delta = (sub.vtt_mpegts_base - m_base_mpegts) / 90; // Convert to ms
 						}
