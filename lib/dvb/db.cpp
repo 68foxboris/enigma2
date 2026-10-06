@@ -194,7 +194,7 @@ const eDVBService::cacheID eDVBService::audioCacheTags[] = {
 const int eDVBService::nAudioCacheTags = sizeof(eDVBService::audioCacheTags) / sizeof(eDVBService::audioCacheTags[0]);
 
 eDVBService::eDVBService()
-	:m_cache(0), m_lcn(0), m_flags(0)
+	:m_cache(0), m_aus_da_flag(0), m_lcn(0), m_flags(0)
 {
 }
 
@@ -210,6 +210,7 @@ eDVBService &eDVBService::operator=(const eDVBService &s)
 	m_service_name_sort = s.m_service_name_sort;
 	m_provider_name = s.m_provider_name;
 	m_provider_display_name = s.m_provider_display_name;
+	m_aus_da_flag = s.m_aus_da_flag;
 	m_flags = s.m_flags;
 	m_ca = s.m_ca;
 	copyCache(s.m_cache);
@@ -1223,6 +1224,10 @@ void eDVBDB::saveServicelist(const char *file)
 			fprintf(f, ",f:%x", sflags);
 			if (g)
 				fprintf(g, ",f:%x", sflags);
+		if (i->second->m_aus_da_flag) {
+			fprintf(f, ",A:%x", i->second->m_aus_da_flag);
+			if (g)
+				fprintf(g, ",A:%x", i->second->m_aus_da_flag);
 		}
 
 		fprintf(f, "\n");
