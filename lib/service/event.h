@@ -116,7 +116,6 @@ public:
 	std::string getEventName() const { return m_event_name; }
 	std::string getShortDescription() const { return m_short_description; }
 	std::string getExtendedDescription() const { return m_extended_description; }
-	std::string getExtendedDescription(bool original);
 	std::string getBeginTimeString() const;
 	std::string getSeriesCrid() const { return m_series_crid; }
 	std::string getEpisodeCrid() const { return m_episode_crid; }
