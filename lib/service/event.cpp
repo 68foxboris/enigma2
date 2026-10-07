@@ -29,6 +29,11 @@ DEFINE_REF(eGenreData);
 DEFINE_REF(eParentalData);
 
 int eServiceEvent::m_UTF8CorrectMode = 0;
+std::string eServiceEvent::getExtendedDescription(bool original)
+{
+	(void)original;
+	return m_extended_description;
+}
 
 /* search for the presence of language from given EIT event descriptors*/
 bool eServiceEvent::loadLanguage(Event *evt, const std::string &lang, int tsidonid)
