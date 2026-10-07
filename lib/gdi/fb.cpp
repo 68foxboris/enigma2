@@ -50,6 +50,10 @@ fbClass::fbClass(const char *fb)
 	cmap.transp=trans;
 
 #ifdef CONFIG_ION
+	m_accel_fd = -1;
+#endif
+
+#if defined(CONFIG_ION) && !defined(DREAMBCM_ION_ACCEL)
 	int ion;
 #endif
 
@@ -76,7 +80,7 @@ fbClass::fbClass(const char *fb)
 	available = fix.smem_len;
 	m_phys_mem = fix.smem_start;
 	eDebug("[fb] %s: %dk video mem", fb, available/1024);
-#if defined(CONFIG_ION)
+#if defined(CONFIG_ION) && !defined(DREAMBCM_ION_ACCEL)
 	/* allocate accel memory here... its independent from the framebuffer */
 	ion = open("/dev/ion", O_RDWR | O_CLOEXEC);
 	if (ion >= 0)
@@ -152,6 +156,11 @@ err_ioc_free:
 		eFatal("[fb] failed to open ION device node! no allocate accel memory available !!");
 		m_accel_fd = -1;
 	}
+#elif defined(DREAMBCM_ION_ACCEL)
+	/*
+	 * Dreambox Broadcom ION boxes allocate acceleration surfaces per pixmap.
+	 */
+	eDebug("[fb] Using Dreambox Broadcom per-surface ION allocator");
 #else
 	eDebug("[fb] %dk video mem", available/1024);
 	lfb=(unsigned char*)mmap(0, available, PROT_WRITE|PROT_READ, MAP_SHARED, fbFd, 0);
@@ -306,8 +315,8 @@ int fbClass::SetMode(int nxRes, int nyRes, int nbpp)
 	stride=fix.line_length;
 
 #ifdef CONFIG_ION
-    	m_phys_mem = fix.smem_start;
-    	available = fix.smem_len;
+    m_phys_mem = fix.smem_start;
+    available = fix.smem_len;
 	/* map new framebuffer */
 	lfb=(unsigned char*)mmap(0, stride * screeninfo.yres_virtual, PROT_WRITE|PROT_READ, MAP_SHARED, fbFd, 0);
 #endif
@@ -328,11 +337,11 @@ int fbClass::setOffset(int off)
 {
 	if (fbFd < 0) return -1;
 #ifdef CONFIG_ION
-	// When locked (e.g. Kodi running), do not pan the framebuffer.
-	// With double/triple buffering, FBIOPAN_DISPLAY would otherwise make
-	// Enigma2's OSD page visible again sporadically.
-	if (locked)
-		return 0;
+    // When locked (e.g. Kodi running), do not pan the framebuffer.
+    // With double/triple buffering, FBIOPAN_DISPLAY would otherwise make
+    // Enigma2's OSD page visible again sporadically.
+    if (locked)
+        return 0;
 #endif
 	screeninfo.xoffset = 0;
 	screeninfo.yoffset = off;
@@ -432,3 +441,5 @@ void fbClass::disableManualBlit()
 		m_manual_blit = 0;
 #endif
 }
+
+
