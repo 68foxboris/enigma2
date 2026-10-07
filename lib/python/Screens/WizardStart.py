@@ -4,7 +4,6 @@ from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 # from Screens.WizardLanguage import WizardLanguage
 from Screens.Wizard import wizardManager, Wizard
-from Screens.Time import TimeWizard
 from Screens.HelpMenu import ShowRemoteControl
 from Screens.Standby import TryQuitMainloop, QUIT_RESTART
 from Screens.NetworkSetup import NetworkAdapterSetup, NetworkWiFiAddFlow
@@ -373,7 +372,6 @@ class AutoInstallWizard(Screen):
 			self.delay.callback.append(self.abort)
 			eActionMap.getInstance().bindAction('', 0, self.abort)
 			self.delay.startLongTimer(5)
-			Time.setNTP(self)  # set NTP if necessary.
 
 	def abort(self, key=None, flag=None):
 		if hasattr(self, 'delay'):
@@ -427,7 +425,7 @@ wizardManager.registerWizard(IncorrectBoxInfoWizard, not BoxInfo.getItem("checks
 wizardManager.registerWizard(AutoInstallWizard, os.path.isfile("/etc/.doAutoinstall"), priority=0)
 wizardManager.registerWizard(AutoRestoreWizard, config.misc.wizardLanguageEnabled.value and config.misc.firstrun.value and checkForAvailableAutoBackup(), priority=0)
 # wizardManager.registerWizard(LocaleSelection, config.misc.wizardLanguageEnabled.value, priority=10)
-wizardManager.registerWizard(TimeWizard, config.misc.firstrun.value, priority=20)
+# wizardManager.registerWizard(TimeWizard, config.misc.firstrun.value, priority=20)
 # if OverscanWizard:
 # wizardManager.registerWizard(OverscanWizard, config.misc.do_overscanwizard.value, priority=30)
 wizardManager.registerWizard(WizardStart, config.misc.firstrun.value, priority=40)
