@@ -641,7 +641,7 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
 		self.statusTimer.callback.append(self.updateStatus)
 
 		self.list = []
-		ConfigListScreen.__init__(self, self.list, on_change=self.newConfig, fullUI=True)
+		ConfigListScreen.__init__(self, self.list, on_change=self.newConfig, fullUI=True, on_change=self.changedEntry)
 		self["introduction"] = Label("")
 		if self.scan_nims.value == "":
 			self["introduction"].text = _("Nothing to scan! Setup your tuner and try again.")
@@ -1759,7 +1759,7 @@ class ScanSimple(ConfigListScreen, Screen, CableTransponderSearchSupport, Terres
 			if self.t2_nim_found:
 				self.list.append((_("Blindscan terrestrial (if possible)"), self.scan_terrestrial_binary_scan))
 
-		ConfigListScreen.__init__(self, self.list, fullUI=True)
+		ConfigListScreen.__init__(self, self.list, fullUI=True, on_change=self.changedEntry)
 		self["footer"] = Label(_("Press OK to scan"))
 
 	def getNetworksForNim(self, nim):
