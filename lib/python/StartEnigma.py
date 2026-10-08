@@ -59,6 +59,8 @@ class Session:
 		self.summary = None
 		self.in_exec = False
 		self.screen = SessionGlobals(self)
+		self.shutdown = False
+		self.isStandby = False  # Set by Screens.Standby.
 		from Components.FrontPanelLed import frontPanelLed
 		frontPanelLed.init(self)
 		from Tools.Notifications import notificationCenter
@@ -335,9 +337,8 @@ def runScreenTest():
 	plugins.readPluginList(resolveFilename(SCOPE_PLUGINS))
 	enigma.resumeInit()
 	enigma.eProfileWrite("Session")
-	nav = Navigation()
 	toast = Toast()  # noqa F841
-
+	nav = Navigation()
 	session = Session(desktop=enigma.getDesktop(0), summaryDesktop=enigma.getDesktop(1), navigation=nav)
 	CiHandler.setSession(session)
 	from Components.RTLSDR import initRTLSDR
