@@ -641,7 +641,7 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
 		self.statusTimer.callback.append(self.updateStatus)
 
 		self.list = []
-		ConfigListScreen.__init__(self, self.list, on_change=self.newConfig, fullUI=True, on_change=self.changedEntry)
+		ConfigListScreen.__init__(self, self.list, fullUI=True, on_change=self.changedEntry)
 		self["introduction"] = Label("")
 		if self.scan_nims.value == "":
 			self["introduction"].text = _("Nothing to scan! Setup your tuner and try again.")
