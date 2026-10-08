@@ -6,7 +6,7 @@ from xml.etree.ElementTree import Element, ElementTree, fromstring
 
 from enigma import BT_ALPHABLEND, BT_ALPHATEST, BT_HALIGN_CENTER, BT_HALIGN_LEFT, BT_HALIGN_RIGHT, BT_KEEP_ASPECT_RATIO, BT_SCALE, BT_VALIGN_BOTTOM, BT_VALIGN_CENTER, BT_VALIGN_TOP, addFont, clearFonts, clearPixmapCache, eLabel, eListbox, eListboxPythonMultiContent, eStack, ePixmap, ePoint, eRect, eRectangle, eScrollConfig, eSize, eSlider, eSubtitleWidget, eWidget, eWindow, eWindowStyleManager, eWindowStyleSkinned, getDesktop, gFont, getFontFaces, gMainDC, gRGB
 
-from Components.config import ConfigEnableDisable, ConfigSelection, ConfigSubsection, ConfigText, config
+from Components.config import ConfigEnableDisable, ConfigSelection, ConfigSubsection, ConfigText, DEFAULT_READONLY_COLOR, config, setReadOnlyColor
 from Components.SystemInfo import BoxInfo
 from Components.Sources.Source import ObsoleteSource
 from Tools.Directories import SCOPE_LCDSKIN, SCOPE_GUISKIN, SCOPE_FONTS, SCOPE_SKINS, pathExists, resolveFilename, fileReadLines, fileReadXML, clearResolveLists
@@ -223,6 +223,7 @@ def loadSkin(filename, scope=SCOPE_SKINS, desktop=getDesktop(GUI_SKIN_ID), scree
 
 
 def reloadSkins():
+	global colors, domScreens, fonts, menus, menuicons, parameters, screens, setups, switchPixmap
 	for styleID in windowStyles:  # Reset window styles so a new skin without its own <windowstyle> doesn't inherit the previous skin's fonts/colors.
 		eWindowStyleManager.getInstance().setStyle(styleID, eWindowStyleSkinned())
 	domScreens.clear()
@@ -243,8 +244,9 @@ def reloadSkins():
 	})
 	menus.clear()
 	menuicons.clear()
-	screens.clear()
 	parameters.clear()
+	setReadOnlyColor(DEFAULT_READONLY_COLOR)
+	screens.clear()
 	setups.clear()
 	switchPixmap.clear()
 	windowStyles.clear()
@@ -1764,6 +1766,9 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_GUISKIN
 				except Exception as err:
 					skinError(f"Unknown style color name '{name}' ({err})")
 		for configList in tag.findall("configList"):
+			if "readOnlyColor" in configList.attrib:  # This is a global setting, not per window style.  The last loaded skin that sets it wins.
+				color = parseColor(configList.attrib.get("readOnlyColor"), 0x007F7F7F)
+				setReadOnlyColor(rf"\c{color.argb():08X}")
 			if "entryFont" in configList.attrib:
 				style.setEntryFont(parseFont(configList.attrib.get("entryFont", "Regular;20"), ((1, 1), (1, 1))))
 			if "valueFont" in configList.attrib:
@@ -1885,7 +1890,9 @@ class ComponentTemplates:
 		BoxInfo.setMutableItem("CanRefreshTemplates", False)
 
 	def get(self, component, name):
-		return self.templates.get(component, {}).get(name)
+		if component in self.templates and self.templates[component][name] is not None:
+			return self.templates[component][name]
+		return None
 
 	def names(self, component):
 		if component in self.templates:
@@ -2487,7 +2494,6 @@ def readSkin(screen, skin, names, desktop):
 		wconnection = widget.attrib.get("connection")
 		widgetConnection = widget.attrib.get("connection")
 		widgetClass = widget.attrib.get("addon")
-		source = None
 		if widgetName is None and widgetSource is None and widgetClass is None:
 			raise SkinError("The widget has no addon, name or source")
 		if widgetName:
@@ -2821,10 +2827,10 @@ def findWidgets(name):
 		widgets = element.findall("widget")
 		if widgets is not None:
 			for widget in widgets:
-				name = widget.get("name")
+				name = widget.get("name", None)
 				if name is not None:
 					widgetSet.add(name)
-				source = widget.get("source")
+				source = widget.get("source", None)
 				if source is not None:
 					widgetSet.add(source)
 				addonConnection = widget.get("connection")
@@ -2834,8 +2840,8 @@ def findWidgets(name):
 		panels = element.findall("panel")
 		if panels is not None:
 			for panel in panels:
-				name = panel.get("name")
-				if name is not None:
+				name = panel.get("name", None)
+				if name:
 					widgetSet.update(findWidgets(name))
 	return widgetSet
 

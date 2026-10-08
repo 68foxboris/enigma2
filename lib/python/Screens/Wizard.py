@@ -4,7 +4,7 @@ from xml.sax.handler import ContentHandler
 from enigma import ePoint, eTimer
 
 from Components.ActionMap import HelpableActionMap, HelpableNumberActionMap
-from Components.config import ConfigPassword, ConfigText, KEY_0, KEY_ASCII, KEY_BACKSPACE, KEY_DELETE, KEY_LEFT, KEY_RIGHT, config  # noqa F401
+from Components.config import ConfigPassword, ConfigText, ActionKeys, config  # noqa F401
 from Components.ConfigList import ConfigList
 from Components.Label import Label
 from Components.Pixmap import Pixmap
@@ -390,7 +390,7 @@ class Wizard(Screen):
 		if self.wizard[self.currStep]["config"]["screen"]:
 			self.screenInstance.keyBackspace()
 		elif self.wizard[self.currStep]["config"]["type"] == "dynamic":
-			self["config"].handleKey(KEY_BACKSPACE)
+			self["config"].handleKey(ActionKeys.BACKSPACE)
 
 	def keyDelete(self):
 		print(f"[Wizard] DEBUG: DELETE button pressed in step {self.currStep}.")
@@ -398,7 +398,7 @@ class Wizard(Screen):
 		if self.wizard[self.currStep]["config"]["screen"]:
 			self.screenInstance.keyDelete()
 		elif self.wizard[self.currStep]["config"]["type"] == "dynamic":
-			self["config"].handleKey(KEY_DELETE)
+			self["config"].handleKey(ActionKeys.DELETE)
 
 	def keyUp(self):
 		print(f"[Wizard] DEBUG: UP button pressed in step {self.currStep}.")
@@ -471,7 +471,7 @@ class Wizard(Screen):
 		if self.wizard[self.currStep]["config"]["screen"]:
 			self.screenInstance.keyNumberGlobal(digit)
 		elif self.wizard[self.currStep]["config"]["type"] == "dynamic":
-			self["config"].handleKey(KEY_0 + digit)
+			self["config"].handleKey(ActionKeys.NUMBER_0 + digit)
 
 	def keyText(self):
 		def keyTextCallback(text):
@@ -649,9 +649,6 @@ class Wizard(Screen):
 
 	def finished(self, gotoStep=None, *args, **kwargs):
 		print("[Wizard] Running finished() code.")
-		if not hasattr(self, "onShown"):
-			print("[Wizard] DEBUG: Screen already torn down, ignoring finished().")
-			return
 		currStep = self.currStep
 		if self.updateValues not in self.onShown:
 			self.onShown.append(self.updateValues)
@@ -692,9 +689,6 @@ class Wizard(Screen):
 		return False
 
 	def afterAsyncCode(self):
-		if not hasattr(self, "onShown"):
-			print("[Wizard] DEBUG: Screen already torn down, ignoring afterAsyncCode().")
-			return
 		if self.updateValues not in self.onShown:
 			self.onShown.append(self.updateValues)
 		if self.codeAfter:
@@ -755,7 +749,10 @@ class Wizard(Screen):
 						if self.wizard[self.currStep]["config"]["args"] is None:
 							self.screenInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"])
 						else:
-							self.screenInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"], eval(self.wizard[self.currStep]["config"]["args"]))
+							try:
+								self.screenInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"], eval(self.wizard[self.currStep]["config"]["args"]))
+							except:
+								self.screenInstance = self.session.instantiateDialog(self.wizard[self.currStep]["config"]["screen"], self.wizard[self.currStep]["config"]["args"])
 						self.screenInstance.setAnimationMode(0)
 						sourceCurrent = self.screenInstance["config"].getCurrent(full=False)
 						if sourceCurrent and len(sourceCurrent) >= 2:
