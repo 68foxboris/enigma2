@@ -244,6 +244,7 @@ public:
 	RESULT allocateFrontendByIndex(ePtr<eDVBAllocatedFrontend> &fe, int slot_index);
 			/* allocate a demux able to filter on the selected frontend. */
 	RESULT allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBAllocatedDemux> &demux, int &cap);
+	void refreshNonCIDemuxSources();
 	RESULT acquireRTLSDRAdapter();
 	void releaseRTLSDRAdapter();
 #ifdef SWIG
