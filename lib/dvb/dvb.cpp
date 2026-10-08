@@ -3,6 +3,7 @@
 #include <linux/dvb/dmx.h>
 #include <linux/dvb/version.h>
 
+#include <lib/base/cfile.h>
 #include <lib/base/eerror.h>
 #include <lib/base/estring.h>
 #include <lib/base/esimpleconfig.h>
