@@ -48,6 +48,7 @@ from Tools.ASCIItranslit import legacyEncode
 from Tools.Directories import SCOPE_CONFIG, SCOPE_SKINS, fileExists, fileReadLines, fileWriteLines, fileReadLinesISO, getRecordingFilename, moveFiles, resolveFilename
 from Tools.Notifications import AddPopup, AddNotificationWithCallback, current_notifications, lock, notificationAdded, notifications, RemovePopup
 from Tools.BoundFunction import boundFunction
+from Tools.HybridService import HybridService
 
 from keyids import KEYFLAGS, KEYIDNAMES, KEYIDS
 
@@ -4078,6 +4079,7 @@ class InfoBarRedButton:
 		self.onHBBTVActivation = []
 		self.onRedButtonActivation = []
 		self.onReadyForAIT = []
+		self.hybridService = HybridService(self) if isStandardInfoBar(self) else None
 		self.__et = ServiceEventTracker(screen=self, eventmap={
 			iPlayableService.evHBBTVInfo: self.detectedHbbtvApplication,
 			iPlayableService.evUpdatedInfo: self.updateInfomation

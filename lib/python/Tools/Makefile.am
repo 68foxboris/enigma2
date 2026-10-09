@@ -10,4 +10,4 @@ install_PYTHON = \
 	Geolocation.py Trace.py Log.py LogConfig.py Conversions.py WeatherID.py \
 	CopyFiles.py ServiceReference.py Migration.py \
 	BaseSubsParser.py SubRip.py TolerantDict.py SubtitleRenderer.py \
-	ServiceAction.py
+	ServiceAction.py HybridService.py
