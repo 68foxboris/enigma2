@@ -10,7 +10,6 @@ from Tools.Directories import SCOPE_CONFIG, fileAccess, resolveFilename
 from Tools.NumericalTextInput import NumericalTextInput
 from Components.Harddisk import harddiskmanager  # This import is order critical!
 
-
 class ActionKeys:
 	LEFT = 0
 	RIGHT = 1
@@ -95,7 +94,8 @@ def getKeyNumber(key):
 
 
 def getConfigListEntry(*args):
-	assert len(args) > 0, "getConfigListEntry needs a minimum of one argument (descr, configElement)"
+	if len(args) < 1:  # A single argument creates a comment line in the ConfigList.  This item can't be selected!
+		print("[Config] Error: 'getConfigListEntry' needs at least one argument (description)!")
 	return args
 
 
@@ -488,23 +488,24 @@ class descriptionsList(choicesList):
 		return [x[1] if isinstance(x, tuple) else x for x in self.choices] if self.type == choicesList.TYPE_LIST else list(self.choices.values()) or [""]  # Should [""] be []?
 
 
-class ConfigAction(ConfigElement):
-	def __init__(self, action, *args):
+class ConfigService(ConfigElement):
+	"""Store a service reference, but display its name and select it with OK."""
+	def __init__(self, default=""):
 		ConfigElement.__init__(self)
-		self.value = "(OK)"
-		self.default = self.value
-		self.action = action
-		self.actionargs = args
+		self.default = default
+		self.value = default
+		self.lastValue = default
 
-	def handleKey(self, key, callback=None):
-		if (key == KEY_OK):
-			self.action(*self.actionargs)
-
-	def getMulti(self, dummy):
-		pass
+	def toDisplayString(self, value):
+		from ServiceReference import ServiceReference
+		return (ServiceReference(value).getServiceName() or _("Service not found")) if value else _("Not set")
 
 	def getText(self):
-		pass
+		return self.toDisplayString(self.value)
+
+	def getMulti(self, selected):
+		text = self.getText()
+		return ("text", f"{READONLY_COLOR}{text}" if self.isReadOnly() else text)
 
 
 # This is the control, and base class, for binary decision settings.
@@ -2200,7 +2201,8 @@ class ConfigSubsection:
 	def __setattr__(self, name, value):
 		if name == "saved_value":
 			return self.setSavedValue(value)
-		assert isinstance(value, (ConfigSubsection, ConfigElement, ConfigSubList, ConfigSubDict)), "ConfigSubsections can only store ConfigSubsections, ConfigSubLists, ConfigSubDicts or ConfigElements"
+		if not isinstance(value, (ConfigSubsection, ConfigElement, ConfigSubList, ConfigSubDict)):
+			raise TypeError("[Config] Error: 'ConfigSubsection' can only store ConfigSubsections, ConfigSubLists, ConfigSubDicts or ConfigElements!")
 		content = self.content
 		content.items[name] = value
 		val = content.stored_values.get(name, None)
