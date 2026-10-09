@@ -23,11 +23,6 @@ FOCUS_CONFIG, FOCUS_STREAMS = range(2)
 SUBTITLE_PGS = 3  # iSubtitleOutput track type: 0 DVB, 1 teletext, 2 text, 3 PGS
 
 
-def isIPTV(service):
-	path = service and service.getPath()
-	return path and not path.startswith("/") and service.type in [0x1, 0x1001, 0x138A, 0x1389]
-
-
 def getConfigMenuItem(configElementName):
 	configElement = f"config.subtitles.{configElementName}"
 	for item in setupDom().findall(".//item"):
@@ -124,9 +119,6 @@ class AudioSelection(ConfigListScreen, Screen):
 	def __layoutFinished(self):
 		self["config"].instance.setSelectionEnable(False)
 		self.settings.menupage.addNotifier(self.fillList)
-
-	def saveAVDict(self):
-		eDVBDB.getInstance().saveIptvServicelist()
 
 	def fillList(self, arg=None):
 		streams = []
@@ -575,12 +567,11 @@ class AudioSelection(ConfigListScreen, Screen):
 	def changeAudio(self, audio):
 		track = int(audio)
 		if isinstance(track, int):
-			ref = self.session.nav.getCurrentlyPlayingServiceReference()
-			#ref = ref and eServiceReference(ref.toString())
-			if self.session.nav.getCurrentService().audioTracks().getNumberOfTracks() > track:
+			service = self.session.nav.getCurrentService()
+			if service.audioTracks().getNumberOfTracks() > track:
 				self.audioTracks.selectTrack(track)
-				if isIPTV(ref):
-					self.saveAVDict()
+				if self.session.nav.isCurrentServiceIPTV():
+					eDVBDB.getInstance().saveIptvServicelist()
 
 	def keyLeft(self):
 		if self.focus == FOCUS_CONFIG:
@@ -685,8 +676,6 @@ class AudioSelection(ConfigListScreen, Screen):
 				self.changeAudio(cur[0])
 				self.__updatedInfo()
 				self.runHooks(self.TYPE_AUDIO)
-			ref = self.session.nav.getCurrentlyPlayingServiceReference()
-			#ref = ref and eServiceReference(ref.toString())
 			if self.settings.menupage.value == PAGE_SUBTITLES and cur[0] is not None:
 				if self.infobar.selected_subtitle and self.infobar.selected_subtitle[:4] == cur[0][:4]:
 					if len(cur[0]) > 6 and callable(cur[0][6]):
@@ -705,8 +694,8 @@ class AudioSelection(ConfigListScreen, Screen):
 							self.infobar.selected_subtitle[6](None)
 						self.enableSubtitle(cur[0][:5])
 					self.__updatedInfo()
-				if isIPTV(ref):
-					self.saveAVDict()
+				if self.session.nav.isCurrentServiceIPTV():
+					eDVBDB.getInstance().saveIptvServicelist()
 			self.runHooks(self.TYPE_ALL)
 			self.close(0)
 		elif self.focus == FOCUS_CONFIG:

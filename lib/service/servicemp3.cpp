@@ -621,7 +621,6 @@ static void create_gstreamer_sinks() {
 	if (dvb_videosink) {
 		gst_object_ref_sink(dvb_videosink);
 		eDebug("[eServiceFactoryMP3] **** dvb_videosink created ***");
-
 	} else
 		eDebug("[eServiceFactoryMP3] **** dvb_videosink NOT created missing plugin ****");
 #endif
@@ -1124,13 +1123,16 @@ eServiceMP3::eServiceMP3(eServiceReference ref)
 
 	std::string sref = ref.toString();
 	if (!sref.empty()) {
-		std::vector<eIPTVDBItem> &iptv_services = eDVBDB::getInstance()->iptv_services;
-		for(std::vector<eIPTVDBItem>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
-			if (sref.find(it->s_ref) != std::string::npos) {
+		sref = replace_all(sref, ",", "_");
+		std::vector<ePtr<eDVBService>>& iptv_services = eDVBDB::getInstance()->iptv_services;
+		for (std::vector<ePtr<eDVBService>>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
+			// eDebug("[eServiceMP3] iptv_services m_reference_str : %s", (*it)->m_reference_str.c_str());
+			if (sref.find((*it)->m_reference_str) != std::string::npos) {
 				if (eSettings::audio_usecache)
-					m_initialAudioStream = it->ampeg_pid;
-				m_currentSubtitleStream = it->subtitle_pid;
+					m_initialAudioStream = (*it)->getCacheEntry(eDVBService::cMPEGAPID);
+				m_currentSubtitleStream = (*it)->getCacheEntry(eDVBService::cSUBTITLE);
 				m_cachedSubtitleStream = m_currentSubtitleStream;
+				break;
 			}
 		}
 	}
@@ -1461,8 +1463,6 @@ eServiceMP3::eServiceMP3(eServiceReference ref)
 
 		/* native video flag = no GStreamer video conversion. DREAMNEXTGEN
 		 * adds SOFT_VOLUME because Master mixer doesn't propagate on hw:0,X. */
-
-
 		guint flags = GST_PLAY_FLAG_AUDIO | GST_PLAY_FLAG_VIDEO | GST_PLAY_FLAG_TEXT | GST_PLAY_FLAG_NATIVE_VIDEO;
 #ifdef DREAMNEXTGEN
 		flags |= GST_PLAY_FLAG_SOFT_VOLUME;
@@ -1704,28 +1704,21 @@ DEFINE_REF(GstMessageContainer);
  */
 void eServiceMP3::setCacheEntry(bool isAudio, int pid) {
 	// eDebug("[eServiceMP3] setCacheEntry %d %d / %s", isAudio, pid, m_ref.toString().c_str());
+	std::string ref = replace_all(m_ref.toString(), ",", "_");
 	bool hasFoundItem = false;
-	std::vector<eIPTVDBItem> &iptv_services = eDVBDB::getInstance()->iptv_services;
-	for(std::vector<eIPTVDBItem>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
-		if (m_ref.toString().find(it->s_ref) != std::string::npos) {
+	std::vector<ePtr<eDVBService>>& iptv_services = eDVBDB::getInstance()->iptv_services;
+	for (std::vector<ePtr<eDVBService>>::iterator it = iptv_services.begin(); it != iptv_services.end(); ++it) {
+		if (ref.find((*it)->m_reference_str) != std::string::npos) {
 			hasFoundItem = true;
-			if (isAudio) {
-				it->ampeg_pid = pid;
-			}
-			else
-			{
-				it->subtitle_pid = pid;
-			}
+			(*it)->setCacheEntry(isAudio ? eDVBService::cMPEGAPID : eDVBService::cSUBTITLE, pid);
 			break;
 		}
 	}
 	if (!hasFoundItem) {
-		std::vector<std::string> ref_split = split(m_ref.toString(), ":");
-		std::vector<std::string> ref_split_r(ref_split.begin(), ref_split.begin() + 10);
-		std::string ref_s;
-		join_str(ref_split_r, ':', ref_s);
-		eIPTVDBItem item(ref_s, isAudio ? pid : -1, -1, -1, -1, -1, -1, -1, isAudio ? -1 : pid, -1);
-		iptv_services.push_back(item);
+		ePtr<eDVBService> s = new eDVBService;
+		s->m_reference_str = ref;
+		s->setCacheEntry(isAudio ? eDVBService::cMPEGAPID : eDVBService::cSUBTITLE, pid);
+		iptv_services.push_back(s);
 	}
 }
 
@@ -3900,30 +3893,35 @@ void eServiceMP3::gstBusCall(GstMessage* msg) {
 				 * (in which case the sink will not produce data while paused, so we won't
 				 * recover from an empty buffer)
 				 */
-				if (m_use_prefillbuffer && !m_is_live && !m_sourceinfo.is_hls && --m_ignore_buffering_messages <= 0) {
-					if (m_bufferInfo.bufferPercent == 100) {
-						GstState state, pending;
-						/* avoid setting to play while still in async state change mode */
-						gst_element_get_state(m_gst_playbin, &state, &pending, 5 * GST_SECOND);
-						if (state != GST_STATE_PLAYING && !m_first_paused) {
-							eDebug("[eServiceMP3] *** PREFILL BUFFER action start playing *** pending state was %s",
-								   pending == GST_STATE_VOID_PENDING ? "NO_PENDING" : "A_PENDING_STATE");
-							gst_element_set_state(m_gst_playbin, GST_STATE_PLAYING);
+				if (m_use_prefillbuffer && !m_is_live && !m_sourceinfo.is_hls)
+				{
+					--m_ignore_buffering_messages;
+					if (m_ignore_buffering_messages <= 0)
+					{
+						if (m_bufferInfo.bufferPercent == 100) {
+							GstState state, pending;
+							/* avoid setting to play while still in async state change mode */
+							gst_element_get_state(m_gst_playbin, &state, &pending, 5 * GST_SECOND);
+							if (state != GST_STATE_PLAYING && !m_first_paused) {
+								eDebug("[eServiceMP3] *** PREFILL BUFFER action start playing *** pending state was %s",
+									   pending == GST_STATE_VOID_PENDING ? "NO_PENDING" : "A_PENDING_STATE");
+								gst_element_set_state(m_gst_playbin, GST_STATE_PLAYING);
+							}
+							/*
+							 * when we start the pipeline, the contents of the buffer will immediately drain
+							 * into the (hardware buffers of the) sinks, so we will receive low buffer level
+							 * messages right away.
+							 * Ignore the first few buffering messages, giving the buffer the chance to recover
+							 * a bit, before we start handling empty buffer states again.
+							 */
+							m_ignore_buffering_messages = 10;
+						} else if (m_bufferInfo.bufferPercent == 0 && !m_first_paused) {
+							eDebug("[eServiceMP3] *** PREFILLBUFFER action start pause ***");
+							gst_element_set_state(m_gst_playbin, GST_STATE_PAUSED);
+							m_ignore_buffering_messages = 0;
+						} else {
+							m_ignore_buffering_messages = 0;
 						}
-						/*
-						 * when we start the pipeline, the contents of the buffer will immediately drain
-						 * into the (hardware buffers of the) sinks, so we will receive low buffer level
-						 * messages right away.
-						 * Ignore the first few buffering messages, giving the buffer the chance to recover
-						 * a bit, before we start handling empty buffer states again.
-						 */
-						m_ignore_buffering_messages = 10;
-					} else if (m_bufferInfo.bufferPercent == 0 && !m_first_paused) {
-						eDebug("[eServiceMP3] *** PREFILLBUFFER action start pause ***");
-						gst_element_set_state(m_gst_playbin, GST_STATE_PAUSED);
-						m_ignore_buffering_messages = 0;
-					} else {
-						m_ignore_buffering_messages = 0;
 					}
 				}
 			}
@@ -4139,6 +4137,8 @@ void eServiceMP3::handleElementAdded(GstBin* bin, GstElement* element, gpointer 
 	eServiceMP3* _this = (eServiceMP3*)user_data;
 	if (_this) {
 		gchar* elementname = gst_element_get_name(element);
+		bool is_uridecodebin = g_str_has_prefix(elementname, "uridecodebin");
+		bool is_decodebin = g_str_has_prefix(elementname, "decodebin");
 
 		if (g_str_has_prefix(elementname, "queue2")) {
 			if (_this->m_download_buffer_path != "") {
@@ -4146,7 +4146,7 @@ void eServiceMP3::handleElementAdded(GstBin* bin, GstElement* element, gpointer 
 			} else {
 				g_object_set(G_OBJECT(element), "temp-template", NULL, NULL);
 			}
-		} else if (g_str_has_prefix(elementname, "uridecodebin") || g_str_has_prefix(elementname, "decodebin")) {
+		} else if (is_uridecodebin || is_decodebin) {
 			/*
 			 * Listen for queue2 element added to uridecodebin/decodebin2 as well.
 			 * Ignore other bins since they may have unrelated queues
@@ -4382,9 +4382,6 @@ void eServiceMP3::pullSubtitle(GstBuffer* buffer) {
 						}
 
 						if (decoder_pts >= 0) {
-							// Both values are in 90kHz
-							const uint64_t pts_mask = (1ULL << 33) - 1; // 33-bit mask
-
 							// Calculate delta based on MPEGTS difference
 							delta = (sub.vtt_mpegts_base - m_base_mpegts) / 90; // Convert to ms
 						}
