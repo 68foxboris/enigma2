@@ -51,7 +51,7 @@ eDVBServiceRecord::eDVBServiceRecord(const eServiceReferenceDVB &ref, bool isstr
 {
 	CONNECT(m_service_handler.serviceEvent, eDVBServiceRecord::serviceEvent);
 	CONNECT(m_event_handler.m_eit_changed, eDVBServiceRecord::gotNewEvent);
-	m_eit_retry_timer = eTimer::create(eApp);
+	m_eit_retry_Timer = eTimer::create(eApp);
 	CONNECT(m_eit_retry_timer->timeout, eDVBServiceRecord::retrySaveEit);
 	m_state = stateIdle;
 	m_want_record = 0;
