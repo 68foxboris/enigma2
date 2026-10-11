@@ -105,8 +105,12 @@ class Screen(dict):
 			self.execing = True
 			for x in self.onShown:
 				x()
+			if self.instance:
+				self.instance.setOSDAutoHideActive(self.execing)
 
 	def execEnd(self):
+		if self.instance:
+			self.instance.setOSDAutoHideActive(False)
 		active_components = self.active_components
 		# for (name, val) in self.items():
 		self.active_components = []
