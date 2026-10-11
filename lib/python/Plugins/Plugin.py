@@ -2,6 +2,8 @@
 from Components.config import ConfigSubsection, config
 from os.path import basename, isdir, join, normpath
 
+config.plugins = ConfigSubsection()
+
 
 class PluginDescriptor:
 	"""An object to describe a plugin."""
@@ -86,7 +88,7 @@ class PluginDescriptor:
 
 	DO_CLOSE_RECURSIVE = 2
 
-	def __init__(self, name="Plugin", where=None, description="", icon=None, fnc=None, wakeupfnc=None, needsRestart=None, internal=False, weight=0, closeMode=0):
+	def __init__(self, name="Plugin", where=[], description="", icon=None, fnc=None, wakeupfnc=None, needsRestart=None, internal=False, weight=0, closeMode=0, serviceFilter=None):
 		self.name = name
 		self.internal = internal
 		self.needsRestart = needsRestart
@@ -110,6 +112,7 @@ class PluginDescriptor:
 		self.wakeupfnc = wakeupfnc
 		self.fnc = fnc
 		self.closeMode = closeMode
+		self.serviceFilter = serviceFilter
 
 	def __call__(self, *args, **kwargs):
 		if callable(self.fnc):

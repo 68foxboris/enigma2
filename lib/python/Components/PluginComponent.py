@@ -47,28 +47,28 @@ class PluginComponent:
 		"""enumerates plugins"""
 		new_plugins = []
 		blacklist = readPluginBlacklist()
-		for c in os.listdir(directory):
-			directory_category = os.path.join(directory, c)
+		for pluginDirectory in os.listdir(directory):
+			directory_category = os.path.join(directory, pluginDirectory)
 			if not os.path.isdir(directory_category):
 				continue
-			for pluginname in os.listdir(directory_category):
-				if pluginname == "__pycache__":
+			for pluginName in os.listdir(directory_category):
+				if pluginName == "__pycache__":
 					continue
-				if pluginname in blacklist:
-					print("[PluginComponent] Plugin '%s/%s' is blacklisted, skipping." % (pluginDirectory, pluginName))
+				if pluginName in blacklist:
+					print("[PluginComponent] Plugin '%s/%s' is blacklisted, skipping." % (c, pluginName))
 					continue
-				path = os.path.join(directory_category, pluginname)
+				path = os.path.join(directory_category, pluginName)
 				if os.path.isdir(path):
-						eProfileWrite('plugin ' + pluginname)
+						eProfileWrite('plugin ' + pluginName)
 						try:
-							plugin = my_import('.'.join(["Plugins", c, pluginname, "plugin"]))
+							plugin = my_import('.'.join(["Plugins", pluginDirectory, pluginName, "plugin"]))
 							plugins = plugin.Plugins(path=path)
 						except Exception as exc:
-							print("Plugin ", c + "/" + pluginname, "failed to load:", exc)
+							print("Plugin ", pluginDirectory + "/" + pluginName, "failed to load:", exc)
 							# supress errors due to missing plugin.py* files (badly removed plugin)
 							for fn in ('plugin.py', 'plugin.pyc'):
 								if os.path.exists(os.path.join(path, fn)):
-									self.pluginWarnings.append((c + "/" + pluginname, str(exc)))
+									self.pluginWarnings.append((pluginDirectory + "/" + pluginName, str(exc)))
 									from traceback import print_exc
 									print_exc()
 									break
@@ -94,8 +94,8 @@ class PluginComponent:
 							try:
 								loadKeymap(keymap)
 							except Exception as exc:
-								print("keymap for plugin %s/%s failed to load: " % (c, pluginname), exc)
-								self.pluginWarnings.append((c + "/" + pluginname, str(exc)))
+								print("keymap for plugin %s/%s failed to load: " % (c, pluginName), exc)
+								self.pluginWarnings.append((pluginDirectory + "/" + pluginName, str(exc)))
 
 		# build a diff between the old list of plugins and the new one
 		# internally, the "fnc" argument will be compared with __eq__
