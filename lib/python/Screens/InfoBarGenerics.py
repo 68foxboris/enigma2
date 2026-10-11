@@ -49,10 +49,11 @@ from Tools.Directories import SCOPE_CONFIG, SCOPE_SKINS, fileExists, fileReadLin
 from Tools.Notifications import AddPopup, AddNotificationWithCallback, current_notifications, lock, notificationAdded, notifications, RemovePopup
 from Tools.BoundFunction import boundFunction
 from Tools.HybridService import HybridService
+from Tools.ServiceAction import ServiceAction
 
 from keyids import KEYFLAGS, KEYIDNAMES, KEYIDS
 
-from enigma import eActionMap, eAVControl, eDBoxLCD, eDVBDB, eDVBServicePMTHandler, eDVBVolumecontrol, eEPGCache, eServiceCenter, eServiceReference, eTimer, getBsodCounter, getDesktop, iPlayableService, iServiceInformation, quitMainloop, resetBsodCounter
+from enigma import eAVControl, eActionMap, eDBoxLCD, eDVBDB, eDVBServicePMTHandler, eDVBVolumecontrol, eEPGCache, eServiceCenter, eServiceReference, eTimer, getBsodCounter, getDesktop, iPlayableService, iServiceInformation, quitMainloop, resetBsodCounter
 from skin import findSkinScreen
 from time import time, localtime, strftime
 import Screens.Standby
@@ -64,6 +65,7 @@ from sys import maxsize
 import itertools
 import datetime
 from re import match
+
 from pickle import load as pickle_load, dump as pickle_dump
 
 from RecordTimer import RecordTimer, RecordTimerEntry, findSafeRecordPath, parseEvent
@@ -1355,17 +1357,21 @@ class InfoBarEPG:
 			return 1
 
 	def zapToService(self, service, preview=False, zapback=False):
+		if service is not None and not service.valid():
+			print(f"[InfoBarEPG] Ignore invalid zap reference '{service.toString()}'.")
+			return
 		if self.servicelist.startServiceRef is None:
 			self.servicelist.startServiceRef = self.session.nav.getCurrentlyPlayingServiceOrGroup()
 		if service is not None:
-			if self.servicelist.getRoot() != self.epg_bouquet:  # already in correct bouquet?
+			if self.epg_bouquet is not None and self.servicelist.getRoot() != self.epg_bouquet:  # Already in correct bouquet?
 				self.servicelist.clearPath()
 				if self.servicelist.bouquet_root != self.epg_bouquet:
 					self.servicelist.enterPath(self.servicelist.bouquet_root)
 				self.servicelist.enterPath(self.epg_bouquet)
 			self.servicelist.setCurrentSelection(service)  # select the service in servicelist
 		if not zapback or preview:
-			self.servicelist.zap(enable_pipzap=True)
+			# The EPG target need not be selectable in the current channel list.
+			self.servicelist.zap(enable_pipzap=True, ref=service))
 		if (self.servicelist.dopipzap or zapback) and not preview:
 			self.servicelist.zapBack()
 		if not preview:
