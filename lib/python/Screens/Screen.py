@@ -89,8 +89,8 @@ class Screen(dict):
 		else:
 			single = self.onFirstExecBegin
 			self.onFirstExecBegin = []
-			for x in self.onExecBegin + single:
-				x()
+			for method in self.onExecBegin + single:
+				method()
 				# DEBUG: if not self.standAlone and self.session.current_dialog != self:
 				if not self.standAlone and self.session.current_dialog != self:
 					return
@@ -103,8 +103,8 @@ class Screen(dict):
 					return
 				self.active_components.append(val)
 			self.execing = True
-			for x in self.onShown:
-				x()
+			for method in self.onShown:
+				method()
 			if self.instance:
 				self.instance.setOSDAutoHideActive(self.execing)
 
@@ -119,13 +119,13 @@ class Screen(dict):
 		# assert self.session is not None, "execEnd on non-execing screen!"
 		# self.session = None
 		self.execing = False
-		for x in self.onExecEnd:
-			x()
+		for method in self.onExecEnd:
+			method()
 
 	def doClose(self):  # Never call this directly - it will be called from the session!
 		self.hide()
-		for x in self.onClose:
-			x()
+		for method in self.onClose:
+			method()
 		del self.helpList  # Fixup circular references.
 		self.deleteGUIScreen()
 		# First disconnect all render from their sources. We might split this out into
@@ -223,8 +223,8 @@ class Screen(dict):
 			self.screenPath = ""
 			if self.session.dialog_stack:
 				screenclasses = [ds[0].__class__.__name__ for ds in self.session.dialog_stack]
-				if "MainMenu" in screenclasses:
-					index = screenclasses.index("MainMenu")
+				if "MainMenu" in screenclasses or "Menu" in screenclasses:
+					index = screenclasses.index("MainMenu") if "MainMenu" in screenclasses else screenclasses.index("Menu")
 					if self.session and len(screenclasses) > index:
 						self.screenPath = " > ".join(ds[0].getTitle() for ds in self.session.dialog_stack[index:])
 			if self.instance:
