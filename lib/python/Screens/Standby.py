@@ -1,5 +1,10 @@
 from os.path import isfile
 import struct
+from time import time, localtime
+
+from enigma import eDBoxLCD, eDVBLocalTimeHandler, eDVBVolumecontrol, eServiceReference, eStreamServer, eTimer, iRecordableService, quitMainloop
+
+from GlobalActions import globalActionMap
 import RecordTimer
 import Components.ParentalControl
 import Components.RecordingConfig
@@ -14,11 +19,9 @@ from Components.SystemInfo import BoxInfo, getBoxDisplayName
 from Components.ScrambledRecordings import ScrambledRecordings
 from Components.Sources.StreamService import StreamServiceList
 from Components.Task import job_manager
-from Tools.Directories import mediaFilesInUse
+from Components.Sources.StreamService import StreamServiceList
 from Tools.Notifications import AddNotification
-from time import time, localtime
-from GlobalActions import globalActionMap
-from enigma import eDVBVolumecontrol, eTimer, eDVBLocalTimeHandler, eServiceReference, eStreamServer, quitMainloop, iRecordableService, eDBoxLCD
+
 
 MODEL = BoxInfo.getItem("model")
 
@@ -390,9 +393,6 @@ def getReasons(session, retvalue=QUIT_SHUTDOWN):
 		reasons.append(_("You seem to be in timeshift!"))
 	if [stream for stream in eStreamServer.getInstance().getConnectedClients() if stream[0] != '127.0.0.1'] or StreamServiceList:
 		reasons.append(_("Client is streaming from this box!"))
-	if not reasons and mediaFilesInUse(session) and retvalue in (QUIT_SHUTDOWN, QUIT_REBOOT, QUIT_KODI, QUIT_RETROGAMING, QUIT_UPGRADE_FP, QUIT_UPGRADE_PROGRAM):
-		reasons.append(_("A file from media is in use!"))
-	return "\n".join(reasons)
 	if jobs and retvalue in (QUIT_SHUTDOWN, QUIT_REBOOT, QUIT_KODI, QUIT_RETROGAMING):
 		reasons.append(_('%d jobs are running in the background!'))
 
