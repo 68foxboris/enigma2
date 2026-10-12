@@ -161,9 +161,9 @@ class EPGList(GUIComponent):
 		if self.type == EPG_TYPE_SINGLE:
 			if self.skinColumns:
 				x = 0
-				self.weekday_rect = Rect(0, 0, self.gap(self.col[0]), height)
+				self.weekday_rect = Rect(0, 0, self.gap(self.col[0] + 100), height)
 				x += self.col[0]
-				self.datetime_rect = Rect(x, 0, self.gap(self.col[1]), height)
+				self.datetime_rect = Rect(x + 75, 0, self.gap(self.col[1] + 15), height)
 				x += self.col[1]
 				if self.sorting == 2:
 					rating_w = 60
