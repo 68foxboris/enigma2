@@ -1549,6 +1549,11 @@ def InitUsageConfig():
 	config.usage.keymap = ConfigSelection(default=DEFAULTKEYMAP, choices=keymapchoices)
 	config.usage.keymap_usermod = ConfigText(default=eEnv.resolve("${datadir}/enigma2/keymap_usermod.xml"))
 
+	choicelist = []
+	for i in range(1, 7):
+		choicelist.append(("%d" % i, "%d" % i))
+	config.misc.longkey_threshold = ConfigSelection(default="4", choices=choicelist)
+
 	config.network = ConfigSubsection()
 	config.network.NFS_autostart = ConfigYesNo(default=True)
 	config.network.OpenVPN_autostart = ConfigYesNo(default=False)
