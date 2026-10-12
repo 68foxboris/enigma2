@@ -1371,7 +1371,7 @@ class InfoBarEPG:
 			self.servicelist.setCurrentSelection(service)  # select the service in servicelist
 		if not zapback or preview:
 			# The EPG target need not be selectable in the current channel list.
-			self.servicelist.zap(enable_pipzap=True, ref=service))
+			self.servicelist.zap(enable_pipzap=True, ref=service)
 		if (self.servicelist.dopipzap or zapback) and not preview:
 			self.servicelist.zapBack()
 		if not preview:
