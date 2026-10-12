@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-from Components.Converter.Converter import Converter
 from enigma import eAVControl, iServiceInformation, eServiceReference, iPlayableService
+
+from Components.Converter.Converter import Converter
 from Screens.InfoBarGenerics import hasActiveSubservicesForCurrentChannel
 from Components.Element import cached
+from Tools.DAB import dabMetadata
 
 from os import path
 
@@ -97,6 +99,8 @@ class ServiceInfo(Converter):
 	IS_SOFTCSA = 39
 	IS_DAB = 40
 	IS_DVBI = 49
+	DAB_LANGUAGE = 50
+	DAB_PROTECTION = 51
 
 	VIDEO_INFO_WIDTH = 0
 	VIDEO_INFO_GAMMA = 1
@@ -117,6 +121,8 @@ class ServiceInfo(Converter):
 				"VideoWidth": (self.XRES, (iPlayableService.evVideoSizeChanged,)),
 				"VideoHeight": (self.YRES, (iPlayableService.evVideoSizeChanged,)),
 				"AudioPid": (self.APID, (iPlayableService.evUpdatedInfo,)),
+			"DABLanguage": (self.DAB_LANGUAGE, (iPlayableService.evStart, iPlayableService.evEnd, iPlayableService.evUpdatedInfo)),
+			"DABProtection": (self.DAB_PROTECTION, (iPlayableService.evStart, iPlayableService.evEnd, iPlayableService.evUpdatedInfo)),
 				"VideoPid": (self.VPID, (iPlayableService.evUpdatedInfo,)),
 				"PcrPid": (self.PCRPID, (iPlayableService.evUpdatedInfo,)),
 				"PmtPid": (self.PMTPID, (iPlayableService.evUpdatedInfo,)),
@@ -178,6 +184,15 @@ class ServiceInfo(Converter):
 		if self.type == self.IS_DVBI:
 			return bool(service and getattr(self.source, "isDVBI", False))
 		info = service.info() if (service and not isRef) else None
+		if self.type in (self.DAB_LANGUAGE, self.DAB_PROTECTION):
+			if info:
+				serviceRef = info.getInfoString(iServiceInformation.sServiceref)
+				if serviceRef and eServiceReference(serviceRef).type == eServiceReference.idServiceDAB:
+					if self.type == self.DAB_LANGUAGE:
+						result = dabMetadata.languageName(info.getInfoString(iServiceInformation.sTagLanguageCode))
+					else:
+						result = info.getInfoString(iServiceInformation.sDABProtection)
+			return result
 		if info:
 			videoData = info.getInfoString(iServiceInformation.sVideoInfo) or "-1|-1|-1|-1|-1|-1"
 			videoData = [int(x) for x in videoData.split("|")]
