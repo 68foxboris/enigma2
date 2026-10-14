@@ -108,7 +108,8 @@ def InitAVSwitch():
 	colorformat_choices = {"cvbs": "CVBS"}
 
 	config.av.yuvenabled = ConfigBoolean(default=MACHINEBUILD != "vuduo")
-	config.av.osd_alpha = ConfigSlider(default=255, increment=5, limits=(20, 255))  # Make OpenATV compatible with some plugins who still use config.av.osd_alpha.
+	config.av.osd_alpha = ConfigSlider(default=255, increment=5, limits=(20, 255))  # Make OpenPli compatible with some plugins who still use config.av.osd_alpha.
+	config.av.manual_resolution_extmenu = ConfigYesNo(default=False)
 
 	if AMLOGIC:
 		config.av.policy_169 = ConfigSelection(default="11", choices=[
