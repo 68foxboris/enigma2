@@ -2589,11 +2589,8 @@ msgstr "Выделить неиспользуемый номер памяти"
 msgid "Allowed clients"
 msgstr "Разрешенные клиенты"
 
-msgid "Allow 10bit"
-msgstr "Разрешить 10 бит"
-
-msgid "Allow 12bit"
-msgstr "Разрешить 12 бит"
+msgid "Allow %s-bit"
+msgstr "Разрешить %s-битный"
 
 msgid "Allow guest access"
 msgstr "Предоставить гостевой доступ"
@@ -10246,6 +10243,9 @@ msgstr "Увлечения"
 
 msgid "Hockey"
 msgstr "Хоккей"
+
+msgid "Hold first frame"
+msgstr "Удерживать первый кадр"
 
 msgid "Hold screen"
 msgstr "Сохранить экран"
@@ -19150,6 +19150,9 @@ msgstr "Словенский"
 
 msgid "Slow"
 msgstr "Медленно"
+
+msgid "Slow motion"
+msgstr "Замедленное воспроизведение"
 
 msgid "Slow motion speeds"
 msgstr "Скорость замедленного воспроизведения"
