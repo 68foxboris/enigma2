@@ -488,6 +488,27 @@ class descriptionsList(choicesList):
 		return [x[1] if isinstance(x, tuple) else x for x in self.choices] if self.type == choicesList.TYPE_LIST else list(self.choices.values()) or [""]  # Should [""] be []?
 
 
+class ConfigAction(ConfigElement):
+	def __init__(self, action, *args):
+
+		ConfigElement.__init__(self)
+		self.value = "(OK)"
+		self.default = self.value
+		self.action = action
+		self.actionargs = args
+
+	def handleKey(self, key, callback=None):
+		if (key == KEY_OK):
+			self.action(*self.actionargs)
+
+	def getMulti(self, dummy):
+		pass
+
+
+	def getText(self):
+		pass
+
+
 class ConfigService(ConfigElement):
 	"""Store a service reference, but display its name and select it with OK."""
 	def __init__(self, default=""):
