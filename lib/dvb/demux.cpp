@@ -836,8 +836,9 @@ int eDVBRecordFileThread::writeData(int len)
 
 			if (next_it->poll() > 0)
 			{
-				// Next slot still has pending AIO - DVR is busy
-				// Discard data instead of blocking in wait()
+			++m_busy_discard_count;
+			if (m_busy_discard_count <= 20 || m_busy_discard_count % 100 == 0)
+				eWarning("[eDVBRecordFileThread] DVR busy - discarded %d bytes (#%u)", len, m_busy_discard_count);
 				return len;
 			}
 		}
