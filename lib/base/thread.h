@@ -46,7 +46,7 @@ public:
 		/* join the thread, i.e. busywait until thread has finnished. */
 	void kill();
 
-		/* join with timeout, returns false if the thread is still running */
+	/* join with timeout, returns false if the thread is still running */
 	bool join(int timeout_ms);
 
 	/* Call pthread_cancel, please don't do this. */
