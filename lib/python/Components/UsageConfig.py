@@ -790,6 +790,12 @@ def InitUsageConfig():
 	config.usage.progressinfo_fontsize = ConfigSelectionNumber(default=0, stepwidth=1, min=-10, max=10, wraparound=True)
 	config.usage.serviceitems_per_page = ConfigSelectionNumber(default=18, stepwidth=1, min=8, max=40, wraparound=True)
 
+	config.usage.tvradiobutton_mode = ConfigSelection(default="BouquetList", choices=[
+		("ChannelList", _("Channel List")),
+		("BouquetList", _("Bouquet List")),
+		("MovieList", _("Movie List"))
+	])
+
 	config.usage.show_event_progress_in_servicelist = ConfigSelection(default="barright", choices=[
 		("barleft", _("Progress bar left")),
 		("barright", _("Progress bar right")),

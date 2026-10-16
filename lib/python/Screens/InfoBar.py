@@ -10,9 +10,12 @@ from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
 from Components.Label import Label
 from Components.Pixmap import MultiPixmap
+from Components.SystemInfo import BoxInfo, getBoxDisplayName  # noqa F401
 
-eProfileWrite("LOAD:enigma")
 import enigma
+eProfileWrite("LOAD:enigma")
+
+boxtype = BoxInfo.getItem("machinebuild")
 
 eProfileWrite("LOAD:InfoBarGenerics")
 from Screens.InfoBarGenerics import InfoBarShowHide, \
@@ -49,10 +52,10 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		Screen.__init__(self, session, enableHelp=True)
 		self["actions"] = HelpableActionMap(self, ["InfobarActions"],
 			{
-				"showMovies": (self.showMovies, _("Open Movie Selection")),
-				"showRadio": (self.showRadio, _("Open Radio bouquet selection")),
-				"showTv": (self.showTv, _("Open TV bouquet selection")),
-				"toggleTvRadio": (self.toggleTvRadio, _("Toggles between TV and Radio")),
+				"showMovies": (self.showMovies, _("Play recorded movies...")),
+				"showRadio": (self.showRadioButton, _("Open Radio bouquet selection")),  # RADIO (Break).
+				"showTv": (self.showTvButton, _("Open TV bouquet selection")),  # TV (Break).
+				"toogleTvRadio": (self.toogleTvRadio, _("Toggles between TV and Radio")),  # Not defined in keymap!
 			}, prio=2)
 
 		self["InstantExtensionsActions"] = HelpableActionMap(self, ["InfobarExtensions"],
@@ -112,18 +115,55 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 		self.serviceStarted()
 		self.onShown.remove(self.__checkServiceStarted)
 
+	def openBouquetList(self):
+		if config.usage.tvradiobutton_mode.value == "MovieList":
+			self.showTvChannelList(True)
+			self.showMovies()
+		elif config.usage.tvradiobutton_mode.value == "ChannelList":
+			self.showTvChannelList(True)
+		elif config.usage.tvradiobutton_mode.value == "BouquetList":
+			self.showTvChannelList(True)
+			self.servicelist.showFavourites()
+
+	def showTvButton(self):
+		if boxtype.startswith('gb') or boxtype in ('classm', 'genius', 'evo', 'galaxym6', 'pulse4kmini', 'sf8008', 'sf8008m', 'sx988', 'ip8', 'og2ott4k', 'og2s4k', 'sfx6008'):
+			self.toogleTvRadio()
+		elif boxtype in ('uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin'):
+			self.showMovies()
+		else:
+			self.showTv()
+
 	def showTv(self):
-		self.showTvChannelList(True)
+		if config.usage.tvradiobutton_mode.value == "MovieList":
+			self.showTvChannelList(True)
+			self.showMovies()
+		elif config.usage.tvradiobutton_mode.value == "BouquetList":
+			self.showTvChannelList(True)
+			if config.usage.show_servicelist.value:
+				self.servicelist.showFavourites()
+		else:
+			self.showTvChannelList(True)
+
+	def showRadioButton(self):
+		if boxtype.startswith('gb') or boxtype in ('classm', 'genius', 'evo', 'galaxym6', 'pulse4kmini', 'uniboxhd1', 'uniboxhd2', 'uniboxhd3', 'sezam5000hd', 'mbtwin', 'beyonwizt3'):
+			self.toogleTvRadio()
+		else:
+			self.showRadio()
 
 	def showRadio(self):
 		if config.usage.e1like_radio_mode.value:
-			self.showRadioChannelList(True)
+			if config.usage.tvradiobutton_mode.value == "BouquetList":
+				self.showRadioChannelList(True)
+				if config.usage.show_servicelist.value:
+					self.servicelist.showFavourites()
+			else:
+				self.showRadioChannelList(True)
 		else:
 			self.rds_display.hide()  # in InfoBarRdsDecoder
 			from Screens.ChannelSelection import ChannelSelectionRadio
 			self.session.openWithCallback(self.ChannelSelectionRadioClosed, ChannelSelectionRadio, self)
 
-	def toggleTvRadio(self):
+	def toogleTvRadio(self):
 		if self.radioTV == 1:
 			self.radioTV = 0
 			self.showTv()
@@ -133,7 +173,8 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 
 	def ChannelSelectionRadioClosed(self, *arg):
 		self.rds_display.show()  # in InfoBarRdsDecoder
-		self.servicelist.correctChannelNumber()
+		self.radioTV = 0
+		self.doShow()
 
 	def showMovies(self, defaultRef=None):
 		self.lastservice = self.session.nav.getCurrentlyPlayingServiceOrGroup()

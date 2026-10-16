@@ -1723,10 +1723,10 @@ class ChannelSelectionBase(Screen):
 			return _("Move to next marker") if self.servicelist.isVertical() else _("Move to the next item")
 		Screen.__init__(self, session)
 		HelpableScreen.__init__(self)
-		self["key_red"] = Button(_("All"))
-		self["key_green"] = Button(_("Satellites"))
-		self["key_yellow"] = Button(_("Provider"))
-		self["key_blue"] = Button(_("Favourites"))
+		self["key_red"] = StaticText(_("All"))
+		self["key_green"] = StaticText(_("Satellites"))
+		self["key_yellow"] = StaticText(_("Provider"))
+		self["key_blue"] = StaticText(_("Favourites"))
 
 		self["list"] = ServiceListLegacy(self) if config.channelSelection.screenStyle.value == "" or config.channelSelection.widgetStyle.value == "" else ServiceList(self)
 		self.servicelist = self["list"]
@@ -2447,19 +2447,17 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		ChannelSelectionBase.__init__(self, session)
 		if config.channelSelection.screenStyle.value:
 			self.skinName = [config.channelSelection.screenStyle.value]
+		self["actions"] = HelpableActionMap(self, ["OkCancelActions", "TvRadioActions"],
+			{
+				"cancel": self.cancel,
+				"ok": self.channelSelected,
+				"keyRadio": (self.toogleTvRadio, _("Change to Radio services mode")),
+				"keyTV": (self.toogleTvRadio, _("Change to TV services mode"))
+			})
 		ChannelSelectionEdit.__init__(self)
 		ChannelSelectionEPG.__init__(self)
 		SelectionEventInfo.__init__(self)
-
-		self["actions"] = HelpableActionMap(self, ["OkCancelActions", "TvRadioActions"],
-			{
-				"cancel": (self.cancel, _("Cancel")),
-				"ok": (self.channelSelected, _("Select service")),
-				"keyRadio": (self.doRadioButton, _("Radio mode")),
-				"keyTV": (self.doTVButton, _("TV mode")),
-				"toggleTvRadio": (self.toggleTVRadio, _("Toggle TV Radio mode")),
-			})
-
+		self.radioTV = 0
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
 				iPlayableService.evStart: self.__evServiceStart,
 				iPlayableService.evEnd: self.__evServiceEnd
@@ -2469,8 +2467,9 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			ChannelSelection.instance = self
 
 		self.startServiceRef = None
-
-		self.history = []
+		self.history_tv = []
+		self.history_radio = []
+		self.history = self.history_tv
 		self.history_pos = 0
 		self.delhistpoint = None
 
@@ -2546,42 +2545,34 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 				if self.getCurrentSelection() and self.getCurrentSelection() != ref:
 					self.setCurrentSelection(ref)
 
-	def doTVButton(self):
-		if self.mode == MODE_TV:
-			self.channelSelected(doClose=False)
-		else:
+	def toogleTvRadio(self):
+		if self.radioTV == 1:
+			self.radioTV = 0
 			self.setModeTv()
+		else:
+			self.radioTV = 1
+			self.setModeRadio()
 
 	def setModeTv(self):
-		if self.revertMode is None:
-			self.revertMode = self.mode
+		if self.revertMode is None and config.servicelist.lastmode.value == "radio":
+			self.revertMode = MODE_RADIO
+		self.history = self.history_tv
 		self.lastservice = config.tv.lastservice
 		self.lastroot = config.tv.lastroot
 		config.servicelist.lastmode.value = "tv"
 		self.setTvMode()
 		self.setMode()
 
-	def doRadioButton(self):
-		if self.mode == MODE_RADIO:
-			self.channelSelected(doClose=False)
-		else:
-			self.setModeRadio()
-
-	def setModeRadio(self):
-		if self.revertMode is None:
-			self.revertMode = self.mode
-		if config.usage.e1like_radio_mode.value:
+	def setModeRadio(self, force=False):
+		if self.revertMode is None and config.servicelist.lastmode.value == "tv":
+			self.revertMode = MODE_TV
+		if force or config.usage.e1like_radio_mode.value:
+			self.history = self.history_radio
 			self.lastservice = config.radio.lastservice
 			self.lastroot = config.radio.lastroot
 			config.servicelist.lastmode.value = "radio"
 			self.setRadioMode()
 			self.setMode()
-
-	def toggleTVRadio(self):
-		if self.mode == MODE_TV:
-			self.doRadioButton()
-		else:
-			self.doTVButton()
 
 	def __onCreate(self):
 		if config.usage.e1like_radio_mode.value:
@@ -3092,11 +3083,11 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 
 		self["actions"] = HelpableActionMap(self, ["OkCancelActions", "TvRadioActions"],
 			{
-				"keyTV": (self.cancel, _("Cancel")),
-				"keyRadio": (self.cancel, _("Cancel")),
-				"cancel": (self.cancel, _("Cancel")),
-				"ok": (self.channelSelected, _("Select service")),
-				"audio": (self.audioSelection, _("Select Audio")),
+				"keyTV": self.cancel,
+				"keyRadio": self.cancel,
+				"cancel": self.cancel,
+				"ok": self.channelSelected,
+				"audio": self.audioSelection
 			})
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={

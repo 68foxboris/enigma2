@@ -236,6 +236,13 @@
 		<key id="KEY_TAB" mapto="select" flags="m" />
 	</map>
 
+	<map context="TvRadioActions">
+		<key id="KEY_TV" mapto="keyTV" flags="m" />
+		<key id="KEY_RADIO" mapto="keyRadio" flags="m" />
+		<key id="KEY_TV2" mapto="keyTVRadio" flags="m" />
+		<key id="KEY_FAVORITES" mapto="keyTVRadio" flags="m" />
+	</map>
+
 	<map context="VirtualKeyBoardActions">
 		<!-- Also uses NumberActions -->
 		<!-- Also uses TextEditActions -->
@@ -466,6 +473,7 @@
 	<map context="InfobarActions">
 		<key id="KEY_VIDEO" mapto="showMovies" flags="b" />
 		<key id="KEY_RADIO" mapto="showRadio" flags="b" />
+		<key id="KEY_RADIO" mapto="openBouquetList" flags="l" />
 		<key id="KEY_TV" mapto="showTv" flags="b" />
 		<key id="KEY_TV2" mapto="toggleTvRadio" flags="b" />
 		<key id="KEY_FILE" mapto="showMovies" flags="m" />
@@ -729,16 +737,6 @@
 	<map context="ChannelSelectEditActions">
 		<key id="KEY_MENU" mapto="contextMenu" flags="m" />
 		<key id="KEY_SPACE" mapto="contextMenu" flags="m" />
-	</map>
-
-	<map context="TvRadioActions">
-		<key id="KEY_TV" mapto="keyTV" flags="m" />
-		<key id="KEY_RADIO" mapto="keyRadio" flags="m" />
-		<key id="KEY_TV2" mapto="keyTVRadio" flags="m" />
-		<key id="KEY_FAVORITES" mapto="keyTVRadio" flags="m" />
-		<key id="KEY_AUDIO" mapto="audio" flags="b" />
-		<key id="KEY_INFO" mapto="epg" flags="m" />
-		<key id="KEY_EPG" mapto="epg" flags="m" />
 	</map>
 
 	<map context="TimerEditActions">
