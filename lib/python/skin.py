@@ -2445,6 +2445,7 @@ def readSkin(screen, skin, names, desktop):
 	screen.renderer = []
 	screen.stacks = []
 	usedComponents = set()
+	usedSources = set()
 
 	def processConstant(constant_widget, context, target=None):
 		widgetName = constant_widget.attrib.get("name")
@@ -2506,9 +2507,9 @@ def readSkin(screen, skin, names, desktop):
 		# widgets (source->renderer).
 		widgetName = widget.attrib.get("name")
 		widgetSource = widget.attrib.get("source")
-		wconnection = widget.attrib.get("connection")
 		widgetConnection = widget.attrib.get("connection")
 		widgetClass = widget.attrib.get("addon")
+		source = None
 		if widgetName is None and widgetSource is None and widgetClass is None:
 			raise SkinError("The widget has no addon, name or source")
 		if widgetName:
@@ -2523,6 +2524,7 @@ def readSkin(screen, skin, names, desktop):
 			screen[widgetName] = proccesStackAddition(widget, stack, screen[widgetName])
 		elif widgetSource:
 			# print(f"[Skin] DEBUG: Widget source='{widgetSource}'.")
+			usedSources.add(widgetSource)
 			while True:  # Get corresponding source until we found a non-obsolete source.
 				# Parse our current "widgetSource", which might specify a "related screen" before the dot,
 				# for example to reference a parent, global or session-global screen.
@@ -2821,14 +2823,24 @@ def readSkin(screen, skin, names, desktop):
 	except Exception as err:
 		print(f"[Skin] Error: Screen '{myName}' {str(err)}!")
 		print_exc()
-	from Components.GUIComponent import GUIComponent  # This must be here to avoid a boot loop.
-	unusedComponents = [x for x in set(screen.keys()) - usedComponents if isinstance(x, GUIComponent)]
-	assert not unusedComponents, f"[Skin] The following components in '{myName}' don't have a skin entry: {', '.join(unusedComponents)}"
+	if config.crash.debugScreens.value:
+		from Components.GUIComponent import GUIComponent  # This must be here to avoid a boot loop.
+		from Components.Sources.Source import Source  # This must be here to avoid a boot loop.
+		screenKeys = sorted(x for x in screen.keys() if not x.endswith(("Action", "Actions")))
+		# print(f"[Skin] Screen '{myName}' in module '{screen.__class__.__name__}' has widgets including '{"', '".join(screenKeys)}'.")
+		print(f"[Skin] Screen '{myName}' has widgets including '{"', '".join(screenKeys)}'.")
+		screenKeys = set(screenKeys)
+		if unusedComponents := sorted(x for x in screenKeys - usedComponents if isinstance(screen[x], GUIComponent)):
+			print(f"[Skin] Unused components: '{"', '".join(unusedComponents)}'.")
+		if unusedSources := sorted(x for x in screenKeys - usedSources if isinstance(screen[x], Source)):
+			print(f"[Skin] Unused sources: '{"', '".join(unusedSources)}'.")
 	# This may look pointless, but it unbinds "screen" from the nested scope. A better
 	# solution is to avoid the nested scope above and use the context object to pass
 	# things around.
 	screen = None
 	usedComponents = None
+	usedSources = None
+
 
 
 # Return a set of all the widgets found in a screen. Panels will be expanded
@@ -2842,10 +2854,10 @@ def findWidgets(name):
 		widgets = element.findall("widget")
 		if widgets is not None:
 			for widget in widgets:
-				name = widget.get("name", None)
+				name = widget.get("name")
 				if name is not None:
 					widgetSet.add(name)
-				source = widget.get("source", None)
+				source = widget.get("source")
 				if source is not None:
 					widgetSet.add(source)
 				addonConnection = widget.get("connection")
@@ -2855,8 +2867,8 @@ def findWidgets(name):
 		panels = element.findall("panel")
 		if panels is not None:
 			for panel in panels:
-				name = panel.get("name", None)
-				if name:
+				name = panel.get("name")
+				if name is not None:
 					widgetSet.update(findWidgets(name))
 	return widgetSet
 
