@@ -489,6 +489,12 @@ int eDVBRecordFileThread::getFirstPTS(pts_t &pts)
 	return m_ts_parser.getFirstPTS(pts);
 }
 
+// Transient resource shortage: drop the chunk instead of aborting the thread.
+static bool isTransientAioError(int err)
+{
+	return err == ENOMEM || err == EAGAIN;
+}
+
 int eDVBRecordFileThread::AsyncIO::wait(const volatile int* stop_flag, int* short_write_count)
 {
 	if (aio.aio_buf == nullptr) // No request outstanding
@@ -629,6 +635,10 @@ int eDVBRecordFileThread::AsyncIO::poll(int* short_write_count)
 			 * This happens on DVR/socket devices with incomplete POSIX AIO.
 			 * The operation itself completed - treat as done. */
 			return 0;
+		if (isTransientAioError(err))
+		{
+			eWarning("[eDVBRecordFileThread] aio failed (error=%d): %s - dropping %zu bytes", err, strerror(err), aio.aio_nbytes);
+			return 0;
 		}
 		eDebug("[eDVBRecordFileThread] poll: aio failed (error=%d): %s", err, strerror(err));
 		// aio_return() does not set errno, callers check it
@@ -685,6 +695,11 @@ int eDVBRecordFileThread::asyncWrite(int len)
 	int r = m_current_buffer->start(m_fd_dest, m_current_offset, len, m_buffer);
 	if (r < 0)
 	{
+		if (isTransientAioError(errno))
+		{
+			eWarning("[eDVBRecordFileThread] aio_write failed: %m - dropping %d bytes", len);
+			return len;
+		}
 		eDebug("[eDVBRecordFileThread] aio_write failed: %m");
 		return r;
 	}
