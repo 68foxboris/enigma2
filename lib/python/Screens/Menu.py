@@ -6,6 +6,7 @@ from enigma import eTimer
 
 from skin import menus, parameters, menuicons
 from Components.ActionMap import HelpableNumberActionMap, HelpableActionMap
+from Components.AVSwitch import avSwitch
 from Components.config import ConfigDictionarySet, NoSave, config, configfile
 from Components.Label import Label
 from Components.Pixmap import Pixmap
@@ -661,6 +662,9 @@ class Menu(Screen, ProtectedScreen):
 		self["menu"].goBottom()
 		if self.sortMode and self.selectedEntry is not None:
 			self.moveAction()
+
+	def keyText(self):
+		avSwitch.setMode("HDMI", "720p", "50Hz")
 
 	def moveAction(self):
 		menuListCopy = list(self.menuList)

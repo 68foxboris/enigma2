@@ -7,7 +7,7 @@ if self.portCount == 1:
 	self.selection = "HDMI"
 	self.portSelectionMoved()
 		</condition>
-		<text value="Video output port selection.\n\nPress OK to select the video port.\n\nThe next output port will be automatically tried in 20 seconds." />
+		<text value="Video output port selection.\n\nMake sure the correct input is selected on the TV. Press OK if you can see this page on your TV.\n\nThe next output port will be automatically tried in 10 seconds." />
 		<displaytext value="Select video output port with UP/DOWN buttons" />
 		<list type="dynamic" source="listPorts" evaluation="portSelectionMade" onselect="portSelectionMoved" />
 		<code>
@@ -20,7 +20,7 @@ self.selectKey("OK")
 		<condition>
 self.condition = (self.port == "DVI" or self.port == "HDMI")
 		</condition>
-		<text value="Do you want to use auto mode detection?\n\nThis option reads all supported modes and automatically sets the highest resolution supported by your TV. Choose 'No' if you want to customize your settings.\n\nWARNING: If on the next screen you lose signal on your video mode, long press EXIT button to return to the list of video modes." />
+		<text value="Use automatic mode detection?\n\nThis option reads all supported modes from your TV. Disable it only if you want to customize the preferred configuration." />
 		<displaytext value="Use automatic mode detection" />
 		<list>
 			<listentry caption="Yes" step="modeauto" />
@@ -58,7 +58,7 @@ config.av.edid_override.save()
 	</step>
 
 	<step id="modeselection" nextstep="rateselection" timeout="10" timeoutaction="selectnext">
-		<text value="Select the video mode to be used on the TV.\n\nThe following video modes will automatically change in 20 seconds.\n\nWARNING: If a video mode causes signal loss, hold the EXIT button to return to the mode video list." />
+		<text value="Select the video mode to be used on the TV." />
 		<displaytext value="Select video mode" />
 		<list type="dynamic" source="listModes" evaluation="modeSelectionMade" onselect="modeSelectionMoved" />
 		<code>
