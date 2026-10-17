@@ -312,6 +312,7 @@ bool ePMTClient::processEcmInfoPacket()
 					return true;
 				}
 			}
+
 			int bytesToRead = (pos == readDataLength) ? 1 : pos - readDataLength;
 			if (bytesAvailable() < bytesToRead) return false;
 			read = readBlock((char*)receivedData + fixDataLength + readDataLength, bytesToRead);
@@ -562,8 +563,8 @@ int eDVBCAHandler::registerService(const eServiceReferenceDVB &ref, int adapter,
 	 * Unless we have a pmt section in our cache, for this service.
 	 */
 
-	ePtr<eTable<ProgramMapSection> > cachedPmt = pmtCacheLookup(ref);
-	if (cachedPmt)
+	std::map<eServiceReferenceDVB, ePtr<eTable<ProgramMapSection> > >::const_iterator cacheit = pmtCache.find(ref);
+	if (cacheit != pmtCache.end() && cacheit->second)
 	{
 		// When a service is already registered and a new consumer registers for
 		// the same service, the PMT is unchanged so buildCAPMT() would skip
@@ -589,7 +590,7 @@ int eDVBCAHandler::registerService(const eServiceReferenceDVB &ref, int adapter,
 			caservice->m_force_cw_send = true;
 			eDebug("[eDVBCAService] forcing softcam CW resend (SR re-register, type %d)", servicetype);
 		}
-		processPMTForService(caservice, cachedPmt);
+		processPMTForService(caservice, cacheit->second);
 	}
 	return 0;
 }
@@ -671,10 +672,6 @@ int eDVBCAHandler::unregisterService(const eServiceReferenceDVB &ref, int adapte
 						it->second = nullptr;
 					}
 
-					/* Clean up caches for this service before deleting */
-					pmtCacheRemove(ref);
-					m_service_caid.erase(caservice->getId());
-
 					delete it->second;
 					services.erase(it);
 
@@ -737,56 +734,15 @@ int eDVBCAHandler::unregisterService(const eServiceReferenceDVB &ref, int adapte
 	return 0;
 }
 
-ePtr<eTable<ProgramMapSection> > eDVBCAHandler::pmtCacheLookup(const eServiceReferenceDVB &ref)
-{
-	for (auto it = pmtCache.begin(); it != pmtCache.end(); ++it)
-	{
-		if (it->first == ref)
-		{
-			/* Move to front (most recently used) */
-			pmtCache.splice(pmtCache.begin(), pmtCache, it);
-			return it->second;
-		}
-	}
-	return nullptr;
-}
-
-void eDVBCAHandler::pmtCacheInsert(const eServiceReferenceDVB &ref, const ePtr<eTable<ProgramMapSection> > &ptr)
-{
-	/* Update existing entry or insert new one at front */
-	for (auto it = pmtCache.begin(); it != pmtCache.end(); ++it)
-	{
-		if (it->first == ref)
-		{
-			it->second = ptr;
-			pmtCache.splice(pmtCache.begin(), pmtCache, it);
-			return;
-		}
-	}
-	pmtCache.emplace_front(ref, ptr);
-
-	/* Evict oldest entries if cache is full */
-	while (pmtCache.size() > PMT_CACHE_MAX)
-		pmtCache.pop_back();
-}
-
-void eDVBCAHandler::pmtCacheRemove(const eServiceReferenceDVB &ref)
-{
-	for (auto it = pmtCache.begin(); it != pmtCache.end(); ++it)
-	{
-		if (it->first == ref)
-		{
-			pmtCache.erase(it);
-			return;
-		}
-	}
-}
-
 void eDVBCAHandler::serviceGone()
 {
 	if (!services.size())
 	{
 		eDebug("[DVBCAHandler] no more services (keeping %zu client connections)", clients.size());
+		if (pmtCache.size() > 500)
+		{
+			pmtCache.clear();
+		}
 	}
 }
 
@@ -906,7 +862,7 @@ void eDVBCAHandler::handlePMT(const eServiceReferenceDVB &ref, ePtr<eTable<Progr
 
 	processPMTForService(it->second, ptr);
 
-	pmtCacheInsert(ref, ptr);
+	pmtCache[ref] = ptr;
 }
 
 void eDVBCAHandler::handlePMT(const eServiceReferenceDVB &ref, ePtr<eDVBService> &dvbservice)
