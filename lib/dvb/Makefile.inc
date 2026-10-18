@@ -38,6 +38,7 @@ dvb_libenigma_dvb_a_SOURCES = \
 	dvb/teletext.cpp \
 	dvb/tstools.cpp \
 	dvb/volume.cpp \
+	dvb/warmstart.cpp \
 	dvb/streamserver.cpp \
 	dvb/pmtparse.cpp \
 	dvb/encoder.cpp \
@@ -101,6 +102,7 @@ dvbinclude_HEADERS = \
 	dvb/teletext.h \
 	dvb/tstools.h \
 	dvb/volume.h \
+	dvb/warmstart.h \
 	dvb/streamserver.h \
 	dvb/pmtparse.h \
 	dvb/encoder.h \
