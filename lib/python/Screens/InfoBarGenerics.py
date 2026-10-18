@@ -1597,61 +1597,6 @@ class InfoBarEPG:
 		self.session.open(EPGSelection, refstr, eventid=eventid)
 
 
-class InfoBarRdsDecoder:
-	"""provides RDS and Rass support/display"""
-
-	def __init__(self):
-		self["RdsDecoder"] = RdsDecoder(self.session.nav)
-		self.dab_slide_display = self.session.instantiateDialog(DABSlideDisplay)
-		self.dab_slide_display.setAnimationMode(0)
-		self.rds_display = self.session.instantiateDialog(RdsInfoDisplay)
-		self.rds_display.setAnimationMode(0)
-		self.dab_slide_display.reserveRadioTextArea(self.rds_display)
-		self.rass_interactive = None
-
-		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
-				iPlayableService.evEnd: self.__serviceStopped,
-				iPlayableService.evUpdatedRassSlidePic: self.RassSlidePicChanged
-			})
-
-		self["RdsActions"] = ActionMap(["InfobarRdsActions"],
-		{
-			"startRassInteractive": self.startRassInteractive
-		}, -1)
-
-		self["RdsActions"].setEnabled(False)
-
-		self.onLayoutFinish.append(self.rds_display.show)
-		self.rds_display.onRassInteractivePossibilityChanged.append(self.RassInteractivePossibilityChanged)
-
-	def RassInteractivePossibilityChanged(self, state):
-		self["RdsActions"].setEnabled(state)
-
-	def RassSlidePicChanged(self):
-		if not self.rass_interactive:
-			service = self.session.nav.getCurrentService()
-			decoder = service and service.rdsDecoder()
-			if decoder:
-				decoder.showRassSlidePicture()
-
-	def __serviceStopped(self):
-		if self.rass_interactive is not None:
-			rass_interactive = self.rass_interactive
-			self.rass_interactive = None
-			rass_interactive.close()
-
-	def startRassInteractive(self):
-		self.dab_slide_display.rassPictureAvailable()
-		self.rds_display.hide()
-		self.rass_interactive = self.session.openWithCallback(self.RassInteractiveClosed, RassInteractive)
-
-	def RassInteractiveClosed(self, *val):
-		if self.rass_interactive is not None:
-			self.rass_interactive = None
-			self.RassSlidePicChanged()
-		self.rds_display.show()
-
-
 class SeekBar(Screen):
 	skin = """
 	<screen name="SeekBar" position="center,10" size="800,50" flags="wfNoBorder" resolution="1280,720">
@@ -2659,6 +2604,57 @@ class InfoBarSeek:
 
 		self.setSeekState(self.SEEK_STATE_PLAY)
 		self.doSeek(0)
+
+
+class InfoBarRdsDecoder:
+	"""provides RDS and Rass support/display"""
+
+	def __init__(self):
+		self["RdsDecoder"] = RdsDecoder(self.session.nav)
+		self.dab_slide_display = self.session.instantiateDialog(DABSlideDisplay)
+		self.dab_slide_display.setAnimationMode(0)
+		self.rds_display = self.session.instantiateDialog(RdsInfoDisplay)
+		self.rds_display.setAnimationMode(0)
+		self.dab_slide_display.reserveRadioTextArea(self.rds_display)
+		self.rds_display.onLayoutFinish.append(self.dab_slide_display.reserveRadioTextArea)
+		self.rass_interactive = None
+		self.__event_tracker = ServiceEventTracker(screen=self, eventmap={
+			iPlayableService.evEnd: self.__serviceStopped,
+			iPlayableService.evUpdatedRassSlidePic: self.RassSlidePicChanged
+		})
+		self["RdsActions"] = HelpableActionMap(self, ["InfobarRdsActions"], {
+			"startRassInteractive": (self.startRassInteractive, _("Start RDS interactive"))
+		}, prio=-1, description=_("RDS Actions"))
+		self["RdsActions"].setEnabled(False)
+		self.onLayoutFinish.append(self.rds_display.updateVisibility)
+		self.rds_display.onRassInteractivePossibilityChanged.append(self.RassInteractivePossibilityChanged)
+
+	def RassInteractivePossibilityChanged(self, state):
+		self["RdsActions"].setEnabled(state)
+
+	def RassSlidePicChanged(self):
+		if not self.rass_interactive:
+			service = self.session.nav.getCurrentService()
+			decoder = service and service.rdsDecoder()
+			if decoder:
+				decoder.showRassSlidePicture()
+
+	def __serviceStopped(self):
+		if self.rass_interactive is not None:
+			rass_interactive = self.rass_interactive
+			self.rass_interactive = None
+			rass_interactive.close()
+
+	def startRassInteractive(self):
+		self.dab_slide_display.rassPictureAvailable()
+		self.rds_display.hide()
+		self.rass_interactive = self.session.openWithCallback(self.RassInteractiveClosed, RassInteractive)
+
+	def RassInteractiveClosed(self, *val):
+		if self.rass_interactive is not None:
+			self.rass_interactive = None
+			self.RassSlidePicChanged()
+		self.rds_display.updateVisibility()
 
 
 class InfoBarPVRState:
