@@ -115,7 +115,9 @@ class PinInput(InputBox):
 		if self.getTries() == 0:
 			if (self.triesEntry.time.value + (self.waitTime * 60)) > time():
 				remaining = (self.triesEntry.time.value + (self.waitTime * 60)) - time()
-				messageText = _("You have to wait %(min)d minutes, %(sec)d seconds!") % {"min": int(remaining / 60), "sec": int(remaining % 60)}
+				remainingMinutes = int(remaining / 60)
+				remainingSeconds = int(remaining % 60)
+				messageText = _("You have to wait %s!") % ", ".join((ngettext("%d Minute", "%d Minutes", remainingMinutes) % remainingMinutes, ngettext("%d Second", "%d Seconds", remainingSeconds) % remainingSeconds))
 				if service and simple:
 					self.session.showError(messageText)
 					self.closePinCancel()
