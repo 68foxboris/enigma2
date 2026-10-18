@@ -128,9 +128,9 @@ class MMIDialog(Screen):
 		self.onClose.append(self.stopMenuRetry)
 
 		# else the skins fails
-		self["title"] = Label("")
-		self["subtitle"] = Label("")
-		self["bottom"] = Label("")
+		self["title"] = Label()
+		self["subtitle"] = Label()
+		self["bottom"] = Label()
 		self["key_menu"] = StaticText(_("MENU"))
 		self["entries"] = ConfigList([])
 
@@ -516,7 +516,7 @@ class CiSelection(Screen):
 		menuList.l.setList(self.list)
 		self["entries"] = menuList
 		self["entries"].onSelectionChanged.append(self.selectionChanged)
-		self["text"] = Label("")
+		self["text"] = Label()
 		self["key_red"] = StaticText(_("Exit"))
 		self.onLayoutFinish.append(self.layoutFinished)
 

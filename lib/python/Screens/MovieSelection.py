@@ -522,7 +522,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 		self.pathselectEnabled = False
 
 		self.numericalTextInput = NumericalTextInput(mapping=MAP_SEARCH_UPCASE)
-		self["chosenletter"] = Label("")
+		self["chosenletter"] = Label()
 		self["chosenletter"].visible = False
 
 		self["waitingtext"] = Label(_("Please wait... Loading list..."))

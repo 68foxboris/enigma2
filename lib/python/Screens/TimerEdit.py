@@ -50,8 +50,8 @@ class TimerEditList(Screen):
 		self["key_blue"] = StaticText()
 		self["key_info"] = StaticText(_("INFO"))
 
-		self["description"] = Label("")
-		self["event_nr"] = Label("")
+		self["description"] = Label()
+		self["event_nr"] = Label()
 
 		self["actions"] = ActionMap(["OkCancelActions", "DirectionActions", "ShortcutActions", "TimerEditActions"],
 			{

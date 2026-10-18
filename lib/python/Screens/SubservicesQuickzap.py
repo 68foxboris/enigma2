@@ -23,7 +23,7 @@ class SubservicesQuickzap(InfoBarBase, InfoBarShowHide, InfoBarMenu,
 		self.restoreService = self.session.nav.getCurrentlyPlayingServiceOrGroup()
 		self.subservices = subservices
 		self.__lastservice = self.currentlyPlayingSubservice = self.getSubserviceIndex(self.session.nav.getCurrentlyPlayingServiceReference())
-		self["CurrentSubserviceNumber"] = Label("")
+		self["CurrentSubserviceNumber"] = Label()
 		self.currentSubserviceNumberLabel = self["CurrentSubserviceNumber"]
 		self["actions"] = NumberActionMap(["InfobarSubserviceQuickzapActions", "NumberActions", "DirectionActions", "ColorActions"],
 			{

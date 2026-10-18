@@ -35,7 +35,7 @@ class Console(Screen):
 		self.commandOutput = ""
 		self.header = ""
 
-		self["text"] = ScrollLabel("")
+		self["text"] = ScrollLabel()
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("Hide"))
 		self["key_yellow"] = StaticText()
