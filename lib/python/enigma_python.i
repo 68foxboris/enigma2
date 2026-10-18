@@ -46,6 +46,7 @@ is usually caused by not marking PSignals as immutable.
 #include <lib/base/message.h>
 #include <lib/base/e2avahi.h>
 #include <lib/base/internetcheck.h>
+#include <lib/base/externalvideo.h>
 #include <lib/base/profile.h>
 #include <lib/network/serviceactionclient.h>
 #include <lib/driver/rc.h>
@@ -222,6 +223,7 @@ class iDVBChannelList   { protected: iDVBChannelList() {}   virtual ~iDVBChannel
 // TODO: embed these...
 %immutable eInternetCheck::callback;
 %immutable eServiceActionClient::actionResult;
+%immutable eExternalVideo::videoChanged;
 %immutable ePicLoad::PictureData;
 %immutable eButton::selected;
 %immutable eInput::changed;
@@ -259,6 +261,7 @@ class iDVBChannelList   { protected: iDVBChannelList() {}   virtual ~iDVBChannel
 %immutable eDVBSatelliteEquipmentControl::slotRotorSatPosChanged;
 %include <lib/base/message.h>
 %include <lib/base/internetcheck.h>
+%include <lib/base/externalvideo.h>
 %include <lib/network/serviceactionclient.h>
 %include <lib/driver/rc.h>
 %include <lib/driver/rcinput_swig.h>
