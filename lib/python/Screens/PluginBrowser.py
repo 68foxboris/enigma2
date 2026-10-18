@@ -1615,6 +1615,8 @@ class PackageAction(Screen, NumericalTextInput):
 			self["logAction"].setEnabled(self.actionMaps[2])
 			self["navigationActions"].setEnabled(self.actionMaps[3])
 			self["quickSelectActions"].setEnabled(self.actionMaps[4])
+			self["searchActions"].setEnabled(True)
+			self.selectionChanged()
 
 	def keyNumberGlobal(self, digit):
 		self.quickSelectTimer.stop()
