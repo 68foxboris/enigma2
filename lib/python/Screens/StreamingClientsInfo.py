@@ -22,8 +22,8 @@ class StreamingClientsInfo(Screen):
 		self.clients = []
 		self["menu"] = MenuList(self.clients)
 		self["key_red"] = StaticText(_("Close"))
-		self["key_green"] = StaticText("")
-		self["key_yellow"] = StaticText("")
+		self["key_green"] = StaticText()
+		self["key_yellow"] = StaticText()
 		self["info"] = Label()
 		self.updateClients()
 		self["actions"] = ActionMap(["ColorActions", "SetupActions"],

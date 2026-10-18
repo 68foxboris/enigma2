@@ -105,8 +105,8 @@ class TempFanControl(ConfigListScreen, Screen):
 
 		self["red"] = StaticText(_("Cancel"))
 		self["green"] = StaticText(_("OK"))
-		self["yellow"] = StaticText("")
-		self["blue"] = StaticText("")
+		self["yellow"] = StaticText()
+		self["blue"] = StaticText()
 
 		for count in range(8):
 			if count < tempcount:
@@ -114,7 +114,7 @@ class TempFanControl(ConfigListScreen, Screen):
 				self["SensorTempText%d" % count] = StaticText(sensors.getSensorName(id))
 				self["SensorTemp%d" % count] = SensorSource(sensorid=id)
 			else:
-				self["SensorTempText%d" % count] = StaticText("")
+				self["SensorTempText%d" % count] = StaticText()
 				self["SensorTemp%d" % count] = SensorSource()
 
 			if count < fancount:
@@ -122,7 +122,7 @@ class TempFanControl(ConfigListScreen, Screen):
 				self["SensorFanText%d" % count] = StaticText(sensors.getSensorName(id))
 				self["SensorFan%d" % count] = SensorSource(sensorid=id)
 			else:
-				self["SensorFanText%d" % count] = StaticText("")
+				self["SensorFanText%d" % count] = StaticText()
 				self["SensorFan%d" % count] = SensorSource()
 
 		self.list = []

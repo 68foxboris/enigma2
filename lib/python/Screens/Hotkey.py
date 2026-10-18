@@ -379,7 +379,7 @@ class HotkeySetupSelect(Screen):
 		self.setTitle(_("Hotkey Setup") + " " + key[0][0])
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("Save"))
-		self["key_yellow"] = StaticText("")
+		self["key_yellow"] = StaticText()
 		self["h_prev"] = Pixmap()
 		self["h_next"] = Pixmap()
 		self["description"] = Label()

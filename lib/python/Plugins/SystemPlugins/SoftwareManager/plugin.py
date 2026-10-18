@@ -567,10 +567,10 @@ class PluginManager(Screen, PackageInfoHandler):
 		self.packetlist = []
 		self["list"] = List(self.list)
 		self["key_red"] = StaticText(_("Close"))
-		self["key_green"] = StaticText("")
-		self["key_yellow"] = StaticText("")
-		self["key_blue"] = StaticText("")
-		self["status"] = StaticText("")
+		self["key_green"] = StaticText()
+		self["key_yellow"] = StaticText()
+		self["key_blue"] = StaticText()
+		self["status"] = StaticText()
 
 		self.cmdList = []
 		self.oktext = _("\nAfter pressing OK, please wait!")
@@ -1160,7 +1160,7 @@ class PluginDetails(Screen, PackageInfoHandler):
 		}, -1)
 
 		self["key_red"] = StaticText(_("Close"))
-		self["key_green"] = StaticText("")
+		self["key_green"] = StaticText()
 		self["author"] = StaticText()
 		self["statuspic"] = Pixmap()
 		self["divpic"] = Pixmap()

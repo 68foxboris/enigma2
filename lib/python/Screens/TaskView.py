@@ -33,17 +33,17 @@ class JobView(InfoBarNotifications, ConfigListScreen, Screen):
 		self.cancelable = cancelable
 		self.backgroundable = backgroundable
 
-		self["key_green"] = StaticText("")
+		self["key_green"] = StaticText()
 
 		if self.cancelable:
 			self["key_red"] = StaticText(_("Cancel"))
 		else:
-			self["key_red"] = StaticText("")
+			self["key_red"] = StaticText()
 
 		if self.backgroundable:
 			self["key_blue"] = StaticText(_("Background"))
 		else:
-			self["key_blue"] = StaticText("")
+			self["key_blue"] = StaticText()
 
 		self.onShow.append(self.windowShow)
 		self.onHide.append(self.windowHide)

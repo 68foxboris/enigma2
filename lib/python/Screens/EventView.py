@@ -43,7 +43,7 @@ class EventViewBase:
 		self["FullDescription"] = ScrollLabel()
 		self["key_menu"] = StaticText(_("MENU"))
 		self["key_info"] = StaticText(_("INFO"))
-		self["key_red"] = StaticText("")
+		self["key_red"] = StaticText()
 		self["summary_description"] = StaticText()
 		self["datetime"] = Label()
 		self["channel"] = Label()
@@ -290,7 +290,7 @@ class EventViewEPGSelect(Screen, EventViewBase):
 				"openSingleServiceEPG": (singleEPGCB, _("Open the single service EPG view"))
 			}, prio=0, description=_("EventViewEPG Actions"))
 		else:
-			self["key_yellow"] = StaticText("")
+			self["key_yellow"] = StaticText()
 			self["yellow"].hide()
 		if multiEPGCB:
 			self["key_blue"] = StaticText(_("Multi EPG"))
@@ -298,7 +298,7 @@ class EventViewEPGSelect(Screen, EventViewBase):
 				"openMultiServiceEPG": (multiEPGCB, _("Open the multi service EPG view"))
 			}, prio=0, description=_("EventViewEPG Actions"))
 		else:
-			self["key_blue"] = StaticText("")
+			self["key_blue"] = StaticText()
 			self["blue"].hide()
 		self.skinName = ["EventView"]
 		if skinName:
@@ -321,10 +321,10 @@ class EventViewMovieEvent(Screen):
 			self.ext_desc = "%s\n\n" % name
 		if ext_desc:
 			self.ext_desc += ext_desc
-		self["key_red"] = StaticText("")
-		self["key_green"] = StaticText("")
-		self["key_yellow"] = StaticText("")
-		self["key_blue"] = StaticText("")
+		self["key_red"] = StaticText()
+		self["key_green"] = StaticText()
+		self["key_yellow"] = StaticText()
+		self["key_blue"] = StaticText()
 		self["epg_description"] = ScrollLabel()
 		self["datetime"] = Label()
 		self["channel"] = Label()

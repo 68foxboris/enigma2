@@ -57,8 +57,8 @@ class InputDeviceSelection(Screen):
 
 		self["key_red"] = StaticText(_("Close"))
 		self["key_green"] = StaticText(_("Select"))
-		self["key_yellow"] = StaticText("")
-		self["key_blue"] = StaticText("")
+		self["key_yellow"] = StaticText()
+		self["key_blue"] = StaticText()
 		self["introduction"] = StaticText(self.edittext)
 
 		self.devices = [(inputDevices.getDeviceName(x), x) for x in inputDevices.getDeviceList()]

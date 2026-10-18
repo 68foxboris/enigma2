@@ -40,7 +40,7 @@ class TimerEntry(ConfigListScreen, Screen):
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("Save"))
 		self["key_yellow"] = StaticText(_("Timer type"))
-		self["key_blue"] = StaticText("")
+		self["key_blue"] = StaticText()
 
 		self["actions"] = NumberActionMap(["SetupActions", "GlobalActions", "PiPSetupActions", "ColorActions"],
 		{
@@ -567,8 +567,8 @@ class TimerLog(Screen):
 		self["logentry"] = Label()
 
 		self["key_red"] = StaticText(_("Delete entry"))
-		self["key_green"] = StaticText("")
-		self["key_yellow"] = StaticText("")
+		self["key_green"] = StaticText()
+		self["key_yellow"] = StaticText()
 		self["key_blue"] = StaticText(_("Clear log"))
 
 		self.onShown.append(self.updateText)

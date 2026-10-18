@@ -802,8 +802,8 @@ class PluginBrowserSummary(ScreenSummary):
 	def __init__(self, session, parent):
 		ScreenSummary.__init__(self, session, parent=parent)
 		self.skinName = ["PluginBrowserSummary"]
-		self["entry"] = StaticText("")
-		self["value"] = StaticText("")
+		self["entry"] = StaticText()
+		self["value"] = StaticText()
 		self.onShow.append(self.addWatcher)
 		self.onHide.append(self.removeWatcher)
 
@@ -1669,9 +1669,9 @@ class PackageActionSummary(ScreenSummary):
 	def __init__(self, session, parent):
 		ScreenSummary.__init__(self, session, parent=parent)
 		self.skinName = ["PackageActionSummary"]
-		self["category"] = StaticText("")
-		self["name"] = StaticText("")
-		self["description"] = StaticText("")
+		self["category"] = StaticText()
+		self["name"] = StaticText()
+		self["description"] = StaticText()
 		self.onShow.append(self.addWatcher)
 		self.onHide.append(self.removeWatcher)
 
