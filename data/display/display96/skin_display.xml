@@ -79,7 +79,7 @@
 	</screen>
 
 <!-- channelselection-->
-	<screen name="ChannelSelectionSummary" position="0,0" size="96,64">
+	<screen name="ChannelSelection_summary" position="0,0" size="96,64">
 		<widget source="parent.ServiceEvent" render="Label" position="0,0" size="96,21" font="FdLcD;20" halign="left" noWrap="1" >
 			<convert type="ServiceName">Name</convert>
 		</widget>
@@ -192,12 +192,25 @@
 	</screen>
 
 <!-- JobView Summary -->
-	<screen name="JobViewSummary" position="0,0" size="96,64">
+	<screen name="JobView_summary" position="0,0" size="96,64">
 		<widget source="parent.summary_job_name" render="Label" position="0,4" size="96,42" font="FdLcD;16" />
 		<widget source="parent.summary_job_task" render="Label" position="0,22" size="96,26" font="FdLcD;12" />
 		<widget source="parent.summary_job_progress" render="Progress" position="0,50" size="60,12" borderWidth="1" zPosition="1" />
 		<widget source="parent.summary_job_progress" render="Label" position="60,50" size="40,12" font="FdLcD;12" zPosition="2" halign="center" transparent="1"  >
 			<convert type="ProgressToText" />
+		</widget>
+	</screen>
+
+<!-- Radio text / optional color-display DAB slideshow -->
+	<screen name="RdsInfoDisplaySummary" position="0,0" size="96,64" zPosition="1" backgroundColor="#000000" flags="wfNoBorder">
+		<widget source="station" render="RunningText" position="0,0" size="96,18" font="Regular;14" halign="center" options="movetype=running,direction=left,wrap=0,always=0,startdelay=3000,steptime=80" />
+		<widget source="message" render="RunningText" position="0,20" size="96,32" font="Regular;14" halign="center" valign="center" options="movetype=running,direction=top,wrap=1,always=0,startdelay=2000,steptime=80" />
+		<widget name="picture" position="0,20" size="96,32" zPosition="1" alphatest="blend" scaleFlags="centerScaled" />
+		<widget source="global.CurrentTime" render="Label" position="48,52" size="48,12" font="Regular;10" halign="right" noWrap="1">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="session.RecordState" render="FixedLabel" text="REC" position="0,52" size="48,12" font="Regular;10" noWrap="1">
+			<convert type="ConditionalShowHide" />
 		</widget>
 	</screen>
 </skin>

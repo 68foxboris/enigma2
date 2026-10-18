@@ -54,13 +54,13 @@
 	</screen>
 
 <!-- channelselection-->
-	<screen name="ChannelSelectionSummary" position="0,0" size="132,64">
+	<screen name="ChannelSelection_summary" position="0,0" size="132,64">
 		<widget source="parent.ServiceEvent" render="Label" position="0,0" size="120,25" horizontalAlignment="left" noWrap="1" >
 			<convert type="ServiceName">Name</convert>
 		</widget>
 	</screen>
-	<screen name="NumberZapSummary" position="0,0" size="132,64">
-		<widget source="parent.numberSummary" render="Label" position="0,0" size="132,64" horizontalAlignment="left" noWrap="1" />
+	<screen name="NumberZap_summary" position="0,0" size="132,64">
+		<widget source="parent.number_summary" render="Label" position="0,0" size="132,64" horizontalAlignment="left" noWrap="1" />
 	</screen>
 
 <!-- menus-->
@@ -107,7 +107,7 @@
 	<screen name="SimpleSummary" position="0,0" size="132,64">
 		<widget source="parent.Title" render="RollerCharLCD" position="0,0" size="124,40" font="Regular;16" verticalAlignment="center" />
 	</screen>
-	<screen name="JobViewSummary" position="0,0" size="132,64">
+	<screen name="JobView_summary" position="0,0" size="132,64">
 		<widget source="parent.summary_job_progress" render="Label" position="0,0" size="132,64" font="Regular;12" zPosition="2" transparent="1">
 			<convert type="ProgressToText" />
 		</widget>
@@ -133,25 +133,25 @@
 	</screen>
 
 <!-- RDS info -->
-	<screen name="RdsInfoDisplaySummary" position="0,0" size="132,64">
-		<widget source="message" render="Label" position="0,0" size="120,20" font="Regular;18" noWrap="1" />
+	<screen name="RdsInfoDisplaySummary" position="0,0" size="132,64" zPosition="1" backgroundColor="#000000" flags="wfNoBorder">
+		<widget source="combined" render="RollerCharLCD" position="0,0" size="132,20" font="Regular;18" noWrap="1" />
 	</screen>
 
 <!-- EMC  -->
-	<screen name="EMCSelectionSummary" position="0,0" size="132,64">
+	<screen name="EMCSelection_summary" position="0,0" size="132,64">
 		<widget source="parent.Service" render="Label" position="0,0" size="132,64" font="Regular;18" horizontalAlignment="center" verticalAlignment="center" >
 			<convert type="ServiceName">Name</convert>
 		</widget>
 	</screen>
 	<screen name="EMCSelectionSummary" position="0,0" size="132,64">
-		<panel name="EMCSelectionSummary" />
+		<panel name="EMCSelection_summary" />
 	</screen>
 	<screen name="EMCMoviePlayerSummary" position="0,0" size="132,1">
 		<widget source="session.CurrentService" render="Label" position="0,0" size="132,1">
 			<convert type="ServicePosition">VFDPosition</convert>
 		</widget>
 	</screen>
-	<screen name="MovieMenuSummary" position="0,0" size="132,64">
+	<screen name="MovieMenu_summary" position="0,0" size="132,64">
 		<widget source="parent.menu" render="Label" position="0,0" size="132,1" font="Regular;16" horizontalAlignment="left" verticalAlignment="top">
 			<convert type="StringListSelection" />
 		</widget>
@@ -165,15 +165,15 @@
 	</screen>
 
 <!-- Quickmenü -->
-	<screen name="QuickMenuSummary" position="0,0" size="132,64">
+	<screen name="QuickMenu_summary" position="0,0" size="132,64">
 		<widget source="parent.summary_description" render="Label" position="fill" size="120,20" font="Regular;18" />
 	</screen>
 <!-- Infopanel -->
-	<screen name="InfopanelSummary" position="0,0" size="132,64">
+	<screen name="Infopanel_summary" position="0,0" size="132,64">
 		<widget source="parent.summary_description" render="Label" position="fill" size="120,20" font="Regular;18" />
 	</screen>
 <!-- Timer -->
-	<screen name="TimerEntrySummary" position="0,0" size="132,64">
+	<screen name="TimerEntry_summary" position="0,0" size="132,64">
 		<widget source="parent.summary_description" render="Label" position="fill" size="120,20" font="Regular;18" />
 	</screen>
 	<screen name="TimerEditListSummary" position="0,0" size="132,64">
@@ -188,26 +188,26 @@
 		<widget source="parent.Title" render="Label" position="fill" size="120,20" font="Regular;18" />
 	</screen>
 <!-- LanguageSelection -->
-	<screen name="LanguageWizardSummary" position="0,0" size="132,64">
+	<screen name="LanguageSelection_summary" position="0,0" size="132,64">
 		<widget source="parent.summarylangsel" render="Label" position="fill" size="120,20" font="Regular;18" />
 	</screen>
 <!-- AudioSelection -->
-	<screen name="AudioSelectionSummary" position="0,0" size="132,64">
+	<screen name="AudioSelection_summary" position="0,0" size="132,64">
 		<widget source="parent.summary_description" render="Label" position="fill" size="120,20" font="Regular;18" />
 	</screen>
 <!-- Console -->
-	<screen name="ConsoleSummary" position="0,0" size="132,64">
+	<screen name="Console_summary" position="0,0" size="132,64">
 		<widget source="parent.Title" render="Label" position="fill" size="120,20" font="Regular;18" />
 	</screen>
 <!-- Timer -->
-	<screen name="TimerLogSummary" position="0,0" size="132,64">
+	<screen name="TimerLog_summary" position="0,0" size="132,64">
 		<widget source="parent.summary_description" render="Label" position="fill" size="120,20" font="Regular;18" />
 	</screen>
 <!-- Wizard -->
 	<screen name="CrossEPG_MenuSummary" position="0,0" size="132,64">
 		<widget source="SetupEntry" render="Label" position="0,0" size="120,20" font="Regular;18" horizontalAlignment="left" noWrap="1"  />
 	</screen>
-	<screen name="CrossEPG_DownloaderSummary" position="0,0" size="132,64">
+	<screen name="CrossEPG_Downloader_summary" position="0,0" size="132,64">
 		<widget source="parent.Title" render="Label" position="0,0" size="120,20" font="Regular;18" horizontalAlignment="left" noWrap="1" />
 	</screen>
 	<screen name="AutoBouquetsMaker_MenuSummary" position="0,0" size="132,64">

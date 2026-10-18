@@ -365,7 +365,7 @@
 	</screen>
 
 	<!-- CHOICEBOX -->
-	<screen name="ChoiceBoxSummary" position="0,0" size="800,480">
+	<screen name="ChoiceBox_summary" position="0,0" size="800,480">
 		<widget source="parent.summary_list" render="Label" position="40,50" size="720,110" foregroundColor="white" font="FdLcD;85" horizontalAlignment="center" verticalAlignment="center" zPosition="2" />
 		<widget source="parent.summary_selection" conditional="parent.summary_selection" render="Label" position="40,200" size="720,160" foregroundColor="white" font="FdLcDLight;65" horizontalAlignment="center" verticalAlignment="top" zPosition="2" />
 	</screen>
@@ -376,7 +376,7 @@
 	</screen>
 
 	<!-- JOBVIEW SUMMARY -->
-	<screen name="JobViewSummary" position="0,0" size="800,480">
+	<screen name="JobView_summary" position="0,0" size="800,480">
 		<widget source="parent.summary_job_name" render="Label" position="40,50" size="720,110" foregroundColor="white" font="FdLcD;85" horizontalAlignment="center" verticalAlignment="center" zPosition="2" />
 		<widget source="parent.summary_job_task" render="Label" position="40,200" size="720,160" foregroundColor="white" font="FdLcDLight;65" horizontalAlignment="center" verticalAlignment="top" zPosition="2" />
 		<widget source="parent.summary_job_progress" render="Label" position="40,410" size="720,60" foregroundColor="white" font="FdLcDLight;60" horizontalAlignment="left" verticalAlignment="center" zPosition="3">
@@ -393,12 +393,12 @@
 	</screen>
 
 	<!-- MESSAGEBOX -->
-	<screen name="MessageBoxSummary" position="0,0" size="800,480">
+	<screen name="MessageBox_summary" position="0,0" size="800,480">
 		<widget source="parent.Text" render="Label" position="40,50" size="720,310" foregroundColor="white" font="FdLcD;70" horizontalAlignment="center" verticalAlignment="center" zPosition="2" />
 		<widget source="parent.selectedChoice" conditional="parent.selectedChoice" render="Label" position="40,380" size="720,70" foregroundColor="white" font="FdLcDLight;60" horizontalAlignment="center" verticalAlignment="top" zPosition="2" />
 	</screen>
-	<screen name="MessageBoxSimpleSummary" position="0,0" size="800,480">
-		<panel name="MessageBoxSummary" />
+	<screen name="MessageBoxSimple_summary" position="0,0" size="800,480">
+		<panel name="MessageBox_summary" />
 	</screen>
 
 	<!-- MOVIE SELECTION-->
@@ -433,13 +433,13 @@
 		<widget source="session.CurrentService" render="Label" position="40,480" size="320,70" font="FdLcD;60" foregroundColor="white" horizontalAlignment="left" verticalAlignment="center">
 			<convert type="ServicePosition">Remaining,Negate</convert>
 		</widget>
-		<widget name="statusiconSummary" position="357,370" size="85,85" pixmaps="play.png,pause.png,stop.png,forward.png,backward.png,slow.png" zPosition="2" />
+		<widget name="statusicon_summary" position="357,370" size="85,85" pixmaps="play.png,pause.png,stop.png,forward.png,backward.png,slow.png" zPosition="2" />
 		<widget source="global.CurrentTime" render="Label" position="540,10" size="220,84" font="FdLcD;84" horizontalAlignment="left" backgroundColor="LCDBackground">
 			<convert type="ClockToText">Default</convert>
 		</widget>
 	</screen>
 	<!-- EMC Player -->
-	<screen name="EMCSelectionSummary" position="0,0" size="800,480">
+	<screen name="EMCSelection_summary" position="0,0" size="800,480">
 		<widget source="parent.Title" render="Label" position="40,40" size="720,90" font="FdLcD;75" foregroundColor="white" horizontalAlignment="center" verticalAlignment="center" zPosition="2" />
 		<widget source="parent.Service" render="Label" position="40,150" size="720,150" font="FdLcDLight;60" foregroundColor="white" horizontalAlignment="center" verticalAlignment="top" zPosition="2">
 			<convert type="ServiceName">Name</convert>
@@ -453,7 +453,7 @@
 		</widget>
 	</screen>
 	<screen name="EMCSelectionSummary" position="0,0" size="800,480">
-		<panel name="EMCSelectionSummary" />
+		<panel name="EMCSelection_summary" />
 	</screen>
 	<screen name="EMCMoviePlayerSummary" position="0,0" size="800,480">
 		<widget source="session.CurrentService" render="Label" position="40,90" size="720,260" font="FdLcD;75" foregroundColor="white" horizontalAlignment="center" verticalAlignment="center" zPosition="2">
@@ -470,7 +470,7 @@
 		</widget>
 	</screen>
 	<!-- NUMBERZAP -->
-	<screen name="NumberZapSummary" position="0,0" size="800,480">
+	<screen name="NumberZap_summary" position="0,0" size="800,480">
 		<widget source="parent.servicename" render="Label" position="40,50" size="720,110" foregroundColor="white" font="FdLcD;85" horizontalAlignment="center" verticalAlignment="center" zPosition="2" />
 		<widget source="parent.number" render="Label" position="40,190" size="720,250" foregroundColor="white" font="FdLcD;90" horizontalAlignment="center" verticalAlignment="center" zPosition="2" />
 	</screen>
@@ -489,7 +489,7 @@
 	</screen>
 
 	<!-- ET PORTAL -->
-	<screen name="EtPortalScreenSummary" position="0,0" size="800,480">
+	<screen name="EtPortalScreen_summary" position="0,0" size="800,480">
 		<eLabel text="EtPortal" position="15,20" foregroundColor="white" size="670,120" font="FdLcD;70" horizontalAlignment="center" verticalAlignment="top" noWrap="1" />
 		<widget source="parent.label" render="Label" position="white" size="670,200" font="FdLcD;60" horizontalAlignment="center" verticalAlignment="top" />
 	</screen>
@@ -509,12 +509,25 @@
 	</screen>
 
 	<!-- ExtensionsList -->
-	<screen name="ExtensionsListSummary" position="0,0" size="800,480">
+	<screen name="ExtensionsList_summary" position="0,0" size="800,480">
 		<widget source="parent.Title" render="Label" position="40,20" size="720,376" font="FdLcD;70" horizontalAlignment="center" verticalAlignment="center" />
 	</screen>
 
 	<!-- EPG -->
-	<screen name="EPGExtensionsListSummary" position="0,0" size="800,480">
+	<screen name="EPGExtensionsList_summary" position="0,0" size="800,480">
 		<widget source="parent.Title" render="Label" position="40,20" size="720,250" font="FdLcD;80" horizontalAlignment="center" verticalAlignment="center" foregroundColor="white" />
+	</screen>
+
+	<!-- Radio text / optional color-display DAB slideshow -->
+	<screen name="RdsInfoDisplaySummary" position="0,0" size="800,480" zPosition="1" backgroundColor="#000000" flags="wfNoBorder">
+		<widget source="station" render="RunningText" position="0,0" size="800,60" font="Regular;56" halign="center" options="movetype=running,direction=left,wrap=0,always=0,startdelay=3000,steptime=80" />
+		<widget source="message" render="RunningText" position="0,62" size="800,380" font="Regular;44" halign="center" valign="center" options="movetype=running,direction=top,wrap=1,always=0,startdelay=2000,steptime=80" />
+		<widget name="picture" position="0,62" size="800,380" zPosition="1" alphatest="blend" scaleFlags="centerScaled" />
+		<widget source="global.CurrentTime" render="Label" position="400,442" size="400,38" font="Regular;36" halign="right" noWrap="1">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="session.RecordState" render="FixedLabel" text="REC" position="0,442" size="400,38" font="Regular;36" noWrap="1">
+			<convert type="ConditionalShowHide" />
+		</widget>
 	</screen>
 </skin>

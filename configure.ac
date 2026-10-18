@@ -746,6 +746,7 @@ data/display/vfd255/Makefile
 data/extensions/Makefile
 data/keymaps/Makefile
 data/rc_models/Makefile
+data/icons/Makefile
 data/skin_default/Makefile
 data/skin_default/buttons/Makefile
 data/skin_default/epg/Makefile

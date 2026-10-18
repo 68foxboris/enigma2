@@ -58,13 +58,12 @@
 		</widget>
 		<widget source="session.Event_Now" render="Label" position="64,50" size="64,16" font="FdLcD;18" halign="right" >
 			<convert type="EventTime">VFDRemaining</convert>
-			<convert type="RemainingToText"></convert>
+			<convert type="RemainingToText">VFDNoSeconds</convert>
 		</widget>
-
 	</screen>
 
 <!-- channelselection-->
-	<screen name="ChannelSelectionSummary" position="2,0" size="128,64">
+	<screen name="ChannelSelection_summary" position="2,0" size="128,64">
 		<widget source="session.CurrentService" render="LcdPicon" position="0,0" size="128,44" zPosition="1" >
 			<convert type="ServiceName">Reference</convert>
 		</widget>
@@ -81,9 +80,9 @@
 	</screen>
 
 <!-- menus-->
-	<screen name="MenuSummary" position="2,0" size="128,64">
-		<widget source="parent.title" render="Label" position="top" size="100,16" font="FdLcD;14" horizontalAlignment="center" verticalAlignment="top" noWrap="1" />
-		<widget source="parent.menu" render="Label" position="top" size="100,48" font="FdLcD;16"  verticalAlignment="top">
+	<screen name="MenuSummary" position="fill">
+		<widget font="FdLcD;52" halign="center" position="12,15" render="Label" size="386,52" source="parent.Title" />
+		<widget font="FdLcD;52" halign="center" foregroundColor="oled1" position="12,95" render="Label" size="386,145" source="parent.menu">
 			<convert type="StringListSelection" />
 		</widget>
 	</screen>
@@ -171,7 +170,7 @@
 	</screen>
 
 <!-- JobView Summary -->
-	<screen name="JobViewSummary" position="2,0" size="128,64">
+	<screen name="JobView_summary" position="2,0" size="128,64">
 		<widget source="parent.summary_job_name" render="Label" position="6,4" size="120,42" font="FdLcD;16" />
 		<widget source="parent.summary_job_task" render="Label" position="6,22" size="120,26" font="FdLcD;12" />
 		<widget source="parent.summary_job_progress" render="Progress" position="6,50" size="60,12" borderWidth="1" zPosition="1" />
@@ -216,5 +215,17 @@
 		<widget name="text1" position="4,0" size="128,35" font="Regular;16"/>
 		<widget name="text3" position="4,36" size="128,14" font="Regular;10"/>
 		<widget name="text4" position="4,49" size="128,14" font="Regular;10"/>
+	</screen>
+	<!-- Radio text / optional color-display DAB slideshow -->
+	<screen name="RdsInfoDisplaySummary" position="0,0" size="128,64" zPosition="1" backgroundColor="#000000" flags="wfNoBorder">
+		<widget source="station" render="RunningText" position="0,0" size="128,18" font="Regular;14" halign="center" options="movetype=running,direction=left,wrap=0,always=0,startdelay=3000,steptime=80" />
+		<widget source="message" render="RunningText" position="0,20" size="128,32" font="Regular;14" halign="center" valign="center" options="movetype=running,direction=top,wrap=1,always=0,startdelay=2000,steptime=80" />
+		<widget name="picture" position="0,20" size="128,32" zPosition="1" alphatest="blend" scaleFlags="centerScaled" />
+		<widget source="global.CurrentTime" render="Label" position="64,52" size="64,12" font="Regular;10" halign="right" noWrap="1">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="session.RecordState" render="FixedLabel" text="REC" position="0,52" size="64,12" font="Regular;10" noWrap="1">
+			<convert type="ConditionalShowHide" />
+		</widget>
 	</screen>
 </skin>
