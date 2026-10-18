@@ -1,58 +1,50 @@
+from Components.AVSwitch import avSwitch
 from Components.config import config, configfile
 from Components.SystemInfo import BoxInfo
 from Screens.HelpMenu import ShowRemoteControl
 from Screens.Wizard import WizardSummary, Wizard
-from Plugins.SystemPlugins.Videomode.VideoHardware import video_hw
-from Components.Pixmap import Pixmap
-from Components.Sources.StaticText import StaticText
-from Tools.Directories import SCOPE_PLUGINS, resolveFilename
-
-MODEL = BoxInfo.getItem("model")
-has_dvi = BoxInfo.getItem("DreamBoxDVI")
-has_scart = BoxInfo.getItem("HasScart")
-has_yuv = BoxInfo.getItem("yuv")
-has_rca = BoxInfo.getItem("rca")
-has_avjack = BoxInfo.getItem("avjack")
+from Tools.Directories import SCOPE_SKINS, resolveFilename
 
 
-class VideoWizard(Wizard, ShowRemoteControl):
+class WizardVideo(Wizard, ShowRemoteControl):
 	def __init__(self, session):
-		self.xmlfile = resolveFilename(SCOPE_PLUGINS, "SystemPlugins/Videomode/videowizard.xml")
+		self.xmlfile = resolveFilename(SCOPE_SKINS, "videowizard.xml")
 		Wizard.__init__(self, session, showSteps=False, showStepSlider=False)
 		ShowRemoteControl.__init__(self)
+		self.skinName = ["WizardVideo", "VideoWizard"]
 		self.setTitle(_("Video Wizard"))
-		self.avSwitch = video_hw
+		self.hasDVI = BoxInfo.getItem("dvi", False)
+		self.hasJack = BoxInfo.getItem("avjack", False)
+		self.hasRCA = BoxInfo.getItem("rca", False)
+		self.hasSCART = BoxInfo.getItem("scart", False)
 		self.portCount = 0
 		self.port = None
 		self.mode = None
 		self.rate = None
 		self.lastVideoMode = None
-		self["portpic"] = Pixmap()
 
-	def listPorts(self):  # Called by videowizard.xml.
+	def listPorts(self):  # Called by wizardvideo.xml.
 		ports = []
-		for port in self.avSwitch.getPortList():
-			if self.avSwitch.isPortUsed(port):
+		for port in avSwitch.getPortList():
+			if avSwitch.isPortUsed(port):
 				descr = port
-				if descr == "HDMI" and has_dvi:
+				if descr == "HDMI" and self.hasDVI:
 					descr = "DVI"
-				if descr == 'HDMI-PC' and has_dvi:
-					descr = 'DVI-PC'
-				if descr == "Scart" and BoxInfo.getItem("rca") and not has_scart:
+				if descr == "Scart" and self.hasRCA and not self.hasSCART:
 					descr = "RCA"
-				if descr == "Scart" and BoxInfo.getItem("avjack") and not has_scart:
+				if descr == "Scart" and self.hasJack and not self.hasSCART:
 					descr = "Jack"
-				if port != "HDMI-PC":
+				if port != "DVI-PC":
 					ports.append((descr, port))
 		ports.sort(key=lambda x: x[0])
 		# print("[WizardVideo] listPorts DEBUG: Ports=%s." % ports)
 		return ports
 
-	def listModes(self):  # Called by videowizard.xml.
+	def listModes(self):  # Called by wizardvideo.xml.
 		def sortKey(name):
 			return sortKeys.get(name[0], 6)
 
-		modes = [(mode[0], mode[0]) for mode in self.avSwitch.getModeList(self.port)]
+		modes = [(mode[0], mode[0]) for mode in avSwitch.getModeList(self.port)]
 
 		sortKeys = {
 			"720p": 1,
@@ -63,27 +55,40 @@ class VideoWizard(Wizard, ShowRemoteControl):
 			"smpte": 20
 		}
 
+		# preferred = avSwitch.readPreferredModes(saveMode=True)
+		preferred = []  # Don't resort because some TV sends wrong edid info
+		if preferred:  # FIXME: Improve EDID handling # NOSONAR
+			if "2160p" in preferred:
+				sortKeys["2160p"] = 1
+				sortKeys["2160p30"] = 2
+				sortKeys["1080p"] = 3
+				sortKeys["1080i"] = 4
+				sortKeys["720p"] = 5
+			elif "1080p" in preferred:
+				sortKeys["1080p"] = 1
+				sortKeys["720p"] = 3
+
 		modes.sort(key=sortKey)
 		# print("[WizardVideo] listModes DEBUG: port='%s', modes=%s." % (self.port, modes))
 		return modes
 
-	def listRates(self, mode=None):  # Called by videowizard.xml.
+	def listRates(self, mode=None):  # Called by wizardvideo.xml.
 		def sortKey(name):
 			return {
-				"50Hz": 1,
-				"60Hz": 2
+				"multi": 1,
+				"auto": 2
 			}.get(name[0], 3)
 
 		if mode is None:
 			mode = self.mode
 		rates = []
-		for modes in self.avSwitch.getModeList(self.port):
+		for modes in avSwitch.getModeList(self.port):
 			if modes[0] == mode:
 				for rate in modes[1]:
-					if rate == "auto" and not BoxInfo.getItem("Has24hz"):
+					if rate == "auto" and not BoxInfo.getItem("have24hz"):
 						continue
-					if self.port == "HDMI-PC":
-						# print("[VideoWizard] listModes DEBUG: rate='%s'." % rate)
+					if self.port == "DVI-PC":
+						# print("[WizardVideo] listModes DEBUG: rate='%s'." % rate)
 						if rate == "640x480":
 							rates.insert(0, (rate, rate))
 							continue
@@ -92,26 +97,17 @@ class VideoWizard(Wizard, ShowRemoteControl):
 		# print("[WizardVideo] listRates DEBUG: port='%s', mode='%s', rates=%s." % (self.port, mode, rates))
 		return rates
 
-	def portSelectionMade(self, index):  # Called by videowizard.xml.
+	def portSelectionMade(self, index):  # Called by wizardvideo.xml.
 		# print("[WizardVideo] inputSelectionMade DEBUG: index='%s'." % index)
 		self.port = index
 		self.portSelect(index)
 
-	def portSelectionMoved(self):  # Called by videowizard.xml.
+	def portSelectionMoved(self):  # Called by wizardvideo.xml.
 		# print("[WizardVideo] inputSelectionMoved DEBUG: self.selection='%s'." % self.selection)
-		if self["portpic"].instance is not None:
-			picname = self.selection
-			if picname == 'HDMI-PC':
-				picname = "HDMI"
-			if picname == 'HDMI' and has_dvi:
-				picname = "DVI"
-			if picname == 'HDMI-PC' and has_dvi:
-				picname = "DVI"
-			self["portpic"].instance.setPixmapFromFile(resolveFilename(SCOPE_PLUGINS, "SystemPlugins/Videomode/" + picname + ".png"))
 		self.portSelect(self.selection)
 
 	def portSelect(self, port):
-		modeList = self.avSwitch.getModeList(port)
+		modeList = avSwitch.getModeList(port)
 		# print("[WizardVideo] inputSelect DEBUG: port='%s', modeList=%s." % (port, modeList))
 		self.port = port
 		if modeList:
@@ -119,12 +115,12 @@ class VideoWizard(Wizard, ShowRemoteControl):
 			if ratesList:
 				self.setVideoMode(port, modeList[0][0], ratesList[0][0])
 
-	def modeSelectionMade(self, index):  # Called by videowizard.xml.
+	def modeSelectionMade(self, index):  # Called by wizardvideo.xml.
 		# print("[WizardVideo] modeSelectionMade DEBUG: index='%s'." % index)
 		if self.modeSelect(index):
 			self.mode = index
 
-	def modeSelectionMoved(self):  # Called by videowizard.xml.
+	def modeSelectionMoved(self):  # Called by wizardvideo.xml.
 		# print("[WizardVideo] modeSelectionMoved DEBUG: self.selection='%s'." % self.selection)
 		self.modeSelect(self.selection)
 
@@ -136,14 +132,18 @@ class VideoWizard(Wizard, ShowRemoteControl):
 		# listRates already prefers multi, but only if all required rates are available.
 		self.rate = rates[0][0]
 		self.setVideoMode(self.port, mode, self.rate)
+
+		if BoxInfo.getItem("machinebuild") == "gbquad4kpro" and mode.startswith("2160p"):  # Hack for GB QUAD 4K Pro
+			config.av.hdmicolordepth.value = "10bit"
+			config.av.hdmicolordepth.save()
 		return True
 
-	def rateSelectionMade(self, index):  # Called by videowizard.xml.
+	def rateSelectionMade(self, index):  # Called by wizardvideo.xml.
 		# print("[WizardVideo] rateSelectionMade DEBUG: index='%s'." % index)
 		if self.rateSelect(index):
 			self.rate = index
 
-	def rateSelectionMoved(self):  # Called by videowizard.xml.
+	def rateSelectionMoved(self):  # Called by wizardvideo.xml.
 		# print("[WizardVideo] rateSelectionMade DEBUG: self.selection='%s'." % self.selection)
 		self.rateSelect(self.selection)
 
@@ -157,24 +157,26 @@ class VideoWizard(Wizard, ShowRemoteControl):
 		# Selection changes, OK and entry into the next step can request the same mode.
 		videoMode = (port, mode, rate)
 		if videoMode != self.lastVideoMode:
-			self.avSwitch.setMode(port=port, mode=mode, rate=rate)
+			avSwitch.setMode(port=port, mode=mode, rate=rate)
 			self.lastVideoMode = videoMode
 
 	def keyNumberGlobal(self, number):
 		if number in (1, 2, 3):
 			if number == 1:
-				self.avSwitch.saveMode("HDMI", "720p", "multi")
+				avSwitch.saveMode("HDMI", "720p", "multi")
 			elif number == 2:
-				self.avSwitch.saveMode("HDMI", "1080i", "multi")
+				avSwitch.saveMode("HDMI", "1080i", "multi")
 			elif number == 3:
-				self.avSwitch.saveMode("Scart", "Multi", "multi")
-			self.avSwitch.setConfiguredMode()
+				avSwitch.saveMode("Scart", "Multi", "multi")
+			avSwitch.setConfiguredMode()
 			self.close()
 		Wizard.keyNumberGlobal(self, number)
 
-	def saveWizardChanges(self):  # Called by videowizard.xml.
-		self.avSwitch.saveMode(self.port, self.mode, self.rate)
-		config.misc.videowizardenabled.value = False
+	def saveWizardChanges(self):  # Called by wizardvideo.xml.
+		avSwitch.saveMode(self.port, self.mode, self.rate)
+		# config.misc.wizardVideoEnabled.value = 0
+		# config.misc.wizardVideoEnabled.save()
+		config.misc.videowizardenabled.value = 0
 		config.misc.videowizardenabled.save()
 		configfile.save()
 

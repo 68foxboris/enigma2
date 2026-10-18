@@ -62,7 +62,7 @@ class Session:
 		self.shutdown = False
 		self.isStandby = False  # Set by Screens.Standby.
 		from Components.FrontPanelLed import frontPanelLed
-		frontPanelLed.init(self)
+		frontPanelLed.setSession(self)
 		from Tools.Notifications import notificationCenter
 		self.allDialogs = []
 		notificationCenter.setup(self)
@@ -381,10 +381,12 @@ def runScreenTest():
 		SymbolsCheck(session)
 	# We need session.scart to access it from within menu.xml.
 	session.scart = AutoScartControl(session)
-
 	enigma.eProfileWrite("Trashcan")
 	import Tools.Trashcan
 	Tools.Trashcan.init(session)
+	enigma.eProfileWrite("VideoModeAutoStart")
+	from Screens.VideoMode import autostart
+	autostart(session)
 	enigma.eProfileWrite("RunReactor")
 	enigma.eProfileDone()
 	from Components.FrontPanelLed import frontPanelLed
@@ -590,7 +592,7 @@ config.crash.debugSeek = ConfigYesNo(default=False)
 config.crash.debugTeletext = ConfigYesNo(default=False)
 config.crash.debugStorage = ConfigYesNo(default=False)
 config.crash.debugTextEncoding = ConfigYesNo(default=False)
-config.crash.debugNetwork = ConfigYesNo(default=True)
+config.crash.debugNetwork = ConfigYesNo(default=False)
 
 # Enable numbers in Plugin Browser (Do not move it to other file)
 config.misc.menu_show_numbers = ConfigYesNo(default=False)
@@ -720,8 +722,10 @@ from Components.InputDevice import InitInputDevices
 InitInputDevices()
 
 enigma.eProfileWrite("InitAVSwitch")
-from Components.AVSwitch import InitAVSwitch
+from Components.AVSwitch import InitAVSwitch, InitiVideomodeHotplug
 InitAVSwitch()
+InitiVideomodeHotplug()
+print("[TEST] After InitAVSwitch:", hasattr(config.osd, "dst_left"))
 
 enigma.eProfileWrite("InitHDMIRecord")
 from Components.HdmiRecord import InitHdmiRecord
@@ -734,6 +738,7 @@ InitRecordingConfig()
 enigma.eProfileWrite("InitUsageConfig")
 from Components.UsageConfig import InitUsageConfig, DEFAULTKEYMAP
 InitUsageConfig()
+print("[TEST] After InitUsageConfig:", hasattr(config.osd, "dst_left"))
 
 enigma.eProfileWrite("InitPvrDescrambleConvert")
 from Components.PvrDescrambleConvert import pvr_descramble_convert
