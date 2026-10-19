@@ -41,7 +41,6 @@ class MessageBox(Screen, HelpableScreen):
 		self.text = text
 		self["text"] = Label(text)
 		self.type = type
-		self.customList = type == self.TYPE_YESNO and list is not None
 		if type == self.TYPE_YESNO:
 			self.list = [(_("Yes"), True), (_("No"), False)] if list is None else list
 			self["list"] = MenuList(self.list)
@@ -98,7 +97,7 @@ class MessageBox(Screen, HelpableScreen):
 		self["actions"] = HelpableActionMap(self, ["MsgBoxActions", "DirectionActions", "NavigationActions"], {
 			"cancel": (self.cancel, _("Select the No / False response")),
 			"select": (self.select, _("Return the current selection response")),
-			"selectOk": (self.selectOk, _("Return the current selection response") if self.customList else _("Select the Yes / True response")),
+			"selectOk": (self.selectOk, _("Select the Yes / True response")),
 			"top": (self.top, _("Move to first line")),
 			"pageUp": (self.pageUp, _("Move up a page")),
 			"up": (self.up, _("Move up a line")),
@@ -174,10 +173,7 @@ class MessageBox(Screen, HelpableScreen):
 			self.close(True)
 
 	def selectOk(self):
-		if self.customList:
-			self.select()
-		else:
-			self.close(True)
+		self.close(True)
 
 	def top(self):
 		self.move(self["list"].instance.moveTop)
@@ -262,7 +258,6 @@ class ModalMessageBox:
 		self.dialog["text"].setText(text)
 		self.dialog.typeIcon = typeIcon
 		self.dialog.type = typeIcon
-		self.dialog.customList = typeIcon == MessageBox.TYPE_YESNO and list is not None
 		self.dialog.picon = (typeIcon != MessageBox.TYPE_NOICON)  # Legacy picon argument to support old skins.
 		if typeIcon == MessageBox.TYPE_YESNO:
 			self.dialog.list = [(_("Yes"), True), (_("No"), False)] if list is None else list
