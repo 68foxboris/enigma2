@@ -2,9 +2,9 @@ from datetime import datetime
 from glob import glob
 from hashlib import md5
 from os import listdir, mkdir, rename, rmdir, stat, unlink
-from os.path import basename, exists, isdir, isfile, ismount, join, islink, realpath
+from os.path import basename, exists, isdir, isfile, islink, ismount, join, realpath
 from re import search
-from struct import calcsize, pack, unpack, error
+from struct import calcsize, error, pack, unpack
 from tempfile import mkdtemp
 
 # NOTE: This module must not import from SystemInfo.py as this module is
@@ -206,17 +206,20 @@ class MultiBootClass():
 		# Match by root partition (or 'recovery' for slotCode R) — section order is not fixed.
 		isRecovery = slotCode == "R"
 		targetPart = None
+		isSdCard = False
 		if not isRecovery:
-			match = search(r"p(\d+)$", self.bootSlots.get(slotCode, {}).get("device", ""))
+			match = search(r"mmcblk(\d+)p(\d+)$", self.bootSlots.get(slotCode, {}).get("device", ""))
 			if not match:
 				return None
-			targetPart = match.group(1)
+			isSdCard = match.group(1) == "1"
+			targetPart = match.group(2)
 		for cur, cmd in self._iterDreamBootSections():
 			if isRecovery:
 				if "recovery" in cmd.lower():
 					return cur
 			else:
-				match = search(r"\b\d+:(\d+)\b", cmd)
+				# Flash slots load from "mmc 1:<part>", SD card slots from "mmc 0:1" with the partition in the kernel name.
+				match = search(r"/kernel(\d+)\.img", cmd) if isSdCard else search(r"\bmmc 1:(\d+)\b", cmd)
 				if match and match.group(1) == targetPart:
 					return cur
 		return None
