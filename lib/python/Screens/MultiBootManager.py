@@ -11,8 +11,8 @@ from Components.config import ConfigInteger, ConfigSelection
 from Components.Console import Console
 from Components.Harddisk import harddiskmanager
 from Components.Label import Label
-from Components.Sources.StaticText import StaticText
 from Components.SystemInfo import BoxInfo, getBoxDisplayName
+from Components.Sources.StaticText import StaticText
 from Screens.Console import Console as ConsoleScreen
 from Screens.LocationBox import DEFAULT_INHIBIT_DEVICES
 from Screens.MessageBox import MessageBox
@@ -20,7 +20,7 @@ from Screens.Screen import Screen
 from Screens.Setup import Setup
 from Screens.Standby import QUIT_REBOOT, QUIT_RESTART, TryQuitMainloop
 from Screens.VirtualKeyBoard import VirtualKeyBoard
-from Tools.Directories import fileReadLines, fileReadLine, fileWriteLine, fileWriteLines
+from Tools.Directories import fileReadLine, fileReadLines, fileWriteLine, fileWriteLines
 from Tools.MultiBoot import MultiBoot
 
 MODULE_NAME = __name__.split(".")[-1]
@@ -88,6 +88,7 @@ def hasAdditionalSlots():
 
 
 class MultiBootManager(Screen):
+
 	# NOTE: This embedded skin will be affected by the Choicelist parameters and ChoiceList font in the current skin!  This screen should be skinned.
 	# 	See Components/ChoiceList.py to see the hard coded defaults for which this embedded screen has been designed.
 	skin = """
@@ -133,14 +134,14 @@ class MultiBootManager(Screen):
 		self["actions"] = HelpableActionMap(self, ["CancelActions", "NavigationActions"], {
 			"cancel": (self.keyCancel, _("Cancel the slot selection and exit")),
 			"close": (self.keyCloseRecursive, _("Cancel the slot selection and exit all menus")),
-			"top": (self.keyTop, _("Move to first line / screen")),
+			"top": (self.keyTop, _("Move to the first line / screen")),
 			"pageUp": (self.keyPageUp, _("Move up a screen")),
 			"up": (self.keyUp, _("Move up a line")),
 			# "left": (self.keyUp, _("Move up a line")),
 			# "right": (self.keyDown, _("Move down a line")),
 			"down": (self.keyDown, _("Move down a line")),
 			"pageDown": (self.keyPageDown, _("Move down a screen")),
-			"bottom": (self.keyBottom, _("Move to last line / screen"))
+			"bottom": (self.keyBottom, _("Move to the last line / screen"))
 		}, prio=0, description=actionDescription)
 		self["restartActions"] = HelpableActionMap(self, ["OkSaveActions"], {
 			"save": (self.keyReboot, _("Select the highlighted slot and reboot")),
@@ -493,6 +494,7 @@ class MultiBootManager(Screen):
 
 
 class KexecInit(Screen):
+
 	skin = """
 	<screen name="KexecInit" title="Kexec MultiBoot Manager" position="center,center" size="900,600" resolution="1280,720">
 		<widget name="description" position="0,0" size="e,e-50" font="Regular;20" />
@@ -853,21 +855,21 @@ class GPTSlotManager(Setup):
 			bootConfig = "/data/bootconfig.txt"
 			lines = fileReadLines(bootConfig, [], source=MODULE_NAME)
 			newlines = []
-			skipblock = False
+			recovery = []
+			block = None
 			for line in lines:
-				if line.strip().startswith("[SDcard Slot"):
-					skipblock = True
-				elif skipblock and line.strip().startswith("["):
-					skipblock = False
-
-				if not skipblock:
+				section = line.strip()
+				if section.startswith("[SDcard Slot"):
+					block = "sdcard"
+				elif section == "[   Recovery   ]":
+					block = "recovery"
+				elif section.startswith("["):
+					block = None
+				if block == "recovery":
+					recovery.append(line)
+				elif block != "sdcard":
 					newlines.append(line)
-			lines = newlines
-
-			for i in range(len(lines) - 1, -1, -1):
-				if lines[i].strip().startswith("["):
-					lines = lines[:i] + bootInfo + lines[i:]
-					break
+			lines = newlines + bootInfo + recovery  # Recovery stays the last entry.
 
 			if numSlots > 4:
 				for idx, line in enumerate(lines):
@@ -877,14 +879,6 @@ class GPTSlotManager(Setup):
 						lines[idx] = "fb_size=1080,300"
 					elif line.startswith("font_size="):
 						lines[idx] = "font_size=2"
-
-			recovery_index = None
-			for i, line in enumerate(lines):
-				if line.strip() == "[   Recovery   ]":
-					recovery_index = i
-					break
-			if recovery_index is not None:
-				del lines[recovery_index:recovery_index + 3]
 			fileWriteLines(bootConfig, lines, source=MODULE_NAME)
 
 		def formatDevice():
@@ -1096,6 +1090,8 @@ class ChkrootInit(Screen):
 
 
 class ChkrootSlotManager(Setup):
+	protectionSections = ("configuration", "multiboot")
+
 	def __init__(self, session):
 		def getGreenHelpText():
 			return {
@@ -1628,7 +1624,7 @@ class NativeSlotManager(Setup):
 			self.NativeSlotManagerDevice = None
 			self.NativeSlotManagerLocation.value = None
 			self.createSetup()
-			self.updateStatus(_("The selected device is too small. At least 2561 MiB is required."))
+			self.updateStatus(_("The selected device is too small. At least 3 GB is required."))
 			return
 		self.NativeSlotManagerSlots.updateLimits([(1, maxSlots)])
 		if self.NativeSlotManagerSlots.value > maxSlots:
@@ -1687,6 +1683,7 @@ class NativeSlotManager(Setup):
 			ACTION_SELECT: _("Select Device"),
 			ACTION_CREATE: _("Create Slots")
 		}.get(self.green, _("Invalid")))
+
 
 class UBISlotManager(Setup):
 	def __init__(self, session):
