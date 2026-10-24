@@ -69,10 +69,14 @@ def InitUsageConfig():
 
 	config.misc.usegstplaybin3 = ConfigYesNo(default=False)
 	config.misc.actionLeftRightToPageUpPageDown = ConfigYesNo(default=True)
-
 	config.misc.spinnerPosition = ConfigSequence(default=[50, 50], limits=[(0, 1260), (0, 700)], seperator=",")
-
 	config.misc.disableServiceHiSilicon = ConfigYesNo(default=False)
+	config.misc.toastFade = ConfigSelection(default=10, choices=[
+		(0, _("Disabled")),
+		(5, _("Slow")),
+		(10, _("Medium")),
+		(20, _("Fast"))
+	])
 
 	config.usage = ConfigSubsection()
 
