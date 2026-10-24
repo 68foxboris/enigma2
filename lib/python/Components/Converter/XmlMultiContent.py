@@ -30,7 +30,7 @@ class MultiContentTemplateParser(TemplateParser):
 			if self.indexNames and isinstance(color, str) and color[0] == "+":
 				index = self.indexNames.get(color[1:])
 				if index is None:
-					print(f"[XmlMultiContent] Error: Error: Index name must resolve to a valid color list item number!")
+					print("[XmlMultiContent] Error: Error: Index name must resolve to a valid color list item number!")
 					color = None
 				else:
 					color = 0xFF000000 | index
@@ -119,7 +119,7 @@ class MultiContentTemplateParser(TemplateParser):
 					index = self.indexNames.get(index)
 					if index is None:
 						index = -1
-						print(f"[XmlMultiContent] Error: Index name must resolve to a valid list item number!")
+						print("[XmlMultiContent] Error: Index name must resolve to a valid list item number!")
 				else:
 					index = -1
 					print("[XmlMultiContent] Error: Index must be a list item number or valid index name!")
@@ -306,7 +306,7 @@ class XmlMultiContent(StringList, MultiContentTemplateParser):
 				for item in range(len(sourceList)):
 					contentList.append((sourceList[item],) if not isinstance(sourceList[item], (list, tuple)) else sourceList[item])
 			except Exception as error:
-				print(f"[XmlMultiContent] Error: {error}!")
+				print("[XmlMultiContent] Error: {error}!")
 				contentList = self.source.list
 			self.content.setList(contentList)
 		setTemplate()
