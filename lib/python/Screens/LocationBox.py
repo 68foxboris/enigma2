@@ -458,7 +458,7 @@ class LocationBox(Screen, NumericalTextInput):
 		if not self.userMode and self.realBookmarks:
 			if self.currList == "filelist":
 				menu = [
-					(_("List of Storage Devices"), self.gotoStorageDevices)
+					(_("List of Storage Devices"), self.gotoStorageDevices),
 					(_("Switch to bookmarks"), self.switchToBookList),
 					(_("Add bookmark"), self.addRemoveBookmark),
 					(_("Update bookmarks"), self.updateBookmarks)
