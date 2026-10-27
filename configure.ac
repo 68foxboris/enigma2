@@ -825,8 +825,6 @@ lib/python/Plugins/SystemPlugins/PositionerSetup/meta/Makefile
 lib/python/Plugins/SystemPlugins/SatelliteEquipmentControl/Makefile
 lib/python/Plugins/SystemPlugins/Satfinder/Makefile
 lib/python/Plugins/SystemPlugins/Satfinder/meta/Makefile
-lib/python/Plugins/SystemPlugins/SoftwareManager/Makefile
-lib/python/Plugins/SystemPlugins/SoftwareManager/meta/Makefile
 lib/python/Plugins/SystemPlugins/TempFanControl/Makefile
 lib/python/Plugins/SystemPlugins/TempFanControl/meta/Makefile
 lib/python/Plugins/SystemPlugins/VideoClippingSetup/Makefile

@@ -26,7 +26,7 @@
 			<item key="crontimer_edit" weight="10" level="0" text="CronTimers"><screen module="CronTimer" screen="CronTimers" /></item>
 		</menu>
 		<item key="scart_switch" level="1" text="VCR scart" conditional="config.usage.show_vcr_scart.value" requires="ScartSwitch"><code>self.session.scart.VCRSbChanged(3)</code></item>
-
+		<!-- Menu / Information -->
 		<menu key="information" level="0" text="Information" description="This menu contains selections to display information about the receiver." weight="5">
 			<item key="distribution_info_screen" level="0" text="About OpenPLi" weight="5"><screen module="Information" screen="InformationDistribution" /></item>
 			<menu key="support" level="0" text="Support" description="This menu contains selections to get help and report problems." weight="7">
@@ -61,7 +61,6 @@
 				<item key="fallbacktuner_settings" text="Fallback remote receiver setup"><screen module="SetupFallbacktuner"/></item>
 			</menu>
 			<menu key="system" weight="5" level="0" text="System">
-				<item key="check_update" level="0" text="Check update Settings" weight="0"><setup setupKey="Checkupdate" /></item>
 				<!-- Menu / Setup / System -->
 				<menu key="AudioVideo" level="0" text="Audio &amp; Video" description="This menu contains audio &amp; video settings.">
 					<!-- Menu / Setup / System / Audio & Video / Video Menu -->
@@ -147,11 +146,13 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 						<item key="timeshift_setup" level="0" text="Timeshift Setup" weight="15"><screen module="Timeshift" screen="TimeshiftSettings" /></item>
 						<item key="hdmirecord_setup" level="0" text="HDMI Recording Setup" weight="15" requires="HDMIin"><setup setupKey="HDMIRecord"/></item>
 					</menu>
+					<!-- Menu / Setup / System / Storage devices -->
 						<menu key="harddisk" level="0" text="Storage Devices" weight="45" requires="Harddisk">
 						<item key="device_manager" level="0" text="Device Manager" weight="20"><screen module="DeviceManager" screen="DeviceManager" /></item>
 						<item key="swap_manager" level="2" text="Swap Manager" weight="30"><screen module="SwapManager" screen="Swap" /></item>
 						<item key="flash_expander" level="2" text="Flash Expander" weight="40"><screen module="FlashExpander" screen="FlashExpander" /></item>
 					</menu>
+					<!-- Menu / Setup / Network -->
 					<menu key="network" level="0" text="Network">
 						<item key="device_setup" level="0" text="Network Overview" weight="0"><screen module="NetworkSetup" screen="NetworkOverview" /></item>
 						<item key="mount_setup" level="0" text="Network Mounts Overview" weight="1"><screen module="NetworkMounts" screen="NetworkMountsOverview" /></item>
@@ -178,15 +179,23 @@ self.session.openWithCallback(msgClosed, EpgDeleteMsg)
 				<item key="softcsa_settings" level="0" text="NDS CSA" weight="105" requires="HasSoftCSA"><setup setupKey="SoftCSA" /></item>
 				<item key="streamrelay_settings" level="2" text="Stream Relay Settings" weight="110"><screen module="SoftcamSetup" screen="StreamRelaySetup" /></item>
 			</menu>
-
+			<!-- Menu / Setup / Software Management -->
 			<item key="parental_setup" weight="15" level="0" text="Parental control"><screen module="ParentalControlSetup" screen="ParentalControlSetup"/></item>
 			<item key="factory_reset" weight="15" level="0" text="Factory reset"><screen module="FactoryReset" screen="FactoryReset"/></item>
 			<item key="flash_online" level="0" text="Flash image Online" description="Download and flash images on your %s %s." weight="13"><screen module="FlashManager" screen="FlashManager" /></item>
 			<item key="software_update" level="0" text="Software Update" description="Online update of your %s %s software." weight="11"><screen module="SoftwareUpdate" screen="SoftwareUpdate" /></item>
 			<item key="backup_image" level="0" text="Image Backup" description="Backup your running %s %s image to HDD or USB." weight="19"><screen module="ImageBackup" screen="ImageBackup" /></item>
-			<item key="upgrade_source" level="2" text="Select Upgrade Source" description="Edit the upgrade source address." weight="16"><screen module="Opkg" screen="PackageFeedSelection" /></item>
+			<!-- Menu / Setup / Software Management / Advanced Options -->
+			<menu key="advanced_software" level="2" text="Advanced Options" description="Advanced options and settings." weight="20">
+					<item key="advanced_restore" level="2" text="Advanced Restore" description="Restore your backups by date." weight="16"><screen module="BackupRestore" screen="RestoreMenu" /></item>
+					<item key="backup_default" level="2" text="Show Default Backup Files" description="Here you can browse (but not modify) the files that are added to the backupfile by default (E2-setup, channels, network)." weight="16"><screen module="BackupRestore" screen="BackupHelper">5</screen></item>
+					<item key="backup_additional" level="2" text="Select Additional Backup Files" description="Here you can specify additional files that should be added to the backup file." weight="16"><screen module="BackupRestore" screen="BackupHelper">6</screen></item>
+					<item key="backup_excluded" level="2" text="Select Excluded Backup Files" description="Here you can select which files should be excluded from the backup." weight="16"><screen module="BackupRestore" screen="BackupHelper">7</screen></item>
+					<item key="package_manager" level="2" text="Package Manager" description="View, install and remove available or installed packages." weight="16"><screen module="PluginBrowser" screen="PackageAction">4</screen></item>
+					<item key="upgrade_source" level="2" text="Select Upgrade Source" description="Edit the upgrade source address." weight="16"><screen module="Opkg" screen="PackageFeedSelection" /></item>
+				</menu>
 		</menu>
-
+		<!-- Menu / Standby Restart -->
 		<menu key="shutdown" text="Standby / restart">
 			<item key="sleep" text="Sleep timer"><screen module="SleepTimerEdit" screen="SleepTimerEdit"/></item>
 			<item key="standby" text="Standby"><screen module="Standby" screen="Standby"/></item>

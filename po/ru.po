@@ -2442,6 +2442,9 @@ msgstr "Углубленная диагностика"
 msgid "Advanced Options"
 msgstr "Дополнительные параметры"
 
+msgid "Advanced Restore"
+msgstr "Расширенное восстановление"
+
 msgid "Advanced Settings"
 msgstr "Расширенные настройки"
 
@@ -16841,6 +16844,12 @@ msgstr "Выберите 'да' ,что бы включить диапазон %
 msgid "Select 'yes' to only send the DiSEqC command when changing from one satellite to another, or select 'no' for the DiSEqC command to be resent on every zap."
 msgstr "Выберите 'да', чтобы отправлять команду DiSEqC только при переходе с одного спутника на другой или выберите 'нет', чтобы команда DiSEqC посылалась при каждом переключении."
 
+msgid "Select Additional Backup Files"
+msgstr "Добавить файлы в резервную копию"
+
+msgid "Select Excluded Backup Files"
+msgstr "Исключить файлы из резервной копии"
+
 msgid "Select CAId"
 msgstr "Выбор CAId"
 
@@ -16867,6 +16876,9 @@ msgstr "Выбрать эмулятор"
 
 msgid "Select Softcam"
 msgstr "Выбрать эмулятор"
+
+msgid "Select Upgrade Source"
+msgstr "Выбор источника обновления"
 
 msgid "Select a bouquet"
 msgstr "Выберите букет"
@@ -18205,6 +18217,9 @@ msgstr "Показывать сообщения CI"
 
 msgid "Show Clients"
 msgstr "Показать клиентов"
+
+msgid "Show Default Backup Files"
+msgstr "Показать файлы резервных копий по умолчанию"
 
 msgid "Show Development packages"
 msgstr "Показать пакеты разработки"

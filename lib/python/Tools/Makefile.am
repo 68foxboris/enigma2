@@ -11,4 +11,4 @@ install_PYTHON = \
 	CopyFiles.py ServiceReference.py Migration.py \
 	BaseSubsParser.py SubRip.py TolerantDict.py SubtitleRenderer.py \
 	ServiceAction.py HybridService.py ScanBouquetRepair.py DAB.py \
-	StartupTasks.py Swap.py
+	StartupTasks.py Swap.py ShellCompatibleFunctions.py
