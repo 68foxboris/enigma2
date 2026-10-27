@@ -30,5 +30,9 @@ if VUDUO4KSE
 SUBDIRS += MiniTV QuadPip
 endif
 
+if DREAMNEXTGEN
+SUBDIRS += QuadPip
+endif
+
 install_PYTHON =	\
 	__init__.py

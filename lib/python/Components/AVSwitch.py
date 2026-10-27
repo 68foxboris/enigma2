@@ -404,11 +404,14 @@ def InitAVSwitch():
 	else:
 		config.av.boxmode = ConfigNothing()
 	colorDepth = fileReadLine("/proc/stb/video/hdmi_colordepth", default=None, source=MODULE_NAME)
-	colorDepth = colorDepth.split() if colorDepth else False
+	colorDepth = colorDepth.split() if colorDepth else MACHINEBUILD in ("dreamone", "dreamtwo")
 	BoxInfo.setItem("havehdmicolordepth", colorDepth)
 	if colorDepth:
 		def setColorDepth(configElement):
-			fileWriteLine("/proc/stb/video/hdmi_colordepth", configElement.value, source=MODULE_NAME)
+			if MACHINEBUILD in ("dreamone", "dreamtwo"):
+				eAVControl.getInstance().setHDMIColordepth(configElement.value)
+			else:
+				fileWriteLine("/proc/stb/video/hdmi_colordepth", configElement.value, source=MODULE_NAME)
 
 		config.av.hdmicolordepth = ConfigSelection(default="auto", choices=[
 			("auto", _("Auto")),
@@ -466,14 +469,14 @@ def InitAVSwitch():
 			fileWriteLine("/sys/class/amhdmitx/amhdmitx0/config", configElement.value, source=MODULE_NAME)
 
 		config.av.amlhdr10_support = ConfigSelection(default="hdr10-2", choices=[
-			("hdr10-0", _("Force enabled")),
-			("hdr10-1", _("Force disabled")),
+			("hdr10-1", _("Force enabled")),
+			("hdr10-0", _("Force disabled")),
 			("hdr10-2", _("Controlled by HDMI"))
 		])
 		config.av.amlhdr10_support.addNotifier(setAMLHDR10)
 		config.av.amlhlg_support = ConfigSelection(default="hlg-2", choices=[
-			("hlg-0", _("Force enabled")),
-			("hlg-1", _("Force disabled")),
+			("hlg-1", _("Force enabled")),
+			("hlg-0", _("Force disabled")),
 			("hlg-2", _("Controlled by HDMI"))
 		])
 		config.av.amlhlg_support.addNotifier(setAMLHLG)

@@ -5,7 +5,7 @@ from os.path import exists, isfile, join as pathjoin, normpath, splitext
 from time import mktime
 
 from Components.config import ConfigBoolean, ConfigClock, ConfigDictionarySet, ConfigDirectory, ConfigFloat, ConfigInteger, ConfigIP, ConfigLocations, ConfigNumber, ConfigPassword, ConfigSelection, ConfigSelectionNumber, ConfigSelectionInteger, ConfigSequence, ConfigSet, ConfigSlider, ConfigSubDict, ConfigSubsection, ConfigText, ConfigYesNo, ConfigEnableDisable, NoSave, config, configfile
-from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eSubtitleSettings, eSettings, eDVBLocalTimeHandler, eEPGCache
+from enigma import setTunerTypePriorityOrder, setPreferredTuner, setSpinnerColor, setSpinnerOnOff, setEnableTtCachingOnOff, eEnv, eDVBDB, Misc_Options, eBackgroundFileEraser, eServiceEvent, eSubtitleSettings, eSettings, eDVBLocalTimeHandler, eEPGCache
 
 from skin import domScreens, getcomponentTemplateNames, parameters
 from Components.Harddisk import harddiskmanager
@@ -70,6 +70,11 @@ def InitUsageConfig():
 	config.misc.usegstplaybin3 = ConfigYesNo(default=False)
 	config.misc.actionLeftRightToPageUpPageDown = ConfigYesNo(default=True)
 	config.misc.spinnerPosition = ConfigSequence(default=[50, 50], limits=[(0, 1260), (0, 700)], seperator=",")
+	config.misc.spinnerColor = ConfigSelection(default="2b7fd9", choices=[("2b7fd9", _("Blue")), ("ffffff", _("White")), ("00c080", _("Green")), ("ffbf00", _("Yellow")), ("ff8000", _("Orange")), ("e04040", _("Red"))])
+
+	def spinnerColorChanged(configElement):
+		setSpinnerColor(int(configElement.value, 16))
+	config.misc.spinnerColor.addNotifier(spinnerColorChanged)
 	config.misc.disableServiceHiSilicon = ConfigYesNo(default=False)
 	config.misc.toastFade = ConfigSelection(default=10, choices=[
 		(0, _("Disabled")),
