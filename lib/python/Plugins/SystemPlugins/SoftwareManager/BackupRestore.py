@@ -188,10 +188,9 @@ class RestoreMenu(Screen):
 			<widget name="filelist" position="5,50" size="550,230" scrollbarMode="showOnDemand" />
 		</screen>"""
 
-	def __init__(self, session, plugin_path):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Restore backups"))
-		self.skin_path = plugin_path
 
 		self["key_red"] = StaticText(_("Cancel"))
 		self["key_green"] = StaticText(_("Restore"))
