@@ -1099,10 +1099,13 @@ class RecordTimer(timer.Timer):
 
 		list.append('</timers>\n')
 
-		file = open(self.Filename + ".writing", "w")
-		for x in list:
-			file.write(x)
-		file.flush()
+		try:
+			file = open(self.Filename + ".writing", "w")
+			for x in list:
+				file.write(x)
+			file.flush()
+		except OSError as err:
+			print(f"[RecordTimer] Error {err.errno}: Unable to save timer entries to 'timers.xml'!  ({err.strerror})")
 
 		import os
 		os.fsync(file.fileno())
