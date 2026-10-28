@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 import math
 
 from Screens.Screen import Screen
 from Components.config import config
 from Components.Sources.CanvasSource import CanvasSource
-from Components.ActionMap import ActionMap, NumberActionMap
+from Components.ActionMap import NumberActionMap
 from Components.Console import Console
 from Components.SystemInfo import BoxInfo
 from Tools.Directories import fileExists, resolveFilename, SCOPE_PLUGINS
@@ -19,9 +18,9 @@ class OverscanTestScreen(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
 
-		self.skin = """<screen position="fill">
+		self.skin = """<screen position="fill" flags="wfNoBorder">
 				<ePixmap pixmap="%s" position="0,0" size="%s,%s" zPosition="2" alphaTest="on"/>
-			</screen>""" % (getDesktop(0).size().height() == 2160 and ("overscan3840x2160.png", 3840, 2160) or getDesktop(0).size().height() == 1440 and ("overscan1920x1080.png", getDesktop(0).size().width(), getDesktop(0).size().height()) or getDesktop(0).size().height() == 1080 and ("overscan1920x1080.png", 1920, 1080) or ("overscan1280x720.png", 1280, 720))
+			</screen>""" % (getDesktop(0).size().height() == 1080 and ("overscan1920x1080.png", 1920, 1080) or ("overscan1280x720.png", 1280, 720))
 
 		self["actions"] = NumberActionMap(["InputActions", "OkCancelActions"],
 		{
@@ -49,7 +48,7 @@ class OverscanTestScreen(Screen):
 
 class FullHDTestScreen(OverscanTestScreen):
 	skin = """
-		<screen position="fill">
+		<screen position="fill" flags="wfNoBorder">
 			<ePixmap pixmap="testscreen.png" position="0,0" size="1920,1080" zPosition="2" alphaTest="on"/>
 		</screen>"""
 
@@ -83,7 +82,7 @@ class FullHDTestScreen(OverscanTestScreen):
 
 
 class FullUHDTestScreen(OverscanTestScreen):
-	skin = """<screen position="0,0" size="0,0"/>"""
+	skin = """<screen position="0,0" size="0,0" flags="wfNoBorder"/>"""
 
 	def __init__(self, session):
 		Screen.__init__(self, session)
@@ -114,30 +113,38 @@ class FullUHDTestScreen(OverscanTestScreen):
 
 class VideoFinetune(Screen):
 	skin = """
-		<screen position="fill">
+		<screen position="fill" flags="wfNoBorder">
 			<widget source="Canvas" render="Canvas" position="fill" zPosition="2"/>
 		</screen>"""
 
 	def __init__(self, session):
 		Screen.__init__(self, session)
 
-		port = config.av.videoport.value
+		port = config.av.videoport.value  # noqa F841
 		self.hasUHD = port and config.av.videomode[port].value.startswith("2160")
 
 		self["Canvas"] = CanvasSource()
 
 		self.basic_colors = [RGB(255, 255, 255), RGB(255, 255, 0), RGB(0, 255, 255), RGB(0, 255, 0), RGB(255, 0, 255), RGB(255, 0, 0), RGB(0, 0, 255), RGB(0, 0, 0)]
-		self.fontsize = getDesktop(0).size().height() == 2160 and 60 or getDesktop(0).size().height() == 1080 and 30 or 20
+		self.fontsize = getDesktop(0).size().height() == 1080 and 30 or 20
 
 		if fileExists("/proc/stb/fb/dst_left"):
-			self.left = open("/proc/stb/fb/dst_left", "r").read()
-			self.width = open("/proc/stb/fb/dst_width", "r").read()
-			self.top = open("/proc/stb/fb/dst_top", "r").read()
-			self.height = open("/proc/stb/fb/dst_height", "r").read()
+			print("[VideoFinetune] Read /proc/stb/fb/dst_left")
+			self.left = open("/proc/stb/fb/dst_left").read()
+			print("[VideoFinetune] Read /proc/stb/fb/dst_width")
+			self.width = open("/proc/stb/fb/dst_width").read()
+			print("[VideoFinetune] Read /proc/stb/fb/dst_top")
+			self.top = open("/proc/stb/fb/dst_top").read()
+			print("[VideoFinetune] Read /proc/stb/fb/dst_height")
+			self.height = open("/proc/stb/fb/dst_height").read()
 			if self.left != "00000000" or self.top != "00000000" or self.width != "000002d0" or self.height != "0000000240":
+				print("[VideoFinetune] Write to /proc/stb/fb/dst_left")
 				open("/proc/stb/fb/dst_left", "w").write("00000000")
+				print("[VideoFinetune] Write to /proc/stb/fb/dst_width")
 				open("/proc/stb/fb/dst_width", "w").write("000002d0")
+				print("[VideoFinetune] Write to /proc/stb/fb/dst_top")
 				open("/proc/stb/fb/dst_top", "w").write("00000000")
+				print("[VideoFinetune] Write to /proc/stb/fb/dst_height")
 				open("/proc/stb/fb/dst_height", "w").write("0000000240")
 				self.onClose.append(self.__close)
 
@@ -158,9 +165,13 @@ class VideoFinetune(Screen):
 		self.testpic_brightness()
 
 	def __close(self):
+		print("[VideoFinetune] Write to /proc/stb/fb/dst_left")
 		open("/proc/stb/fb/dst_left", "w").write(self.left)
+		print("[VideoFinetune] Write to /proc/stb/fb/dst_width")
 		open("/proc/stb/fb/dst_width", "w").write(self.width)
+		print("[VideoFinetune] Write to /proc/stb/fb/dst_top")
 		open("/proc/stb/fb/dst_top", "w").write(self.top)
+		print("[VideoFinetune] Write to /proc/stb/fb/dst_height")
 		open("/proc/stb/fb/dst_height", "w").write(self.height)
 
 	def keyNumber(self, key):
@@ -185,7 +196,7 @@ class VideoFinetune(Screen):
 
 		xres, yres = getDesktop(0).size().width(), getDesktop(0).size().height()
 
-		bbw, bbh = xres // 192, yres // 192
+		bbw, bbh = xres // 192, yres // 192  # noqa F841
 		c.fill(0, 0, xres, yres, RGB(0, 0, 0))
 
 		for i in range(15):
@@ -223,11 +234,11 @@ class VideoFinetune(Screen):
 
 		xres, yres = getDesktop(0).size().width(), getDesktop(0).size().height()
 
-		bbw, bbh = xres // 192, yres // 192
+		bbw, bbh = xres // 192, yres // 192  # noqa F841
 		c.fill(0, 0, xres, yres, RGB(0, 0, 0))
 
-		bbw = xres // 192
-		bbh = yres // 192
+		bbw = xres // 192  # noqa F841
+		bbh = yres // 192  # noqa F841
 		c.fill(0, 0, xres, yres, RGB(255, 255, 255))
 
 		for i in range(15):
@@ -366,6 +377,7 @@ class VideoFinetune(Screen):
 
 		posY = 0
 		fnt = gFont("Regular", height // 14)
+		import math
 		for i in range(1, 15):
 			y = i * height // 14
 			h = y - posY
@@ -406,7 +418,7 @@ class VideoFinetune(Screen):
 
 	def testpicCallback(self, key):
 		if key:
-			if key == True:
+			if key:
 				self.next()
 			else:
 				self.keyNumber(key)
@@ -416,7 +428,7 @@ class VideoFinetune(Screen):
 
 class PixelsTestScreen(Screen):
 	skin = """
-		<screen position="fill">
+		<screen position="fill" flags="wfNoBorder">
 			<widget source="Canvas" render="Canvas" position="fill" zPosition="2"/>
 		</screen>"""
 
@@ -424,7 +436,7 @@ class PixelsTestScreen(Screen):
 		Screen.__init__(self, session)
 
 		self["Canvas"] = CanvasSource()
-		self.fontsize = getDesktop(0).size().height() == 2160 and 60 or getDesktop(0).size().height() == 1080 and 30 or 20
+		self.fontsize = getDesktop(0).size().height() == 1080 and 30 or 20
 		self.xres, self.yres = getDesktop(0).size().width(), getDesktop(0).size().height()
 
 		self["actions"] = NumberActionMap(["InputActions", "OkCancelActions", "ColorActions"],

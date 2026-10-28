@@ -311,7 +311,7 @@ static void bsodFatalSignal(const char *component, int signum)
 		p.resetClip(eRect(ePoint(0, 0), my_dc->size()));
 		p.setBackgroundColor(gRGB(0x27408B));
 		p.setForegroundColor(gRGB(0xFFFFFF));
-		int hd = (my_dc->size().width() == 1920 || my_dc->size().width() == 2560 || my_dc->size().width() == 3840);
+		int hd =  my_dc->size().width() == 1920;
 		ePtr<gFont> font = new gFont("Regular", hd ? 30 : 20);
 		p.setFont(font);
 		p.clear();
@@ -325,7 +325,7 @@ static void bsodFatalSignal(const char *component, int signum)
 		if (!bsodpython)
 		{
 			os_text << "Your receiver encountered a software problem, and needs to be restarted.\n"
-				"Please send the logfile " << crashlog_name << " to (https://github.com/68foxboris/enigma2.git).\n"
+				"Please send the logfile " << crashlog_name << " to the OpenATV forum (www.opena.tv).\n"
 				"Your receiver will restart in 10 seconds.\n"
 				"Component: " << component;
 			os << os_text.str();
@@ -341,7 +341,7 @@ static void bsodFatalSignal(const char *component, int signum)
 				txt = "if it happens one more time";
 
 			os_text << "Your receiver encountered a Python software problem. There have been " << bsodcnt << " crashes so far.\n"
-				"Please send the logfile " << crashlog_name << " to (https://github.com/68foxboris/enigma2.git).\n"
+				"Please send the logfile " << crashlog_name << " to the OpenATV forum (www.opena.tv).\n"
 				"Your receiver will restart " << txt << ".\n"
 				"Component: " << component;
 			os << os_text.str();

@@ -15,9 +15,6 @@ class gFBDC: public gMainDC
 	gUnmanagedSurface surface;
 	gUnmanagedSurface surface_back;
 	gUnmanagedSurface surface_third;
-	gUnmanagedSurface m_logical_surface; // off-screen skin canvas when the skin is larger than the OSD hardware (WQHD)
-	bool m_scaled_output = false;
-	int m_requested_x = 0, m_requested_y = 0;
 	int m_number_of_pages = 1;
 	bool m_graphics_suspended = false;
 	mutable std::recursive_mutex m_graphics_mutex;
@@ -26,7 +23,6 @@ class gFBDC: public gMainDC
 	void calcRamp();
 	void setPalette();
 	void rotateSurfaces();
-	void scaleLogicalToSurfaceCPU();
 	int getSurfaceOffset(const gUnmanagedSurface &s) const;
 public:
 	void setResolution(int xres, int yres, int bpp = 32);
