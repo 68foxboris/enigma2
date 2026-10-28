@@ -401,6 +401,8 @@ class IncorrectBoxInfoWizard(MessageBox):
 
 
 class WizardLanguage(Wizard, ShowRemoteControl):
+	disableWindowAnimation = True
+
 	def __init__(self, session, silent=True, showSteps=False, neededTag=None):
 		self.xmlfile = ["wizardlanguage.xml"]
 		Wizard.__init__(self, session, showSteps=False)
