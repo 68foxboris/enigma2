@@ -10,7 +10,6 @@
 #endif
 
 #include <algorithm>
-#include <new>
 #include <cstring>
 
 #if defined(DREAMBCM_ION_ACCEL)
@@ -74,7 +73,10 @@ gFBDC::gFBDC()
 
 gFBDC::~gFBDC()
 {
-	freeLogicalSurface();
+#if defined(CONFIG_ION)
+	if (m_logical_surface.data_phys && gAccel::getInstance())
+		gAccel::getInstance()->accelFree(&m_logical_surface);
+#endif
 	delete fb;
 	delete[] surface.clut.data;
 }
@@ -312,8 +314,6 @@ void gFBDC::exec(const gOpcode *o)
 			}
 		}
 #elif defined(DREAMNEXTGEN)
-		if (m_scaled_output && m_logical_surface.data && surface.data)
-			scaleLogicalToSurfaceNextGen();
 		if (surface_back.data_phys && surface.data)
 		{
 			fb->waitVSync();
@@ -551,8 +551,11 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	surface_third.clut = surface.clut;
 
 	m_scaled_output = false;
-#if defined(CONFIG_ION) || defined(DREAMNEXTGEN)
-	freeLogicalSurface();
+#if defined(CONFIG_ION)
+	if (m_logical_surface.data_phys && gAccel::getInstance())
+		gAccel::getInstance()->accelFree(&m_logical_surface);
+	m_logical_surface.data = 0;
+	m_logical_surface.data_phys = 0;
 	if (logical_xres != xres || logical_yres != yres)
 	{
 		m_logical_surface.x = logical_xres;
@@ -561,30 +564,16 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 		m_logical_surface.bypp = bpp / 8;
 		m_logical_surface.stride = logical_xres * (bpp / 8);
 		m_logical_surface.clut = surface.clut;
-		bool logical_ok = false;
-		if (bpp == 32 && gAccel::getInstance() && gAccel::getInstance()->accelAlloc(&m_logical_surface) == 0)
+		if (bpp == 32 && gAccel::getInstance() && gAccel::getInstance()->accelAlloc(&m_logical_surface) == 0 && m_logical_surface.data_phys)
 		{
-#if defined(DREAMNEXTGEN)
-			/* the GE2D allocator may leave the surface to the CPU: use a plain buffer then */
-			if (!m_logical_surface.data)
-			{
-				m_logical_surface.data = new (std::nothrow) unsigned char[(size_t)m_logical_surface.stride * m_logical_surface.y];
-				m_logical_cpu = (m_logical_surface.data != 0);
-			}
-			logical_ok = m_logical_surface.data != 0;
-#else
-			logical_ok = m_logical_surface.data && m_logical_surface.data_phys;
-#endif
-		}
-		if (logical_ok)
-		{
-			memset(m_logical_surface.data, 0, (size_t)m_logical_surface.stride * m_logical_surface.y);
+			memset(m_logical_surface.data, 0, m_logical_surface.stride * m_logical_surface.y);
 			m_scaled_output = true;
 			eDebug("[gFBDC] scaled output: logical %dx%d -> physical %dx%d", logical_xres, logical_yres, xres, yres);
 		}
 		else
 		{
-			freeLogicalSurface();
+			m_logical_surface.data = 0;
+			m_logical_surface.data_phys = 0;
 			eDebug("[gFBDC] can't allocate logical surface %dx%d, scaled output disabled", logical_xres, logical_yres);
 		}
 	}
@@ -615,41 +604,6 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 		grc->unlock();
 #endif
 }
-
-void gFBDC::freeLogicalSurface()
-{
-#if defined(CONFIG_ION) || defined(DREAMNEXTGEN)
-	if (m_logical_cpu)
-		delete[] (unsigned char *)m_logical_surface.data;
-	else if ((m_logical_surface.data_phys || m_logical_surface.data) && gAccel::getInstance())
-		gAccel::getInstance()->accelFree(&m_logical_surface);
-	m_logical_cpu = false;
-	m_logical_surface.data = 0;
-	m_logical_surface.data_phys = 0;
-#endif
-}
-
-#ifdef DREAMNEXTGEN
-void gFBDC::scaleLogicalToSurfaceNextGen()
-{
-	/* the skin is drawn at its own (larger) size, scale it down into the draw page */
-	const eRect full(0, 0, surface.x, surface.y);
-	const eRect logical(0, 0, m_logical_surface.x, m_logical_surface.y);
-	bool done = false;
-	if (gAccel::getInstance() && !m_logical_cpu)
-	{
-		/* GE2D can only scale together with alpha blending, so the page is cleared first */
-		if (gAccel::getInstance()->fill(&surface, full, 0) != 0)
-		{
-			for (int y = 0; y < surface.y; y++)
-				memset((unsigned char *)surface.data + (long)y * surface.stride, 0, (size_t)surface.x * 4);
-		}
-		done = (gAccel::getInstance()->blit(&surface, &m_logical_surface, full, logical, 6) == 0);
-	}
-	if (!done)
-		scaleLogicalToSurfaceCPU();
-}
-#endif
 
 void gFBDC::scaleLogicalToSurfaceCPU()
 {

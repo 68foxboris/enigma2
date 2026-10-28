@@ -27,9 +27,6 @@ class gFBDC: public gMainDC
 	void setPalette();
 	void rotateSurfaces();
 	void scaleLogicalToSurfaceCPU();
-	void scaleLogicalToSurfaceNextGen();
-	void freeLogicalSurface();
-	bool m_logical_cpu = false; // the logical surface is a plain CPU buffer
 	int getSurfaceOffset(const gUnmanagedSurface &s) const;
 public:
 	void setResolution(int xres, int yres, int bpp = 32);
