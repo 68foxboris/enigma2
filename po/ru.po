@@ -17266,6 +17266,9 @@ msgstr "Выберите путь к значкам из предложенны�
 msgid "Select the mode for picon path selection and resolution. 'Legacy' represents the previous mode of operation."
 msgstr "Выберите режим для выбора и разрешения пути к пиктограммам. «Legacy» соответствует предыдущему режиму работы."
 
+msgid "Select the video mode to be used on the TV."
+msgstr "Выберите видеорежим, который будет использоваться на телевизоре."
+
 msgid "Select the write block buffer size (wsize) mount option. Use 'Automatic' to allow the kernel and server to negotiate the optimal size."
 msgstr "Выберите параметр монтирования размера буфера блока записи (wsize). Используйте значение «Автоматический», чтобы позволить ядру и серверу согласовать оптимальный размер."
 
@@ -18039,6 +18042,18 @@ msgstr "Настройки мотоподвеса"
 
 msgid "Setup the interval to check for online updates. (in hours)"
 msgstr "Настройка интервала времени проверки онлайн-обновлений (В часах)"
+
+msgid "Set up tuner [TUNER]"
+msgstr ""
+
+msgid ""
+"Set up tuner [TUNER].\n"
+"\n"
+"For tuners supporting multiple reception types, configure each available type separately."
+msgstr ""
+"Настройка тюнера [TUNER].\n"
+"\n"
+"Для тюнеров, поддерживающих несколько типов приема, настройте каждый из доступных типов отдельно."
 
 msgid "Setup tuner(s)"
 msgstr "Настройка тюнера(ов)"
@@ -22017,9 +22032,6 @@ msgstr "Индивидуальные настройки"
 msgid "Use"
 msgstr "Использовать"
 
-msgid "Use automatic mode detection"
-msgstr "Использовать автоматическое определение режима"
-
 msgid "Use DNS rotation"
 msgstr "Используйте ротацию DNS"
 
@@ -22097,6 +22109,18 @@ msgstr "Использовать информацию ТВ-гида Virgin, ко
 
 msgid "Use alternate GitHub DNS"
 msgstr "Используйте альтернативный DNS GitHub"
+
+msgid "Use automatic mode detection"
+msgstr "Использовать автоматическое определение режима"
+
+msgid ""
+"Use automatic mode detection?\n"
+"\n"
+"This option reads all supported modes from your TV. Disable it only if you want to customize the preferred configuration."
+msgstr ""
+"Использовать автоматическое определение режима?\n"
+"\n"
+"Эта опция считывает все поддерживаемые режимы с вашего телевизора. Отключите его, только если хотите задать собственную конфигурацию."
 
 msgid "Use adaptive date display"
 msgstr "Используйте адаптивный дисплей даты"

@@ -80,9 +80,7 @@ self.condition = self.hasPartitions()
 				<listentry caption="Skip package installation, only core packages will be available" step="timezone" />
 			</list>
 		</step>
-		<step id="update">
-			<config screen="WizardInstallSmallBox" module="WizardInstall" type="standalone" />
-		</step>
+
 		<step id="networkfailed" >
 			<buttons enable="OK,UP,DOWN" />
 			<text value="The %s %s does not have an Internet connection." />
@@ -104,7 +102,8 @@ self.condition = self.hasPartitions()
 from Components.NimManager import nimmanager
 self.condition = len(nimmanager.nim_slots) > 0 and not nimmanager.nim_slots[0].empty
 			</condition>
-			<text value="Please set up tuner A"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="0" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -117,7 +116,8 @@ self.selectKey("RIGHT")
 from Components.NimManager import nimmanager
 self.condition = len(nimmanager.nim_slots) > 1 and not nimmanager.nim_slots[1].empty and not nimmanager.nim_slots[1].isFBCLink()
 			</condition>
-			<text value="Please set up tuner B"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="1" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -128,9 +128,11 @@ self.selectKey("RIGHT")
 		<step id="nimc">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 2 and not nimmanager.nim_slots[2].empty and not nimmanager.nim_slots[2].isFBCLink()
 			</condition>
-			<text value="Please set up tuner C"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="2" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -141,9 +143,11 @@ self.selectKey("RIGHT")
 		<step id="nimd">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 3 and not nimmanager.nim_slots[3].empty and not nimmanager.nim_slots[3].isFBCLink()
 			</condition>
-			<text value="Please set up tuner D"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="3" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -154,9 +158,11 @@ self.selectKey("RIGHT")
 		<step id="nime">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 4 and not nimmanager.nim_slots[4].empty and not nimmanager.nim_slots[4].isFBCLink()
 			</condition>
-			<text value="Please set up tuner E"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="4" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -167,9 +173,11 @@ self.selectKey("RIGHT")
 		<step id="nimf">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 5 and not nimmanager.nim_slots[5].empty and not nimmanager.nim_slots[5].isFBCLink()
 			</condition>
-			<text value="Please set up tuner F"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="5" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -180,9 +188,11 @@ self.selectKey("RIGHT")
 		<step id="nimg">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 6 and not nimmanager.nim_slots[6].empty and not nimmanager.nim_slots[6].isFBCLink()
 			</condition>
-			<text value="Please set up tuner G"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="6" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -193,9 +203,11 @@ self.selectKey("RIGHT")
 		<step id="nimh">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 7 and not nimmanager.nim_slots[7].empty and not nimmanager.nim_slots[7].isFBCLink()
 			</condition>
-			<text value="Please set up tuner H"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="7" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -206,9 +218,11 @@ self.selectKey("RIGHT")
 		<step id="nimi">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 8 and not nimmanager.nim_slots[8].empty and not nimmanager.nim_slots[8].isFBCLink()
 			</condition>
-			<text value="Please set up tuner I"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="8" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -219,9 +233,11 @@ self.selectKey("RIGHT")
 		<step id="nimj">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 9 and not nimmanager.nim_slots[9].empty and not nimmanager.nim_slots[9].isFBCLink()
 			</condition>
-			<text value="Please set up tuner J"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="9" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -232,9 +248,11 @@ self.selectKey("RIGHT")
 		<step id="nimq">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 16 and not nimmanager.nim_slots[16].empty
 			</condition>
-			<text value="Please set up tuner Q"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="16" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -245,9 +263,11 @@ self.selectKey("RIGHT")
 		<step id="nimr">
 			<condition>
 from Components.NimManager import nimmanager
+from enigma import isFBCLink
 self.condition = len(nimmanager.nim_slots) > 17 and not nimmanager.nim_slots[17].empty
 			</condition>
-			<text value="Please set up tuner R"/>
+			<text value="Set up tuner [TUNER].\n\nFor tuners supporting multiple reception types, configure each available type separately." />
+			<displaytext value="Set up tuner [TUNER]" />
 			<config screen="NimSetup" module="Satconfig" args="17" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -261,6 +281,7 @@ from Components.NimManager import nimmanager
 self.condition = nimmanager.somethingConnected() and config.misc.installwizard.hasnetwork.value and config.misc.installwizard.opkgloaded.value
 			</condition>
 			<text value="Do you want to install a channel list?"/>
+			<displaytext value="Do you want to install a channel list?" />
 			<config screen="WizardInstall" module="WizardInstall" args="1" type="ConfigList"/>
 			<code>
 self.clearSelectedKeys()
@@ -302,7 +323,8 @@ self.selectKey("OK")
 			</code>
 		</step>
 		<step id="end" laststep="true">
-			<text value="Thank you for using the wizard. Your receiver is now ready for use.\nPress OK to start using your receiver."/>
+			<text value="Thank you for using and completing the wizard. The %s %s is now ready to use.\n\nPlease press OK to start using the %s %s." />
+			<displaytext value="Press OK to start using %s %s" />
 			<code>
 self.clearSelectedKeys()
 self.selectKey("OK")
@@ -310,8 +332,8 @@ self.selectKey("OK")
 		</step>
 		<step id="restore" nextstep="restorereboot">
 			<buttons enable="OK,UP,DOWN,LEFT,RIGHT" />
-			<text value="Select the backup you want to restore." />
-			<displaytext value="Select backup to restore" />
+			<text value="You have chosen to restore your settings. The %s %s will restart after the restore. Press OK to start the restore now." />
+			<displaytext value="Restore settings now" />
 			<config screen="RestoreScreen" module="BackupRestore" type="ConfigList" />
 		</step>
 		<step id="restorereboot">
