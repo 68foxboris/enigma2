@@ -835,8 +835,6 @@ if test "$BOXTYPE" == "et4x00" -o "$BOXTYPE" == "xt7413" -o "$BOXTYPE" == "et7x0
 	AC_DEFINE(KEY_F3_TO_KEY_LIST, 1,[define when rc sends a KEY_F3 event for its KEY_LIST key])
 fi
 
-fi
-
 if test "$BOXTYPE" == "ultramini" -o "$BOXTYPE" == "et1x000" -o "$BOXTYPE" == "et7x00"; then
 	AC_DEFINE(KEY_F1_TO_KEY_F2, 1,[define when rc sends a KEY_F1 event for its KEY_F2 key])
 	AC_DEFINE(FORCE_ALPHABLENDING_ACCELERATION, 1,[define when the framebuffer acceleration has alphablending support, but detection slow down all])
