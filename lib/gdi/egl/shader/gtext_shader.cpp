@@ -10,12 +10,12 @@
 static const char *vertex_shader_es3 = R"(#version 300 es
     layout(location = 0) in vec4 pos_uv;
     layout(location = 1) in vec4 color;
-    
+
     uniform mat4 u_projection;
-    
+
     out vec2 v_uv;
     out vec4 v_color;
-    
+
     void main() {
         gl_Position = u_projection * vec4(pos_uv.xy, 0.0, 1.0);
         v_uv    = pos_uv.zw;
@@ -25,13 +25,13 @@ static const char *vertex_shader_es3 = R"(#version 300 es
 
 static const char *fragment_shader_es3 = R"(#version 300 es
     precision mediump float;
-    
+
     in vec2 v_uv;
     in vec4 v_color;
-    
+
     uniform sampler2D u_texture;
     out vec4 frag_color;
-    
+
     void main() {
         float mask = texture(u_texture, v_uv).r;
         frag_color = vec4(v_color.rgb, v_color.a * mask);
@@ -47,12 +47,12 @@ static const char *fragment_shader_es3 = R"(#version 300 es
 static const char *vertex_shader_es2 = R"(#version 100
     attribute vec4 pos_uv;
     attribute vec4 color;
-    
+
     uniform mat4 u_projection;
-    
+
     varying vec2 v_uv;
     varying vec4 v_color;
-    
+
     void main() {
         gl_Position = u_projection * vec4(pos_uv.xy, 0.0, 1.0);
         v_uv    = pos_uv.zw;
@@ -62,12 +62,12 @@ static const char *vertex_shader_es2 = R"(#version 100
 
 static const char *fragment_shader_es2 = R"(#version 100
     precision mediump float;
-    
+
     varying vec2 v_uv;
     varying vec4 v_color;
-    
+
     uniform sampler2D u_texture;
-    
+
     void main() {
         // In GL_LUMINANCE textures the single channel is replicated into r/g/b
         float mask = texture2D(u_texture, v_uv).r;
@@ -118,6 +118,9 @@ GLuint gTextShader::compileShader(GLenum type, const char *source)
 
 bool gTextShader::init()
 {
+    gles::ShaderLocale shaderLocale;
+    if (!shaderLocale.valid())
+        return false;
     const size_t max_glyphs = 1024;
     const size_t floats_per_vertex = 8;  // x, y, u, v, r, g, b, a
     const size_t vertices_per_glyph = 6;
@@ -166,7 +169,7 @@ bool gTextShader::init()
     // Attribute 1: color (4 floats)
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, floats_per_vertex * sizeof(float), (void*)(4 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     return true;

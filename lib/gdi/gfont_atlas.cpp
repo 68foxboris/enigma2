@@ -23,11 +23,20 @@ gFontAtlas::~gFontAtlas()
 
 bool gFontAtlas::init(int width, int height)
 {
+    // Keep explicit sizes valid. The default grows only after the caller has
+    // flushed its text batch, so no queued vertices retain obsolete UVs.
+    if (width <= 0 || height <= 0) {
+        const char *setting = std::getenv("E2EGL_FONT_ATLAS_START");
+        const int requested = setting ? std::atoi(setting) : 512;
+        const int initial = requested == 1024 || requested == 2048 ? requested : 512;
+        width = height = initial;
+    }
     release();
     m_atlas_width = width;
     m_atlas_height = height;
 
     m_pixmap = new gPixmap(eSize(width, height), 8, gPixmap::accelNever);
+    m_pixmap->surface->gl_content_cacheable = false;
     memset(m_pixmap->surface->data, 0, width * height);
 
     m_is_dirty = false;
@@ -113,7 +122,7 @@ bool gFontAtlas::getGlyph(glyph_key_t key, glyph_uv &uv)
 bool gFontAtlas::addGlyph(glyph_key_t key, int width, int height, int pitch, const uint8_t *data, glyph_uv &uv, bool allow_reset)
 {
     if (!m_pixmap) return false;
-    
+
     if (width == 0 || height == 0) {
         // Empty space glyph
         uv.u0 = uv.v0 = uv.u1 = uv.v1 = 0.0f;
@@ -135,7 +144,15 @@ bool gFontAtlas::addGlyph(glyph_key_t key, int width, int height, int pitch, con
         if (!allow_reset)
             return false;
 
-        eDebug("[gFontAtlas] ATLAS FULL! Resetting atlas...");
+        if (m_atlas_width < 2048 || m_atlas_height < 2048) {
+            const int nextWidth = m_atlas_width < 2048 ? std::min(2048, m_atlas_width * 2) : m_atlas_width;
+            const int nextHeight = m_atlas_height < 2048 ? std::min(2048, m_atlas_height * 2) : m_atlas_height;
+            eDebug("[gFontAtlas] growing %dx%d -> %dx%d after text batch flush", m_atlas_width, m_atlas_height, nextWidth, nextHeight);
+            init(nextWidth, nextHeight);
+            return addGlyph(key, width, height, pitch, data, uv, true);
+        }
+
+        eDebug("[gFontAtlas] ATLAS FULL! Resetting atlas at maximum size...");
         m_glyphs.clear();
         memset(m_pixmap->surface->data, 0, m_atlas_width * m_atlas_height);
 

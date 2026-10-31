@@ -22,7 +22,7 @@ private:
     ePtr<gPixmap> m_pixmap;
     int m_atlas_width;
     int m_atlas_height;
-    
+
     bool m_is_dirty;
     eRect m_dirty_rect;
     std::vector<eRect> m_dirty_rects;
@@ -38,9 +38,9 @@ public:
     gFontAtlas();
     ~gFontAtlas();
 
-    bool init(int width = 2048, int height = 2048);
+    bool init(int width = 0, int height = 0);
     void release();
-    
+
     bool getGlyph(glyph_key_t key, glyph_uv &uv);
     bool addGlyph(glyph_key_t key, int width, int height, int pitch, const uint8_t *data, glyph_uv &uv, bool allow_reset = true);
 
