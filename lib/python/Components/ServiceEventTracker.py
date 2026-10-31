@@ -43,12 +43,12 @@ class InfoBarBase:
 		else:
 			nav = self.session.nav
 			ServiceEventTracker.setActiveInfoBar(self, not steal_current_service and nav.getCurrentService(), nav.getCurrentlyPlayingServiceOrGroup())
-		self.onClose.append(self.__close)
+		self.onClose.append(self._close)
 		InfoBarBase.infoBarOpened(self)
 		global InfoBarCount
 		InfoBarCount += 1
 
-	def __close(self):
+	def _close(self):
 		ServiceEventTracker.popActiveInfoBar()
 		InfoBarBase.infoBarClosed(self)
 		global InfoBarCount
@@ -70,7 +70,8 @@ class ServiceEventTracker:
 		if func_list:
 			nav = set.navcore
 			cur_ref = nav.getCurrentlyPlayingServiceOrGroup()
-			old_service_running = set.oldRef and cur_ref and cur_ref == set.oldRef and set.oldServiceStr == nav.getCurrentService().getPtrString()
+			currentService = nav.getCurrentService()
+			old_service_running = set.oldRef and cur_ref and cur_ref == set.oldRef and currentService and set.oldServiceStr == currentService.getPtrString()
 			if not old_service_running and set.oldServiceStr:
 				set.oldServiceStr = None
 				set.oldRef = None
