@@ -4802,6 +4802,12 @@ msgstr "Выберите страну для декодирования инфо
 msgid "Choose bouquet"
 msgstr "Выбор букета"
 
+msgid "Choose how Enigma2 draws menus and skins. Select the classic framebuffer to disable GLES and its animations. The change takes effect after restarting the GUI."
+msgstr "Выберите способ, которым Enigma2 отрисовывает меню и скины. Выберите классический фреймбуфер (framebuffer), чтобы отключить GLES и связанные с ним анимации. Изменения вступят в силу после перезапуска графического интерфейса (GUI)."
+
+msgid "Classic framebuffer"
+msgstr "Классический фреймбуфер"
+
 msgid "Choose server and press ok"
 msgstr "Выберите сервер и нажмите ок"
 
@@ -13430,6 +13436,9 @@ msgstr "Настройки калибровки экранного меню"
 
 msgid "OSD Settings"
 msgstr "Общие настройки"
+
+msgid "OSD renderer"
+msgstr "Средство отрисовки OSD"
 
 msgid "OSD Setup"
 msgstr "Настройка интерфейса"
