@@ -17,7 +17,6 @@ dist_install_DATA = arrowdown.png \
     overscan.png \
     overscan1280x720.png \
     overscan1920x1080.png \
-    overscan3840x2160.png \
     picon_default.png \
     position_arrow.png \
     position_pointer.png \
@@ -36,13 +35,10 @@ dist_install_DATA = arrowdown.png \
     sleeptimer.png \
     style4.jpg \
     style4hd.jpg \
-    style4UHD.jpg \
     style5.jpg \
     style5hd.jpg \
-    style5UHD.jpg \
     style6.jpg \
     style6hd.jpg \
-    style6UHD.jpg \
     slider_back.png \
     slider.png \
     testscreen.png \

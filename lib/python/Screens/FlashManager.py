@@ -6,7 +6,7 @@ from time import time
 from urllib.request import Request, urlopen
 from zipfile import ZipFile
 
-from enigma import eEPGCache, eTimer, fbClass
+from enigma import eEPGCache, eTimer, fbClass, gMainDC
 
 from Components.ActionMap import HelpableActionMap
 from Components.ChoiceList import ChoiceEntryComponent, ChoiceList
@@ -461,6 +461,7 @@ class FlashImage(Screen):
 		self.setTitle(_("Flash Image"))
 		self.containerBackup = None
 		self.containerOFGWrite = None
+		self.graphicsAccess = None
 		self.getImageList = None
 		self.downloader = None
 		self.downloadOnly = downloadOnly
@@ -487,10 +488,10 @@ class FlashImage(Screen):
 		self.close()
 
 	def keyCloseRecursive(self):
-		self.close(True)
+		if not self.containerOFGWrite:
+			self.close(True)
 
 	def keyOK(self):
-		fbClass.getInstance().unlock()
 		if self["header"].text == _("Flashing image successful"):
 			if MultiBoot.canMultiBoot():
 				self.session.openWithCallback(self.keyCancel, MultiBootManager)
@@ -779,9 +780,38 @@ class FlashImage(Screen):
 		except Exception as err:
 			print("[FlashManager] startUnzip Error: %s!" % str(err))
 			self.session.openWithCallback(self.keyCancel, MessageBox, _("Error unzipping image '%s'!") % self.imageName, type=MessageBox.TYPE_ERROR, windowTitle=self.getTitle())
+			return
+		self.flashImage()
+
+	def lockGraphics(self):
+		mainDC = gMainDC.getInstance()
+		if mainDC is None or mainDC.isGraphicsSuspended():
+			return False
+		framebuffer = fbClass.getInstance()
+		if framebuffer is not None and framebuffer.lock() < 0:
+			return False
+		# Locking the framebuffer stops new paints but leaves the last OSD frame visible.
+		if not mainDC.suspendGraphics():
+			if framebuffer is not None:
+				framebuffer.unlock(False)
+			print("[FlashManager] Unable to suspend main graphics for ofgwrite!")
+			return False
+		self.graphicsAccess = (framebuffer, mainDC)
+		print("[FlashManager] Main graphics suspended for ofgwrite.")
+		return True
+
+	def unlockGraphics(self):
+		if self.graphicsAccess is None:
+			return
+		framebuffer, mainDC = self.graphicsAccess
+		self.graphicsAccess = None
+		if framebuffer is not None:
+			framebuffer.unlock()
+		if not mainDC.resumeGraphics():
+			print("[FlashManager] Unable to resume main graphics after ofgwrite!")
 
 	def flashImage(self):
-		if BoxInfo.getItem("model") in ("dm820", "dm7080") and not hasattr(self, "dreamKernelA"):
+		if BoxInfo.getItem("model") == "dm7435" and not hasattr(self, "dreamKernelA"):
 			def featuresDone(data, retVal, extraArgs):
 				self.dreamKernelA = retVal == 0 and "dream-kernel-a" in data.split()
 				self.containerOFGWrite = None
@@ -810,7 +840,7 @@ class FlashImage(Screen):
 			else:
 				mtdKernel = BoxInfo.getItem("mtdkernel")
 				mtdRootFS = BoxInfo.getItem("mtdrootfs")
-				if BoxInfo.getItem("model") in ("dreamone", "dreamtwo"):
+				if BoxInfo.getItem("model") == "dms922x":
 					try:
 						with open("/proc/cmdline") as fd:
 							for arg in fd.read().split():
@@ -826,12 +856,12 @@ class FlashImage(Screen):
 				else:
 					cmdArgs = ["-r%s" % mtdRootFS, "-k", "-m%s" % self.slotCode]
 					if "uuid" in bootSlots[self.slotCode] and "mmcblk" not in mtdRootFS:
-						cmdArgs.insert(2, "-s%s/linuxrootfs" % BoxInfo.getItem("model")[2:])
-			elif BoxInfo.getItem("model") in ("dreamone", "dreamtwo") and not BoxInfo.getItem("HasGPT"):  # Temp solution ofgwrite auto detection not ready.
+						cmdArgs.insert(2, "-s%s/linuxrootfs" % BoxInfo.getItem("machinebuild")[2:])
+			elif BoxInfo.getItem("model") == "dms922x" and not BoxInfo.getItem("HasGPT"):  # Temp solution ofgwrite auto detection not ready.
 				cmdArgs = ["-r%s" % mtdRootFS, "-k%s" % mtdKernel]
-			elif BoxInfo.getItem("model") in ("dreamone", "dreamtwo") and BoxInfo.getItem("HasGPT"):  # Temp solution ofgwrite auto detection not ready.
+			elif BoxInfo.getItem("model") == "dms922x" and BoxInfo.getItem("HasGPT"):  # Temp solution ofgwrite auto detection not ready.
 				cmdArgs = ["-r%s" % mtdRootFS, "-a"]
-			elif BoxInfo.getItem("model") in ("dm820", "dm7080"):
+			elif BoxInfo.getItem("model") == "dm7435":
 				if rootSubDir is None:
 					cmdArgs = ["-r"] if self.dreamKernelA else ["-rmmcblk0p1"]
 				else:
@@ -847,26 +877,39 @@ class FlashImage(Screen):
 					cmdArgs = ["-r%s" % mtdRootFS, "-c%s" % currentSlot, "-m%s" % self.slotCode]
 				else:
 					cmdArgs = ["-r%s" % mtdRootFS, "-k%s" % mtdKernel, "-m0"] if (rootSubDir) is None else ["-r", "-k", "-m%s" % self.slotCode]
-			elif BoxInfo.getItem("model") in ("dm800se", "dm500hd"):  # Temp solution ofgwrite auto detection not ready.
+			elif BoxInfo.getItem("model") == "dm7405nand":  # Temp solution ofgwrite auto detection not ready.
 				cmdArgs = ["-r%s" % mtdRootFS, "-f"]
-			elif BoxInfo.getItem("model") in ("zgemmah82h",):  # Temp solution ofgwrite kill e2 not allways works.
+			elif BoxInfo.getItem("machinebuild") in ("zgemmah82h",):  # Temp solution ofgwrite kill e2 not allways works.
 				cmdArgs = ["-r", "-k", "-f"]
 			elif mtdKernel == mtdRootFS:  # Receiver with kernel and rootfs on one partition.
 				cmdArgs = ["-r"]
 			else:  # Normal non MultiBoot receiver.
 				cmdArgs = ["-r", "-k"]
-			self.containerOFGWrite = Console()
-			self.containerOFGWrite.ePopen([OFGWRITE, OFGWRITE] + cmdArgs + ['%s' % imageFiles], callback=self.flashImageDone)
-			fbClass.getInstance().lock()
+			if not self.lockGraphics():
+				self.session.openWithCallback(self.keyCancel, MessageBox, _("Error: Unable to lock the graphics system for flashing!"), type=MessageBox.TYPE_ERROR, windowTitle=self.getTitle())
+				return
+			try:
+				self.containerOFGWrite = Console()
+				self.containerOFGWrite.ePopen((OFGWRITE, OFGWRITE, *cmdArgs, imageFiles), callback=self.flashImageDone)
+			except OSError as err:
+				print(f"[FlashManager] Unable to start ofgwrite: {err}")
+				self.flashImageDone("", -1, None)
+			except Exception:
+				self.containerOFGWrite = None
+				self.unlockGraphics()
+				raise
 		else:
 			self.session.openWithCallback(self.keyCancel, MessageBox, _("Error: Image '%s' to install is invalid!") % self.imageName, type=MessageBox.TYPE_ERROR, windowTitle=self.getTitle())
 
 	def flashImageDone(self, data, retVal, extraArgs):
-		fbClass.getInstance().unlock()
+		self.unlockGraphics()
+		# The unlock resets the framebuffer, draw the whole screen again.
+		self.hide()
+		self.show()
 		self.containerOFGWrite = None
 		if retVal == 0:
 			slotCode = getattr(self, "slotCode", None)
-			if slotCode and BoxInfo.getItem("model") in ("dreamone", "dreamtwo") and BoxInfo.getItem("HasGPT"):
+			if slotCode and BoxInfo.getItem("model") == "dms922x" and BoxInfo.getItem("HasGPT"):
 				MultiBoot.updateDreamBootSection(slotCode)
 			self["header"].setText(_("Flashing image successful"))
 			self["summary_header"].setText(self["header"].getText())

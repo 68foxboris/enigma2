@@ -2,16 +2,20 @@ installdir = $(pkglibdir)/python/Plugins/Extensions
 
 SUBDIRS = CutListEditor FileCommander PicturePlayer MediaScanner MediaPlayer GraphMultiEPG SocketMMI DVDBurn StreamlinkWrapper YTDLWrapper YTDLPWrapper
 
+if ENABLE_GLES_TESTLAB
+SUBDIRS += GlesTestLab
+endif
+
 if HAVE_LIBDDVD
 SUBDIRS += DVDPlayer
 endif
 
-if VUSOLO4K
+if VU7376
 SUBDIRS += MiniTV QuadPip
 endif
 
-if VUULTIMO4K
-SUBDIRS += MiniTV QuadPip
+if VUDUO4KLITE
+SUBDIRS += QuadPip
 endif
 
 if VUUNO4K
@@ -22,11 +26,7 @@ if VUUNO4KSE
 SUBDIRS += MiniTV QuadPip
 endif
 
-if VUDUO4K
-SUBDIRS += MiniTV QuadPip
-endif
-
-if VUDUO4KSE
+if VU7376DUO
 SUBDIRS += MiniTV QuadPip
 endif
 
@@ -34,5 +34,4 @@ if DREAMNEXTGEN
 SUBDIRS += QuadPip
 endif
 
-install_PYTHON =	\
-	__init__.py
+install_PYTHON = __init__.py

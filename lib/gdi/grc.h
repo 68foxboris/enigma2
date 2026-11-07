@@ -13,6 +13,8 @@
 
 #include <pthread.h>
 #include <atomic>
+#include <functional>
+#include <memory>
 #include <stack>
 #include <list>
 #include <vector>
@@ -30,6 +32,40 @@
 class eTextPara;
 
 class gDC;
+
+// Render thread writes completion; a native GUI timer delivers the signal on
+// the main thread. No widget pointer is retained by a render command.
+struct gAnimationCompletion {
+	std::atomic<bool> done{false};
+};
+typedef std::shared_ptr<gAnimationCompletion> gAnimationToken;
+
+inline void completeAnimation(gAnimationToken& token) {
+	if (token) token->done = true;
+	token.reset();
+}
+
+class gAnimationCompletionGuard {
+	gAnimationToken token;
+public:
+	explicit gAnimationCompletionGuard(gAnimationToken value) : token(value) {}
+	~gAnimationCompletionGuard() { if (token) token->done = true; }
+	void transfer() { token.reset(); }
+};
+
+// Queued draws keep their images and budget reservation alive after widget close.
+struct gContentTransition {
+	ePtr<gPixmap> before, after;
+	unsigned long long bytes = 0;
+	bool beforePremultiplied = true, afterPremultiplied = true;
+	int blitFlags = gPixmap::blitAlphaBlend;
+	int radius = 0;
+	uint8_t edges = 0;
+	static std::atomic<unsigned long long> liveBytes;
+	static std::atomic<unsigned long long> limitBytes;
+	static std::shared_ptr<gContentTransition> reserve(unsigned long long bytes);
+	~gContentTransition();
+};
 struct gOpcode
 {
 	enum Opcode
@@ -81,13 +117,10 @@ struct gOpcode
 		setCompositing,
 		sendShow,
 		sendHide,
-#ifdef USE_LIBVUGLES2
-		sendShowItem,
-		setFlush,
-		setView,
-#endif
+		sendListboxAnimation,
+		invoke,
+		blitTransition,
 	} opcode;
-
 	gDC *dc;
 	union para
 	{
@@ -201,25 +234,30 @@ struct gOpcode
 		{
 			ePoint point;
 			eSize size;
+			int animation = -1;
+			int durationMs = 0;
+			gAnimationToken completion;
 		} *setShowHideInfo;
-#ifdef USE_LIBVUGLES2
-		struct psetShowItemInfo
-		{
-			long dir;
-			ePoint point;
-			eSize size;
-		} *setShowItemInfo;
 
-		struct psetFlush
+		struct plistboxAnimation
 		{
-			bool enable;
-		} *setFlush;
+			eRect from;
+			eRect to;
+			gRGB backgroundColor;
+			std::vector<gRGB> gradientColors;
+			uint8_t gradientOrientation;
+			bool gradientAlphaBlend;
+			int radius;
+			uint8_t radiusEdges;
+			gPixmap *selectionPixmap;
+		} *listboxAnimation;
 
-		struct psetViewInfo
-		{
-			eSize size;
-		} *setViewInfo;
-#endif
+		std::function<void()> *invoke;
+		struct pblitTransition {
+			std::shared_ptr<gContentTransition> content;
+			eRect position;
+			float progress;
+		} *blitTransition;
 	} parm;
 };
 
@@ -247,10 +285,14 @@ class gRC : public iObject, public sigc::trackable
 	void recv_notify(const int &i);
 
 	ePtr<gDC> m_spinner_dc;
+	ePtr<gDC> m_animation_dc;
 	int m_spinner_enabled;
 
 	int m_spinneronoff;
+	int m_spinner_suspended;
+	unsigned long long m_spinner_suspend_until;
 
+	bool spinnerSuspended() const;
 	void enableSpinner();
 	void disableSpinner();
 
@@ -263,6 +305,7 @@ public:
 	virtual ~gRC();
 
 	void submit(const gOpcode &o);
+	void invoke(const std::function<void()>& function, gDC* dc = nullptr);
 
 #ifdef CONFIG_ION
 	void lock();
@@ -274,6 +317,8 @@ public:
 	void setSpinnerDC(gDC *dc) { m_spinner_dc = dc; }
 	void setSpinnerOnOff(int onoff) { m_spinneronoff = onoff; }
 	void setSpinnerColor(unsigned int color);
+	void suspendSpinner();
+	void resumeSpinner(int hold_ms = 0);
 
 	static gRC *getInstance();
 };
@@ -356,6 +401,7 @@ public:
 	void blitScale(gPixmap *pixmap, const eRect &pos, const eRect &clip=eRect(), int flags=0, int aflags = BT_SCALE);
 	void blit(gPixmap *pixmap, ePoint pos, const eRect &clip=eRect(), int flags=0);
 	void blit(gPixmap *pixmap, const eRect &pos, const eRect &clip=eRect(), int flags=0);
+	void blitTransition(std::shared_ptr<gContentTransition> content, const eRect& position, float progress);
 
 	void drawRectangle(const eRect &area, bool useNew=false);
 
@@ -379,13 +425,16 @@ public:
 	void setCompositing(gCompositingData *comp);
 
 	void flush();
-	void sendShow(ePoint point, eSize size);
-	void sendHide(ePoint point, eSize size);
-#ifdef USE_LIBVUGLES2
-	void sendShowItem(long dir, ePoint point, eSize size);
-	void setFlush(bool val);
-	void setView(eSize size);
-#endif
+	void sendShow(ePoint point, eSize size, int animation = -1, int durationMs = 0);
+	void sendHide(ePoint point, eSize size, int animation = -1, int durationMs = 0);
+	void sendWindowAnimation(bool show, ePoint point, eSize size, int animation, int durationMs, gAnimationToken completion);
+	void sendListboxAnimation(const eRect &from, const eRect &to, const gRGB &backgroundColor,
+		const std::vector<gRGB> &gradientColors, uint8_t gradientOrientation, bool gradientAlphaBlend,
+		int radius, uint8_t radiusEdges, gPixmap *selectionPixmap);
+
+	/* Returns the underlying DC so widgets can query e.g. isHardwareAccelerated()
+	 * at paint time without reaching into private members. */
+	const gDC *getDC() const { return m_dc; }
 };
 
 class gDC : public iObject
@@ -414,11 +463,10 @@ protected:
 	std::stack<gRegion> m_clip_stack;
 	gRegion m_current_clip;
 
-	ePtr<gPixmap> m_spinner_saved_HD, m_spinner_temp_HD, m_spinner_saved_FHD, m_spinner_temp_FHD, m_spinner_saved_UHD, m_spinner_temp_UHD;
+	ePtr<gPixmap> m_spinner_saved_HD, m_spinner_temp_HD, m_spinner_saved_FHD, m_spinner_temp_FHD;
 	ePtr<gPixmap> *m_spinner_pic;
 	eRect m_spinner_pos_HD;
 	eRect m_spinner_pos_FHD;
-	eRect m_spinner_pos_UHD;
 	int m_spinner_num, m_spinner_i;
 	bool m_nativeSpinner = false, m_nativeSpinnerVisible = false;
 	std::atomic<unsigned int> m_spinnerColor{0x2b7fd9};
@@ -430,6 +478,8 @@ protected:
 	uint64_t m_nativeSpinnerStart = 0;
 	void drawNativeSpinner();
 	void discardOpcode(const gOpcode *opcode);
+
+	virtual void fillTextBackground(const gRegion &clip);
 
 public:
 	virtual void exec(const gOpcode *opcode);
@@ -445,6 +495,15 @@ public:
 	gRGB getRGB(gColor col);
 	virtual eSize size() { return m_pixmap->size(); }
 	virtual int islocked() const { return 0; }
+	virtual bool isHardwareAccelerated() const { return false; }
+	virtual bool supportsShowHideAnimations() const { return false; }
+	virtual bool supportsListboxAnimations() const { return false; }
+	virtual bool supportsContentAnimations() const { return false; }
+	// Render-thread deadlines allow animation frames without blocking queued UI work.
+	virtual unsigned long long animationFrameDeadlineUs() const { return 0; }
+	virtual void renderAnimationFrame() {}
+
+	virtual void renderGlyph(const ePoint &pos, gPixmap *glyph_mask, const gRGB &color);
 
 	virtual void enableSpinner();
 	virtual void disableSpinner();

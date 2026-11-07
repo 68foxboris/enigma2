@@ -6,6 +6,7 @@
 #include <lib/gui/ewindowstyleskinned.h>
 
 #include <lib/gdi/epng.h>
+#include <functional>
 
 int eWindow::m_has_animation_mode = -1;
 
@@ -13,22 +14,17 @@ eWindow::eWindow(eWidgetDesktop *desktop, int z): eWidget(0)
 {
 	m_flags = 0;
 
-	// check animation_mode once
-	if(eWindow::m_has_animation_mode==-1) {
-		if (::access("/proc/stb/fb/animation_mode", R_OK) < 0)
-		{
-			eDebug("[eWindow] animation mode not supported");
-			m_animation_mode = 0;
-			eWindow::m_has_animation_mode=0;
-		}
-		else {
-			eDebug("[eWindow] animation mode supported");
-			m_animation_mode = 0x11;
-			eWindow::m_has_animation_mode=1;
-		}
+	const bool desktop_supports_animation = desktop && desktop->supportsShowHideAnimations();
+	if (eWindow::m_has_animation_mode == -1 || (desktop_supports_animation && eWindow::m_has_animation_mode == 0))
+	{
+		eDebug("[eWindow] animation mode %s", desktop_supports_animation ? "supported" : "not supported");
+		eWindow::m_has_animation_mode = desktop_supports_animation ? 1 : 0;
 	}
+	m_animation_mode = desktop_supports_animation ? 0x11 : 0;
 
 	m_desktop = desktop;
+	completionTimer = eTimer::create(eApp);
+	CONNECT(completionTimer->timeout, eWindow::checkAnimationCompletion);
 		/* ask style manager for current style */
 	ePtr<eWindowStyleManager> mgr;
 	eWindowStyleManager::getInstance(mgr);
@@ -54,6 +50,8 @@ eWindow::eWindow(eWidgetDesktop *desktop, int z): eWidget(0)
 
 eWindow::~eWindow()
 {
+	completionTimer->stop();
+	animationCompletion.reset();
 	if (m_desktop->getStyleID() == 0 && eAVControl::getInstance())
 		eAVControl::getInstance()->setOSDWindowVisible(this, false);
 	m_desktop->removeRootWidget(this);
@@ -143,8 +141,10 @@ void eWindow::show()
 {
 	if (m_osdAutoHideActive && m_desktop->getStyleID() == 0 && eAVControl::getInstance())
 		eAVControl::getInstance()->setOSDWindowVisible(this, true);
-	if (m_animation_mode & 0x01)
-		m_desktop->sendShow(position(), size());
+	if (m_animationStyle > 0 || (m_animationStyle < 0 && (m_animation_mode & 0x01)))
+	{
+		beginAnimation(true);
+	}
 	eWidget::show();
 }
 
@@ -152,9 +152,36 @@ void eWindow::hide()
 {
 	if (m_desktop->getStyleID() == 0 && eAVControl::getInstance())
 		eAVControl::getInstance()->setOSDWindowVisible(this, false);
-	if (m_animation_mode & 0x10)
-		m_desktop->sendHide(position(), size());
+	if (m_animationStyle > 0 || (m_animationStyle < 0 && (m_animation_mode & 0x10)))
+	{
+		beginAnimation(false);
+	}
 	eWidget::hide();
+}
+
+bool eWindow::isFading() const
+{
+	return animationCompletion && !animationCompletion->done;
+}
+
+void eWindow::beginAnimation(bool show)
+{
+	animationCompletion = std::make_shared<gAnimationCompletion>();
+	completingShow = show;
+	m_desktop->sendWindowAnimation(show, animationRect(), m_animationStyle, m_animationDurationMs, animationCompletion);
+	completionTimer->start(20, false);
+}
+
+void eWindow::checkAnimationCompletion()
+{
+	if (!animationCompletion || !animationCompletion->done)
+		return;
+	completionTimer->stop();
+	animationCompletion.reset();
+	if (completingShow)
+		showAnimationFinished();
+	else
+		hideAnimationFinished();
 }
 
 void eWindow::setOSDAutoHideActive(bool active)
@@ -172,7 +199,39 @@ void eWindow::setAnimationMode(int mode)
 	 * 0x10 = hide on
 	 * 0x11 = animation on
 	 */
-	m_animation_mode = (eWindow::m_has_animation_mode==1) ? mode : 0;
+	m_animation_mode = (m_desktop && m_desktop->supportsShowHideAnimations()) ? mode : 0;
+}
+
+void eWindow::setAnimationStyle(int style, int durationMs)
+{
+	m_animationStyle = m_desktop && m_desktop->supportsShowHideAnimations() ? style : -1;
+	m_animationDurationMs = durationMs;
+}
+
+eRect eWindow::animationRect() const
+{
+	const eRect full(position(), size());
+	if ((m_animationStyle != 22 && m_animationStyle != 23) || !m_desktop || size().height() < m_desktop->size().height() * 3 / 4)
+		return full;
+	// Fullscreen transparent InfoBar skins also contain clocks/weather at the top.
+	// Slide the lower widget group; leave the rest at its declared screen position.
+	// Use widget geometry, never a skin-specific fixed pixel height.
+	eRect lower;
+	const int minimumY = full.top() + full.height() / 2;
+	std::function<void(const eWidget*, ePoint)> collect = [&](const eWidget* parent, ePoint origin) {
+		for (ePtrList<eWidget>::const_iterator i = parent->m_childs.begin(); i != parent->m_childs.end(); ++i) {
+			const eWidget* widget = *i;
+			if (!(widget->m_vis & eWidget::wVisShow))
+				continue;
+			const ePoint point = origin + widget->position();
+			const eRect rect = eRect(point, widget->size()) & full;
+			if (!rect.empty() && rect.top() >= minimumY)
+				lower = lower.empty() ? rect : lower | rect;
+			collect(widget, point);
+		}
+	};
+	collect(this, position());
+	return lower.empty() ? full : lower;
 }
 
 void eWindow::setBackgroundGradient(const gRGB &startcolor, const gRGB &midcolor, const gRGB &endcolor, uint8_t direction, bool alphablend)

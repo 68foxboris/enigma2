@@ -23,3 +23,4 @@ install_PYTHON = \
 	Toast.py HDMICEC.py Picon.py NetworkServices.py NetworkMounts.py \
 	DABScan.py RTLSDRSetup.py SkinIcon.py SkinSelection.py UserManual.py \
 	VideoMode.py WizardVideo.py BackupRestore.py DateTime.py
+	VideoMode.py WizardVideo.py BackupRestore.py AnimationSetup.py

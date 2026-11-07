@@ -3,6 +3,7 @@
 
 #include <lib/gui/ewidget.h>
 #include <lib/gui/ewindowstyle.h>
+#include <connection.h>
 
 class eWidgetDesktop;
 
@@ -32,6 +33,10 @@ public:
 	void setFlag(int flags);
 	void clearFlag(int flags);
 	void setAnimationMode(int mode);
+	void setAnimationStyle(int style, int durationMs = 0);
+	bool isFading() const;
+	PSignal0<void> showAnimationFinished;
+	PSignal0<void> hideAnimationFinished;
 protected:
 	enum eWindowEvents
 	{
@@ -45,7 +50,17 @@ private:
 	bool m_osdAutoHideActive = false;
 	eWidgetDesktop *m_desktop;
 	int m_animation_mode;
+	int m_animationStyle = -1;
+	int m_animationDurationMs = 0;
+	eRect animationRect() const;
 	static int m_has_animation_mode;
+#ifndef SWIG
+	gAnimationToken animationCompletion;
+	ePtr<eTimer> completionTimer;
+	bool completingShow = false;
+	void beginAnimation(bool show);
+	void checkAnimationCompletion();
+#endif
 };
 
 #endif

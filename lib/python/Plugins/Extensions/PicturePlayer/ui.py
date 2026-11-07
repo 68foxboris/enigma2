@@ -1,17 +1,17 @@
 from os.path import isfile
 
-from enigma import ePicLoad, eTimer, getDesktop, gMainDC, eSize
+from enigma import ePicLoad, eSize, eTimer, gMainDC, getDesktop
 
-from Components.Pixmap import Pixmap, MovingPixmap
+from skin import parameters
 from Components.ActionMap import ActionMap
-from Components.Sources.StaticText import StaticText
+from Components.config import ConfigInteger, ConfigSelection, ConfigSubsection, ConfigText, ConfigYesNo, config
 from Components.FileList import FileList
+from Components.Pixmap import MovingPixmap, Pixmap
 from Components.Sources.List import List
-from Components.config import config, ConfigSubsection, ConfigInteger, ConfigSelection, ConfigText, ConfigYesNo
+from Components.Sources.StaticText import StaticText
 from Screens.Screen import Screen
 from Screens.Setup import Setup
-from Tools.Directories import resolveFilename, pathExists, SCOPE_MEDIA, SCOPE_GUISKIN
-import skin
+from Tools.Directories import SCOPE_GUISKIN, SCOPE_MEDIA, pathExists, resolveFilename
 
 
 config.pic = ConfigSubsection()
@@ -201,7 +201,7 @@ class Pic_Thumb(Screen):
 
 		self.textcolor = config.pic.textcolor.value
 		self.color = config.pic.bgcolor.value
-		self.spaceX, self.picX, self.spaceY, self.picY, textsize, thumtxt = skin.parameters.get("PicturePlayerThumb", (35, 190, 30, 200, 20, 14))
+		self.spaceX, self.picX, self.spaceY, self.picY, textsize, thumtxt = parameters.get("PicturePlayerThumb", (35, 190, 30, 200, 20, 14))
 
 		pic_frame = resolveFilename(SCOPE_GUISKIN, "icons/pic_frame.png")
 
@@ -458,6 +458,9 @@ class Pic_Full_View(Screen):
 			self.onLayoutFinish.append(self.setPicloadConf)
 
 	def setPicloadConf(self):
+		animation = getattr(config.misc, "animation", None)
+		if animation and self["pic"].instance.supportsContentAnimations():
+			self["pic"].instance.setContentAnimation(int(animation.pictureDuration.value) if animation.pictureFade.value else 0)
 		self.picload.setPara([self["pic"].instance.size().width(), self["pic"].instance.size().height(), 1, 1, 0, int(config.pic.resize.value), self.bgcolor])
 
 		self["play_icon"].hide()

@@ -11,6 +11,8 @@ WORKDIR = "${S}/build"
 PV = "develop+git"
 PKGV = "develop+git${GITPKGV}"
 
+DEPENDS += "${@bb.utils.contains('MACHINE_FEATURES', 'e2egl', 'virtual/egl virtual/libgles2', '', d)}"
+
 FILES_${PN} += "${datadir}/keymaps"
 FILES_${PN}-meta = "${datadir}/meta"
 PACKAGES =+ "${PN}-src"
@@ -67,8 +69,7 @@ EXTRA_OECONF = "\
 	${@bb.utils.contains("MACHINE_FEATURES", "bwlcd255", "--with-bwlcd255" , "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "fullgraphiclcd", "--with-fullgraphiclcd" , "", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "nolcd", "--with-nolcd" , "", d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "uianimation", "--with-libvugles2" , "", d)} \
-	${@bb.utils.contains("MACHINE_FEATURES", "osdanimation", "--with-osdanimation" , "", d)} \
+	${@bb.utils.contains("MACHINE_FEATURES", "e2egl", "--with-egl" , "--without-egl", d)} \
 	${@bb.utils.contains("MACHINE_FEATURES", "fcc", "--with-fcc" , "", d)}
 	"
 

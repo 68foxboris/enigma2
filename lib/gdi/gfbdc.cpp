@@ -10,7 +10,6 @@
 #endif
 
 #include <algorithm>
-#include <new>
 #include <cstring>
 
 #if defined(DREAMBCM_ION_ACCEL)
@@ -20,18 +19,10 @@
 #include <time.h>
 #include <sys/time.h>
 
-#ifdef USE_LIBVUGLES2
-#include <vuplus_gles.h>
-#endif
-
-#ifdef HAVE_OSDANIMATION
-#include <lib/base/cfile.h>
-#endif
-
 #if defined(CONFIG_ION) || defined(CONFIG_HISILICON_FB)
 #include <lib/gdi/grc.h>
 
-extern int bcm_accel_blit(
+extern void bcm_accel_blit(
 		int src_addr, int src_width, int src_height, int src_stride, int src_format,
 		int dst_addr, int dst_width, int dst_height, int dst_stride,
 		int src_x, int src_y, int width, int height,
@@ -74,9 +65,17 @@ gFBDC::gFBDC()
 
 gFBDC::~gFBDC()
 {
-	freeLogicalSurface();
+	if (m_pixmap)
+		m_pixmap->surface = nullptr;
+	m_pixmap = nullptr;
+
 	delete fb;
+	fb = nullptr;
+
 	delete[] surface.clut.data;
+	surface.clut.data = nullptr;
+	surface_back.clut.data = nullptr;
+	surface_third.clut.data = nullptr;
 }
 
 void gFBDC::calcRamp()
@@ -139,6 +138,54 @@ int gFBDC::getSurfaceOffset(const gUnmanagedSurface &s) const
 		return 0;
 
 	return (s.data_phys - fb->getPhysAddr()) / s.stride;
+}
+
+std::string gFBDC::getGraphicsBuffering() const
+{
+	if (m_number_of_pages >= 3)
+		return "triple";
+	if (m_number_of_pages == 2)
+		return "double";
+	return "single";
+}
+
+std::string gFBDC::getGraphicsAccelerator() const
+{
+#if defined(DREAMNEXTGEN)
+	std::string info = dreamGE2DIsActive() ? "e2ge / Dream GE2D active" : "e2ge / Dream GE2D";
+	if (dreamGE2DPageCopyEnabled())
+		info += ", page-copy";
+	if (dreamGE2DSurfaceAccelerationEnabled())
+		info += ", surfaces";
+	if (dreamGE2DFillAccelerationEnabled())
+		info += ", fill";
+	if (dreamGE2DBlitAccelerationEnabled())
+		info += ", blit";
+	return info;
+#elif defined(DREAMBCM_ION_ACCEL)
+	return "Dream BCM ION";
+#elif defined(HAVE_HISILICON_ACCEL)
+	return "HiSilicon";
+#elif defined(CONFIG_ION)
+	return "BCM/ION";
+#else
+	gAccel *accel = gAccel::getInstance();
+	if (accel && accel->hasAlphaBlendingSupport())
+		return "BCM";
+	return "";
+#endif
+}
+
+bool gFBDC::getGraphicsHardwareAccelerated() const
+{
+#if defined(DREAMNEXTGEN)
+	return dreamGE2DIsActive();
+#elif defined(DREAMBCM_ION_ACCEL) || defined(HAVE_HISILICON_ACCEL) || defined(CONFIG_ION)
+	return true;
+#else
+	gAccel *accel = gAccel::getInstance();
+	return accel && accel->hasAlphaBlendingSupport();
+#endif
 }
 
 void gFBDC::rotateSurfaces()
@@ -228,30 +275,8 @@ void gFBDC::exec(const gOpcode *o)
 		break;
 	}
 	case gOpcode::flush:
-#ifdef USE_LIBVUGLES2
-		if (gles_is_animation())
-			gles_do_animation();
-		else
-			fb->blit();
-		gles_flush();
-#else
 		fb->blit();
-#endif
 #if defined(CONFIG_ION)
-		if (m_scaled_output && m_logical_surface.data_phys && surface.data_phys)
-		{
-			/* the skin is drawn at its own (larger) size, scale it down into the draw page */
-			int ret = bcm_accel_blit(
-				m_logical_surface.data_phys, m_logical_surface.x, m_logical_surface.y, m_logical_surface.stride, 0,
-				surface.data_phys, surface.x, surface.y, surface.stride,
-				0, 0, m_logical_surface.x, m_logical_surface.y,
-				0, 0, surface.x, surface.y,
-				0, 0);
-			if (gAccel::getInstance())
-				gAccel::getInstance()->sync();
-			if (ret != 0)
-				scaleLogicalToSurfaceCPU();
-		}
 		if (surface_back.data_phys)
 		{
 #if defined(DREAMBCM_ION_ACCEL)
@@ -312,8 +337,6 @@ void gFBDC::exec(const gOpcode *o)
 			}
 		}
 #elif defined(DREAMNEXTGEN)
-		if (m_scaled_output && m_logical_surface.data && surface.data)
-			scaleLogicalToSurfaceNextGen();
 		if (surface_back.data_phys && surface.data)
 		{
 			fb->waitVSync();
@@ -354,49 +377,14 @@ void gFBDC::exec(const gOpcode *o)
 		break;
 	case gOpcode::sendShow:
 	{
-#ifdef HAVE_OSDANIMATION
-		CFile::writeIntHex("/proc/stb/fb/animation_mode", 0x01);
-#endif
-#ifdef USE_LIBVUGLES2
-		gles_set_buffer((unsigned int *)surface.data);
-		gles_set_animation(1, o->parm.setShowHideInfo->point.x(), o->parm.setShowHideInfo->point.y(), o->parm.setShowHideInfo->size.width(), o->parm.setShowHideInfo->size.height());
-#endif
 		delete o->parm.setShowHideInfo;
 		break;
 	}
 	case gOpcode::sendHide:
 	{
-#ifdef HAVE_OSDANIMATION
-		CFile::writeIntHex("/proc/stb/fb/animation_mode", 0x10);
-#endif
-#ifdef USE_LIBVUGLES2
-		gles_set_buffer((unsigned int *)surface.data);
-		gles_set_animation(0, o->parm.setShowHideInfo->point.x(), o->parm.setShowHideInfo->point.y(), o->parm.setShowHideInfo->size.width(), o->parm.setShowHideInfo->size.height());
-#endif
 		delete o->parm.setShowHideInfo;
 		break;
 	}
-#ifdef USE_LIBVUGLES2
-	case gOpcode::sendShowItem:
-	{
-		gles_set_buffer((unsigned int *)surface.data);
-		gles_set_animation_listbox(o->parm.setShowItemInfo->dir, o->parm.setShowItemInfo->point.x(), o->parm.setShowItemInfo->point.y(), o->parm.setShowItemInfo->size.width(), o->parm.setShowItemInfo->size.height());
-		delete o->parm.setShowItemInfo;
-		break;
-	}
-	case gOpcode::setFlush:
-	{
-		gles_set_flush(o->parm.setFlush->enable);
-		delete o->parm.setFlush;
-		break;
-	}
-	case gOpcode::setView:
-	{
-		gles_viewport(o->parm.setViewInfo->size.width(), o->parm.setViewInfo->size.height(), fb->Stride());
-		delete o->parm.setViewInfo;
-		break;
-	}
-#endif
 	default:
 		gDC::exec(o);
 		break;
@@ -430,7 +418,7 @@ void gFBDC::setGamma(int g)
 void gFBDC::setResolution(int xres, int yres, int bpp)
 {
 	std::lock_guard<std::recursive_mutex> lock(m_graphics_mutex);
-	if (m_pixmap && (m_requested_x == xres) && (m_requested_y == yres) && (surface.bpp == bpp)
+	if (m_pixmap && (surface.x == xres) && (surface.y == yres) && (surface.bpp == bpp)
 	#if defined(CONFIG_HISILICON_FB)
 		&& islocked()==0
 	#endif
@@ -444,21 +432,6 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	if (grc)
 		grc->lock();
 #endif
-	m_requested_x = xres;
-	m_requested_y = yres;
-
-	/* The OSD hardware tops out at 1920x1080.  Bigger skins (WQHD, 4K) are
-	 * drawn into an off-screen logical surface and scaled down on flush. */
-	const int logical_xres = xres;
-	const int logical_yres = yres;
-#ifdef HAVE_FBWQHD
-	if (xres > 1920 || yres > 1080)
-	{
-		xres = 1920;
-		yres = 1080;
-	}
-#endif
-
 	fb->SetMode(xres, yres, bpp);
 
 	unsigned char *base_addr = fb->lfb;
@@ -486,6 +459,7 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	{
 		surface_back = surface;
 		fb_size += fb_page_size;
+
 		// the hardware starts on the first page; draw to the next one first
 		surface_back.data = base_addr;
 		surface_back.data_phys = base_phys;
@@ -550,46 +524,6 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	surface_back.clut = surface.clut;
 	surface_third.clut = surface.clut;
 
-	m_scaled_output = false;
-#if defined(CONFIG_ION) || defined(DREAMNEXTGEN)
-	freeLogicalSurface();
-	if (logical_xres != xres || logical_yres != yres)
-	{
-		m_logical_surface.x = logical_xres;
-		m_logical_surface.y = logical_yres;
-		m_logical_surface.bpp = bpp;
-		m_logical_surface.bypp = bpp / 8;
-		m_logical_surface.stride = logical_xres * (bpp / 8);
-		m_logical_surface.clut = surface.clut;
-		bool logical_ok = false;
-		if (bpp == 32 && gAccel::getInstance() && gAccel::getInstance()->accelAlloc(&m_logical_surface) == 0)
-		{
-#if defined(DREAMNEXTGEN)
-			/* the GE2D allocator may leave the surface to the CPU: use a plain buffer then */
-			if (!m_logical_surface.data)
-			{
-				m_logical_surface.data = new (std::nothrow) unsigned char[(size_t)m_logical_surface.stride * m_logical_surface.y];
-				m_logical_cpu = (m_logical_surface.data != 0);
-			}
-			logical_ok = m_logical_surface.data != 0;
-#else
-			logical_ok = m_logical_surface.data && m_logical_surface.data_phys;
-#endif
-		}
-		if (logical_ok)
-		{
-			memset(m_logical_surface.data, 0, (size_t)m_logical_surface.stride * m_logical_surface.y);
-			m_scaled_output = true;
-			eDebug("[gFBDC] scaled output: logical %dx%d -> physical %dx%d", logical_xres, logical_yres, xres, yres);
-		}
-		else
-		{
-			freeLogicalSurface();
-			eDebug("[gFBDC] can't allocate logical surface %dx%d, scaled output disabled", logical_xres, logical_yres);
-		}
-	}
-#endif
-
 #ifdef DREAMNEXTGEN
 	dreamGE2DRegisterFramebuffer(fb->lfb, base_phys, surface.x, surface.y, surface.stride, m_number_of_pages);
 #endif
@@ -603,10 +537,6 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	}
 #endif
 
-	if (m_scaled_output)
-		m_pixmap = new gPixmap(&m_logical_surface);
-	else
-		m_pixmap = new gPixmap(&surface);
 	m_pixmap = new gPixmap(&surface);
 	invalidateNativeSpinner();
 
@@ -614,55 +544,6 @@ void gFBDC::setResolution(int xres, int yres, int bpp)
 	if (grc)
 		grc->unlock();
 #endif
-}
-
-void gFBDC::freeLogicalSurface()
-{
-#if defined(CONFIG_ION) || defined(DREAMNEXTGEN)
-	if (m_logical_cpu)
-		delete[] (unsigned char *)m_logical_surface.data;
-	else if ((m_logical_surface.data_phys || m_logical_surface.data) && gAccel::getInstance())
-		gAccel::getInstance()->accelFree(&m_logical_surface);
-	m_logical_cpu = false;
-	m_logical_surface.data = 0;
-	m_logical_surface.data_phys = 0;
-#endif
-}
-
-#ifdef DREAMNEXTGEN
-void gFBDC::scaleLogicalToSurfaceNextGen()
-{
-	/* the skin is drawn at its own (larger) size, scale it down into the draw page */
-	const eRect full(0, 0, surface.x, surface.y);
-	const eRect logical(0, 0, m_logical_surface.x, m_logical_surface.y);
-	bool done = false;
-	if (gAccel::getInstance() && !m_logical_cpu)
-	{
-		/* GE2D can only scale together with alpha blending, so the page is cleared first */
-		if (gAccel::getInstance()->fill(&surface, full, 0) != 0)
-		{
-			for (int y = 0; y < surface.y; y++)
-				memset((unsigned char *)surface.data + (long)y * surface.stride, 0, (size_t)surface.x * 4);
-		}
-		done = (gAccel::getInstance()->blit(&surface, &m_logical_surface, full, logical, 6) == 0);
-	}
-	if (!done)
-		scaleLogicalToSurfaceCPU();
-}
-#endif
-
-void gFBDC::scaleLogicalToSurfaceCPU()
-{
-	/* fallback when the hardware scaler refused the blit: nearest neighbour */
-	if (!m_logical_surface.data || !surface.data || m_logical_surface.bypp != 4 || surface.bypp != 4)
-		return;
-	for (int y = 0; y < surface.y; y++)
-	{
-		const unsigned int *src = (const unsigned int *)((unsigned char *)m_logical_surface.data + (long)(y * m_logical_surface.y / surface.y) * m_logical_surface.stride);
-		unsigned int *dst = (unsigned int *)((unsigned char *)surface.data + (long)y * surface.stride);
-		for (int x = 0; x < surface.x; x++)
-			dst[x] = src[x * m_logical_surface.x / surface.x];
-	}
 }
 
 bool gFBDC::suspendGraphics()
@@ -721,8 +602,8 @@ bool gFBDC::resumeGraphics()
 	 * the framebuffer again, so the unmanaged surfaces and m_pixmap must be
 	 * rebound before drawing is allowed to continue.
 	 */
-	const int xres = m_requested_x ? m_requested_x : surface.x;
-	const int yres = m_requested_y ? m_requested_y : surface.y;
+	const int xres = surface.x;
+	const int yres = surface.y;
 	const int bpp = surface.bpp;
 	m_pixmap = 0;
 	m_graphics_suspended = false;
@@ -752,62 +633,37 @@ void gFBDC::reloadSettings()
 	setPalette();
 }
 
-eAutoInitPtr<gFBDC> init_gFBDC(eAutoInitNumbers::graphic-1, "GFBDC");
-
-#ifdef HAVE_OSDANIMATION
-void setAnimation_current(int a) {
-	switch (a) {
-		case 1:
-			CFile::writeStr("/proc/stb/fb/animation_current", "simplefade");
-			break;
-		case 2:
-			CFile::writeStr("/proc/stb/fb/animation_current", "simplezoom");
-			break;
-		case 3:
-			CFile::writeStr("/proc/stb/fb/animation_current", "growdrop");
-			break;
-		case 4:
-			CFile::writeStr("/proc/stb/fb/animation_current", "growfromleft");
-			break;
-		case 5:
-			CFile::writeStr("/proc/stb/fb/animation_current", "extrudefromleft");
-			break;
-		case 6:
-			CFile::writeStr("/proc/stb/fb/animation_current", "popup");
-			break;
-		case 7:
-			CFile::writeStr("/proc/stb/fb/animation_current", "slidedrop");
-			break;
-		case 8:
-			CFile::writeStr("/proc/stb/fb/animation_current", "slidefromleft");
-			break;
-		case 9:
-			CFile::writeStr("/proc/stb/fb/animation_current", "slidelefttoright");
-			break;
-		case 10:
-			CFile::writeStr("/proc/stb/fb/animation_current", "sliderighttoleft");
-			break;
-		case 11:
-			CFile::writeStr("/proc/stb/fb/animation_current", "slidetoptobottom");
-			break;
-		case 12:
-			CFile::writeStr("/proc/stb/fb/animation_current", "zoomfromleft");
-			break;
-		case 13:
-			CFile::writeStr("/proc/stb/fb/animation_current", "zoomfromright");
-			break;
-		case 14:
-			CFile::writeStr("/proc/stb/fb/animation_current", "stripes");
-			break;
-		default:
-			CFile::writeStr("/proc/stb/fb/animation_current", "disable");
-			break;
+class gFBDCAutoInit : protected eAutoInit
+{
+	ePtr<gFBDC> m_dc;
+	void initNow() override
+	{
+		ePtr<gMainDC> ptr;
+		if (gMainDC::getInstance(ptr) == 0)
+		{
+			eDebug("[gFBDC] gMainDC already initialized, skipping GFBDC");
+			return;
+		}
+		eDebug("[eInit] + (%d) GFBDC", rl);
+		m_dc = new gFBDC();
 	}
-}
 
-void setAnimation_speed(int speed) {
-	CFile::writeInt("/proc/stb/fb/animation_speed", speed);
-}
+	void closeNow() override
+	{
+		m_dc = nullptr;
+	}
 
-void setAnimation_current_listbox(int a) {}
-#endif
+public:
+	gFBDCAutoInit()
+		: eAutoInit(eAutoInitNumbers::graphic - 1, "GFBDC"), m_dc(nullptr)
+	{
+		eInit::add(rl, this);
+	}
+
+	~gFBDCAutoInit()
+	{
+		eInit::remove(rl, this);
+	}
+};
+
+static gFBDCAutoInit init_gFBDC_custom;

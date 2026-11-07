@@ -1,14 +1,13 @@
 #include <unistd.h>
 #include <fstream>
 #include <algorithm>
+#include <condition_variable>
+#include <mutex>
 #include <lib/gdi/grc.h>
 #include <lib/gdi/font.h>
 #include <lib/base/init.h>
 #include <lib/base/init_num.h>
 #include <lib/base/esimpleconfig.h>
-#ifdef USE_LIBVUGLES2
-#include <vuplus_gles.h>
-#endif
 
 //#define GFX_DEBUG_DRAWRECT
 
@@ -25,6 +24,13 @@ void *gRC::thread_wrapper(void *ptr)
 
 gRC *gRC::instance = 0;
 
+static unsigned long long monotonicMs()
+{
+	struct timespec now = {};
+	clock_gettime(CLOCK_MONOTONIC, &now);
+	return (unsigned long long)now.tv_sec * 1000ULL + now.tv_nsec / 1000000ULL;
+}
+
 gRC::gRC() : rp(0), wp(0)
 #ifdef SYNC_PAINT
 			 ,
@@ -34,7 +40,7 @@ gRC::gRC() : rp(0), wp(0)
 			 m_notify_pump(eApp, 1, "gRC")
 #endif
 			 ,
-			 m_spinner_enabled(0), m_spinneronoff(1), m_prev_idle_count(0) // NOSONAR
+			 m_spinner_enabled(0), m_spinneronoff(1), m_spinner_suspended(0), m_spinner_suspend_until(0), m_prev_idle_count(0) // NOSONAR
 {
 	ASSERT(!instance);
 	instance = this;
@@ -115,7 +121,7 @@ void gRC::submit(const gOpcode &o)
 		queue[wp++] = o;
 		if (wp == MAXSIZE)
 			wp = 0;
-		if (o.opcode == gOpcode::flush || o.opcode == gOpcode::shutdown || o.opcode == gOpcode::notify)
+		if (o.opcode == gOpcode::flush || o.opcode == gOpcode::shutdown || o.opcode == gOpcode::notify || o.opcode == gOpcode::invoke)
 #ifndef SYNC_PAINT
 			pthread_cond_signal(&cond); // wakeup gdi thread
 		pthread_mutex_unlock(&mutex);
@@ -126,16 +132,37 @@ void gRC::submit(const gOpcode &o)
 	}
 }
 
+void gRC::invoke(const std::function<void()>& function, gDC* dc)
+{
+#ifndef SYNC_PAINT
+	if (pthread_equal(pthread_self(), the_thread)) {
+		function();
+		return;
+	}
+#endif
+	std::mutex mutex;
+	std::condition_variable completed;
+	bool done = false;
+	std::function<void()> call = [&]() {
+		function();
+		std::lock_guard<std::mutex> lock(mutex);
+		done = true;
+		completed.notify_one();
+	};
+	gOpcode op;
+	op.opcode = gOpcode::invoke;
+	op.dc = dc;
+	if (dc)
+		dc->AddRef();
+	op.parm.invoke = &call;
+	submit(op);
+	std::unique_lock<std::mutex> lock(mutex);
+	completed.wait(lock, [&]() { return done; });
+}
+
 void *gRC::thread()
 {
 	int need_notify = 0;
-#ifdef USE_LIBVUGLES2
-	if (gles_open())
-	{
-		gles_state_open();
-		gles_viewport(720, 576, 720 * 4);
-	}
-#endif
 #ifndef SYNC_PAINT
 	while (1)
 	{
@@ -161,6 +188,8 @@ void *gRC::thread()
 				break;
 			else if (o.opcode == gOpcode::notify)
 				need_notify = 1;
+			else if (o.opcode == gOpcode::invoke && !o.dc)
+				(*o.parm.invoke)();
 			else if (o.opcode == gOpcode::setCompositing)
 			{
 				m_compositing = o.parm.setCompositing;
@@ -169,6 +198,10 @@ void *gRC::thread()
 			else if (o.dc)
 			{
 				o.dc->exec(&o);
+				if (o.dc->animationFrameDeadlineUs())
+					m_animation_dc = o.dc;
+				else if (m_animation_dc == o.dc)
+					m_animation_dc = nullptr;
 				// o.dc is a gDC* filled with grabref... so we must release it here
 				o.dc->Release();
 			}
@@ -183,13 +216,28 @@ void *gRC::thread()
 #ifndef SYNC_PAINT
 			while (rp == wp)
 			{
+				unsigned long long animation_delay_ms = 0;
+				if (m_animation_dc) {
+					const unsigned long long deadline = m_animation_dc->animationFrameDeadlineUs();
+					const unsigned long long now = monotonicMs() * 1000ULL;
+					if (!deadline)
+						m_animation_dc = nullptr;
+					else if (deadline <= now) {
+						// Producers must be able to submit while the GPU presents a frame.
+						pthread_mutex_unlock(&mutex);
+						m_animation_dc->renderAnimationFrame();
+						pthread_mutex_lock(&mutex);
+						continue;
+					} else
+						animation_delay_ms = (deadline - now + 999) / 1000;
+				}
 
 				/* when the main thread is non-idle for a too long time without any display output,
 				   we want to display a spinner. */
 				struct timespec timeout = {};
 				clock_gettime(CLOCK_REALTIME, &timeout);
 
-				if (m_spinner_enabled)
+				if (m_spinner_enabled || spinnerSuspended())
 				{
 					timeout.tv_nsec += (m_spinner_dc ? m_spinner_dc->spinnerInterval() : 100) * 1000 * 1000;
 					/* yes, this is required. */
@@ -201,11 +249,19 @@ void *gRC::thread()
 				}
 				else
 					timeout.tv_sec += 2;
+				if (animation_delay_ms) {
+					clock_gettime(CLOCK_REALTIME, &timeout);
+					const unsigned long long wait_ns = timeout.tv_nsec + std::min(2000ULL, animation_delay_ms) * 1000000ULL;
+					timeout.tv_sec += wait_ns / 1000000000ULL;
+					timeout.tv_nsec = wait_ns % 1000000000ULL;
+				}
 
 				int idle = 1;
 
 				if (pthread_cond_timedwait(&cond, &mutex, &timeout) == ETIMEDOUT)
 				{
+					if (animation_delay_ms)
+						continue;
 					if (eApp && !eApp->isIdle())
 					{
 						int idle_count = eApp->idleCount();
@@ -218,6 +274,8 @@ void *gRC::thread()
 
 				if (!idle)
 				{
+					if (spinnerSuspended())
+						continue;
 					if (!m_spinner_enabled)
 					{
 						eDebug("[gRC] Warning: Main thread is busy, displaying spinner!");
@@ -233,11 +291,8 @@ void *gRC::thread()
 #endif
 		}
 	}
-#ifdef USE_LIBVUGLES2
-	gles_state_close();
-	gles_close();
-#endif
 #ifndef SYNC_PAINT
+	m_animation_dc = nullptr;
 	pthread_exit(0);
 #endif
 	return 0;
@@ -253,8 +308,16 @@ gRC *gRC::getInstance()
 	return instance;
 }
 
+bool gRC::spinnerSuspended() const
+{
+	return m_spinner_suspended > 0 || (m_spinner_suspend_until && monotonicMs() < m_spinner_suspend_until);
+}
+
 void gRC::enableSpinner()
 {
+	if (spinnerSuspended())
+		return;
+
 	if (!m_spinner_dc)
 	{
 		eDebug("[gRC] enableSpinner Error: No spinner DC!");
@@ -276,6 +339,37 @@ void gRC::setSpinnerColor(unsigned int color)
 {
 	if (m_spinner_dc)
 		m_spinner_dc->setSpinnerColor(color);
+}
+
+void gRC::suspendSpinner()
+{
+#ifndef SYNC_PAINT
+	pthread_mutex_lock(&mutex);
+#endif
+	++m_spinner_suspended;
+	if (m_spinner_enabled)
+		disableSpinner();
+#ifndef SYNC_PAINT
+	pthread_mutex_unlock(&mutex);
+#endif
+}
+
+void gRC::resumeSpinner(int hold_ms)
+{
+#ifndef SYNC_PAINT
+	pthread_mutex_lock(&mutex);
+#endif
+	if (m_spinner_suspended > 0)
+		--m_spinner_suspended;
+	if (hold_ms > 0)
+	{
+		unsigned long long until = monotonicMs() + (unsigned int)hold_ms;
+		if (until > m_spinner_suspend_until)
+			m_spinner_suspend_until = until;
+	}
+#ifndef SYNC_PAINT
+	pthread_mutex_unlock(&mutex);
+#endif
 }
 
 void gRC::disableSpinner()
@@ -507,6 +601,43 @@ void gPainter::blit(gPixmap *pixmap, ePoint pos, const eRect &clip, int flags)
 	blit(pixmap, eRect(pos, eSize()), clip, flags);
 }
 
+std::atomic<unsigned long long> gContentTransition::liveBytes{0};
+std::atomic<unsigned long long> gContentTransition::limitBytes{32ULL * 1024 * 1024};
+
+std::shared_ptr<gContentTransition> gContentTransition::reserve(unsigned long long bytes)
+{
+	unsigned long long live = liveBytes.load();
+	do {
+		const unsigned long long limit = limitBytes.load();
+		if (!bytes || bytes > limit || live > limit - bytes)
+			return {};
+	} while (!liveBytes.compare_exchange_weak(live, live + bytes));
+	try {
+		auto result = std::make_shared<gContentTransition>();
+		result->bytes = bytes;
+		return result;
+	} catch (...) {
+		liveBytes -= bytes;
+		return {};
+	}
+}
+
+gContentTransition::~gContentTransition()
+{
+	liveBytes -= bytes;
+}
+
+void gPainter::blitTransition(std::shared_ptr<gContentTransition> content, const eRect& position, float progress)
+{
+	if (m_dc->islocked() || !content || !content->after)
+		return;
+	gOpcode opcode;
+	opcode.opcode = gOpcode::blitTransition;
+	opcode.dc = m_dc.grabRef();
+	opcode.parm.blitTransition = new gOpcode::para::pblitTransition{content, position, progress};
+	m_rc->submit(opcode);
+}
+
 void gPainter::blit(gPixmap *pixmap, const eRect &pos, const eRect &clip, int flags)
 {
 	if (m_dc->islocked())
@@ -722,68 +853,57 @@ void gPainter::end()
 		return;
 }
 
-void gPainter::sendShow(ePoint point, eSize size)
+void gPainter::sendShow(ePoint point, eSize size, int animation, int durationMs)
 {
-	if (m_dc->islocked())
+	sendWindowAnimation(true, point, size, animation, durationMs, {});
+}
+
+void gPainter::sendHide(ePoint point, eSize size, int animation, int durationMs)
+{
+	sendWindowAnimation(false, point, size, animation, durationMs, {});
+}
+
+void gPainter::sendWindowAnimation(bool show, ePoint point, eSize size, int animation, int durationMs, gAnimationToken completion)
+{
+	if (m_dc->islocked()) {
+		if (completion) completion->done = true;
 		return;
+	}
 	gOpcode o;
-	o.opcode = gOpcode::sendShow;
+	o.opcode = show ? gOpcode::sendShow : gOpcode::sendHide;
 	o.dc = m_dc.grabRef();
 	o.parm.setShowHideInfo = new gOpcode::para::psetShowHideInfo;
 	o.parm.setShowHideInfo->point = point;
 	o.parm.setShowHideInfo->size = size;
+	o.parm.setShowHideInfo->animation = animation;
+	o.parm.setShowHideInfo->durationMs = durationMs;
+	o.parm.setShowHideInfo->completion = completion;
 	m_rc->submit(o);
 }
 
-void gPainter::sendHide(ePoint point, eSize size)
+void gPainter::sendListboxAnimation(const eRect &from, const eRect &to, const gRGB &backgroundColor,
+	const std::vector<gRGB> &gradientColors, uint8_t gradientOrientation, bool gradientAlphaBlend,
+	int radius, uint8_t radiusEdges, gPixmap *selectionPixmap)
 {
-	if (m_dc->islocked())
+	if (m_dc->islocked() || !m_dc->supportsListboxAnimations())
 		return;
 	gOpcode o;
-	o.opcode = gOpcode::sendHide;
+	o.opcode = gOpcode::sendListboxAnimation;
 	o.dc = m_dc.grabRef();
-	o.parm.setShowHideInfo = new gOpcode::para::psetShowHideInfo;
-	o.parm.setShowHideInfo->point = point;
-	o.parm.setShowHideInfo->size = size;
+	o.parm.listboxAnimation = new gOpcode::para::plistboxAnimation;
+	o.parm.listboxAnimation->from = from;
+	o.parm.listboxAnimation->to = to;
+	o.parm.listboxAnimation->backgroundColor = backgroundColor;
+	o.parm.listboxAnimation->gradientColors = gradientColors;
+	o.parm.listboxAnimation->gradientOrientation = gradientOrientation;
+	o.parm.listboxAnimation->gradientAlphaBlend = gradientAlphaBlend;
+	o.parm.listboxAnimation->radius = radius;
+	o.parm.listboxAnimation->radiusEdges = radiusEdges;
+	o.parm.listboxAnimation->selectionPixmap = selectionPixmap;
+	if (selectionPixmap)
+		selectionPixmap->AddRef();
 	m_rc->submit(o);
 }
-#ifdef USE_LIBVUGLES2
-void gPainter::sendShowItem(long dir, ePoint point, eSize size)
-{
-	if (m_dc->islocked())
-		return;
-	gOpcode o;
-	o.opcode = gOpcode::sendShowItem;
-	o.dc = m_dc.grabRef();
-	o.parm.setShowItemInfo = new gOpcode::para::psetShowItemInfo;
-	o.parm.setShowItemInfo->dir = dir;
-	o.parm.setShowItemInfo->point = point;
-	o.parm.setShowItemInfo->size = size;
-	m_rc->submit(o);
-}
-void gPainter::setFlush(bool val)
-{
-	if (m_dc->islocked())
-		return;
-	gOpcode o;
-	o.opcode = gOpcode::setFlush;
-	o.dc = m_dc.grabRef();
-	o.parm.setFlush = new gOpcode::para::psetFlush;
-	o.parm.setFlush->enable = val;
-	m_rc->submit(o);
-}
-void gPainter::setView(eSize size)
-{
-	if (m_dc->islocked())
-		return;
-	gOpcode o;
-	o.opcode = gOpcode::setView;
-	o.dc = m_dc.grabRef();
-	o.parm.setViewInfo = new gOpcode::para::psetViewInfo;
-	o.parm.setViewInfo->size = size;
-	m_rc->submit(o);
-}
-#endif
 
 gDC::gDC()
 {
@@ -810,6 +930,9 @@ void gDC::discardOpcode(const gOpcode *o)
 {
 	switch (o->opcode)
 	{
+	case gOpcode::blitTransition:
+		delete o->parm.blitTransition;
+		break;
 	case gOpcode::renderText:
 		if (o->parm.renderText->text)
 			free(o->parm.renderText->text);
@@ -877,19 +1000,15 @@ void gDC::discardOpcode(const gOpcode *o)
 		break;
 	case gOpcode::sendShow:
 	case gOpcode::sendHide:
+		if (o->parm.setShowHideInfo->completion)
+			o->parm.setShowHideInfo->completion->done = true;
 		delete o->parm.setShowHideInfo;
 		break;
-#ifdef USE_LIBVUGLES2
-	case gOpcode::sendShowItem:
-		delete o->parm.setShowItemInfo;
+	case gOpcode::sendListboxAnimation:
+		if (o->parm.listboxAnimation->selectionPixmap)
+			o->parm.listboxAnimation->selectionPixmap->Release();
+		delete o->parm.listboxAnimation;
 		break;
-	case gOpcode::setFlush:
-		delete o->parm.setFlush;
-		break;
-	case gOpcode::setView:
-		delete o->parm.setViewInfo;
-		break;
-#endif
 	case gOpcode::popClip:
 	case gOpcode::flush:
 	case gOpcode::waitVSync:
@@ -1113,10 +1232,7 @@ void gDC::exec(const gOpcode *o)
 				eRect area = o->parm.renderText->area;
 				area.moveBy(offset);
 				gRegion clip = m_current_clip & bbox & area;
-				if (m_pixmap->needClut())
-					m_pixmap->fill(clip, m_foreground_color);
-				else
-					m_pixmap->fill(clip, m_foreground_color_rgb);
+				fillTextBackground(clip);
 			}
 		}
 
@@ -1171,6 +1287,16 @@ void gDC::exec(const gOpcode *o)
 			m_pixmap->fill(m_current_clip, m_background_color_rgb);
 		delete o->parm.fill;
 		break;
+	case gOpcode::blitTransition:
+	{
+		const auto& content = o->parm.blitTransition->content;
+		eRect position = o->parm.blitTransition->position;
+		position.moveBy(m_current_offset);
+		if (content && content->after)
+			m_pixmap->blit(*content->after, position, m_current_clip, content->radius, content->edges, gPixmap::blitScale | content->blitFlags);
+		delete o->parm.blitTransition;
+		break;
+	}
 	case gOpcode::blit:
 	{
 #ifdef GFX_DEBUG_DRAWRECT
@@ -1294,17 +1420,16 @@ void gDC::exec(const gOpcode *o)
 	case gOpcode::flush:
 		break;
 	case gOpcode::sendShow:
-		break;
 	case gOpcode::sendHide:
+		if (o->parm.setShowHideInfo->completion)
+			o->parm.setShowHideInfo->completion->done = true;
+		delete o->parm.setShowHideInfo;
 		break;
-#ifdef USE_LIBVUGLES2
-	case gOpcode::sendShowItem:
+	case gOpcode::sendListboxAnimation:
+		if (o->parm.listboxAnimation->selectionPixmap)
+			o->parm.listboxAnimation->selectionPixmap->Release();
+		delete o->parm.listboxAnimation;
 		break;
-	case gOpcode::setFlush:
-		break;
-	case gOpcode::setView:
-		break;
-#endif
 	case gOpcode::enableSpinner:
 		enableSpinner();
 		break;
@@ -1317,6 +1442,19 @@ void gDC::exec(const gOpcode *o)
 	default:
 		eFatal("[gRC] gDC Error: Illegal opcode %d, expect memory leak!", o->opcode);
 	}
+}
+
+void gDC::fillTextBackground(const gRegion &clip)
+{
+	if (m_pixmap->needClut())
+		m_pixmap->fill(clip, m_foreground_color);
+	else
+		m_pixmap->fill(clip, m_foreground_color_rgb);
+}
+
+// Base implementation for software fallback
+void gDC::renderGlyph(const ePoint &pos, gPixmap *glyph_mask, const gRGB &color)
+{
 }
 
 gRGB gDC::getRGB(gColor col)
@@ -1340,10 +1478,8 @@ void gDC::enableSpinner()
 	}
 	ASSERT(m_spinner_saved_HD);
 	ASSERT(m_spinner_saved_FHD);
-	ASSERT(m_spinner_saved_UHD);
 
 	/* save the background to restore it later. We need to negative position because we want to blit from the middle of the screen. */
-	m_spinner_saved_UHD->blit(*m_pixmap, eRect(-m_spinner_pos_UHD.topLeft(), eSize()), gRegion(eRect(ePoint(0, 0), m_spinner_saved_UHD->size())), 0, 0 ,0);
 	m_spinner_saved_FHD->blit(*m_pixmap, eRect(-m_spinner_pos_FHD.topLeft(), eSize()), gRegion(eRect(ePoint(0, 0), m_spinner_saved_FHD->size())), 0, 0 ,0);
 	m_spinner_saved_HD->blit(*m_pixmap, eRect(-m_spinner_pos_HD.topLeft(), eSize()), gRegion(eRect(ePoint(0, 0), m_spinner_saved_HD->size())), 0, 0 ,0);
 
@@ -1363,9 +1499,7 @@ void gDC::disableSpinner()
 	ASSERT(m_spinner_saved_FHD);
 
 	/* restore background */
-	if (size().width() == 3840)
-		m_pixmap->blit(*m_spinner_saved_UHD, eRect(m_spinner_pos_UHD.topLeft(), eSize()), gRegion(m_spinner_pos_UHD), 0, 0, 0);
-	else if (size().width() >= 1920)
+	if (size().width() == 1920)
 		m_pixmap->blit(*m_spinner_saved_FHD, eRect(m_spinner_pos_FHD.topLeft(), eSize()), gRegion(m_spinner_pos_FHD), 0, 0, 0);
 	else
 		m_pixmap->blit(*m_spinner_saved_HD, eRect(m_spinner_pos_HD.topLeft(), eSize()), gRegion(m_spinner_pos_HD), 0, 0, 0);
@@ -1381,10 +1515,11 @@ void gDC::incrementSpinner()
 	ASSERT(m_spinner_saved_HD);
 	ASSERT(m_spinner_saved_FHD);
 
-#if 0
-	int i;
 	static int blub;
 	blub++;
+
+#if 0
+	int i;
 
 	for (i = 0; i < 5; ++i)
 	{
@@ -1397,16 +1532,7 @@ void gDC::incrementSpinner()
 	}
 #endif
 
-	if (size().width() == 3840)
-	{
-		m_spinner_temp_UHD->blit(*m_spinner_saved_UHD, eRect(0, 0, 0, 0), eRect(ePoint(0, 0), m_spinner_pos_UHD.size()), 0, 0, 0);
-
-		if (m_spinner_pic[m_spinner_i])
-			m_spinner_temp_UHD->blit(*m_spinner_pic[m_spinner_i], eRect(0, 0, 0, 0), eRect(ePoint(0, 0), m_spinner_pos_UHD.size()), 0, 0, gPixmap::blitAlphaBlend);
-
-		m_pixmap->blit(*m_spinner_temp_UHD, eRect(m_spinner_pos_UHD.topLeft(), eSize()), gRegion(m_spinner_pos_UHD), 0, 0, 0);
-	}
-	else if (size().width() >= 1920)
+	if (size().width() == 1920)
 	{
 		m_spinner_temp_FHD->blit(*m_spinner_saved_FHD, eRect(0, 0, 0, 0), eRect(ePoint(0, 0), m_spinner_pos_FHD.size()), 0, 0, 0);
 
@@ -1440,15 +1566,10 @@ void gDC::setSpinner(eRect pos, ePtr<gPixmap> *pic, int len)
 	m_spinner_temp_HD = new gPixmap(pos.size(), m_pixmap->surface->bpp);
 	m_spinner_saved_FHD = new gPixmap(pos.size(), m_pixmap->surface->bpp);
 	m_spinner_temp_FHD = new gPixmap(pos.size(), m_pixmap->surface->bpp);
-	m_spinner_saved_UHD = new gPixmap(pos.size(), m_pixmap->surface->bpp);
-	m_spinner_temp_UHD = new gPixmap(pos.size(), m_pixmap->surface->bpp);
 	m_spinner_pos_HD = pos;
 	int x = (int)(float)pos.x() * 1.5;
 	int y = (int)(float)pos.y() * 1.5;
 	m_spinner_pos_FHD = eRect(ePoint(x, y), pos.size());
-	int ux = (int)(float)pos.x() * 3.0;
-	int uy = (int)(float)pos.y() * 3.0;
-	m_spinner_pos_UHD = eRect(ePoint(ux, uy), pos.size());
 
 	m_spinner_i = 0;
 	m_spinner_num = len;
@@ -1470,6 +1591,7 @@ void gDC::setNativeSpinner(ePoint position, unsigned int color)
 	m_nativeSpinner = true;
 	invalidateNativeSpinner();
 }
+
 void gDC::drawNativeSpinner()
 {
 	if (!m_pixmap || !m_pixmap->surface->data || islocked())

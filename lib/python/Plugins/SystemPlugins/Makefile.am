@@ -6,14 +6,6 @@ SUBDIRS = PositionerSetup Satfinder \
 	CableScan FastScan OSDPositionSetup OSD3DSetup VideoClippingSetup \
 	LCNScanner OSDCalibration
 
-if HAVE_LIBVUGLES2
-SUBDIRS += AnimationSetup
-endif
-
-if HAVE_OSDANIMATION
-SUBDIRS += AnimationSetup
-endif
-
 if DREAMNEXTGEN
 SUBDIRS += AmlFRQ VideoEnhancementAML
 else

@@ -3,6 +3,7 @@ from enigma import ePoint, eSize, eTimer, gRGB
 from skin import parseColor, parseInteger
 from Components.config import config
 from Components.Label import Label
+from Components.SystemInfo import BoxInfo
 from Screens.Screen import Screen
 
 
@@ -137,7 +138,7 @@ class ToastScreen(Screen):
 		self["background"].instance.resize(eSize(width, height))
 		self["text"].instance.resize(eSize(textWidth, textHeight))
 		self.hideTimer.start((timeout if timeout else self.defaultTimeout) * 1000)
-		if config.misc.toastFade.value:
+		if config.misc.toastFade.value and not BoxInfo.getItem("e2egl", False):
 			self.alpha = 0xFF
 			self.fadeIn = True
 			self.fadeTimer.start(self.fadeSpeed)
@@ -160,7 +161,7 @@ class ToastScreen(Screen):
 
 	def hideToast(self):
 		self.hideTimer.stop()
-		if config.misc.toastFade.value:
+		if config.misc.toastFade.value and not BoxInfo.getItem("e2egl", False):
 			self.fadeIn = False
 			self.fadeTimer.start(self.fadeSpeed)
 		else:
@@ -204,6 +205,8 @@ class Toast:
 
 	def setup(self, session):
 		def scheduleNext():
+			if self.dialog.instance and self.dialog.instance.isFading():
+				return
 			self.activeToastId = None
 			if self.queue:
 				self.nextTimer.start(500, True)  # 500 ms pause between Toast messages.
@@ -213,6 +216,7 @@ class Toast:
 		self.nextTimer = eTimer()
 		self.nextTimer.callback.append(self.showNext)
 		self.dialog.onHide.append(scheduleNext)
+		self.dialog.instance.hideAnimationFinished.get().append(scheduleNext)
 		if self.queue:
 			self.showNext()
 
@@ -242,6 +246,8 @@ class Toast:
 
 	def showNext(self):
 		self.nextTimer.stop()
+		if self.dialog.instance and self.dialog.instance.isFading():
+			return
 		if not self.dialog.shown and self.queue:
 			text, toastType, timeout, customIcon, self.activeToastId = self.queue.pop(0)
 			print(f"[Toast] Showing '{text}', remaining={len(self.queue)}.")

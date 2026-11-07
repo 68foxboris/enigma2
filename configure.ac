@@ -11,6 +11,7 @@ AC_SYS_LARGEFILE
 
 AC_PROG_CC
 AC_PROG_CXX
+PKG_PROG_PKG_CONFIG
 m4_ifdef([LT_INIT], [LT_INIT], [AC_PROG_LIBTOOL])
 AC_CONFIG_MACRO_DIR([m4])
 AC_OPENMP()
@@ -84,67 +85,137 @@ AM_CONDITIONAL(DAGS, test `echo "$BOXTYPE" | cut -b 1-4` == "dags")
 AM_CONDITIONAL(DREAMBOX, test `echo "$BOXTYPE" | cut -b 1-2` == "dm" -o `echo "$BOXTYPE" | cut -b 1-5` == "dream")
 AM_CONDITIONAL(VUPLUS, test `echo "$BOXTYPE" | cut -b 1-2` == "vu")
 AM_CONDITIONAL(XTREND, test `echo "$BOXTYPE" | cut -b 1-2` == "et")
+AM_CONDITIONAL(TECHNOMATE, test `echo "$BOXTYPE" | cut -b 1-2` == "tm")
+AM_CONDITIONAL(INI, test `echo "$BOXTYPE" | cut -b 1-3` == "ini")
+AM_CONDITIONAL(IQON, test `echo "$BOXTYPE" | cut -b 1-4` == "iqon")
+AM_CONDITIONAL(GIGABLUE, test `echo "$BOXTYPE" | cut -b 1-5` == "gb800")
+AM_CONDITIONAL(ODIN, test `echo "$BOXTYPE" | cut -b 1-4` == "odin")
+AM_CONDITIONAL(VENTON, test `echo "$BOXTYPE" | cut -b 1-6` == "venton")
+AM_CONDITIONAL(EDISION, test `echo "$BOXTYPE" | cut -b 1-4` == "opti")
+AM_CONDITIONAL(JEPSSEN, test `echo "$BOXTYPE" | cut -b 1-5` == "media")
+AM_CONDITIONAL(SOGNO, test `echo "$BOXTYPE" | cut -b 1-5` == "sogno")
+AM_CONDITIONAL(SKYLAKE, test `echo "$BOXTYPE" | cut -b 1-2` == "hd")
+AM_CONDITIONAL(UNIBOXHDE, test "$BOXTYPE" == uniboxhde)
+AM_CONDITIONAL(EVO, test `echo "$BOXTYPE" | cut -b 1-4` == "enfi")
+AM_CONDITIONAL(MIRACLEBOX, test `echo "$BOXTYPE" | cut -b 1-2` == "mb")
 AM_CONDITIONAL(DAGS1, test "$BOXTYPE" == dags1)
 AM_CONDITIONAL(DAGS2, test "$BOXTYPE" == dags2)
 AM_CONDITIONAL(DAGS3, test "$BOXTYPE" == dags3)
 AM_CONDITIONAL(DAGS4, test "$BOXTYPE" == dags4)
 AM_CONDITIONAL(DAGS5, test "$BOXTYPE" == dags5)
-AM_CONDITIONAL(DM900, test "$BOXTYPE" == dm900)
-AM_CONDITIONAL(DM920, test "$BOXTYPE" == dm920)
+AM_CONDITIONAL(DM7252S, test "$BOXTYPE" == dm7252s)
 AM_CONDITIONAL(DM8000, test "$BOXTYPE" == dm8000)
-AM_CONDITIONAL(DM7080, test "$BOXTYPE" == dm7080)
-AM_CONDITIONAL(DM820, test "$BOXTYPE" == dm820)
+AM_CONDITIONAL(DM7435, test "$BOXTYPE" == dm7435)
 AM_CONDITIONAL(DM520, test "$BOXTYPE" == dm520)
 AM_CONDITIONAL(DM7020HD, test "$BOXTYPE" == dm7020hd)
-AM_CONDITIONAL(DM7020HDV2, test "$BOXTYPE" == dm7020hdv2)
 AM_CONDITIONAL(DM800, test "$BOXTYPE" == dm800)
-AM_CONDITIONAL(DM800SE, test "$BOXTYPE" == dm800se)
-AM_CONDITIONAL(DM800SEV2, test "$BOXTYPE" == dm800sev2)
-AM_CONDITIONAL(DM500HD, test "$BOXTYPE" == dm500hd)
-AM_CONDITIONAL(DM500HDV2, test "$BOXTYPE" == dm500hdv2)
-AM_CONDITIONAL(DREAMONE, test "$BOXTYPE" == dreamone)
-AM_CONDITIONAL(DREAMTWO, test "$BOXTYPE" == dreamtwo)
+AM_CONDITIONAL(DM7405NAND, test "$BOXTYPE" == dm7405nand)
+AM_CONDITIONAL(DM7405UBI, test "$BOXTYPE" == dm7405ubi)
 AM_CONDITIONAL(E3HD, test "$BOXTYPE" == e3hd)
-AM_CONDITIONAL(FORMULER3, test "$BOXTYPE" == formuler3)
+AM_CONDITIONAL(VG1000, test "$BOXTYPE" == vg1000)
+AM_CONDITIONAL(VG5000, test "$BOXTYPE" == vg5000)
+AM_CONDITIONAL(ENFINITY, test "$BOXTYPE" == enfinity)
+AM_CONDITIONAL(BRE2ZE, test "$BOXTYPE" == bre2ze)
+AM_CONDITIONAL(X2PLUS, test "$BOXTYPE" == x2plus)
+AM_CONDITIONAL(XCOMBO, test "$BOXTYPE" == xcombo)
+AM_CONDITIONAL(ET4X00, test "$BOXTYPE" == et4x00)
+AM_CONDITIONAL(ET7X00, test "$BOXTYPE" == et7x00)
+AM_CONDITIONAL(XT7413, test "$BOXTYPE" == xt7413)
+AM_CONDITIONAL(ET8000, test "$BOXTYPE" == et8000)
+AM_CONDITIONAL(ET8500, test "$BOXTYPE" == et8500)
+AM_CONDITIONAL(ET8500S, test "$BOXTYPE" == et8500s)
+AM_CONDITIONAL(ET10000, test "$BOXTYPE" == et10000)
+AM_CONDITIONAL(FORCE1, test "$BOXTYPE" == force1)
+AM_CONDITIONAL(WORLDVISIONF1, test "$BOXTYPE" == worldvisionf1)
+AM_CONDITIONAL(TRIPLEX, test "$BOXTYPE" == triplex)
+AM_CONDITIONAL(FM7356, test "$BOXTYPE" == fm7356)
+AM_CONDITIONAL(FM7362, test "$BOXTYPE" == fm7362)
+AM_CONDITIONAL(GBIPBOX, test "$BOXTYPE" == gbipbox)
+AM_CONDITIONAL(GB800SOLO, test "$BOXTYPE" == gb800solo)
+AM_CONDITIONAL(GB800SE, test "$BOXTYPE" == gb800se)
+AM_CONDITIONAL(GB800UE, test "$BOXTYPE" == gb800ue)
+AM_CONDITIONAL(GB800SEPLUS, test "$BOXTYPE" == gb800seplus)
+AM_CONDITIONAL(GB800UEPLUS, test "$BOXTYPE" == gb800ueplus)
+AM_CONDITIONAL(GBULTRASE, test "$BOXTYPE" == gbultrase)
+AM_CONDITIONAL(GBULTRAUE, test "$BOXTYPE" == gbultraue)
+AM_CONDITIONAL(GBULTRAUEH, test "$BOXTYPE" == gbultraueh)
+AM_CONDITIONAL(GBQUADPLUS, test "$BOXTYPE" == gbquadplus)
+AM_CONDITIONAL(GBQUAD, test "$BOXTYPE" == gbquad)
 AM_CONDITIONAL(GB7252, test "$BOXTYPE" == gb7252)
+AM_CONDITIONAL(GB72604, test "$BOXTYPE" == gb72604)
+AM_CONDITIONAL(GBX1, test "$BOXTYPE" == gbx1)
+AM_CONDITIONAL(GBX2, test "$BOXTYPE" == gbx2)
+AM_CONDITIONAL(GBX3, test "$BOXTYPE" == gbx3)
+AM_CONDITIONAL(GBX3H, test "$BOXTYPE" == gbx3h)
+AM_CONDITIONAL(INIHDE, test "$BOXTYPE" == inihde)
+AM_CONDITIONAL(INIHDP, test "$BOXTYPE" == inihdp)
+AM_CONDITIONAL(INIHDX, test "$BOXTYPE" == inihdx)
+AM_CONDITIONAL(IQONIOS100HD, test "$BOXTYPE" == iqonios100hd)
+AM_CONDITIONAL(IQONIOS200HD, test "$BOXTYPE" == iqonios200hd)
+AM_CONDITIONAL(IQONIOS300HD, test "$BOXTYPE" == iqonios300hd)
+AM_CONDITIONAL(IQONIOS300HDV2, test "$BOXTYPE" == iqonios300hdv2)
+AM_CONDITIONAL(MEDIABOX, test "$BOXTYPE" == mediabox)
+AM_CONDITIONAL(MBTWIN, test "$BOXTYPE" == mbtwin)
+AM_CONDITIONAL(MUTANT2400, test "$BOXTYPE" == mutant2400)
+AM_CONDITIONAL(ODINM6, test "$BOXTYPE" == odinm6)
+AM_CONDITIONAL(ODINM7, test "$BOXTYPE" == odinm7)
+AM_CONDITIONAL(ODINM9, test "$BOXTYPE" == odinm9)
+AM_CONDITIONAL(OSMIO4KPLUS, test "$MACHINEBUILD" == osmio4kplus)
+AM_CONDITIONAL(QUADBOX2400, test "$BOXTYPE" == quadbox2400)
+AM_CONDITIONAL(OPTIMUSSOS1, test "$BOXTYPE" == optimussos1)
+AM_CONDITIONAL(OPTIMUSSOS2, test "$BOXTYPE" == optimussos2)
+AM_CONDITIONAL(SOGNO8800HD, test "$BOXTYPE" == sogno8800hd)
+AM_CONDITIONAL(S8100, test "$BOXTYPE" == 8100s)
+AM_CONDITIONAL(PROTEK9900LX, test "$BOXTYPE" == 9900lx)
+AM_CONDITIONAL(TMTWINOE, test "$BOXTYPE" == tmtwin)
+AM_CONDITIONAL(TM2TOE, test "$BOXTYPE" == tm2t)
+AM_CONDITIONAL(TMSINGLE, test "$BOXTYPE" == tmsingle)
+AM_CONDITIONAL(TMNANO, test "$BOXTYPE" == tmnano)
+AM_CONDITIONAL(TMNANO2T, test "$BOXTYPE" == tmnano2t)
+AM_CONDITIONAL(TMNANOSE, test "$BOXTYPE" == tmnanose)
+AM_CONDITIONAL(TMNANOSEM2, test "$BOXTYPE" == tmnanosem2)
+AM_CONDITIONAL(TMNANOSEM2PLUS, test "$BOXTYPE" == tmnanosem2plus)
+AM_CONDITIONAL(TIVIARMIN, test "$BOXTYPE" == tiviarmin)
 AM_CONDITIONAL(VUUNO, test "$BOXTYPE" == vuuno)
 AM_CONDITIONAL(VUULTIMO, test "$BOXTYPE" == vuultimo)
 AM_CONDITIONAL(VUSOLO, test "$BOXTYPE" == vusolo)
 AM_CONDITIONAL(VUSOLOSE, test "$BOXTYPE" == vusolose)
 AM_CONDITIONAL(VUDUO, test "$BOXTYPE" == vuduo)
 AM_CONDITIONAL(VUSOLO2, test "$BOXTYPE" == vusolo2)
-AM_CONDITIONAL(VUSOLO4K, test "$BOXTYPE" == vusolo4k)
+AM_CONDITIONAL(VU7376, test "$BOXTYPE" == vu7376)
 AM_CONDITIONAL(VUUNO4K, test "$BOXTYPE" == vuuno4k)
 AM_CONDITIONAL(VUUNO4KSE, test "$BOXTYPE" == vuuno4kse)
-AM_CONDITIONAL(VUULTIMO4K, test "$BOXTYPE" == vuultimo4k)
 AM_CONDITIONAL(VUZERO4K, test "$BOXTYPE" == vuzero4k)
 AM_CONDITIONAL(VUDUO2, test "$BOXTYPE" == vuduo2)
-AM_CONDITIONAL(VUDUO4K, test "$BOXTYPE" == vuduo4k)
-AM_CONDITIONAL(VUDUO4KSE, test "$BOXTYPE" == vuduo4kse)
+AM_CONDITIONAL(VU7376DUO, test "$BOXTYPE" == vu7376duo)
 AM_CONDITIONAL(VUDUO4KLITE, test "$BOXTYPE" == vuduo4klite)
 AM_CONDITIONAL(VUZERO, test "$BOXTYPE" == vuzero)
-AM_CONDITIONAL(HAVE_COLORLCD3, test "$BOXTYPE" == dm7080)
-AM_CONDITIONAL(HAVE_COLORLCD240, test "$BOXTYPE" == dreamtwo)
-AM_CONDITIONAL(HAVE_COLORLCD2, test "$BOXTYPE" == dm800se -o "$BOXTYPE" == dm800sev2 -o "$BOXTYPE" == dm820)
-AM_CONDITIONAL(HAVE_COLORLCD1, test "$BOXTYPE" == dm8000 -o "$BOXTYPE" == dm800 -o "$BOXTYPE" == dm7020hd -o "$BOXTYPE" == dm7020hdv2)
+AM_CONDITIONAL(VENTONHDX, test "$BOXTYPE" == ventonhdx)
+AM_CONDITIONAL(XP1000, test "$BOXTYPE" == xp1000)
+AM_CONDITIONAL(HAVE_COLORLCD3, test "$MACHINEBUILD" == dm7080)
+AM_CONDITIONAL(HAVE_COLORLCD240, test "$MACHINEBUILD" == dreamtwo)
+AM_CONDITIONAL(HAVE_COLORLCD2, test "$MACHINEBUILD" == dm800se -o "$MACHINEBUILD" == dm800sev2 -o "$MACHINEBUILD" == dm820)
+AM_CONDITIONAL(HAVE_COLORLCD1, test "$BOXTYPE" == dm8000 -o "$BOXTYPE" == dm800 -o "$BOXTYPE" == dm7020hd -o "$MACHINEBUILD" == dm7020hdv2)
 AM_CONDITIONAL(HAVE_GRAUTEC8000, test "$BOXTYPE" == dm8000)
-AM_CONDITIONAL(HAVE_GRAUTEC70X0, test "$BOXTYPE" == dm7020hd -o "$BOXTYPE" == dm7020hdv2 -o "$BOXTYPE" == dm7080)
+AM_CONDITIONAL(HAVE_GRAUTEC70X0, test "$BOXTYPE" == dm7020hd -o "$MACHINEBUILD" == dm7020hdv2 -o "$MACHINEBUILD" == dm7080)
 AM_CONDITIONAL(LCD_FRAMEBUFFER_MODE, test "$BOXTYPE" == et8500 -o "$BOXTYPE" == et8500s -o "$BOXTYPE" == 8100s)
 
 AS_IF([test "$MACHINEBUILD" == "beyonwizt2"],[AC_DEFINE(HWBEYONWIZT2, 1,[beyonwizt2])])
-AS_IF([test "$BOXTYPE" == "dreamone"],[AC_DEFINE(HWDREAMONE, 1,[dreamone])])
-AS_IF([test "$BOXTYPE" == "dreamtwo"],[AC_DEFINE(HWDREAMTWO, 1,[dreamtwo])])
+AS_IF([test "$MACHINEBUILD" == "dreamone"],[AC_DEFINE(HWDREAMONE, 1,[dreamone])])
+AS_IF([test "$MACHINEBUILD" == "dreamtwo"],[AC_DEFINE(HWDREAMTWO, 1,[dreamtwo])])
 AS_IF([test "$BOXTYPE" == "dm8000"],[AC_DEFINE(HWDM8000, 1,[dm8000])])
-AS_IF([test "$BOXTYPE" == "dm7020hd" -o "$BOXTYPE" == "dm7020hdv2"],[AC_DEFINE(HWDM7020HD, 1,[dm7020hd])])
-AS_IF([test "$BOXTYPE" == "dm7080"],[AC_DEFINE(HWDM7080, 1,[dm7080])])
-AS_IF([test "$BOXTYPE" == "dm820"],[AC_DEFINE(HWDM820, 1,[dm820])])
+AS_IF([test "$BOXTYPE" == "dm7020hd" -o "$MACHINEBUILD" == "dm7020hdv2"],[AC_DEFINE(HWDM7020HD, 1,[dm7020hd])])
+AS_IF([test "$BOXTYPE" == "dm7435"],[AC_DEFINE(HWDM7435, 1,[dm7435])])
+AS_IF([test "$MACHINEBUILD" == "dm7080"],[AC_DEFINE(HWDM7080, 1,[dm7080])])
+AS_IF([test "$MACHINEBUILD" == "dm820"],[AC_DEFINE(HWDM820, 1,[dm820])])
 AS_IF([test "$BOXTYPE" == "dm520" -o "$BOXTYPE" == "dm525"],[AC_DEFINE(HWDM520, 1,[dm520])])
-AS_IF([test "$BOXTYPE" == "dm900"],[AC_DEFINE(HWDM900, 1,[dm900])])
-AS_IF([test "$BOXTYPE" == "dm920"],[AC_DEFINE(HWDM920, 1,[dm920])])
-AS_IF([test "$BOXTYPE" == "dm800se"],[AC_DEFINE(HWDM800SE, 1,[dm800se])])
-AS_IF([test "$BOXTYPE" == "dm500hd"],[AC_DEFINE(HWDM500HD, 1,[dm500hd])])
-AS_IF([test "$BOXTYPE" == "dm800sev2"],[AC_DEFINE(HWDM800SEV2, 1,[dm800sev2])])
-AS_IF([test "$BOXTYPE" == "dm500hdv2"],[AC_DEFINE(HWDM500HDV2, 1,[dm500hdv2])])
+AS_IF([test "$BOXTYPE" == "dm7252s"],[AC_DEFINE(HWDM7252S, 1,[dm7252s])])
+AS_IF([test "$MACHINEBUILD" == "dm900"],[AC_DEFINE(HWDM900, 1,[dm900])])
+AS_IF([test "$MACHINEBUILD" == "dm920"],[AC_DEFINE(HWDM920, 1,[dm920])])
+AS_IF([test "$MACHINEBUILD" == "dm800se"],[AC_DEFINE(HWDM800SE, 1,[dm800se])])
+AS_IF([test "$MACHINEBUILD" == "dm500hd"],[AC_DEFINE(HWDM500HD, 1,[dm500hd])])
+AS_IF([test "$MACHINEBUILD" == "dm800sev2"],[AC_DEFINE(HWDM800SEV2, 1,[dm800sev2])])
+AS_IF([test "$MACHINEBUILD" == "dm500hdv2"],[AC_DEFINE(HWDM500HDV2, 1,[dm500hdv2])])
 AS_IF([test "$MACHINEBUILD" == "dual"],[AC_DEFINE(HWDUAL, 1,[dual4k])])
 AS_IF([test "$BOXTYPE" == "et7x00"],[AC_DEFINE(HWET7X00, 1,[et7x00])])
 AS_IF([test "$MACHINEBUILD" == "gbip4k"],[AC_DEFINE(HWGBIP4K, 1,[gbip4k])])
@@ -153,6 +224,7 @@ AS_IF([test "$MACHINEBUILD" == "gbquad4kpro"],[AC_DEFINE(HWGBQUAD4KPRO, 1,[gbqua
 AS_IF([test "$MACHINEBUILD" == "gbtrio4k"],[AC_DEFINE(HWGBTRIO4K, 1,[gbtrio4k])])
 AS_IF([test "$MACHINEBUILD" == "gbtrio4kpro"],[AC_DEFINE(HWGBTRIO4KPRO, 1,[gbtrio4kpro])])
 AS_IF([test "$MACHINEBUILD" == "gbue4k"],[AC_DEFINE(HWGBUE4K, 1,[gbue4k])])
+AS_IF([test "$BOXTYPE" == "gb7252" -o "$BOXTYPE" == "vuduo4klite"],[AC_DEFINE(E2EGL_NXPL_SYNC_FB_DST, 1,[BCM7252S NXPL MiniTV framebuffer destination workaround])])
 AS_IF([test "$BOXTYPE" == "h7"],[AC_DEFINE(HWH7, 1,[h7])])
 AS_IF([test "$BOXTYPE" == "h9"],[AC_DEFINE(HWH9, 1,[h9])])
 AS_IF([test "$BOXTYPE" == "h9combo"],[AC_DEFINE(HWH9COMBO, 1,[h9combo])])
@@ -165,27 +237,27 @@ AS_IF([test "$BOXTYPE" == "hd51"],[AC_DEFINE(HWHD51, 1,[hd51])])
 AS_IF([test "$BOXTYPE" == "hd61"],[AC_DEFINE(HWHD61, 1,[hd61])])
 AS_IF([test "$BOXTYPE" == "multiboxpro"],[AC_DEFINE(HWMULTIBOXPRO, 1,[multiboxpro])])
 AS_IF([test "$BOXTYPE" == "osnino"],[AC_DEFINE(HWOSNINO, 1,[osnino])])
-AS_IF([test "$BOXTYPE" == "osmio4k"],[AC_DEFINE(HWOSMIO4K, 1,[osmio4k])])
-AS_IF([test "$BOXTYPE" == "osmio4kplus"],[AC_DEFINE(HWOSMIO4KPLUS, 1,[osmio4Kplus])])
+AS_IF([test "$MACHINEBUILD" == "osmio4k"],[AC_DEFINE(HWOSMIO4K, 1,[osmio4k])])
+AS_IF([test "$MACHINEBUILD" == "osmio4kplus"],[AC_DEFINE(HWOSMIO4KPLUS, 1,[osmio4Kplus])])
 AS_IF([test "$BOXTYPE" == "sf4008"],[AC_DEFINE(HWSF4008, 1,[sf4008])])
-AS_IF([test "$BOXTYPE" == "pulse4k"],[AC_DEFINE(HWPULSE4K, 1,[pulse4k])])
-AS_IF([test "$BOXTYPE" == "pulse4kmini"],[AC_DEFINE(HWPULSE4KMINI, 1,[pulse4kmini])])
+AS_IF([test "$MACHINEBUILD" == "pulse4k"],[AC_DEFINE(HWPULSE4K, 1,[pulse4k])])
+AS_IF([test "$MACHINEBUILD" == "pulse4kmini"],[AC_DEFINE(HWPULSE4KMINI, 1,[pulse4kmini])])
 AS_IF([test "$MACHINEBUILD" == "sf8008m"],[AC_DEFINE(HWSF8008M, 1,[sf8008m])])
-AS_IF([test "$BOXTYPE" == "sf8008"],[AC_DEFINE(HWSF8008, 1,[sf8008])])
+AS_IF([test "$MACHINEBUILD" == "sf8008"],[AC_DEFINE(HWSF8008, 1,[sf8008])])
 AS_IF([test "$BOXTYPE" == "sfx6008"],[AC_DEFINE(HWSFX6008, 1,[sfx6008])])
 AS_IF([test "$BOXTYPE" == "sx988"],[AC_DEFINE(HWSX988, 1,[sx988])])
 AS_IF([test "$BOXTYPE" == "sx88v2"],[AC_DEFINE(HWSX88V2, 1,[sx88v2])])
 AS_IF([test "$BOXTYPE" == "u5"],[AC_DEFINE(HWU5, 1,[u5])])
 AS_IF([test "$BOXTYPE" == "ustym4kpro"],[AC_DEFINE(HWUSTYM4KPRO, 1,[ustym4kpro])])
 AS_IF([test "$BOXTYPE" == "vuduo2"],[AC_DEFINE(HWVUDUO2, 1,[vuduo2])])
-AS_IF([test "$BOXTYPE" == "vuduo4k"],[AC_DEFINE(HWVUDUO4K, 1,[vuduo4k])])
-AS_IF([test "$BOXTYPE" == "vuduo4kse"],[AC_DEFINE(HWVUDUO4KSE, 1,[vuduo4kse])])
+AS_IF([test "$MACHINEBUILD" == "vuduo4k"],[AC_DEFINE(HWVUDUO4K, 1,[vuduo4k])])
+AS_IF([test "$MACHINEBUILD" == "vuduo4kse"],[AC_DEFINE(HWVUDUO4KSE, 1,[vuduo4kse])])
 AS_IF([test "$BOXTYPE" == "vuduo4klite"],[AC_DEFINE(HWVUDUO4KLITE, 1,[vuduo4klite])])
 AS_IF([test "$BOXTYPE" == "vusolo2"],[AC_DEFINE(HWVUSOLO2, 1,[vusolo2])])
-AS_IF([test "$BOXTYPE" == "vusolo4k"],[AC_DEFINE(HWVUSOLO4K, 1,[vusolo4k])])
+AS_IF([test "$MACHINEBUILD" == "vusolo4k"],[AC_DEFINE(HWVUSOLO4K, 1,[vusolo4k])])
 AS_IF([test "$BOXTYPE" == "vusolose"],[AC_DEFINE(HWVUSOLOSE, 1,[vusolose])])
 AS_IF([test "$BOXTYPE" == "vuultimo"],[AC_DEFINE(HWVUULTIMO, 1,[vuultimo])])
-AS_IF([test "$BOXTYPE" == "vuultimo4k"],[AC_DEFINE(HWVUULTIMO4K, 1,[vuultimo4k])])
+AS_IF([test "$MACHINEBUILD" == "vuultimo4k"],[AC_DEFINE(HWVUULTIMO4K, 1,[vuultimo4k])])
 AS_IF([test "$BOXTYPE" == "vuuno4k"],[AC_DEFINE(HWVUUNO4K, 1,[vuuno4k])])
 AS_IF([test "$BOXTYPE" == "vuuno4kse"],[AC_DEFINE(HWVUUNO4KSE, 1,[vuuno4kse])])
 AS_IF([test "$BOXTYPE" == "vuzero"],[AC_DEFINE(HWVUZERO, 1,[vuzero])])
@@ -228,7 +300,7 @@ elif test x"$with_alphablendingacceleration" = xalways ; then
 	AC_DEFINE_UNQUOTED(FORCE_ALPHABLENDING_ACCELERATION, 1, [Accelerate alphablending blits])
 fi
 
-if test "$BOXTYPE" == "dm7080" -o "$BOXTYPE" == "dm820" -o "$BOXTYPE" == "dm900" -o "$BOXTYPE" == "dm920" -o "$BOXTYPE" == "dm520"; then
+if test "$BOXTYPE" == "dm7435" -o "$BOXTYPE" == "dm7252s" -o "$BOXTYPE" == "dm520"; then
 	default_accelerationaccumulation=yes
 else
 	default_accelerationaccumulation=no
@@ -244,16 +316,6 @@ if test x"$with_accelerationaccumulation" = xyes ; then
 	AC_DEFINE(SUPPORT_ACCUMULATED_ACCELERATION_OPERATIONS, 1,[Accumulate blit/fill acceleration operations])
 fi
 
-
-AC_ARG_WITH(libvugles2,
-	AS_HELP_STRING([--with-libvugles2],[use libvugles2, yes or no]),
-	[with_libvugles2=$withval],[with_libvugles2=no])
-if test "$with_libvugles2" = "yes"; then
-	PKG_CHECK_MODULES(LIBVUGLES2, [libvugles2])
-	GLES_CFLAGS="-DUSE_LIBVUGLES2"
-fi
-AM_CONDITIONAL(HAVE_LIBVUGLES2, test "$with_libvugles2" = "yes")
-
 AC_ARG_WITH(libhiaccel,
 	AS_HELP_STRING([--with-libhiaccel],[use libhiaccel, yes or no]),
 	[with_libhiaccel=$withval],[with_libhiaccel=no])
@@ -265,18 +327,6 @@ fi
 if test x"$with_libhiaccel" != xno ; then
 	AC_DEFINE(HAVE_HISILICON_ACCEL, 1,[define add HISILICON ACCEL])
 fi
-
-AC_ARG_WITH(osdanimation,
-	AS_HELP_STRING([--with-osdanimation], [use osd animation, yes or no]),
-	[[withosdanimation=$withval]],
-	[[withosdanimation=no]]
-)
-if test x"$withosdanimation" != xno ; then
-
-	AC_DEFINE(HAVE_OSDANIMATION, 1,[Define if driver supports animation of osd])
-fi
-AM_CONDITIONAL(HAVE_OSDANIMATION, test x"$withosdanimation" != xno)
-
 
 if test `echo "$BOXTYPE" | cut -b 1-2` == "dm" -o `echo "$BOXTYPE" | cut -b 1-5` == "dream"; then
 	AC_DEFINE(DREAMBOX, 1, [Dreambox hardware])
@@ -302,15 +352,6 @@ if test x"$withtextlcd" != xno ; then
 	AC_DEFINE(HAVE_TEXTLCD, 1,[Define when using an ascii based lcd device])
 fi
 AM_CONDITIONAL(HAVE_TEXTLCD, test x"$withtextlcd" != xno)
-
-AC_ARG_WITH(egl,
-	AC_HELP_STRING([--with-egl], [passed by the e2egl machine feature: render skins larger than 1920x1080 (WQHD/4K) in gFBDC and scale them down, yes or no]),
-	[[withegl=$withval]],
-	[[withegl=no]]
-)
-if test x"$withegl" != xno ; then
-	AC_DEFINE(HAVE_FBWQHD, 1,[Define to enable scaled WQHD/4K skins in gFBDC])
-fi
 
 AC_ARG_WITH(7segment,
 	AS_HELP_STRING([--with-7segment], [use ascii based lcd, yes or no]),
@@ -534,8 +575,221 @@ AC_ARG_WITH(amlogic,
 	[[with_amlogic=no]]
 )
 
-AM_CONDITIONAL(DREAMNEXTGEN, test "$BOXTYPE" == dreamone -o "$BOXTYPE" == dreamtwo)
-if test "$BOXTYPE" == "dreamone" -o "$BOXTYPE" == "dreamtwo"; then
+AC_ARG_WITH([egl],
+  AS_HELP_STRING([--with-egl], [enable EGL/GLES2/GLES3 backend]),
+  [],
+  [with_egl=no])
+
+have_egl=no
+have_gles2=no
+have_gles3=no
+have_nxpl=no
+have_vupl=no
+have_v3dplatform=no
+use_vuplus_egl=no
+use_vuplus_mips_egl=no
+use_nxpl_egl=no
+use_v3dplatform_egl=no
+use_hisilicon_egl=no
+use_dreambcm_egl=no
+NXPL_CFLAGS=""
+NXPL_LIBS=""
+VUPL_CFLAGS=""
+VUPL_LIBS=""
+V3DPLATFORM_CFLAGS=""
+V3DPLATFORM_LIBS=""
+
+is_vuplus_egl_box=no
+case "$BOXTYPE" in
+  vu7376duo|vu7376|vuuno4k|vuuno4kse|vuzero4k)
+    is_vuplus_egl_box=yes
+    ;;
+esac
+
+is_vuplus_mips_egl_box=no
+case "$BOXTYPE" in
+  vuduo2|vusolo2|vusolose)
+    is_vuplus_mips_egl_box=yes
+    ;;
+esac
+
+is_nxpl_egl_box=no
+case "$BOXTYPE" in
+  et10000|et1x000|triplex|hd2400|8100s|gb7252|gb72604|dags72604|hd51|vs1500|h7|h17|sf4008|vuduo4klite)
+    is_nxpl_egl_box=yes
+    ;;
+esac
+# Only formuler1 of fm7356, not formuler1tc.
+if test "$MACHINEBUILD" == "formuler1"; then
+  is_nxpl_egl_box=yes
+fi
+
+is_v3dplatform_egl_box=no
+case "$BOXTYPE" in
+  ed72604|xc7346)
+    is_v3dplatform_egl_box=yes
+    ;;
+esac
+
+is_dreambcm_egl_box=no
+case "$BOXTYPE" in
+  dm520|dm525|dm7435|dm7252s)
+    is_dreambcm_egl_box=yes
+    ;;
+esac
+
+is_hisilicon_egl_box=no
+case "$BOXTYPE" in
+  u5|u5pvr|u51|u52|u54|u55|u56|u57|u571|u41|u42|u43|u45|u53|u532|u533|ocmv200|sx988|ip8|ustym4kpro|ustym4kottpremium|ustym4ks2ottx|gbmv200|beyonwizv2|viper4k|dagsmv200|og2ott4k|og2s4k|sfx6008|sx88v2|abmv200|multibox|multiboxpro|multiboxse|h8se|h9|h9combo|h9combose|h9se|h10|h11|i55plus|i55se|hd60|hd61|hd66se)
+    is_hisilicon_egl_box=yes
+    ;;
+esac
+
+AS_IF([test "x$with_egl" != "xno"], [
+  PKG_CHECK_MODULES([EGL], [egl], [have_egl=yes], [
+    EGL_CFLAGS=""
+    EGL_LIBS="-lEGL"
+    have_egl=yes
+  ])
+  PKG_CHECK_MODULES([GLES2], [glesv2], [have_gles2=yes], [
+    GLES2_CFLAGS=""
+    GLES2_LIBS="-lGLESv2"
+    have_gles2=yes
+  ])
+  AS_IF([test "x$is_vuplus_egl_box" = "xyes" -o "x$is_nxpl_egl_box" = "xyes"], [
+    PKG_CHECK_MODULES([NXPL], [nxpl], [have_nxpl=yes], [have_nxpl=no])
+  ])
+  AS_IF([test "x$is_vuplus_mips_egl_box" = "xyes"], [
+    PKG_CHECK_MODULES([VUPL], [libvupl nxpl], [have_vupl=yes], [
+      AC_CHECK_HEADERS([eglvuplus.h], [have_vupl_header=yes], [have_vupl_header=no])
+      saved_LIBS="$LIBS"
+      LIBS="$LIBS -lnxpl -ldvb_client -ldvb_base"
+      AC_CHECK_LIB([vupl], [VUGLES_InitPlatformAndDefaultDisplay], [have_vupl_lib=yes], [have_vupl_lib=no])
+      LIBS="$saved_LIBS"
+      AS_IF([test "x$have_vupl_header" = "xyes" -a "x$have_vupl_lib" = "xyes"], [
+        VUPL_CFLAGS=""
+        VUPL_LIBS="-lvupl -lnxpl -ldvb_client -ldvb_base"
+        have_vupl=yes
+      ], [
+        have_vupl=no
+      ])
+    ])
+  ])
+  AS_IF([test "x$is_v3dplatform_egl_box" = "xyes"], [
+    PKG_CHECK_MODULES([V3DPLATFORM], [v3dplatform], [have_v3dplatform=yes], [have_v3dplatform=no])
+  ])
+])
+
+AS_IF([test "x$have_gles2" = "xyes"], [
+  saved_CPPFLAGS="$CPPFLAGS"
+  saved_LIBS="$LIBS"
+  CPPFLAGS="$CPPFLAGS $EGL_CFLAGS $GLES2_CFLAGS"
+  LIBS="$LIBS $GLES2_LIBS $EGL_LIBS $NXPL_LIBS $VUPL_LIBS $V3DPLATFORM_LIBS"
+  AC_CHECK_HEADERS([GLES3/gl3.h], [have_gles3_header=yes], [have_gles3_header=no])
+  # Some SDKs ship GLES3/gl3.h but a GLESv2-only library, verify the GLES3 entry points link.
+  AS_IF([test "x$have_gles3_header" = "xyes"], [
+    AC_MSG_CHECKING([whether libGLESv2 provides GLES3 entry points])
+    AC_LINK_IFELSE([AC_LANG_PROGRAM(
+      [[#include <GLES3/gl3.h>]],
+      [[GLuint vao; glGenVertexArrays(1, &vao); glBindVertexArray(vao);]])],
+      [have_gles3=yes], [have_gles3=no])
+    AC_MSG_RESULT([$have_gles3])
+  ], [have_gles3=no])
+  AC_CHECK_HEADERS([EGL/fbdev_window.h])
+  AC_CHECK_TYPES([fbdev_window],
+    [AC_DEFINE([HAVE_FBDEV_WINDOW_TYPE], [1], [Define if EGL exposes the fbdev_window type])],
+    [],
+    [[#include <EGL/egl.h>]])
+  CPPFLAGS="$saved_CPPFLAGS"
+  LIBS="$saved_LIBS"
+])
+
+AS_IF([test "x$with_egl" = "xyes"], [
+  AS_IF([test "x$have_egl" != "xyes" -o "x$have_gles2" != "xyes"], [
+    AC_MSG_ERROR([--with-egl was given, but egl and/or glesv2 were not found])
+  ])
+  AS_IF([test "x$is_vuplus_egl_box" = "xyes" -a "x$have_nxpl" != "xyes"], [
+    AC_MSG_ERROR([--with-egl on Vu+ requires nxpl])
+  ])
+  AS_IF([test "x$is_vuplus_mips_egl_box" = "xyes" -a "x$have_vupl" != "xyes"], [
+    AC_MSG_ERROR([--with-egl on Vu+ MIPS requires libvupl])
+  ])
+  AS_IF([test "x$is_nxpl_egl_box" = "xyes" -a "x$have_nxpl" != "xyes"], [
+    AC_MSG_ERROR([--with-egl on Broadcom/NXPL requires nxpl])
+  ])
+  AS_IF([test "x$is_v3dplatform_egl_box" = "xyes" -a "x$have_v3dplatform" != "xyes"], [
+    AC_MSG_ERROR([--with-egl on Broadcom/V3D platform requires v3dplatform])
+  ])
+  AS_IF([test "x$is_hisilicon_egl_box" = "xyes"], [
+    AC_DEFINE([HAVE_HISILICON_EGL], [1], [Define if HiSilicon Mali native EGL support is available])
+    use_hisilicon_egl=yes
+  ])
+  AS_IF([test "x$is_dreambcm_egl_box" = "xyes"], [
+    AC_DEFINE([HAVE_DREAMBCM_EGL], [1], [Define if Dreambox Broadcom native EGL support is available])
+    EGL_CFLAGS="$EGL_CFLAGS -DBROADCOM_PLATFORM"
+    GLES2_CFLAGS="$GLES2_CFLAGS -DBROADCOM_PLATFORM"
+    use_dreambcm_egl=yes
+  ])
+])
+
+use_egl=no
+AS_IF([test "x$have_egl" = "xyes" -a "x$have_gles2" = "xyes"], [
+  AC_DEFINE([HAVE_EGL], [1], [Define if EGL/GLES2 support is available])
+  use_egl=yes
+  AS_IF([test "x$is_vuplus_egl_box" = "xyes" -a "x$have_nxpl" = "xyes"], [
+    AC_DEFINE([HAVE_VUPLUS_EGL], [1], [Define if Vu+ NXPL native EGL support is available])
+    use_vuplus_egl=yes
+  ])
+  AS_IF([test "x$is_vuplus_mips_egl_box" = "xyes" -a "x$have_vupl" = "xyes"], [
+    AC_DEFINE([HAVE_VUPLUS_MIPSEL_EGL], [1], [Define if legacy Vu+ MIPS libvupl native EGL support is available])
+    use_vuplus_mips_egl=yes
+  ])
+  AS_IF([test "x$is_nxpl_egl_box" = "xyes" -a "x$have_nxpl" = "xyes"], [
+    AC_DEFINE([HAVE_NXPL_EGL], [1], [Define if Broadcom NXPL native EGL support is available])
+    use_nxpl_egl=yes
+  ])
+  AS_IF([test "x$is_v3dplatform_egl_box" = "xyes" -a "x$have_v3dplatform" = "xyes"], [
+    AC_DEFINE([HAVE_V3DPLATFORM_EGL], [1], [Define if Broadcom V3D platform native EGL support is available])
+    use_v3dplatform_egl=yes
+  ])
+])
+
+AS_IF([test "x$have_egl" = "xyes" -a "x$have_gles3" = "xyes"], [
+  AC_DEFINE([HAVE_GLES3], [1], [Define if GLES3 support is available])
+])
+
+AM_CONDITIONAL([HAVE_EGL], [test "x$use_egl" = "xyes"])
+AM_CONDITIONAL([HAVE_VUPLUS_EGL], [test "x$use_vuplus_egl" = "xyes"])
+AM_CONDITIONAL([HAVE_VUPLUS_MIPSEL_EGL], [test "x$use_vuplus_mips_egl" = "xyes"])
+AM_CONDITIONAL([HAVE_NXPL_EGL], [test "x$use_nxpl_egl" = "xyes"])
+AM_CONDITIONAL([HAVE_V3DPLATFORM_EGL], [test "x$use_v3dplatform_egl" = "xyes"])
+AM_CONDITIONAL([HAVE_HISILICON_EGL], [test "x$use_hisilicon_egl" = "xyes"])
+AM_CONDITIONAL([HAVE_DREAMBCM_EGL], [test "x$use_dreambcm_egl" = "xyes"])
+
+AC_ARG_ENABLE([gles-testlab],
+  AS_HELP_STRING([--enable-gles-testlab], [build the optional GLES visual/performance test plugin (default: no)]),
+  [enable_gles_testlab="$enableval"], [enable_gles_testlab=no])
+AS_CASE([$enable_gles_testlab], [yes|no], [], [AC_MSG_ERROR([--enable-gles-testlab accepts yes or no])])
+AS_IF([test "x$enable_gles_testlab" = "xyes"], [
+  AS_IF([test "x$use_egl" != "xyes"], [AC_MSG_ERROR([--enable-gles-testlab requires --with-egl])])
+  AC_DEFINE([ENABLE_GLES_TESTLAB], [1], [Build the optional GLES renderer test lab])
+  AX_SWIG_PYTHON_OPT="$AX_SWIG_PYTHON_OPT -DENABLE_GLES_TESTLAB"
+])
+AM_CONDITIONAL([ENABLE_GLES_TESTLAB], [test "x$enable_gles_testlab" = "xyes"])
+
+AC_SUBST([EGL_CFLAGS])
+AC_SUBST([EGL_LIBS])
+AC_SUBST([GLES2_CFLAGS])
+AC_SUBST([GLES2_LIBS])
+AC_SUBST([NXPL_CFLAGS])
+AC_SUBST([NXPL_LIBS])
+AC_SUBST([VUPL_CFLAGS])
+AC_SUBST([VUPL_LIBS])
+AC_SUBST([V3DPLATFORM_CFLAGS])
+AC_SUBST([V3DPLATFORM_LIBS])
+
+AM_CONDITIONAL(DREAMNEXTGEN, test "$BOXTYPE" == dms922x)
+if test "$BOXTYPE" == "dms922x"; then
 	ALSA_CFLAGS="-lasound"
 	FFMPEG_CFLAGS=" -lavdevice -lavformat -lavcodec -lswresample -lswscale -lavutil -lm "
 	AC_DEFINE(DREAMNEXTGEN, 1, [Dreambox NexT Generation Hardware])
@@ -559,20 +813,20 @@ AC_ARG_WITH(subttxtabnormalptsdiffs,
 
 AC_DEFINE_UNQUOTED(SUBT_TXT_ABNORMAL_PTS_DIFFS, $with_subttxtabnormalptsdiffs,[Configure abnormal pts for subtitle and teletext])
 
-if test "$BOXTYPE" == "dm7080" -o "$BOXTYPE" == "dm820" -o "$BOXTYPE" == "dm800se" -o "$BOXTYPE" == "dm800sev2" -o "$BOXTYPE" == "dm7020hd" -o "$BOXTYPE" == "dm7020hdv2" -o "$BOXTYPE" == "dreamone" -o "$BOXTYPE" == "dreamtwo" -o "$BOXTYPE" == "dm900" -o "$BOXTYPE" == "dm920"; then
+if test "$BOXTYPE" == "dm7435" -o "$MACHINEBUILD" == "dm800se" -o "$MACHINEBUILD" == "dm800sev2" -o "$BOXTYPE" == "dm7020hd" -o "$MACHINEBUILD" == "dm7020hdv2" -o "$BOXTYPE" == "dms922x" -o "$BOXTYPE" == "dm7252s"; then
 	AC_DEFINE(DREAMBOX_DUAL_TUNER, 1,[define BOXTYPE DM7080])
 fi
 
-if test "$BOXTYPE" == "dreamtwo"; then
+if test "$MACHINEBUILD" == "dreamtwo"; then
 	AC_DEFINE(LCD_COLOR_BYTESWAP_16, 1, [LCD 16-bit Byte-Swap])
 fi
 
-if test "$BOXTYPE" == "dm7080" -o "$BOXTYPE" == "dm820" -o "$BOXTYPE" == "dm900" -o "$BOXTYPE" == "dm920" -o "$BOXTYPE" == "dm520"; then
+if test "$BOXTYPE" == "dm7435" -o "$BOXTYPE" == "dm7252s" -o "$BOXTYPE" == "dm520"; then
 	AC_DEFINE(CONFIG_ION, 1,[define BOX use ION Allocator])
 	AC_DEFINE(DREAMBCM_ION_ACCEL, 1,[define Dreambox Broadcom ION framebuffer acceleration])
 fi
 
-if test "$BOXTYPE" == "vusolo4k" -o "$BOXTYPE" == "vuuno4k" -o "$BOXTYPE" == "vuuno4kse" -o "$BOXTYPE" == "vuultimo4k" -o "$BOXTYPE" == "vuzero4k" -o "$BOXTYPE" == "vuduo4k" -o "$BOXTYPE" == "vuduo4kse" -o "$BOXTYPE" == "sf8008" -o "$BOXTYPE" == "sf8008m" -o "$BOXTYPE" == "sx988" -o "$BOXTYPE" == "ip8" -o "$BOXTYPE" == "ustym4kpro" -o "$BOXTYPE" == "ustym4kottpremium" -o "$BOXTYPE" == "ustym4ks2ottx" -o "$BOXTYPE" == "gbmv200" -o "$BOXTYPE" == "beyonwizv2" -o "$BOXTYPE" == "viper4k" -o "$BOXTYPE" == "dagsmv200" -o "$BOXTYPE" == "og2ott4k" -o "$BOXTYPE" == "og2s4k" -o "$BOXTYPE" == "sfx6008" -o "$BOXTYPE" == "sx88v2"; then
+if test "$BOXTYPE" == "vu7376" -o "$BOXTYPE" == "vuuno4k" -o "$BOXTYPE" == "vuuno4kse" -o "$BOXTYPE" == "vuzero4k" -o "$BOXTYPE" == "vu7376duo" -o "$BOXTYPE" == "ocmv200" -o "$BOXTYPE" == "sx988" -o "$BOXTYPE" == "ip8" -o "$BOXTYPE" == "ustym4kpro" -o "$BOXTYPE" == "ustym4kottpremium" -o "$BOXTYPE" == "ustym4ks2ottx" -o "$BOXTYPE" == "gbmv200" -o "$BOXTYPE" == "beyonwizv2" -o "$BOXTYPE" == "viper4k" -o "$BOXTYPE" == "dagsmv200" -o "$BOXTYPE" == "og2ott4k" -o "$BOXTYPE" == "og2s4k" -o "$BOXTYPE" == "sfx6008" -o "$BOXTYPE" == "sx88v2"; then
 	AC_DEFINE(VMSG_TYPE2, 1,[define vtuner_message type 2])
 fi
 
@@ -580,11 +834,16 @@ if test "$BOXTYPE" == "vuzero" -o "$BOXTYPE" == "vuuno" -o "$BOXTYPE" == "vuulti
 	AC_DEFINE(FORCE_AUTO_INV, 1,[force Inversion auto for vu mipsel boxes])
 fi
 
-if test "$BOXTYPE" == "sf8008" -o "$BOXTYPE" == "sf8008m" -o "$BOXTYPE" == "sx988" -o "$BOXTYPE" == "ip8" -o "$BOXTYPE" == "ustym4kpro" -o "$BOXTYPE" == "ustym4kottpremium" -o "$BOXTYPE" == "ustym4ks2ottx" -o "$BOXTYPE" == "gbmv200" -o "$BOXTYPE" == "beyonwizv2" -o "$BOXTYPE" == "viper4k" -o "$BOXTYPE" == "dagsmv200" -o "$BOXTYPE" == "og2ott4k" -o "$BOXTYPE" == "og2s4k" -o "$BOXTYPE" == "sfx6008" -o "$BOXTYPE" == "sx88v2"; then
+if test "$BOXTYPE" == "ocmv200" -o "$BOXTYPE" == "sx988" -o "$BOXTYPE" == "ip8" -o "$BOXTYPE" == "ustym4kpro" -o "$BOXTYPE" == "ustym4kottpremium" -o "$BOXTYPE" == "ustym4ks2ottx" -o "$BOXTYPE" == "gbmv200" -o "$BOXTYPE" == "beyonwizv2" -o "$BOXTYPE" == "viper4k" -o "$BOXTYPE" == "dagsmv200" -o "$BOXTYPE" == "og2ott4k" -o "$BOXTYPE" == "og2s4k" -o "$BOXTYPE" == "sfx6008" -o "$BOXTYPE" == "sx88v2"; then
 	AC_DEFINE(HAVE_HISILICON, 1,[define add HISILICON chip])
 	AC_DEFINE(CONFIG_HISILICON_FB, 1,[define add HISILICON framebuffer blit])
 	AC_DEFINE(FORCE_ALPHABLENDING_ACCELERATION, 1,[define when the framebuffer acceleration has alphablending support, but detection slow down all])
 	AC_DEFINE(FORCE_NO_ACCELERATION_SCALE, 1,[define when the framebuffer acceleration does not have scale support])
+fi
+
+if test "$BOXTYPE" == "et4x00" -o "$BOXTYPE" == "xt7413" -o "$BOXTYPE" == "et7x00" -o "$BOXTYPE" == "et8000" -o "$BOXTYPE" == "et8500" -o "$BOXTYPE" == "et8500s" -o "$BOXTYPE" == "et10000"; then
+	AC_DEFINE(KEY_PLAY_ACTUALLY_IS_KEY_PLAYPAUSE, 1,[define when rc sends a KEY_PLAY event for its KEY_PLAYPAUSE key])
+	AC_DEFINE(KEY_F3_TO_KEY_LIST, 1,[define when rc sends a KEY_F3 event for its KEY_LIST key])
 fi
 
 if test "$BOXTYPE" == "ultramini" -o "$BOXTYPE" == "et1x000" -o "$BOXTYPE" == "et7x00"; then
@@ -596,21 +855,21 @@ if test "$BOXTYPE" == "g300" -o "$BOXTYPE" == "g100" -o "$BOXTYPE" == "sf4008" -
 	AC_DEFINE(FORCE_ALPHABLENDING_ACCELERATION, 1,[define when the framebuffer acceleration has alphablending support, but detection slow down all])
 fi
 
-if test "$BOXTYPE" == "osnino" -o "$BOXTYPE" == "osninoplus" -o "$BOXTYPE" == "osninopro" -o "$BOXTYPE" == "osmio4k" -o "$BOXTYPE" == "osmio4kplus" -o "$BOXTYPE" == "osmini4k"; then
+if test "$BOXTYPE" == "osnino" -o "$BOXTYPE" == "ed73625" -o "$BOXTYPE" == "ed72604"; then
 	AC_DEFINE(KEY_MEDIA_TO_KEY_LIST, 1,[define MEDIA to LIST])
 	AC_DEFINE(KEY_VIDEO_TO_KEY_ANGLE, 1,[define VIDEO to ANGLE])
 fi
 
-if test "$BOXTYPE" == "osmio4k" -o "$BOXTYPE" == "osmio4kplus" -o "$BOXTYPE" == "osmini4k"; then
+if test "$BOXTYPE" == "ed72604"; then
 	AC_DEFINE(KEY_PLAY_ACTUALLY_IS_KEY_PLAYPAUSE, 1,[define when rc sends a KEY_PLAY event for its KEY_PLAYPAUSE key])
 fi
 
-if test "$BOXTYPE" == "hd2400" -o "$BOXTYPE" == "hd11" -o "$BOXTYPE" == "hd1100" -o "$BOXTYPE" == "hd1200" -o "$BOXTYPE" == "hd500c" -o "$BOXTYPE" == "hd530c" -o "$BOXTYPE" == "hd1265" -o "$BOXTYPE" == "hd1500" -o "$BOXTYPE" == "hd51" -o "$BOXTYPE" == "hd60" -o "$BOXTYPE" == "hd61" -o "$BOXTYPE" == "hd66se" -o "$BOXTYPE" == "pulse4k" -o "$BOXTYPE" == "pulse4kmini" -o "$BOXTYPE" == "hd52" -o "$BOXTYPE" == "vs1000" -o "$BOXTYPE" == "vs1500"; then
+if test "$BOXTYPE" == "hd2400" -o "$BOXTYPE" == "hd11" -o "$BOXTYPE" == "hd1100" -o "$BOXTYPE" == "hd1200" -o "$BOXTYPE" == "hd500c" -o "$BOXTYPE" == "hd530c" -o "$BOXTYPE" == "hd1265" -o "$BOXTYPE" == "hd1500" -o "$BOXTYPE" == "hd51" -o "$BOXTYPE" == "hd60" -o "$BOXTYPE" == "hd61" -o "$BOXTYPE" == "hd66se" -o "$BOXTYPE" == "abmv200" -o "$BOXTYPE" == "hd52" -o "$BOXTYPE" == "vs1000" -o "$BOXTYPE" == "vs1500"; then
 	AC_DEFINE(KEY_PLAY_ACTUALLY_IS_KEY_PLAYPAUSE, 1,[define when rc sends a KEY_PLAY event for its KEY_PLAYPAUSE key])
 	AC_DEFINE(KEY_F3_TO_KEY_LIST, 1,[define when rc sends a KEY_F3 event for its KEY_LIST key])
 fi
 
-if test "$BOXTYPE" == "formuler1" -o "$BOXTYPE" == "formuler3" -o "$BOXTYPE" == "formuler4" -o "$BOXTYPE" == "formuler4turbo" -o "$BOXTYPE" == "triplex" -o "$BOXTYPE" == "sf108" -o "$BOXTYPE" == "ultrabox" -o "$BOXTYPE" == "formuler1tc" -o "$BOXTYPE" == "formuler3ip" -o "$BOXTYPE" == "formuler4ip"; then
+if test "$BOXTYPE" == "fm7356" -o "$BOXTYPE" == "fm7362" -o "$BOXTYPE" == "formuler4turbo" -o "$BOXTYPE" == "triplex" -o "$BOXTYPE" == "sf108" -o "$BOXTYPE" == "ultrabox"; then
 	AC_DEFINE(KEY_F3_TO_KEY_LIST, 1,[define when rc sends a KEY_F3 event for its KEY_LIST key])
 	AC_DEFINE(KEY_LAST_TO_KEY_BACK, 1,[define when rc sends a KEY_LAST event for its KEY_BACK key])
 	AC_DEFINE(KEY_BOOKMARKS_TO_KEY_MEDIA, 1,[define when rc Playlist sends a KEY_BOOKMARKS event for its KEY_MEDIA key])
@@ -623,7 +882,7 @@ if test "$BOXTYPE" == "vuduo4klite"; then
 	AC_DEFINE(KEY_EDIT_TO_KEY_TIME, 1,[define when rc sends a KEY_TIME event for its KEY_EDIT key])
 fi
 
-if test "$BOXTYPE" == "vuduo" -o "$BOXTYPE" == "vusolo" -o "$BOXTYPE" == "vuduo2" -o "$BOXTYPE" == "vusolo2" -o "$BOXTYPE" == "vuuno" -o "$BOXTYPE" == "vuultimo" -o "$BOXTYPE" == "vusolose" -o "$BOXTYPE" == "vuzero" -o "$BOXTYPE" == "vusolo4k" -o "$BOXTYPE" == "vuuno4k" -o "$BOXTYPE" == "vuuno4kse" -o "$BOXTYPE" == "vuultimo4k" -o "$BOXTYPE" == "vuzero4k" -o "$BOXTYPE" == "vuduo4k" -o "$BOXTYPE" == "vuduo4kse"; then
+if test "$BOXTYPE" == "vuduo" -o "$BOXTYPE" == "vusolo" -o "$BOXTYPE" == "vuduo2" -o "$BOXTYPE" == "vusolo2" -o "$BOXTYPE" == "vuuno" -o "$BOXTYPE" == "vuultimo" -o "$BOXTYPE" == "vusolose" -o "$BOXTYPE" == "vuzero" -o "$BOXTYPE" == "vu7376" -o "$BOXTYPE" == "vuuno4k" -o "$BOXTYPE" == "vuuno4kse" -o "$BOXTYPE" == "vuzero4k" -o "$BOXTYPE" == "vu7376duo"; then
 	AC_DEFINE(FORCE_NO_BLENDING_ACCELERATION, 1,[define when the framebuffer acceleration does not have alphablending support, though the autodetection might indicate that it does])
 	AC_DEFINE(FORCE_ADVANCED_REMOTE, 1,[define to fixup the input device identification when the remote control is actually an 'advanced' remote (with play/forward/rewind keys)])
 	AC_DEFINE(KEY_HELP_TO_KEY_INFO, 1,[define when rc sends a KEY_HELP event we need KEY_INFO])
@@ -633,11 +892,11 @@ if test "$BOXTYPE" == "vuduo" -o "$BOXTYPE" == "vusolo" -o "$BOXTYPE" == "vuduo2
 
 fi
 
-if test "$BOXTYPE" == "dm7080" -o "$BOXTYPE" == "dm820" -o "$BOXTYPE" == "dm900" -o "$BOXTYPE" == "dm920"; then
+if test "$BOXTYPE" == "dm7435" -o "$BOXTYPE" == "dm7252s"; then
 	AC_DEFINE(HAVE_HDMIIN_DM, 1,[has hdmi in dm])
 fi
 
-if test "$BOXTYPE" == "dm900" -o "$BOXTYPE" == "dm920"; then
+if test "$BOXTYPE" == "dm7252s"; then
 	AC_DEFINE(LCD_DM900_Y_OFFSET, 4,[define LCD Y offset for dm900 and dm920])
 	AC_DEFINE(HAVE_DM_FBC, 1,[define for dm900 and dm920])
 	AC_DEFINE(ENABLE_TIMESHIFT_HW_LATENCY_FIX, 1,[define for dm900 and dm920])
@@ -647,7 +906,7 @@ if test "$BOXTYPE" == "sf4008" -o "$BOXTYPE" == "beyonwizu4"; then
 	AC_DEFINE(LCD_SCROLL_HEX, 1,[define LCD scroll values in hex])
 fi
 
-if test "$BOXTYPE" == "gb7252" -o "$BOXTYPE" == "dm900" -o "$BOXTYPE" == "dm920"; then
+if test "$BOXTYPE" == "gb7252" -o "$BOXTYPE" == "dm7252s"; then
 	AC_DEFINE(LCD_FORCE_RGB, 1,[define 16 Bit LCD force rgb])
 fi
 
@@ -657,7 +916,7 @@ AS_IF([test "$MACHINEBUILD" == "osmini" -o "$MACHINEBUILD" == "spycatmini" -o "$
 AS_IF([test "$MACHINEBUILD" == "xpeedlx3" -o "$MACHINEBUILD" == "sezammarvel" -o "$MACHINEBUILD" == "atemionemesis"],[AC_DEFINE(PROFILE4, 1,[profile4])])
 
 # VFD Symbols Poll Time
-if test "$MACHINEBUILD" == "9910lx" -o "$MACHINEBUILD" == "9911lx" -o "$MACHINEBUILD" == "9920lx" -o "$MACHINEBUILD" == "dm7020hd" -o "$MACHINEBUILD" == "dm7020hdv2" -o "$MACHINEBUILD" == "dual" -o "$MACHINEBUILD" == "e4hd" -o "$MACHINEBUILD" == "e4hdhybrid" -o "$MACHINEBUILD" == "force3uhd" -o "$MACHINEBUILD" == "mbmicro" -o "$MACHINEBUILD" == "mbmicrov2" -o "$MACHINEBUILD" == "osnino" -o "$MACHINEBUILD" == "osninoplus" -o "$MACHINEBUILD" == "osninopro" -o "$MACHINEBUILD" == "revo4k" -o "$MACHINEBUILD" == "tmtwin4k" -o "$BOXTYPE" == "beyonwizv2" -o "$BOXTYPE" == "dags7362" -o "$BOXTYPE" == "dags73625" -o "$BOXTYPE" == "gbmv200" -o "$BOXTYPE" == "sf8008" -o "$BOXTYPE" == "sf8008m" -o "$BOXTYPE" == "sfx6008" -o "$BOXTYPE" == "sx888" -o "$BOXTYPE" == "sx88v2" -o "$BOXTYPE" == "ustym4kpro" -o "$BOXTYPE" == "ustym4ks2ottx" -o "$BOXTYPE" == "viper4k" -o "$BOXTYPE" == "h7" -o "$BOXTYPE" == "h17"; then
+if test "$MACHINEBUILD" == "9910lx" -o "$MACHINEBUILD" == "9911lx" -o "$MACHINEBUILD" == "9920lx" -o "$MACHINEBUILD" == "dm7020hd" -o "$MACHINEBUILD" == "dm7020hdv2" -o "$MACHINEBUILD" == "dual" -o "$MACHINEBUILD" == "e4hd" -o "$MACHINEBUILD" == "e4hdhybrid" -o "$MACHINEBUILD" == "force3uhd" -o "$MACHINEBUILD" == "mbmicro" -o "$MACHINEBUILD" == "mbmicrov2" -o "$MACHINEBUILD" == "osnino" -o "$MACHINEBUILD" == "osninoplus" -o "$MACHINEBUILD" == "osninopro" -o "$MACHINEBUILD" == "revo4k" -o "$MACHINEBUILD" == "tmtwin4k" -o "$BOXTYPE" == "beyonwizv2" -o "$BOXTYPE" == "dags7362" -o "$BOXTYPE" == "dags73625" -o "$BOXTYPE" == "gbmv200" -o "$BOXTYPE" == "ocmv200" -o "$BOXTYPE" == "sfx6008" -o "$BOXTYPE" == "sx888" -o "$BOXTYPE" == "sx88v2" -o "$BOXTYPE" == "ustym4kpro" -o "$BOXTYPE" == "ustym4ks2ottx" -o "$BOXTYPE" == "viper4k" -o "$BOXTYPE" == "h7" -o "$BOXTYPE" == "h17"; then
 	AC_DEFINE(VFDSymbolsPoll, 1,[define VFD Symbols Poll])
 else
 	if test "$BOXTYPE" == "u41" -o "$MACHINEBUILD" == "alphatriple" -o "$MACHINEBUILD" == "atemio5x00" -o "$MACHINEBUILD" == "beyonwizt3" -o "$MACHINEBUILD" == "et7500" -o "$MACHINEBUILD" == "maram9" -o "$MACHINEBUILD" == "mbmini" -o "$MACHINEBUILD" == "mbtwin" -o "$MACHINEBUILD" == "osmega" -o "$MACHINEBUILD" == "osminiplus" -o "$MACHINEBUILD" == "sezam1000hd" -o "$MACHINEBUILD" == "sezam5000hd" -o "$MACHINEBUILD" == "sf3038" -o "$MACHINEBUILD" == "spycat" -o "$MACHINEBUILD" == "spycat4kmini" -o "$MACHINEBUILD" == "uniboxhd1" -o "$MACHINEBUILD" == "uniboxhd2" -o "$MACHINEBUILD" == "uniboxhd3"; then
@@ -717,7 +976,7 @@ CFLAGS="$CFLAGS -Wall"
 CXXFLAGS="$CXXFLAGS -Wall -Wno-psabi \
 	-Wformat=2 -Wformat-overflow=2 -Wformat-nonliteral -Wformat-security \
 	-Wimplicit-fallthrough=5 -Wdangling-else -Wno-error=stringop-truncation \
-	$BASE_CFLAGS $ENIGMA2_CFLAGS $PTHREAD_CFLAGS $OPENMP_CFLAGS $GLES_CFLAGS $ALSA_CFLAGS $AMCODEC_CFLAGS $AMADEC_CFLAGS $DVBCSA_CFLAGS $FFMPEG_CFLAGS"
+	$BASE_CFLAGS $ENIGMA2_CFLAGS $PTHREAD_CFLAGS $OPENMP_CFLAGS $EGL_CFLAGS $GLES2_CFLAGS $NXPL_CFLAGS $VUPL_CFLAGS $V3DPLATFORM_CFLAGS $ALSA_CFLAGS $AMCODEC_CFLAGS $AMADEC_CFLAGS $DVBCSA_CFLAGS $FFMPEG_CFLAGS"
 
 AX_SWIG_PYTHON_OPT="$AX_SWIG_PYTHON_OPT -DSWIG_PYTHON_LEGACY_BOOL"
 
@@ -729,6 +988,7 @@ AC_SUBST(AR_FLAGS)
 AC_CONFIG_FILES([
 Makefile
 data/Makefile
+data/icons/Makefile
 data/fonts/Makefile
 data/countries/Makefile
 data/display/Makefile
@@ -755,7 +1015,6 @@ data/display/vfd255/Makefile
 data/extensions/Makefile
 data/keymaps/Makefile
 data/rc_models/Makefile
-data/icons/Makefile
 data/skin_default/Makefile
 data/skin_default/buttons/Makefile
 data/skin_default/epg/Makefile
@@ -793,6 +1052,7 @@ lib/python/Plugins/Extensions/MediaScanner/Makefile
 lib/python/Plugins/Extensions/MediaScanner/meta/Makefile
 lib/python/Plugins/Extensions/MiniTV/Makefile
 lib/python/Plugins/Extensions/PicturePlayer/Makefile
+lib/python/Plugins/Extensions/GlesTestLab/Makefile
 lib/python/Plugins/Extensions/SocketMMI/Makefile
 lib/python/Plugins/Extensions/SocketMMI/meta/Makefile
 lib/python/Plugins/Extensions/SocketMMI/src/Makefile
@@ -802,8 +1062,6 @@ lib/python/Plugins/Extensions/YTDLWrapper/Makefile
 lib/python/Plugins/Extensions/YTDLPWrapper/Makefile
 lib/python/Plugins/PLi/Makefile
 lib/python/Plugins/SystemPlugins/Makefile
-lib/python/Plugins/SystemPlugins/AnimationSetup/Makefile
-lib/python/Plugins/SystemPlugins/AnimationSetup/meta/Makefile
 lib/python/Plugins/SystemPlugins/AmlFRQ/Makefile
 lib/python/Plugins/SystemPlugins/CableScan/Makefile
 lib/python/Plugins/SystemPlugins/CommonInterfaceAssignment/Makefile

@@ -20,6 +20,7 @@ class Label(VariableText, Renderer):
 
 	def changed(self, what):
 		source = self.source
+		self.updateAnimationPolicy()
 		if what[0] == self.CHANGED_CLEAR:
 			self.text = ""
 		elif source:

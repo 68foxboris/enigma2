@@ -15,6 +15,7 @@
 #include <cerrno>
 #include <cstdlib>
 #include <map>
+#include <mutex>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
@@ -87,6 +88,7 @@ struct DreamBcmIonSurface
 };
 
 static std::map<gUnmanagedSurface*, DreamBcmIonSurface> s_dreambcm_ion_surfaces;
+static std::mutex s_dreambcm_ion_mutex;
 static int s_dreambcm_ion_fd = -1;
 static bool s_dreambcm_ion_open_failed = false;
 static bool s_dreambcm_ion_logged = false;
@@ -212,6 +214,7 @@ static int dreambcm_ion_get_fd()
 
 static int dreambcm_ion_alloc_surface(gUnmanagedSurface *surface, int stride, int size, bool debug)
 {
+	std::lock_guard<std::mutex> lock(s_dreambcm_ion_mutex);
 	if (dreambcm_ion_disabled())
 		return -1;
 
@@ -310,6 +313,7 @@ fail:
 
 static bool dreambcm_ion_free_surface(gUnmanagedSurface *surface, bool debug)
 {
+	std::lock_guard<std::mutex> lock(s_dreambcm_ion_mutex);
 	std::map<gUnmanagedSurface*, DreamBcmIonSurface>::iterator it = s_dreambcm_ion_surfaces.find(surface);
 	if (it == s_dreambcm_ion_surfaces.end())
 		return false;
@@ -329,6 +333,7 @@ static bool dreambcm_ion_free_surface(gUnmanagedSurface *surface, bool debug)
 
 static void dreambcm_ion_release_all(bool relocate)
 {
+	std::lock_guard<std::mutex> lock(s_dreambcm_ion_mutex);
 	unsigned int released = 0;
 	while (!s_dreambcm_ion_surfaces.empty())
 	{
@@ -358,6 +363,39 @@ static void dreambcm_ion_release_all(bool relocate)
 }
 
 #endif
+
+bool gAccel::exportDreamBcmIonBuffer(gUnmanagedSurface *surface, int &fd, unsigned long &phys, size_t &size)
+{
+	fd = -1;
+	phys = 0;
+	size = 0;
+#ifdef DREAMBCM_ION_ACCEL
+	// Finish pending BCM writes before publishing this buffer to V3D.
+	if (!surface || sync() != 0)
+		return false;
+	std::lock_guard<std::mutex> lock(s_dreambcm_ion_mutex);
+	auto entry = s_dreambcm_ion_surfaces.find(surface);
+	if (entry == s_dreambcm_ion_surfaces.end())
+		return false;
+	int duplicate = fcntl(entry->second.fd, F_DUPFD_CLOEXEC, 0);
+	if (duplicate < 0)
+		return false;
+	struct ion_fd_data syncData = {};
+	syncData.fd = duplicate;
+	__sync_synchronize();
+	if (ioctl(s_dreambcm_ion_fd, ION_IOC_SYNC, &syncData) < 0) {
+		close(duplicate);
+		return false;
+	}
+	fd = duplicate;
+	phys = entry->second.phys;
+	size = entry->second.size;
+	return true;
+#else
+	(void)surface;
+	return false;
+#endif
+}
 
 gAccel::gAccel():
 	m_accel_addr(0),
@@ -425,6 +463,9 @@ void gAccel::releaseAccelMemorySpace()
 	dumpDebug();
 #ifdef DREAMBCM_ION_ACCEL
 	dreambcm_ion_release_all(true);
+#endif
+#ifdef DREAMNEXTGEN
+	dreamGE2DReleaseAccelMemory();
 #endif
 	for (MemoryBlockList::const_iterator it = m_accel_allocation.begin();
 		 it != m_accel_allocation.end();
@@ -721,6 +762,11 @@ int gAccel::accelAlloc(gUnmanagedSurface* surface)
 #endif
 
 #ifndef DREAMNEXTGEN
+#ifdef DREAMBCM_ION_ACCEL
+	if (!m_bcm_accel_state)
+		return dreambcm_ion_alloc_surface(surface, stride, size, m_accel_debug);
+#endif
+
 	size += ACCEL_ALIGNMENT_MASK;
 	size >>= ACCEL_ALIGNMENT_SHIFT;
 
@@ -750,7 +796,7 @@ int gAccel::accelAlloc(gUnmanagedSurface* surface)
 		}
 	}
 
-	eDebug("[gAccel] accel alloc failed\n");
+	eTrace("[gAccel] accel alloc failed\n");
 	return -3;
 #else
 	if (surface->bpp == 32 && dreamGE2DAllocSurface(surface, stride, size))

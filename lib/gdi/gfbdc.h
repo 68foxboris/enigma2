@@ -15,9 +15,6 @@ class gFBDC: public gMainDC
 	gUnmanagedSurface surface;
 	gUnmanagedSurface surface_back;
 	gUnmanagedSurface surface_third;
-	gUnmanagedSurface m_logical_surface; // off-screen skin canvas when the skin is larger than the OSD hardware (WQHD)
-	bool m_scaled_output = false;
-	int m_requested_x = 0, m_requested_y = 0;
 	int m_number_of_pages = 1;
 	bool m_graphics_suspended = false;
 	mutable std::recursive_mutex m_graphics_mutex;
@@ -26,10 +23,6 @@ class gFBDC: public gMainDC
 	void calcRamp();
 	void setPalette();
 	void rotateSurfaces();
-	void scaleLogicalToSurfaceCPU();
-	void scaleLogicalToSurfaceNextGen();
-	void freeLogicalSurface();
-	bool m_logical_cpu = false; // the logical surface is a plain CPU buffer
 	int getSurfaceOffset(const gUnmanagedSurface &s) const;
 public:
 	void setResolution(int xres, int yres, int bpp = 32);
@@ -46,6 +39,11 @@ public:
 	int getGamma() const { return gamma; }
 
 	int haveDoubleBuffering() const { return surface_back.data_phys != 0; }
+	std::string getGraphicsBackend() const override { return "framebuffer"; }
+	std::string getGraphicsAccelerator() const override;
+	std::string getGraphicsBuffering() const override;
+	int getGraphicsBufferPages() const override { return m_number_of_pages; }
+	bool getGraphicsHardwareAccelerated() const override;
 
 	void saveSettings();
 
@@ -53,10 +51,5 @@ public:
 	virtual ~gFBDC();
 	int islocked() const { return fb->islocked(); }
 };
-#endif
-#ifdef HAVE_OSDANIMATION
-void setAnimation_current(int a);
-void setAnimation_speed(int speed);
-void setAnimation_current_listbox(int a);
 #endif
 #endif
