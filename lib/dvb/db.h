@@ -203,7 +203,7 @@ public:
 
 	RESULT getBouquet(const eServiceReference &ref, eBouquet* &bouquet);
 //////
-	void loadBouquet(const char *path);
+	bool loadBouquet(const char *path);
 	void deleteBouquet(const std::string filename);
 	eServiceReference searchReference(int tsid, int onid, int sid);
 	void searchAllReferences(std::vector<eServiceReference> &result, int tsid, int onid, int sid);
@@ -258,7 +258,8 @@ public:
 
 class eDVBDBBouquetQuery: public eDVBDBQueryBase
 {
-	std::list<eServiceReference>::iterator m_cursor;
+	std::vector<eServiceReference> m_services;
+	size_t m_cursor = 0;
 public:
 	eDVBDBBouquetQuery(eDVBDB *db, const eServiceReference &source, eDVBChannelQuery *query);
 	RESULT getNextResult(eServiceReferenceDVB &ref);

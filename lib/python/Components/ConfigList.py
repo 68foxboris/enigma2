@@ -5,9 +5,9 @@ from Components.ActionMap import HelpableActionMap, HelpableNumberActionMap
 from Components.config import ActionKeys, ConfigBoolean, ConfigElement, ConfigInteger, ConfigMACText, ConfigNumber, ConfigSelection, ConfigSequence, ConfigService, ConfigText, config, configfile
 from Components.GUIComponent import GUIComponent
 from Components.Pixmap import Pixmap
+from Components.SystemInfo import getBoxDisplayName
 from Components.Sources.Boolean import Boolean
 from Components.Sources.StaticText import StaticText
-from Components.SystemInfo import getBoxDisplayName
 from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Screens.Standby import QUIT_REBOOT, QUIT_RESTART, TryQuitMainloop
@@ -543,11 +543,12 @@ class ConfigListScreen:
 		self.closeConfigList((True,))
 
 	def closeConfigList(self, closeParameters=()):
+		self.closeParameters = closeParameters
 		if self["config"].isChanged():
-			self.closeParameters = closeParameters
+
 			self.session.openWithCallback(self.cancelConfirm, MessageBox, self.cancelMsg, default=False, type=MessageBox.TYPE_YESNO)
 		else:
-			self.close(*closeParameters)
+			self.cancelConfirmed()
 
 	def cancelConfirm(self, result):
 		if not result:
@@ -557,6 +558,9 @@ class ConfigListScreen:
 				item[1].cancel()
 		if not hasattr(self, "closeParameters"):
 			self.closeParameters = ()
+		self.cancelConfirmed()
+
+	def cancelConfirmed(self):  # This method allows sub classes to hook on the final decision to cancel changes.
 		self.close(*self.closeParameters)
 
 	def createSummary(self):  # This should not be required if ConfigList is invoked via Setup (as it should).
