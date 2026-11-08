@@ -113,7 +113,7 @@ class EventViewBase:
 		self["channel"].setText("%s%s" % (serviceName if serviceName else _("Unknown Service"), " - %s" % _("Recording") if self.isRecording else ""))
 
 	def setEvent(self, event):
-		self["key_red"].setText()
+		self["key_red"].setText("")
 		self["similarActions"].setEnabled(False)
 		if self.similarBroadcastTimer:
 			self.similarBroadcastTimer.stop()
@@ -202,7 +202,7 @@ class EventViewBase:
 					if simulTimerList is not None:
 						try:
 							from Screens.TimerEdit import TimerSanityConflict
-						except:  # maybe already been imported from another module
+						except Exception:  # maybe already been imported from another module
 							pass
 						self.session.openWithCallback(self.finishSanityCorrection, TimerSanityConflict, simulTimerList)
 			self["key_green"].setText(_("Change Timer"))
@@ -239,7 +239,7 @@ class EventViewBase:
 		return isRecordEvent
 
 	def getSimilarEvents(self):
-		self["key_red"].setText()
+		self["key_red"].setText("")
 		self["similarActions"].setEnabled(False)
 		if self.event is None or self.similarEPGCB is None:
 			return
