@@ -1,4 +1,3 @@
-#include <linux/ioctl.h>
 #include <linux/dvb/frontend.h>
 #include <linux/dvb/dmx.h>
 #include <linux/dvb/version.h>
@@ -25,6 +24,8 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <algorithm>
+#include <array>
+#include <memory>
 #include <cctype>
 #include <fstream>
 #include <sstream>
@@ -115,7 +116,6 @@ eDVBResourceManager::eDVBResourceManager()
 		}
 		num_adapter++;
 	}
-
 
 	if (eDVBAdapterLinux::exist(0))
 	{
@@ -881,6 +881,90 @@ PyObject *eDVBResourceManager::setFrontendSlotInformations(ePyObject list)
 		}
 	}
 	Py_RETURN_NONE;
+}
+
+PyObject *eDVBResourceManager::setFrontendInputGroups(ePyObject list)
+{
+	if (!PyList_Check(list))
+	{
+		PyErr_SetString(PyExc_TypeError, "frontend input groups must be a list of (slot, SAT group, C/T group)");
+		return nullptr;
+	}
+	std::map<int, std::pair<int, int>> groups;
+	for (Py_ssize_t index = 0; index < PyList_Size(list); ++index)
+	{
+		ePyObject entry = PyList_GET_ITEM(list, index);
+		if (!PyTuple_Check(entry) || PyTuple_Size(entry) != 3
+			|| !PyLong_Check(PyTuple_GET_ITEM(entry, 0)) || !PyLong_Check(PyTuple_GET_ITEM(entry, 1)) || !PyLong_Check(PyTuple_GET_ITEM(entry, 2)))
+		{
+			PyErr_SetString(PyExc_TypeError, "frontend input groups require three integer slot IDs");
+			return nullptr;
+		}
+		long slot = PyLong_AsLong(PyTuple_GET_ITEM(entry, 0));
+		long sat = PyLong_AsLong(PyTuple_GET_ITEM(entry, 1));
+		long ct = PyLong_AsLong(PyTuple_GET_ITEM(entry, 2));
+		if (PyErr_Occurred())
+			return nullptr;
+		if (slot < 0 || slot >= 32 || sat < -1 || sat >= 32 || ct < -1 || ct >= 32 || groups.count(slot))
+		{
+			PyErr_SetString(PyExc_ValueError, "invalid or duplicate frontend input group slot");
+			return nullptr;
+		}
+		groups[slot] = {sat, ct};
+	}
+	for (auto *frontends : {&m_frontend, &m_simulate_frontend})
+	{
+		std::map<int, std::shared_ptr<std::array<long, eDVBFrontend::NUM_DATA_ENTRIES>>> satelliteInputs;
+		for (auto &entry : *frontends)
+		{
+			auto group = groups.find(entry->m_frontend->getSlotID());
+			int sat = group == groups.end() ? -1 : group->second.first;
+			int ct = group == groups.end() ? -1 : group->second.second;
+			std::shared_ptr<std::array<long, eDVBFrontend::NUM_DATA_ENTRIES>> data;
+			if (sat >= 0)
+			{
+				auto &shared = satelliteInputs[sat];
+				if (!shared)
+				{
+					shared = std::make_shared<std::array<long, eDVBFrontend::NUM_DATA_ENTRIES>>();
+					shared->fill(-1);
+				}
+				data = shared;
+			}
+			entry->m_frontend->setInputGroups(sat, ct, data);
+		}
+	}
+	Py_RETURN_NONE;
+}
+
+bool eDVBResourceManager::sharedInputInUse(eDVBFrontend *frontend, int type, bool incompatibleOnly)
+{
+	const bool satellite = type == iDVBFrontend::feSatellite;
+	if (!satellite && type != iDVBFrontend::feCable && type != iDVBFrontend::feTerrestrial)
+		return false;
+	const int group = satellite ? frontend->getSharedSatInput() : frontend->getSharedCTInput();
+	if (group < 0)
+		return false;
+	auto &frontends = frontend->is_simulate() ? m_simulate_frontend : m_frontend;
+	for (auto &entry : frontends)
+	{
+		eDVBFrontend *other = entry->m_frontend;
+		if (other == frontend || !entry->m_inuse || (satellite ? other->getSharedSatInput() : other->getSharedCTInput()) != group)
+			continue;
+		const int otherType = other->getTuneType();
+		if (satellite ? otherType != iDVBFrontend::feSatellite : (otherType != iDVBFrontend::feCable && otherType != iDVBFrontend::feTerrestrial))
+			continue;
+		if (!incompatibleOnly || otherType != type)
+			return true;
+		if (type == iDVBFrontend::feTerrestrial)
+		{
+			const std::string prefix = "config.Nims.";
+			if (eSimpleConfig::getBool((prefix + std::to_string(frontend->getSlotID()) + ".terrestrial_5V").c_str(), false)
+				!= eSimpleConfig::getBool((prefix + std::to_string(other->getSlotID()) + ".terrestrial_5V").c_str(), false))
+				return true;
+		}
+	}
+	return false;
 }
 
 bool eDVBResourceManager::frontendIsCompatible(int index, const char *type)
@@ -2505,7 +2589,7 @@ RESULT eDVBChannel::playFile(const char *file)
 
 	if (f->open(file) < 0)
 	{
-		eDebug("[eDVBChannel] can't open PVR file %s (%m)", file);
+		eDebug("[eDVBChannel] can't open PVR file %s: %m", file);
 		return -ENOENT;
 	}
 
@@ -2553,7 +2637,12 @@ RESULT eDVBChannel::playSource(ePtr<iTsSource> &source, const char *streaminfo_f
 	if (streaminfo_file && strstr(streaminfo_file, "timeshift"))
 	{
 		eDebug("[eDVBChannel] playsource timeshift mode");
-		flags = 1;
+		flags = FLAGBIT_TIMESHIFT;
+		if (strstr(streaminfo_file, "ram_timeshift"))
+		{
+			eDebug("[eDVBChannel] playsource RAM timeshift mode");
+			flags |= FLAGBIT_RAM_MODE;
+		}
 	}
 
 	m_pvr_thread = new eDVBChannelFilePush(m_source->getPacketSize(), flags);

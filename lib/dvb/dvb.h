@@ -171,7 +171,6 @@ class eDVBResourceManager: public iObject, public sigc::trackable
 	void setUsbTuner();
 
 public:
-#ifndef SWIG
 	struct active_channel
 	{
 		eDVBChannelID m_channel_id;
@@ -180,7 +179,6 @@ public:
 
 		active_channel(const eDVBChannelID &chid, eDVBChannel *ch) : m_channel_id(chid), m_channel(ch) { }
 	};
-#endif
 	void feStateChanged();
 
 private:
@@ -189,11 +187,10 @@ private:
 	ePtr<iDVBChannelList> m_list;
 	ePtr<iDVBSatelliteEquipmentControl> m_sec;
 	static eDVBResourceManager *instance;
-
 	friend class eDVBChannel;
 	friend class eFBCTunerManager;
+	friend class eRTSPStreamClient;
 	ePtr<eFBCTunerManager> m_fbcmng;
-
 	RESULT addChannel(const eDVBChannelID &chid, eDVBChannel *ch);
 	RESULT removeChannel(eDVBChannel *ch);
 
@@ -242,6 +239,7 @@ public:
 	RESULT allocateFrontend(ePtr<eDVBAllocatedFrontend> &fe, ePtr<iDVBFrontendParameters> &feparm, bool simulate=false);
 
 	RESULT allocateFrontendByIndex(ePtr<eDVBAllocatedFrontend> &fe, int slot_index);
+	bool sharedInputInUse(eDVBFrontend *frontend, int type, bool incompatibleOnly);
 			/* allocate a demux able to filter on the selected frontend. */
 	RESULT allocateDemux(eDVBRegisteredFrontend *fe, ePtr<eDVBAllocatedDemux> &demux, int &cap);
 	void refreshNonCIDemuxSources();
@@ -255,6 +253,7 @@ public:
 	PSignal1<void,int> frontendUseMaskChanged;
 	SWIG_VOID(RESULT) allocateRawChannel(eUsePtr<iDVBChannel> &SWIG_OUTPUT, int slot_index);
 	PyObject *setFrontendSlotInformations(SWIG_PYOBJECT(ePyObject) list);
+	PyObject *setFrontendInputGroups(SWIG_PYOBJECT(ePyObject) list);
 	bool frontendIsCompatible(int index, const char *type);
 	bool frontendIsMultistream(int index);
 	std::string getFrontendCapabilities(int index);
@@ -320,10 +319,8 @@ private:
 
 	ePtr<iDVBFrontendParameters> m_current_frontend_parameters;
 	eDVBChannelID m_channel_id;
-
 	sigc::signal<void(iDVBChannel*)> m_stateChanged;
 	sigc::signal<void(iDVBChannel*,int)> m_event;
-
 	int m_state;
 	ePtr<iTsSource> m_source;
 
