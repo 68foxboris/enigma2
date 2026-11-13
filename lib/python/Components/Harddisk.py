@@ -534,6 +534,13 @@ class HarddiskManager:
 
 	def getBlockDevInfo(self, blockdev):
 		devpath = join("/sys/block", blockdev)
+		physdev = exists(devpath)
+		if physdev:
+			dev = blockdev
+			part = None
+		else:
+			dev, part = self.splitDeviceName(blockdev)
+			devpath = "/sys/block/" + dev
 		error = False
 		removable = False
 		blacklisted = False
@@ -559,7 +566,7 @@ class HarddiskManager:
 						is_cdrom = True
 				except OSError:
 					error = True
-			if not is_cdrom and exists(devpath):  # Check for partitions.
+			if not part and not is_cdrom and exists(devpath):  # Check for partitions.
 				for partition in listdir(devpath):
 					if partition[0:len(blockdev)] != blockdev:
 						continue
