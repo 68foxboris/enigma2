@@ -51,8 +51,11 @@ eDVBServiceRecord::eDVBServiceRecord(const eServiceReferenceDVB &ref, bool isstr
 {
 	CONNECT(m_service_handler.serviceEvent, eDVBServiceRecord::serviceEvent);
 	CONNECT(m_event_handler.m_eit_changed, eDVBServiceRecord::gotNewEvent);
-	m_eitRetryTimer = eTimer::create(eApp);
-	CONNECT(m_eitRetryTimer->timeout, eDVBServiceRecord::retrySaveEit);
+	m_eit_retry_timer = eTimer::create(eApp);
+	CONNECT(m_eit_retry_timer->timeout, eDVBServiceRecord::retryEitSave);
+	m_programInfoRetryTimer = eTimer::create(eApp);
+	CONNECT(m_programInfoRetryTimer->timeout, eDVBServiceRecord::retryProgramInfo);
+	m_programInfoRetries = 0;
 	m_state = stateIdle;
 	m_want_record = 0;
 	m_record_ecm = false;
@@ -111,6 +114,13 @@ void eDVBServiceRecord::serviceEvent(int event)
 	}
 	case eDVBServicePMTHandler::eventNewProgramInfo:
 	{
+		if (m_service_handler.isPmtReady())
+		{
+			m_programInfoRetryTimer->stop();
+			if (m_programInfoRetries)
+				eDebug("[eDVBServiceRecord] programme information recovered for %s after %u retries", m_ref.toString().c_str(), m_programInfoRetries);
+			m_programInfoRetries = 0;
+		}
 		// eDebug("[eDVBServiceRecord] eventNewProgramInfo m_state=%d / m_want_record=%d / m_pvr_descramble=%d", m_state, m_want_record, m_pvr_descramble);
 		if (m_state == stateIdle)
 			doPrepare();
@@ -124,6 +134,17 @@ void eDVBServiceRecord::serviceEvent(int event)
 		m_event((iRecordableService*)this, evNewProgramInfo);
 		break;
 	}
+	case eDVBServicePMTHandler::eventNoPAT:
+	case eDVBServicePMTHandler::eventNoPATEntry:
+	case eDVBServicePMTHandler::eventNoPMT:
+		if (m_state == statePrepared && !m_simulate && !m_streaming && m_ref.path.empty()
+			&& !m_service_handler.isPmtReady() && !m_programInfoRetryTimer->isActive())
+		{
+			eWarning("[eDVBServiceRecord] programme information unavailable for %s (event %d)", m_ref.toString().c_str(), event);
+			// Leave the table callback before replacing readers or reporting terminal failure.
+			m_programInfoRetryTimer->start(1000, true);
+		}
+		break;
 	case eDVBServicePMTHandler::eventMisconfiguration:
 		m_error = errMisconfiguration;
 		m_event((iRecordableService*)this, evTuneFailed);
@@ -220,39 +241,22 @@ RESULT eDVBServiceRecord::prepare(const char *filename, time_t begTime, time_t e
 				std::string fname = filename;
 				fname.erase(fname.length()-2, 2);
 				fname += "eit";
-				int eitret = eEPGCache::getInstance()->saveEventToFile(fname.c_str(), ref, eit_event_id, begTime, endTime);
-
-				if (eitret)
+				if (eEPGCache::getInstance()->saveEventToFile(fname.c_str(), ref, eit_event_id, begTime, endTime))
 				{
+					/* event not yet in EPG cache (recording started before tuning); retry once, 30s later */
+					eTrace("[eDVBServiceRecord] saveEventToFile failed for %s (event_id %04x), retrying in 30s", fname.c_str(), eit_event_id);
 					m_eitFilename = fname;
 					m_eitRef = ref;
 					m_eitEventId = eit_event_id;
 					m_eitBegTime = begTime;
 					m_eitEndTime = endTime;
-					m_eitRetryTimer->stop();
-					m_eitRetryTimer->startLongTimer(30);
+					m_eit_retry_timer->start(30000, true);
 				}
 			}
 		}
 		return ret;
 	}
 	return -1;
-}
-
-void eDVBServiceRecord::retrySaveEit()
-{
-	m_eitRetryTimer->stop();
-
-	if (m_eitFilename.empty())
-		return;
-	if (!access(m_eitFilename.c_str(), F_OK))
-	{
-		m_eitFilename.clear();
-		return;
-	}
-	eEPGCache::getInstance()->saveEventToFile(m_eitFilename.c_str(), m_eitRef, m_eitEventId, m_eitBegTime, m_eitEndTime);
-
-	m_eitFilename.clear();
 }
 
 RESULT eDVBServiceRecord::prepareStreaming(bool descramble, bool includeecm)
@@ -277,7 +281,11 @@ RESULT eDVBServiceRecord::start(bool simulate)
 
 RESULT eDVBServiceRecord::stop()
 {
-	m_eitRetryTimer->stop();
+	int result = 0;
+	m_programInfoRetryTimer->stop();
+	m_want_record = 0;
+	m_eit_retry_timer->stop();
+	m_eitFilename.clear();
 
 	if (!m_simulate)
 		eDebug("[eDVBServiceRecord] stop recording!");
@@ -287,7 +295,7 @@ RESULT eDVBServiceRecord::stop()
 	// so we must ensure it's not running before we release the CSA session.
 	if (m_state == stateRecording && m_record)
 	{
-		m_record->stop();
+		result = m_record->stop();
 	}
 
 	// Now safe to remove descrambler and release session
@@ -305,17 +313,19 @@ RESULT eDVBServiceRecord::stop()
 		m_use_software_descramble = false;
 	}
 
+	// The target may have been opened while still waiting for programme information.
+	if (m_target_fd >= 0)
+	{
+		if (::close(m_target_fd) < 0)
+			result = -1;
+		m_target_fd = -1;
+	}
+
 	// Recording already stopped above
 	if (m_state == stateRecording)
 	{
-		if (m_target_fd >= 0)
-		{
-			::close(m_target_fd);
-			m_target_fd = -1;
-		}
-
 		// .sc may be unreadable after a write error, mmap access would crash
-		if (!m_write_error)
+		if (!result && !m_write_error)
 			saveCutlist();
 
 		m_state = statePrepared;
@@ -326,8 +336,12 @@ RESULT eDVBServiceRecord::stop()
 		m_record = 0;
 		m_state = stateIdle;
 	}
+	m_service_handler.free();
+	m_tuned = 0;
 	m_event((iRecordableService*)this, evRecordStopped);
-	return 0;
+	if (result)
+		m_event((iRecordableService*)this, evRecordWriteError);
+	return result;
 }
 
 int eDVBServiceRecord::doPrepare()
@@ -337,6 +351,7 @@ int eDVBServiceRecord::doPrepare()
 
 	if (m_state == stateIdle)
 	{
+		m_programInfoRetries = 0;
 
 		if(tryFallbackTuner(/*REF*/m_ref, /*REF*/m_is_stream_client, m_is_pvr, m_simulate))
 			eDebug("[eDVBServiceRecord] fallback tuner selected");
@@ -470,6 +485,28 @@ int eDVBServiceRecord::setupSoftwareDescrambler(eDVBServicePMTHandler::program& 
 	return 0;
 }
 
+void eDVBServiceRecord::retryProgramInfo()
+{
+	if (m_state != statePrepared || m_simulate || m_streaming || !m_ref.path.empty() || m_service_handler.isPmtReady())
+		return;
+
+	if (m_programInfoRetries < 2)
+	{
+		++m_programInfoRetries;
+		eWarning("[eDVBServiceRecord] retrying programme information for %s (%u/2)", m_ref.toString().c_str(), m_programInfoRetries);
+		if (m_service_handler.retryProgramInfo())
+			m_programInfoRetryTimer->start(1000, true);
+		return;
+	}
+
+	// Event consumers may release their last reference to this recording.
+	ePtr<eDVBServiceRecord> self = this;
+	eWarning("[eDVBServiceRecord] recording failed: programme information unavailable for %s", m_ref.toString().c_str());
+	m_error = errNoProgramInfo;
+	stop();
+	m_event((iRecordableService*)this, evRecordFailed);
+}
+
 int eDVBServiceRecord::doRecord()
 {
 	int err = doPrepare();
@@ -531,6 +568,16 @@ int eDVBServiceRecord::doRecord()
 		}
 		m_record->setTargetFD(fd);
 		m_record->setTargetFilename(m_filename);
+		off_t splitSize = CFile::getRecordingSplitSize(fd, m_packet_size);
+		if (splitSize < 0 || (splitSize && m_record->setSplitSize(splitSize)))
+		{
+			eWarning("[eDVBServiceRecord] cannot prepare recording storage: %m");
+			m_record = 0;
+			::close(fd);
+			m_error = errOpenRecordFile;
+			m_event((iRecordableService*)this, evRecordFailed);
+			return errOpenRecordFile;
+		}
 		m_record->connectEvent(sigc::mem_fun(*this, &eDVBServiceRecord::recordEvent), m_con_record_event);
 
 		m_target_fd = fd;
@@ -743,7 +790,18 @@ int eDVBServiceRecord::doRecord()
 
 			if (m_state != stateRecording)
 			{
-				m_record->start();
+				if (m_record->start())
+				{
+					m_record = 0;
+					if (m_target_fd >= 0)
+					{
+						::close(m_target_fd);
+						m_target_fd = -1;
+					}
+					m_error = errOpenRecordFile;
+					m_event((iRecordableService*)this, evRecordFailed);
+					return m_error;
+				}
 				m_state = stateRecording;
 			}
 		}
@@ -922,11 +980,14 @@ void eDVBServiceRecord::recordEvent(int event)
 	switch (event)
 	{
 	case iDVBTSRecorder::eventWriteError:
+	{
 		eWarning("[eDVBServiceRecord] record write error");
 		m_write_error = true;
-		stop();
-		m_event((iRecordableService*)this, evRecordWriteError);
+		ePtr<iDVBTSRecorder> recorder = m_record;
+		if (!stop())
+			m_event((iRecordableService*)this, evRecordWriteError);
 		return;
+	}
 	default:
 		eDebug("[eDVBServiceRecord] unhandled record event %d", event);
 	}
@@ -961,6 +1022,19 @@ void eDVBServiceRecord::gotNewEvent(int /*error*/)
 	m_last_event_id = event_id;
 
 	m_event((iRecordableService*)this, evNewEventInfo);
+}
+
+void eDVBServiceRecord::retryEitSave()
+{
+	if (m_eitFilename.empty())
+		return;
+
+	if (!eEPGCache::getInstance()->saveEventToFile(m_eitFilename.c_str(), m_eitRef, m_eitEventId, m_eitBegTime, m_eitEndTime))
+		eTrace("[eDVBServiceRecord] saveEventToFile succeeded for %s (event_id %04x)", m_eitFilename.c_str(), m_eitEventId);
+	else
+		eTrace("[eDVBServiceRecord] saveEventToFile failed for %s (event_id %04x), giving up", m_eitFilename.c_str(), m_eitEventId);
+
+	m_eitFilename.clear();
 }
 
 void eDVBServiceRecord::saveCutlist()
