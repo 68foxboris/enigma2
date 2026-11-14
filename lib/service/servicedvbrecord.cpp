@@ -569,16 +569,6 @@ int eDVBServiceRecord::doRecord()
 		}
 		m_record->setTargetFD(fd);
 		m_record->setTargetFilename(m_filename);
-		off_t splitSize = CFile::getRecordingSplitSize(fd, m_packet_size);
-		if (splitSize < 0 || (splitSize && m_record->setSplitSize(splitSize)))
-		{
-			eWarning("[eDVBServiceRecord] cannot prepare recording storage: %m");
-			m_record = 0;
-			::close(fd);
-			m_error = errOpenRecordFile;
-			m_event((iRecordableService*)this, evRecordFailed);
-			return errOpenRecordFile;
-		}
 		m_record->connectEvent(sigc::mem_fun(*this, &eDVBServiceRecord::recordEvent), m_con_record_event);
 
 		m_target_fd = fd;
