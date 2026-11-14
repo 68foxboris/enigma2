@@ -9,7 +9,6 @@ dist_pkgdata_DATA = \
 	freesat.t1 \
 	freesat.t2 \
 	groupedservices \
-	iso-639-3.pck \
 	keymap.xml \
 	keymap.ntr \
 	menu.xml \
@@ -29,6 +28,3 @@ dist_pkgdata_DATA = \
 	hd-testcard.mvi \
 	picon_default.png \
 	lcd_picon_default.png
-
-iso-639-3.pck: $(srcdir)/iso-639-3.tab
-	python3 $(srcdir)/convert-iso-639-3.py $< $@
