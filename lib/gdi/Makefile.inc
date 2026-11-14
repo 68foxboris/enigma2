@@ -37,6 +37,8 @@ gdiinclude_HEADERS = \
 	gdi/esize.h \
 	gdi/fb.h \
 	gdi/font.h \
+	gdi/font_arabic.h
+	font_arabic.h
 	gdi/gfont.h \
 	gdi/gfont_atlas.h \
 	gdi/glcddc.h \
