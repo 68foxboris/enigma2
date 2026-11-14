@@ -20,7 +20,7 @@ eDVBServiceFCCPlay::~eDVBServiceFCCPlay()
 
 void eDVBServiceFCCPlay::serviceEvent(int event)
 {
-	if (!m_is_primary) // PIP mode
+	if (!m_is_primary) // PiP mode
 	{
 		eDVBServicePlay::serviceEvent(event);
 		return;
@@ -131,10 +131,14 @@ void eDVBServiceFCCPlay::serviceEvent(int event)
 
 RESULT eDVBServiceFCCPlay::start()
 {
-	if (!m_is_primary) // PIP mode
+	/* FCC event handlers may stop and release the service during promotion. */
+	ePtr<eDVBServiceFCCPlay> self = this;
+	RESULT ret = 0;
+
+	if (!m_is_primary) // PiP mode
 	{
-		eDVBServicePlay::start();
-		return 0;
+		ret = eDVBServicePlay::start();
+		return ret;
 	}
 
 	if (m_fcc_flag & fcc_start) // already started
@@ -148,9 +152,9 @@ RESULT eDVBServiceFCCPlay::start()
 
 		/* disable CA Interfaces on fcc_mode_preparing */
 		m_service_handler.setCaDisable(true);
-		eDVBServicePlay::start();
+		ret = eDVBServicePlay::start();
 	}
-	return 0;
+	return ret;
 }
 
 void eDVBServiceFCCPlay::pushbackFCCEvents(int event)
@@ -172,6 +176,10 @@ void eDVBServiceFCCPlay::popFCCEvents()
 		}
 	}
 
+	/* Decoder updates can also emit events which stop or replace this service. */
+	if (!getFCCStateDecoding())
+		return;
+
 	/* add CaHandler */
 	m_service_handler.addCaHandler();
 
@@ -182,6 +190,8 @@ void eDVBServiceFCCPlay::popFCCEvents()
 	/* send events */
 	for (std::list<int>::iterator it = m_fcc_events.begin(); it != m_fcc_events.end(); ++it)
 	{
+		if (!getFCCStateDecoding())
+			break;
 		int event = *it;
 		m_event((iPlayableService*)this, event);
 	}
@@ -194,7 +204,7 @@ void eDVBServiceFCCPlay::changeFCCMode()
 		eDebug("[eDVBServiceFCCPlay] changeFCCMode [%s] disable FCC decoding.", m_reference.toString().c_str());
 		m_fcc_mode = fcc_mode_preparing;
 
-		/* stop timeshift */
+		/* stop time shift */
 		eDVBServicePlay::stopTimeshift();
 
 		/* remove CaHandler */
@@ -349,7 +359,7 @@ void eDVBServiceFCCPlay::updateFCCDecoder(bool sendSeekableStateChanged)
 			m_subtitle_parser->connectNewPage(sigc::mem_fun(*this, &eDVBServiceFCCPlay::newDVBSubtitlePage), m_new_dvb_subtitle_page_connection);
 			if (m_timeshift_changed)
 			{
-				struct SubtitleTrack track;
+				struct SubtitleTrack track = {};
 				if (getCachedSubtitle(track) >= 0)
 				{
 					if (track.type == 0) // dvb
@@ -532,7 +542,7 @@ void eDVBServiceFCCPlay::switchToLive()
 
 	m_is_paused = m_skipmode = m_fastforward = m_slowmotion = 0; /* not supported in live mode */
 
-	/* free the timeshift service handler, we need the resources */
+	/* free the time shift service handler, we need the resources */
 	m_service_handler_timeshift.free();
 
 	m_fcc_flag &=~fcc_ready;
@@ -563,10 +573,13 @@ void eDVBServiceFCCPlay::setupSpeculativeDescrambling()
 {
 	// Override base class to use FCC-specific callback (onFCCSessionActivated)
 	// instead of base class callback (onSessionActivated)
+
 	// Only for Live-TV, not for PVR, streams
 	if (m_is_pvr || m_is_stream)
 		return;
+
 	eDebug("[eDVBServiceFCCPlay] Encrypted channel, creating CSA session for FCC");
+
 	// Use base class members (m_csa_session, m_soft_decoder) for proper integration
 	// Create session (starts INACTIVE, will activate when CSA-ALT detected from ECM)
 	eServiceReferenceDVB ref = eServiceReferenceDVB(m_reference.toString());
@@ -577,9 +590,11 @@ void eDVBServiceFCCPlay::setupSpeculativeDescrambling()
 		m_csa_session = nullptr;
 		return;
 	}
+
 	// Create SoftDecoder using base class member
 	m_soft_decoder = new eDVBSoftDecoder(m_service_handler, m_dvb_service, m_decoder_index);
 	m_soft_decoder->setSession(m_csa_session);
+
 	// Connect to SoftDecoder's audio PID selection signal
 	// Note: Use a lambda to call the protected base class method
 	m_soft_decoder->m_audio_pid_selected.connect(
@@ -595,20 +610,25 @@ void eDVBServiceFCCPlay::setupSpeculativeDescrambling()
 	// which handles FCC decoder stop/start properly
 	m_csa_session->activated.connect(
 		sigc::mem_fun(*this, &eDVBServiceFCCPlay::onFCCSessionActivated));
+
 	eDebug("[eDVBServiceFCCPlay] CSA session created for FCC, waiting for ECM analysis");
 }
+
 void eDVBServiceFCCPlay::activateFCCCSASession()
 {
 	if (!m_csa_session)
 		return;
+
 	// Check if CSA-ALT was detected during prepare phase
 	// isCsaAlt() returns true only if CSA-ALT was actually detected (not just analyzed)
 	if (m_csa_session->isCsaAlt())
 	{
 		eDebug("[eDVBServiceFCCPlay] CSA-ALT was detected, activating session for decoding");
+
 		// Force activate the session now that we're in decoding mode
 		// CWs should start arriving now that CA handler is active
 		m_csa_session->forceActivate();
+
 		// SoftDecoder will be started in updateFCCDecoder() when it sees the active session
 	}
 	else if (m_csa_session->isEcmAnalyzed())
@@ -620,6 +640,7 @@ void eDVBServiceFCCPlay::activateFCCCSASession()
 		eDebug("[eDVBServiceFCCPlay] No ECM analyzed yet, using HW descrambling");
 	}
 }
+
 void eDVBServiceFCCPlay::deactivateFCCCSASession()
 {
 	// Stop SoftDecoder when going back to prepare mode
@@ -628,6 +649,7 @@ void eDVBServiceFCCPlay::deactivateFCCCSASession()
 		eDebug("[eDVBServiceFCCPlay] Stopping SoftDecoder for FCC prepare mode");
 		m_soft_decoder->stop();
 	}
+
 	// Deactivate session but keep it around for next switch
 	if (m_csa_session && m_csa_session->isActive())
 	{
@@ -635,30 +657,37 @@ void eDVBServiceFCCPlay::deactivateFCCCSASession()
 		m_csa_session->forceDeactivate();
 	}
 }
+
 void eDVBServiceFCCPlay::onFCCSessionActivated(bool active)
 {
 	eDebug("[eDVBServiceFCCPlay] Session activated callback: active=%d, fcc_mode=%d", active, m_fcc_mode);
+
 	if (active && m_soft_decoder)
 	{
 		// CSA-ALT activated - handle decoder handover
 		eDebug("[eDVBServiceFCCPlay] CSA-ALT activated, handling decoder handover");
+
 		// Disconnect old video event connection
 		m_video_event_connection = nullptr;
+
 		// Release HW decoder resources if we're in decoding mode
 		if (m_fcc_mode == fcc_mode_decoding && m_decoder)
 		{
 			eDebug("[eDVBServiceFCCPlay] Releasing HW decoder for SoftDecoder");
+
 			// Stop FCC decoder first
 			if (m_fcc_flag & fcc_decoding)
 			{
 				m_decoder->fccDecoderStop();
 				m_fcc_flag &= ~fcc_decoding;
 			}
+
 			m_decoder->setVideoPID(-1, -1);
 			m_decoder->setAudioPID(-1, -1);
 			m_decoder->setSyncPCR(-1);
 			m_decoder->setTextPID(-1);
 			m_decoder->set();
+
 			// Start SoftDecoder now
 			if (!m_soft_decoder->isRunning())
 			{
