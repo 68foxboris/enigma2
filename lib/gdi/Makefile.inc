@@ -13,6 +13,7 @@ gdi_libenigma_gdi_a_SOURCES = \
 	gdi/fb.cpp \
 	gdi/font.cpp \
 	gdi/font_arabic.cpp \
+	gdi/font_arabic.h \
 	gdi/gfont.cpp \
 	gdi/gfont_atlas.cpp \
 	gdi/glcddc.cpp \
@@ -37,8 +38,6 @@ gdiinclude_HEADERS = \
 	gdi/esize.h \
 	gdi/fb.h \
 	gdi/font.h \
-	gdi/font_arabic.h
-	font_arabic.h
 	gdi/gfont.h \
 	gdi/gfont_atlas.h \
 	gdi/glcddc.h \
