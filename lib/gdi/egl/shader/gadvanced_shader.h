@@ -22,6 +22,7 @@ private:
 	GLint m_alphablend_location;
 	GLint m_border_width_location;
 	GLint m_border_color_location;
+	GLint m_coveragePassLocation;
 
 	// Gradient uniforms
 	GLint m_gradient_colors_location;
@@ -46,13 +47,14 @@ public:
 	~gAdvancedShader();
 
 	bool init();
-	void release();
+	void release(bool contextCurrent = true);
 	void bind();
 
 	bool isInitialized() const { return m_program_id != 0; }
 	void setResolution(float width, float height);
 	void setFramebufferResolution(float width, float height);
 
+	// Coverage replacement starts and ends with blending disabled; other draws use the caller's blend state.
 	void drawAdvancedRect(float x, float y, float width, float height, int radius, uint8_t edges, const std::vector<gRGB>& gradient_colors, uint8_t orientation, bool alphablend,
-						  int gradient_full_size, float alpha, const gRGB& solid_color, int border_width = 0, const gRGB& border_color = gRGB());
+						  int gradient_full_size, float alpha, const gRGB& solid_color, int border_width = 0, const gRGB& border_color = gRGB(), bool replaceCoverage = false);
 };

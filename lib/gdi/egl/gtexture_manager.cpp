@@ -645,6 +645,9 @@ GLuint gTextureManager::createTextureFromSurface(gUnmanagedSurface* surface) {
 		return 0;
 	if (!surface->cpu_content_valid)
 		return 0;
+	// A resize/invalidation can queue the previous texture during this draw
+	// opcode. Release it before allocating its replacement, also with an empty cache.
+	processDeletions();
 
 	GLuint texture_id = createSharedNativeTarget(surface);
 	if (texture_id != 0)
@@ -1053,6 +1056,10 @@ void gTextureManager::resetContextGeneration()
 {
 	std::lock_guard<std::mutex> lock(m_deletion_mutex);
 	// Also cover a lost context where GL cleanup could no longer run.
+	m_offscreen_advanced_shader.release(false);
+	m_offscreen_texture_shader.release(false);
+	m_offscreen_advanced_shader_initialized = false;
+	m_offscreen_texture_shader_initialized = false;
 	for (const auto& entry : m_nativeTargets) {
 		if (entry.second.mapping)
 			munmap(entry.second.mapping, entry.second.length);
@@ -1254,7 +1261,8 @@ bool gTextureManager::drawRectangleSurface(gUnmanagedSurface* surface, const gRe
 		return true;
 
 	const bool blend_border = border_width > 0 && (use_new || radius > 0);
-	const bool blend_rect = use_new || radius > 0 || (!gradient_colors.empty() && alphablend);
+	const bool replaceCoverage = radius > 0 && border_width <= 0 && !use_new && (gradient_colors.empty() || !alphablend);
+	const bool blend_rect = !replaceCoverage && (use_new || radius > 0 || (!gradient_colors.empty() && alphablend));
 	const bool full_overwrite = !blend_border && !blend_rect && radius <= 0 && regionCoversRect(draw_region, surface_rect);
 	if (!ensureFramebuffer(surface, !full_overwrite && !surface->gl_content_valid))
 		return false;
@@ -1308,7 +1316,7 @@ bool gTextureManager::drawRectangleSurface(gUnmanagedSurface* surface, const gRe
 	for (const eRect& clipped : draw_region.rects) {
 		glScissor(clipped.left(), clipped.top(), clipped.width(), clipped.height());
 		m_offscreen_advanced_shader.drawAdvancedRect(area.x(), area.y(), area.width(), area.height(), radius, edges,
-			nativeColors, direction, alphablend, gradient_full_size, textureColorAlpha(background_color), swapChannels(background_color), border_width, swapChannels(border_color));
+			nativeColors, direction, alphablend, gradient_full_size, textureColorAlpha(background_color), swapChannels(background_color), border_width, swapChannels(border_color), replaceCoverage);
 	}
 
 	GLenum err = glGetError();

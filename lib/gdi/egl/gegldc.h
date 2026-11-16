@@ -72,6 +72,8 @@ private:
 
 	gFontAtlas m_font_atlas;
 	gTextureManager m_texture_manager;
+	unsigned int m_textRenderErrorCount = 0;
+	bool m_fontAtlasRetrySmaller = false;
 
 	struct PendingWindowAnimation {
 		bool active;
@@ -278,7 +280,7 @@ private:
 	void executeFill(const gOpcode* op);
 	void executeFillRegion(const gOpcode* op);
 	void executeRectangle(const gOpcode* op);
-	void drawRoundedSolidRect(const gRegion& clip, const eRect& area, int radius, int edges, const gRGB& color);
+	void drawRoundedSolidRect(const gRegion& clip, const eRect& area, int radius, int edges, const gRGB& color, bool replaceCoverage);
 	void executeLine(const gOpcode* op);
 	void executeBlit(const gOpcode* op);
 	void executeDrawGlyph(const gOpcode* op);
@@ -351,6 +353,9 @@ private:
 	void resetRectangleState();
 	void resetBlitState();
 	void flushTextBatch();
+	GLuint prepareFontAtlasTexture();
+	void recoverFontAtlas();
+	void logTextRenderFailure(const char* stage, GLenum error, const eRect& area = eRect());
 	void flushTextBatchForReason(TextFlushReason reason);
 	void flushTextBatchIfOverlaps(const eRect& area, TextFlushReason reason);
 	void flushTextBatchIfOverlaps(const gRegion& region, TextFlushReason reason);
@@ -387,6 +392,9 @@ private:
 public:
 	bool runSurfaceOperation(const std::function<bool(gTextureManager&)>& operation);
 	bool initEGL();
+#ifdef HAVE_VUPLUS_MIPSEL_EGL
+	void setNativeWindowVisible(bool visible) override;
+#endif
 	gEGLDC(INativeWindowProvider* window_provider = nullptr, int width = 1280, int height = 720);
 	virtual ~gEGLDC();
 
