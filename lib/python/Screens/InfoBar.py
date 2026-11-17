@@ -1,8 +1,11 @@
 # flake8: noqa E402
 
-from enigma import eServiceReference, eProfileWrite
 from os.path import splitext
 from glob import glob
+from enigma import eServiceReference, eProfileWrite
+
+from skin import EMERGENCY_SKIN, findSkinScreen
+
 # workaround for required config entry dependencies.
 import Screens.MovieSelection
 
@@ -159,8 +162,7 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 			else:
 				self.showRadioChannelList(True)
 		else:
-			self.rds_display.hide()  # in InfoBarRdsDecoder
-			from Screens.ChannelSelection import ChannelSelectionRadio
+			from Screens.ChannelSelection import ChannelSelectionRadio  # Avoid a circular import during InfoBar initialization.
 			self.session.openWithCallback(self.ChannelSelectionRadioClosed, ChannelSelectionRadio, self)
 
 	def toogleTvRadio(self):
@@ -172,7 +174,6 @@ class InfoBar(InfoBarBase, InfoBarShowHide,
 			self.showRadio()
 
 	def ChannelSelectionRadioClosed(self, *arg):
-		self.rds_display.show()  # in InfoBarRdsDecoder
 		self.radioTV = 0
 		self.doShow()
 
