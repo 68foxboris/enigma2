@@ -13,8 +13,9 @@ from Components.ServiceList import ServiceList, ServiceListLegacy, refreshServic
 from Components.ActionMap import NumberActionMap, ActionMap, HelpableActionMap, HelpableNumberActionMap
 from Components.MenuList import MenuList
 from Components.ServiceEventTracker import InfoBarBase, ServiceEventTracker
+from skin import EMERGENCY_SKIN, findSkinScreen, getSkinFactor
 from ServiceReference import ServiceReference, getStreamRelayRef, serviceRefAppendPath, isRadioServiceReference, service_types_radio_ref, service_types_tv_ref
-from enigma import eServiceReference, eServiceReferenceDVB, eEPGCache, eServiceCenter, eRCInput, eTimer, eDVBDB, iPlayableService, iServiceInformation, getPrevAsciiCode, loadPNG, eProfileWrite
+from enigma import eServiceReference, eServiceReferenceDVB, eEPGCache, eServiceCenter, eRCInput, eTimer, eWindow, eDVBDB, iPlayableService, iServiceInformation, getPrevAsciiCode, loadPNG, eProfileWrite
 eProfileWrite("ChannelSelection.py 1")
 from Screens.EpgSelection import EPGSelection
 from Components.config import config, configfile, ConfigSubsection, ConfigText, ConfigYesNo, ConfigSelection, ConfigText
@@ -1726,7 +1727,7 @@ class ChannelSelectionBase(Screen):
 	MODE_TV = 0
 	MODE_RADIO = 1
 
-	def __init__(self, session):
+	def __init__(self, session, forceLegacyList=False):
 		def leftHelp():
 			return _("Move to previous marker") if self.servicelist.isVertical() else _("Move to the previous item")
 
@@ -1739,7 +1740,7 @@ class ChannelSelectionBase(Screen):
 		self["key_yellow"] = StaticText(_("Provider"))
 		self["key_blue"] = StaticText(_("Favourites"))
 
-		self["list"] = ServiceListLegacy(self) if config.channelSelection.screenStyle.value == "" or config.channelSelection.widgetStyle.value == "" else ServiceList(self)
+		self["list"] = ServiceListLegacy(self) if forceLegacyList or not config.channelSelection.screenStyle.value or not config.channelSelection.widgetStyle.value else ServiceList(self)
 		self.servicelist = self["list"]
 
 		self.numericalTextInput = NumericalTextInput(handleTimeout=False)
@@ -2458,6 +2459,12 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 		ChannelSelectionBase.__init__(self, session)
 		if config.channelSelection.screenStyle.value:
 			self.skinName = [config.channelSelection.screenStyle.value]
+		self.channelListSkinNames = self.skinName
+		self["DabImage"] = Pixmap()
+		self["DabImage"].hide()
+		self.ignoreWidgets.append("DabImage")
+		self.onExecBegin.append(self.updateRadioListSkin)
+
 		self["actions"] = HelpableActionMap(self, ["OkCancelActions", "TvRadioActions"],
 			{
 				"cancel": self.cancel,
@@ -2539,6 +2546,8 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 						if not [timer for timer in self.session.nav.RecordTimer.timer_list if timer.state == 2 and refstr == timer.service_ref]:
 							ref.setAlternativeUrl(refstr, True)
 					self.servicelist.setPlayableIgnoreService(ref)
+		if self.execing:
+			self.updateRadioListSkin()
 
 	def __evServiceEnd(self):
 		self.servicelist.setPlayableIgnoreService(eServiceReference())
@@ -2555,6 +2564,21 @@ class ChannelSelection(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelect
 			if ref and Components.ParentalControl.parentalControl.isProtected(ref):
 				if self.getCurrentSelection() and self.getCurrentSelection() != ref:
 					self.setCurrentSelection(ref)
+		if self.execing:
+			self.updateRadioListSkin()
+
+	def updateRadioListSkin(self):
+		if self is not ChannelSelection.instance:
+			return
+		skinNames = self.channelListSkinNames
+		if self.mode == MODE_RADIO and config.usage.e1like_radio_mode.value:
+			reference = self.session.nav.getCurrentlyPlayingServiceReference()
+			if reference and reference.type == eServiceReference.idServiceDAB and findSkinScreen("ChannelSelectionRadioDABList"):
+				skinNames = ["ChannelSelectionRadioDABList", *skinNames]
+			elif config.skin.primary_skin.value == EMERGENCY_SKIN and findSkinScreen("ChannelSelectionRadioList"):
+				skinNames = ["ChannelSelectionRadioList", *skinNames]
+		if self.skinName != skinNames:
+			self.reloadChannelListSkin(skinNames, borderless=skinNames != self.channelListSkinNames)
 
 	def toogleTvRadio(self):
 		if self.radioTV == 1:
@@ -3074,9 +3098,7 @@ class RadioInfoBar(Screen):
 class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelectionEPG, InfoBarBase, SelectionEventInfo, InfoBarScreenSaver):
 
 	def __init__(self, session, infobar):
-		ChannelSelectionBase.__init__(self, session)
-		self["list"] = ServiceListLegacy(self)  # Force legacy list
-		self.servicelist = self["list"]
+		ChannelSelectionBase.__init__(self, session, forceLegacyList=True)
 		ChannelSelectionEdit.__init__(self)
 		ChannelSelectionEPG.__init__(self)
 		InfoBarBase.__init__(self)
@@ -3084,7 +3106,10 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		InfoBarScreenSaver.__init__(self)
 		self.infobar = infobar
 		self.startServiceRef = None
-		self.onLayoutFinish.append(self.onCreate)
+		self["DabImage"] = Pixmap()
+		self["DabImage"].hide()
+		self.ignoreWidgets.append("DabImage")
+		self.onFirstExecBegin.append(self.onCreate)
 
 		self.info = session.instantiateDialog(RadioInfoBar)  # Our simple InfoBar.
 		self.info.setAnimationMode(0)
@@ -3116,9 +3141,47 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		self["rdsActions"].setEnabled(False)
 		infobar.rds_display.onRassInteractivePossibilityChanged.append(self.RassInteractivePossibilityChanged)
 		self.onClose.append(self.__onClose)
-		self.onExecBegin.append(self.__onExecBegin)
-		self.onExecEnd.append(self.__onExecEnd)
-		self.onShown.append(self.info.show)
+		self.onShow.append(self.updateRadioLayout)
+		self.onHide.append(self.hideRadioLayout)
+
+	def getRadioSkinName(self):
+		reference = self.session.nav.getCurrentlyPlayingServiceReference()
+		isDAB = reference and reference.type == eServiceReference.idServiceDAB
+		if isDAB and findSkinScreen("ChannelSelectionRadioDABWithEPG"):
+			return "ChannelSelectionRadioDABWithEPG"
+		if config.skin.primary_skin.value == EMERGENCY_SKIN:
+			skinName = "ChannelSelectionRadioDAB" if isDAB else "ChannelSelectionRadioHD"
+			if findSkinScreen(skinName):
+				return skinName
+		return "ChannelSelectionRadio"
+
+	def reloadSkin(self):
+		skinName = self.getRadioSkinName()
+		self.reloadChannelListSkin(skinName, borderless=skinName != "ChannelSelectionRadio")
+		if self.shown:
+			self.updateRadioLayout()
+
+	def updateRadioLayout(self):
+		if not self.shown:
+			return
+		if self.skinName != self.getRadioSkinName():
+			self.reloadSkin()
+			return
+		picture = self["DabImage"]
+		if self.skinName in ("ChannelSelectionRadio", "ChannelSelectionRadioDABWithEPG"):
+			self.info.show()
+		else:
+			self.info.hide()
+		if picture.skinAttributes:
+			self.infobar.setRadioListVisible(True, picture)
+			self.infobar.dab_slide_display.slideshowChanged()
+		else:
+			self.infobar.rds_display.setSuppressed(True)
+			self.infobar.dab_slide_display.setRadioListVisible(self.skinName != "ChannelSelectionRadio")
+
+	def hideRadioLayout(self):
+		self.info.hide()
+		self.infobar.setRadioListVisible(False)
 
 	def __onClose(self):
 		lastservice = eServiceReference(config.tv.lastservice.value)
@@ -3130,7 +3193,6 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		self.infobar.rass_interactive = self.session.openWithCallback(self.RassInteractiveClosed, RassInteractive)
 
 	def RassInteractiveClosed(self):
-		self.info.show()
 		self.infobar.rass_interactive = None
 		self.infobar.RassSlidePicChanged()
 
@@ -3138,15 +3200,8 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		self["rdsActions"].setEnabled(state)
 		# RDS Radiotext / Rass Support END
 
-	def __onExecBegin(self):
-		self.info.show()
-
-	def __onExecEnd(self):
-		self.info.hide()
-
 	def cancel(self):
 		self.infobar.rds_display.onRassInteractivePossibilityChanged.remove(self.RassInteractivePossibilityChanged)
-		self.info.hide()
 		# set previous tv service
 		self.close(None)
 
@@ -3157,6 +3212,7 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 			if info:
 				refstr = info.getInfoString(iServiceInformation.sServiceref)
 				self.servicelist.setPlayableIgnoreService(eServiceReference(refstr))
+		self.updateRadioLayout()
 
 	def __evServiceEnd(self):
 		self.servicelist.setPlayableIgnoreService(eServiceReference())
@@ -3216,7 +3272,6 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 				self.session.nav.stopService()
 		else:
 			self.session.nav.stopService()
-		self.info.show()
 
 	def channelSelected(self, doClose=False):  # Just return selected service.
 		ref = self.getCurrentSelection()
@@ -3284,6 +3339,18 @@ class SimpleChannelSelection(ChannelSelectionBase, SelectionEventInfo):
 				self.gotoCurrentServiceOrProvider(ref)
 		if self.setService:
 			self.setCurrentSelection(self.setService)
+
+	def reloadChannelListSkin(self, skinName, borderless):
+		if borderless:
+			# Clear the old window's child inset when switching from a bordered list.
+			self.instance.setFlag(eWindow.wfNoBorder)
+			self.instance.child().move(ePoint(0, 0))
+		else:
+			self.instance.clearFlag(eWindow.wfNoBorder)
+		selection = self.getCurrentSelection()
+		self.skinName = skinName
+		Screen.reloadSkin(self)
+		self.setCurrentSelection(selection)
 
 	def saveRoot(self):
 		pass
@@ -3444,6 +3511,7 @@ class ChannelSelectionSetup(Setup):
 						oldDialogIndex = (index, dialog[1])
 				ChannelSelection.instance = None
 				InfoBarInstance.servicelist = session.instantiateDialog(ChannelSelection)
+				InfoBarInstance.connectRadioOverlays()
 				InfoBarInstance.servicelist.summaries = oldSummarys
 				InfoBarInstance.servicelist.isTmp = False
 				InfoBarInstance.servicelist.callback = None
