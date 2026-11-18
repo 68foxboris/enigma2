@@ -1727,7 +1727,7 @@ class ChannelSelectionBase(Screen):
 	MODE_TV = 0
 	MODE_RADIO = 1
 
-	def __init__(self, session, forceLegacyList=False):
+	def __init__(self, session):
 		def leftHelp():
 			return _("Move to previous marker") if self.servicelist.isVertical() else _("Move to the previous item")
 
@@ -1740,7 +1740,7 @@ class ChannelSelectionBase(Screen):
 		self["key_yellow"] = StaticText(_("Provider"))
 		self["key_blue"] = StaticText(_("Favourites"))
 
-		self["list"] = ServiceListLegacy(self) if forceLegacyList or not config.channelSelection.screenStyle.value or not config.channelSelection.widgetStyle.value else ServiceList(self)
+		self["list"] = self.createServiceList()
 		self.servicelist = self["list"]
 
 		self.numericalTextInput = NumericalTextInput(handleTimeout=False)
@@ -1846,6 +1846,11 @@ class ChannelSelectionBase(Screen):
 					return _("Zap to channel number")
 			else:
 				return _("Search in SMS mode")
+
+	def createServiceList(self):
+		if config.channelSelection.screenStyle.value and config.channelSelection.widgetStyle.value:
+			return ServiceList(self)
+		return ServiceListLegacy(self)
 
 	def compileTitle(self):
 		self.setTitle(f"{self.maintitle}{self.modetitle}{self.functiontitle}{self.servicetitle}")
@@ -3098,7 +3103,7 @@ class RadioInfoBar(Screen):
 class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelSelectionEPG, InfoBarBase, SelectionEventInfo, InfoBarScreenSaver):
 
 	def __init__(self, session, infobar):
-		ChannelSelectionBase.__init__(self, session, forceLegacyList=True)
+		ChannelSelectionBase.__init__(self, session)
 		ChannelSelectionEdit.__init__(self)
 		ChannelSelectionEPG.__init__(self)
 		InfoBarBase.__init__(self)
@@ -3143,6 +3148,9 @@ class ChannelSelectionRadio(ChannelSelectionBase, ChannelSelectionEdit, ChannelS
 		self.onClose.append(self.__onClose)
 		self.onShow.append(self.updateRadioLayout)
 		self.onHide.append(self.hideRadioLayout)
+
+	def createServiceList(self):
+		return ServiceListLegacy(self)
 
 	def getRadioSkinName(self):
 		reference = self.session.nav.getCurrentlyPlayingServiceReference()
