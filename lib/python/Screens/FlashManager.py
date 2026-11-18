@@ -1,12 +1,14 @@
 from json import load
 from os import W_OK, access, listdir, major, makedirs, minor, mkdir, remove, sep, stat, statvfs, unlink, walk
-from os.path import basename, exists, isdir, isfile, islink, ismount, splitext, join, getsize
+from os.path import basename, dirname, exists, getsize, isdir, isfile, islink, ismount, join, realpath
+from queue import Empty, Queue
 from shutil import rmtree
-from time import time
+from threading import BoundedSemaphore, Event, Thread
+from time import monotonic, time
 from urllib.request import Request, urlopen
 from zipfile import ZipFile
 
-from enigma import eEPGCache, eTimer, fbClass, gMainDC
+from enigma import eEPGCache, eTimer, fbClass
 
 from Components.ActionMap import HelpableActionMap
 from Components.ChoiceList import ChoiceEntryComponent, ChoiceList
@@ -44,12 +46,111 @@ def checkImageFiles(files):
 	return sum(f.endswith((".nfi", ".tar.xz")) for f in files) == 1 or sum(("kernel" in f and f.endswith(".bin")) or f in {"zImage", "uImage", "root_cfe_auto.bin", "root_cfe_auto.jffs2", "oe_kernel.bin", "oe_rootfs.bin", "e2jffs2.img", "rootfs.ubi", "rootfs.bin", "rootfs.tar.bz2", "rootfs-one.tar.bz2", "rootfs-two.tar.bz2"} for f in files) >= 2
 
 
+def isSmallBoxBootstrapImage(image):
+	# This archive only boots the mandatory native setup from a USB stick.  A
+	# running SmallBox image must use the full companion Multiboot archive.
+	return BoxInfo.getItem("SmallBoxWizard") and str(image).split("?", 1)[0].lower().endswith("_usb.zip")
+
+
 def isNewNativeAdditionalSlot(slotCode, slotData):
 	if not slotCode or not slotCode.isdecimal() or BoxInfo.getItem("HasKexecMultiboot") or BoxInfo.getItem("HasGPT") or BoxInfo.getItem("HasChkrootMultiboot") or BoxInfo.getItem("hasUBIMB"):
 		return False
 	cmdLines = slotData.get("cmdline", {})
 	cmdLines = cmdLines.values() if isinstance(cmdLines, dict) else (cmdLines,)
 	return any("extra=true" in cmdLine for cmdLine in cmdLines if cmdLine)
+
+
+class LocalImageScan:
+	# A stuck network mount must neither block E2 nor create unlimited workers.
+	workerSlots = BoundedSemaphore(2)
+	TIMEOUT = 30
+
+	def __init__(self, modelNames, hasMMC, smallBox, backups):
+		self.modelNames = tuple(name for name in modelNames if name)
+		self.hasMMC = hasMMC
+		self.smallBox = smallBox
+		self.backups = backups
+		self.cancelled = Event()
+		self.results = Queue()
+		self.deadline = monotonic() + self.TIMEOUT
+		self.images = {}
+		self.errors = False
+
+	def stopped(self):
+		return self.cancelled.is_set() or monotonic() >= self.deadline
+
+	def start(self):
+		if not self.workerSlots.acquire(blocking=False):
+			return False
+		try:
+			Thread(target=self.run, name="FlashManagerLocalImages", daemon=True).start()
+		except Exception as err:
+			self.workerSlots.release()
+			print(f"[FlashManager] Unable to start local image search: {err}")
+			return False
+		return True
+
+	def readDirectory(self, path):
+		if self.stopped():
+			return []
+		try:
+			return listdir(path)
+		except FileNotFoundError:
+			return []  # A device may have been removed while scanning.
+		except OSError as err:
+			self.errors = True
+			print(f"[FlashManager] Unable to search '{path}': {err}")
+			return []
+
+	def scanDirectory(self, path, names):
+		for name in names:
+			if self.stopped():
+				return
+			if name.startswith(".") or not name.lower().endswith(".zip") or not any(model in name for model in self.modelNames):
+				continue
+			if ("backup" in name.lower()) != self.backups or (self.smallBox and name.lower().endswith("_usb.zip")):
+				continue
+			image = join(path, name)
+			try:
+				if not isfile(image) or self.stopped():
+					continue
+				with ZipFile(image, mode="r") as archive:
+					files = archive.namelist()
+				if not self.stopped() and checkImageFiles([entry.rsplit("/", 1)[-1] for entry in files]):
+					self.images[image] = {"link": image, "name": name}
+			except Exception as err:
+				print(f"[FlashManager] Unable to read image archive '{image}': {err}")
+
+	def scanMedia(self, media):
+		if self.stopped() or (self.hasMMC and "/mmc" in media) or not isdir(media):
+			return
+		names = self.readDirectory(media)
+		self.scanDirectory(media, names)
+		for folder in ("images", "downloaded_images", "imagebackups"):
+			if self.stopped():
+				return
+			if folder in names:
+				path = join(media, folder)
+				if not islink(path) and not ismount(path) and isdir(path):
+					self.scanDirectory(path, self.readDirectory(path))
+
+	def run(self):
+		try:
+			for name in self.readDirectory("/media"):
+				if self.stopped():
+					return
+				self.scanMedia(join("/media", name))
+			for name in self.readDirectory("/media/net"):
+				if self.stopped():
+					return
+				self.scanMedia(join("/media/net", name))
+		except Exception as err:
+			self.errors = True
+			print(f"[FlashManager] Local image search failed: {err}")
+		finally:
+			if not self.stopped():
+				self.results.put((self.images, self.errors))
+			self.workerSlots.release()
 
 
 class FlashManager(Screen):
@@ -80,8 +181,17 @@ class FlashManager(Screen):
 		self.imageFeed = "OpenATV"
 		self.setTitle(_("Flash Manager - %s Images") % self.imageFeed)
 		self.imagesList = {}
+		self.imagesListLoaded = False
+		self.localImageTypes = {_("Downloaded images"): False, _("Backup images"): True}
+		self.localImages = {}
+		self.localImageErrors = {}
+		self.localScan = None
+		self.localScanCategory = None
+		self.localScanTimer = eTimer()
+		self.localScanTimer.callback.append(self.pollLocalImages)
+		self.onClose.append(self.stopLocalScan)
 		self.expanded = []
-		self.setIndex = 0
+		self.setIndex = None
 		self["actions"] = HelpableActionMap(self, ["OkCancelActions", "ColorActions", "NavigationActions"], {
 			"cancel": (self.keyCancel, _("Cancel the image selection and exit")),
 			"close": (self.keyCloseRecursive, _("Cancel the image selection and exit all menus")),
@@ -89,12 +199,12 @@ class FlashManager(Screen):
 			"red": (self.keyCancel, _("Cancel the image selection and exit")),
 			"green": (self.keyOk, _("Select the highlighted image and proceed to the slot selection")),
 			"yellow": (self.keyDistribution, _("Select a distribution from where images are to be obtained")),
-			"top": (self.keyTop, _("Move to first line / screen")),
+			"top": (self.keyTop, _("Move to the first line / screen")),
 			"pageUp": (self.keyPageUp, _("Move up a screen")),
 			"up": (self.keyUp, _("Move up a line")),
 			"down": (self.keyDown, _("Move down a line")),
 			"pageDown": (self.keyPageDown, _("Move down a screen")),
-			"bottom": (self.keyBottom, _("Move to last line / screen"))
+			"bottom": (self.keyBottom, _("Move to the last line / screen"))
 		}, prio=-1, description=_("Flash Manager Actions"))
 		self["deleteActions"] = HelpableActionMap(self, ["ColorActions"], {
 			"blue": (self.keyDeleteImage, _("Delete the selected locally stored image")),
@@ -112,204 +222,128 @@ class FlashManager(Screen):
 		self["description"] = StaticText()
 		self["list"] = ChoiceList(list=[ChoiceEntryComponent("", ((_("Retrieving image list, please wait...")), "Loading"))])
 		self.feedUrls = [
-			("OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName")),
-			("OpenPLi", "https://downloads.openpli.org/json/%s" % BoxInfo.getItem("model"))
+			("OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName"))
 		]
 		self.callLater(self.getImagesList)
 
 	def getImagesList(self):
-		def findInList(item):
-			result = [index for index, data in enumerate(self.feedUrls) if data[FEED_DISTRIBUTION] == item]
-			return result[0] if result else None
-
-		def getImages(path, files):
-			for file in [x for x in files if splitext(x)[1] == ".zip" and not basename(x).startswith(".") and (boxname in x or machinebuild in x or model in x)]:
-				try:
-					zipData = ZipFile(file, mode="r")
-					zipFiles = zipData.namelist()
-					zipData.close()
-					if checkImageFiles([x.split(sep)[-1] for x in zipFiles]):
-						imageType = _("Downloaded images")
-						if "backup" in file.split(sep)[-1]:
-							imageType = _("Backup images")
-						if imageType not in self.imagesList:
-							self.imagesList[imageType] = {}
-						self.imagesList[imageType][file] = {
-							"link": str(file),
-							"name": str(file.split(sep)[-1])
-						}
-				except Exception:
-					print("[FlashManager] getImagesList Error: Unable to extract file list from Zip file '%s'!" % file)
-
-		def getImagesListCallback(retVal=None):
-			if self.imageFeed != "OpenATV":
-				self.keyDistributionCallback("OpenATV")
-
-		machinebuild = BoxInfo.getItem("machinebuild")
-		model = BoxInfo.getItem("model")
-		boxname = BoxInfo.getItem("BoxName")
-		
-		# Отладочная информация об устройстве
-		print("[FlashManager] Device info - machinebuild: '%s', model: '%s', boxname: '%s'" % (machinebuild, model, boxname))
-		
-		# Маппинг устройств для совместимости
-		device_mapping = {
-			"et1x00": "et1x000",
-		}
-		
-		# Используем маппинг если устройство есть в списке
-		mapped_machinebuild = device_mapping.get(machinebuild, machinebuild)
-		mapped_boxname = device_mapping.get(boxname, boxname)
-		
-		print("[FlashManager] Mapped boxname: '%s'" % mapped_boxname)
-
-		if not self.imagesList:
-			index = findInList(self.imageFeed)
-			
-			if index is not None:
-				# Для выбранного дистрибутива используем соответствующий URL
-				feedURL = self.feedUrls[index][FEED_JSON_URL]
-				# Для OpenATV применяем маппинг устройств и подставляем имя бокса
-				if self.imageFeed == "OpenATV" and "%s" in feedURL:
-					feedURL = feedURL % mapped_boxname
-				# Для других дистрибутивов используем URL как есть
-			else:
-				# По умолчанию OpenATV с маппингом
-				feedURL = "https://images.mynonpublic.com/openatv/json/%s" % mapped_boxname
-			
+		if not self.imagesListLoaded:
+			feedURL = next((feed[FEED_JSON_URL] for feed in self.feedUrls if feed[FEED_DISTRIBUTION] == self.imageFeed), self.feedUrls[0][FEED_JSON_URL])
 			try:
-				print("[FlashManager] Loading images from: %s" % feedURL)
 				req = Request(feedURL, None, USER_AGENT)
-				response = urlopen(req)
-				raw_data = response.read().decode('utf-8')
-				print("[FlashManager] Raw response (first 500 chars): %s" % raw_data[:500])
-				
-				# Нужно пересоздать response для json.load
-				response = urlopen(req)
-				json_data = load(response)
-				
-				# Анализируем структуру полученных данных
-				print("[FlashManager] JSON structure type: %s" % type(json_data))
-				print("[FlashManager] JSON data length: %d" % len(json_data))
-				
-				if isinstance(json_data, dict):
-					print("[FlashManager] JSON keys: %s" % list(json_data.keys()))
-					for key, value in json_data.items():
-						print("[FlashManager] Key '%s' has %d items" % (key, len(value) if isinstance(value, (dict, list)) else 1))
-					self.imagesList = json_data
-				elif isinstance(json_data, list):
-					# Если пришел список, преобразуем в нужную структуру
-					print("[FlashManager] Converting list to dictionary structure")
-					print("[FlashManager] First 3 items in list: %s" % str(json_data[:3]))
-					
-					self.imagesList = {"Online Images": {}}
-					image_count = 0
-					for i, item in enumerate(json_data):
-						print("[FlashManager] Item %d: %s" % (i, type(item)))
-						if isinstance(item, dict):
-							print("[FlashManager] Item %d keys: %s" % (i, list(item.keys())))
-							
-							# Проверяем различные возможные структуры данных
-							if 'link' in item and 'name' in item:
-								self.imagesList["Online Images"][item['name']] = item
-								image_count += 1
-								print("[FlashManager] Added image: %s" % item['name'])
-							elif 'url' in item and 'filename' in item:
-								# Альтернативная структура: url и filename
-								self.imagesList["Online Images"][item['filename']] = {
-									"link": item['url'],
-									"name": item['filename']
-								}
-								image_count += 1
-								print("[FlashManager] Added image from url/filename: %s" % item['filename'])
-							elif 'download' in item and 'name' in item:
-								# Еще одна возможная структура
-								self.imagesList["Online Images"][item['name']] = {
-									"link": item['download'],
-									"name": item['name']
-								}
-								image_count += 1
-								print("[FlashManager] Added image from download/name: %s" % item['name'])
-							else:
-								# Пытаемся найти любые ссылки и имена в словаре
-								link_found = None
-								name_found = None
-								for key, value in item.items():
-									if isinstance(value, str) and value.startswith('http'):
-										link_found = value
-									if key in ['name', 'filename', 'imagename'] and isinstance(value, str):
-										name_found = value
-								
-								if link_found and name_found:
-									self.imagesList["Online Images"][name_found] = {
-										"link": link_found,
-										"name": name_found
-									}
-									image_count += 1
-									print("[FlashManager] Added image from auto-detection: %s" % name_found)
-						else:
-							print("[FlashManager] Skipping non-dict item: %s" % type(item))
-					
-					print("[FlashManager] Successfully processed %d images from list" % image_count)
-				else:
-					print("[FlashManager] Unknown JSON structure: %s" % type(json_data))
-					self.imagesList = {}
-					
-				print("[FlashManager] Successfully loaded %d image categories for %s" % (len(self.imagesList), self.imageFeed))
-				
-			except Exception as err:
-				print("[FlashManager] getImagesList Error: Unable to load json data from URL '%s'! (%s)" % (feedURL, err))
-				import traceback
-				traceback.print_exc()
+				with urlopen(req, timeout=10) as response:
+					self.imagesList = dict(load(response))
+				if BoxInfo.getItem("SmallBoxWizard"):
+					self.imagesList = {
+						category: {
+							image: data for image, data in images.items()
+							if not isSmallBoxBootstrapImage(data.get("name", image))
+						} for category, images in self.imagesList.items()
+					}
+					self.imagesList = {category: images for category, images in self.imagesList.items() if images}
+			except Exception:
+				print("[FlashManager] getImagesList Error: Unable to load json data from URL '%s'!" % feedURL)
 				self.imagesList = {}
-			
-			# Поиск локальных образов используя оригинальные имена устройств
-			if not index or self.imageFeed == "OpenATV":
-				for media in ["/media/%s" % x for x in listdir("/media")] + (["/media/net/%s" % x for x in listdir("/media/net")] if isdir("/media/net") else []):
-					if not (BoxInfo.getItem("HasMMC") and "/mmc" in media) and isdir(media):
-						getImages(media, [join(media, x) for x in listdir(media) if splitext(x)[1] == ".zip" and (boxname in x or machinebuild in x or model in x)])
-						for folder in ["images", "downloaded_images", "imagebackups"]:
-							if folder in listdir(media):
-								subFolder = join(media, folder)
-								if isdir(subFolder) and not islink(subFolder) and not ismount(subFolder):
-									getImages(subFolder, [join(subFolder, x) for x in listdir(subFolder) if splitext(x)[1] == ".zip" and (boxname in x or machinebuild in x or model in x)])
-									for dir in [dir for dir in [join(subFolder, dir) for dir in listdir(subFolder)] if isdir(dir) and splitext(dir)[1] == ".unzipped"]:
-										try:
-											rmtree(dir)
-										except OSError as err:
-											print("[FlashManager] getImagesList Error %d: Unable to remove directory '%s'!  (%s)" % (err.errno, dir, err.strerror))
+			self.imagesListLoaded = True
+		self.startLocalImages()
+		self.updateImagesList()
 
-		# Отладочная информация о загруженных образах
-		total_images = 0
-		for category in self.imagesList:
-			if isinstance(self.imagesList[category], dict):
-				total_images += len(self.imagesList[category])
-				print("[FlashManager] Category '%s' has %d images" % (category, len(self.imagesList[category])))
-		print("[FlashManager] Total images loaded: %d in %d categories" % (total_images, len(self.imagesList)))
+	def startLocalImages(self):
+		if self.localScan is not None or self.imageFeed != "OpenATV":
+			return
+		for category in self.expanded:
+			if category in self.localImageTypes and category not in self.localImages:
+				scan = LocalImageScan(
+					[BoxInfo.getItem(key) for key in ("BoxName", "machinebuild", "model")],
+					BoxInfo.getItem("HasMMC"), BoxInfo.getItem("SmallBoxWizard"), self.localImageTypes[category])
+				if scan.start():
+					self.localScan = scan
+					self.localScanCategory = category
+					self.localScanTimer.start(250)
+					return
+				self.localImages[category] = {}
+				self.localImageErrors[category] = _("Unable to start the local image search. Please try again later.")
+				self.session.showError(self.localImageErrors[category])
 
-		# Остальной код метода без изменений...
+	def stopLocalScan(self):
+		self.localScanTimer.stop()
+		if self.localScan is not None:
+			self.localScan.cancelled.set()
+		self.localScan = None
+		self.localScanCategory = None
+
+	def pollLocalImages(self):
+		scan = self.localScan
+		if scan is None:
+			return
+		try:
+			images, errors = scan.results.get_nowait()
+			message = _("Some image locations could not be read. Check your storage devices.") if errors else None
+		except Empty:
+			if monotonic() < scan.deadline:
+				return
+			images = {}
+			message = _("The local image search timed out. Check your storage devices.")
+		category = self.localScanCategory
+		self.stopLocalScan()
+		self.localImages[category] = images
+		if message:
+			self.localImageErrors[category] = message
+			self.session.showError(message)
+		self.startLocalImages()
+		self.updateImagesList()
+
+	def reloadImagesList(self, recursive=False):
+		if recursive:
+			self.close(True)
+			return
+		self.stopLocalScan()
+		self.imagesList = {}
+		self.imagesListLoaded = False
+		self.localImages.clear()
+		self.localImageErrors.clear()
+		self.getImagesList()
+
+	def updateImagesList(self):
+		current = self["list"].getCurrent()
+		selected = current[0] if current else None
+		index = self["list"].getSelectedIndex() or 0
+		categories = dict(self.imagesList)
+		if self.imageFeed == "OpenATV":
+			categories.update({category: self.localImages.get(category, {}) for category in self.localImageTypes})
 		imageList = []
-		for catagory in sorted(self.imagesList.keys(), reverse=True):
-			if catagory in self.expanded:
-				imageList.append(ChoiceEntryComponent("expanded", ((str(catagory)), "Expanded")))
-				for image in sorted(self.imagesList[catagory].keys(), key=lambda x: x.split(sep)[-1], reverse=True):
-					imageList.append(ChoiceEntryComponent("verticalline", ((self.imagesList[catagory][image]["name"]), self.imagesList[catagory][image]["link"])))
+		for category in sorted(categories, reverse=True):
+			images = categories[category]
+			local = self.imageFeed == "OpenATV" and category in self.localImageTypes
+			if not images and not local:
+				continue
+			if category in self.expanded:
+				imageList.append(ChoiceEntryComponent("expanded", (category, "Expanded")))
+				for image in sorted(images, key=lambda image: basename(image), reverse=True):
+					imageList.append(ChoiceEntryComponent("verticalline", (images[image]["name"], images[image]["link"])))
+				if local:
+					message = self.localImageErrors.get(category)
+					if category not in self.localImages:
+						message = _("Searching for local images, please wait...")
+					elif not images and not message:
+						message = _("No local images found.")
+					if message:
+						imageList.append(ChoiceEntryComponent("verticalline", (message, "Loading")))
 			else:
-				for image in self.imagesList[catagory].keys():
-					imageList.append(ChoiceEntryComponent("expandable", ((catagory), "Expanded")))
-					break
-		if imageList:
-			self["list"].setList(imageList)
-			if self.setIndex:
-				self["list"].moveToIndex(self.setIndex if self.setIndex < len(imageList) else len(imageList) - 1)
-				if self["list"].getCurrent()[0][1] == "Expanded":
-					self.setIndex -= 1
-					if self.setIndex:
-						self["list"].moveToIndex(self.setIndex if self.setIndex < len(imageList) else len(imageList) - 1)
-				self.setIndex = 0
-			self.selectionChanged()
+				imageList.append(ChoiceEntryComponent("expandable", (category, "Expanded")))
+		if not imageList:
+			# Preserve the fallback for distributions without matching images.
+			self.session.showError(_("Error: Cannot find any images!"))
+			self.keyDistributionCallback("OpenATV")
+			return
+		self["list"].setList(imageList)
+		if self.setIndex is not None:
+			index = self.setIndex
+			self.setIndex = None
 		else:
-			self.session.openWithCallback(getImagesListCallback, MessageBox, _("Error: Cannot find any images!"), type=MessageBox.TYPE_ERROR, timeout=3, windowTitle=self.getTitle())
+			index = next((position for position, entry in enumerate(imageList) if entry[0] == selected), index)
+		self["list"].moveToIndex(max(0, min(index, len(imageList) - 1)))
+		self.selectionChanged()
 
 	def keyCancel(self):
 		self.close()
@@ -318,19 +352,24 @@ class FlashManager(Screen):
 		self.close(True)
 
 	def keyOk(self):
-		def reloadImagesList():
-			self.imagesList = {}
-			self.getImagesList()
-
 		currentSelection = self["list"].getCurrent()
+		if not currentSelection:
+			return
 		if currentSelection[0][1] == "Expanded":
-			if currentSelection[0][0] in self.expanded:
-				self.expanded.remove(currentSelection[0][0])
+			category = currentSelection[0][0]
+			if category in self.expanded:
+				self.expanded.remove(category)
+				if category == self.localScanCategory:
+					self.stopLocalScan()
 			else:
-				self.expanded.append(currentSelection[0][0])
+				self.expanded.append(category)
+				# Explicitly reopening a local category also refreshes removable media.
+				self.localImages.pop(category, None)
+				self.localImageErrors.pop(category, None)
 			self.getImagesList()
 		elif currentSelection[0][1] != "Loading":
-			self.session.openWithCallback(reloadImagesList, FlashImage, currentSelection[0][0], currentSelection[0][1])
+			self.stopLocalScan()
+			self.session.openWithCallback(self.reloadImagesList, FlashImage, currentSelection[0][0], currentSelection[0][1])
 
 	def keyTop(self):
 		self["list"].instance.goTop()
@@ -357,17 +396,7 @@ class FlashManager(Screen):
 		self.selectionChanged()
 
 	def keyDistribution(self):
-		device_mapping = {
-			"et1x00": "gi11000",
-			"h9combo": "zgemmah9combo",
-		}
-		boxname = BoxInfo.getItem("BoxName")
-		mapped_boxname = device_mapping.get(boxname, boxname)
-
-		self.feedUrls = [
-			("OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % mapped_boxname),
-			("OpenPLi", "https://downloads.openpli.org/json/%s" % BoxInfo.getItem("model")),
-		]
+		self.feedUrls = [["OpenATV", "https://images.mynonpublic.com/openatv/json/%s" % BoxInfo.getItem("BoxName")]]
 		distributionList = []
 		default = 0
 		machine = BoxInfo.getItem("machinebuild")
@@ -385,48 +414,48 @@ class FlashManager(Screen):
 
 	def keyDistributionCallback(self, distribution):
 		if distribution:
+			self.stopLocalScan()
 			self.imageFeed = distribution
 			# TRANSLATORS: The variable is the name of a distribution.  E.g. "OpenATV".
 			self.setTitle(_("Flash Manager - %s Images") % self.imageFeed)
-			print("[FlashManager] Selected distribution: %s" % distribution)
-			self.imagesList = {}
 			self.expanded = []
 			self.setIndex = 0
-			self.getImagesList()
-			self["list"].moveToIndex(self.setIndex)
+			self.reloadImagesList()
 
 	def keyDeleteImage(self):
+		selection = self["list"].getCurrent()
+		if not selection or selection[0][1] in ("Loading", "Expanded") or "://" in selection[0][1]:
+			return
+		currentSelectionImage, imagePath = selection[0]
+
 		def keyDeleteImageCallback(result):
-			currentSelection = self["list"].getCurrent()[0][1]
 			if result:
 				try:
-					unlink(currentSelection)
-					currentSelection = ".".join([currentSelection[:-4], "unzipped"])
-					if isdir(currentSelection):
-						rmtree(currentSelection)
+					unlink(imagePath)
+					unpacked = f"{imagePath[:-4]}.unzipped"
+					if isdir(unpacked) and not islink(unpacked) and not ismount(unpacked):
+						rmtree(unpacked)
 					self.setIndex = self["list"].getSelectedIndex()
-					self.imagesList = {}
-					self.getImagesList()
+					self.reloadImagesList()
 				except OSError as err:
-					self.session.open(MessageBox, _("Error %d: Unable to delete downloaded image '%s'!  (%s)" % (err.errno, currentSelection, err.strerror)), MessageBox.TYPE_ERROR, timeout=3, windowTitle=self.getTitle())
+					self.session.showError(_("Error %d: Unable to delete downloaded image '%s'!  (%s)") % (err.errno, imagePath, err.strerror))
 
-		currentSelectionImage = self["list"].getCurrent()[0][0]
 		self.session.openWithCallback(keyDeleteImageCallback, MessageBox, _("Do you really want to delete '%s'?") % currentSelectionImage, MessageBox.TYPE_YESNO, default=False)
 
 	def keyDownloadImage(self):
-		def reloadImagesList():
-			self.imagesList = {}
-			self.getImagesList()
-
 		currentSelection = self["list"].getCurrent()
-		self.session.openWithCallback(reloadImagesList, FlashImage, currentSelection[0][0], currentSelection[0][1], True)
+		if currentSelection and "://" in currentSelection[0][1]:
+			self.stopLocalScan()
+			self.session.openWithCallback(self.reloadImagesList, FlashImage, currentSelection[0][0], currentSelection[0][1], True)
 
 	def selectionChanged(self):
-		currentSelection = self["list"].getCurrent()[0]
+		selection = self["list"].getCurrent()
+		currentSelection = selection[0] if selection else ("", "Loading")
 		canDownload = False
 		canDelete = False
 		if currentSelection[1] == "Loading":
 			self["key_green"].setText("")
+			self["description"].setText("")
 		else:
 			if currentSelection[1] == "Expanded":
 				self["key_green"].setText(_("Collapse") if currentSelection[0] in self.expanded else _("Expand"))
@@ -461,7 +490,6 @@ class FlashImage(Screen):
 		self.setTitle(_("Flash Image"))
 		self.containerBackup = None
 		self.containerOFGWrite = None
-		self.graphicsAccess = None
 		self.getImageList = None
 		self.downloader = None
 		self.downloadOnly = downloadOnly
@@ -488,10 +516,10 @@ class FlashImage(Screen):
 		self.close()
 
 	def keyCloseRecursive(self):
-		if not self.containerOFGWrite:
-			self.close(True)
+		self.close(True)
 
 	def keyOK(self):
+		fbClass.getInstance().unlock()
 		if self["header"].text == _("Flashing image successful"):
 			if MultiBoot.canMultiBoot():
 				self.session.openWithCallback(self.keyCancel, MultiBootManager)
@@ -570,7 +598,7 @@ class FlashImage(Screen):
 			if destination:
 				destination = join(destination, "images")
 				self.zippedImage = "://" in self.source and join(destination, self.imageName) or self.source
-				self.unzippedImage = join(destination, "%s.unzipped" % self.imageName[:-4])
+				self.unzippedImage = join(destination, "%s.unzipped" % basename(self.imageName)[:-4])
 				try:
 					if isfile(destination):
 						unlink(destination)
@@ -766,9 +794,16 @@ class FlashImage(Screen):
 
 	def startUnzip(self):
 		try:
-			zipData = ZipFile(self.zippedImage, mode="r")
-			zipData.extractall(self.unzippedImage)  # NOSONAR
-			zipData.close()
+			with ZipFile(self.zippedImage, mode="r") as zipData:
+				# Only clear this image's extraction directory when flashing it,
+				# never remove other unpacked images while browsing the list.
+				if (islink(self.unzippedImage) or ismount(self.unzippedImage)
+						or basename(self.unzippedImage) != "%s.unzipped" % basename(self.imageName)[:-4]
+						or dirname(realpath(self.unzippedImage)) != realpath(dirname(self.unzippedImage))):
+					raise ValueError("Unsafe image extraction directory")
+				if isdir(self.unzippedImage):
+					rmtree(self.unzippedImage)
+				zipData.extractall(self.unzippedImage)  # NOSONAR
 			target = next(
 				(join(p, "rootfs.tar.bz2") for p, _, f in walk(self.unzippedImage)
 					if "rootfs.ubi" in f and "rootfs.tar.bz2" in f),
@@ -780,38 +815,9 @@ class FlashImage(Screen):
 		except Exception as err:
 			print("[FlashManager] startUnzip Error: %s!" % str(err))
 			self.session.openWithCallback(self.keyCancel, MessageBox, _("Error unzipping image '%s'!") % self.imageName, type=MessageBox.TYPE_ERROR, windowTitle=self.getTitle())
-			return
-		self.flashImage()
-
-	def lockGraphics(self):
-		mainDC = gMainDC.getInstance()
-		if mainDC is None or mainDC.isGraphicsSuspended():
-			return False
-		framebuffer = fbClass.getInstance()
-		if framebuffer is not None and framebuffer.lock() < 0:
-			return False
-		# Locking the framebuffer stops new paints but leaves the last OSD frame visible.
-		if not mainDC.suspendGraphics():
-			if framebuffer is not None:
-				framebuffer.unlock(False)
-			print("[FlashManager] Unable to suspend main graphics for ofgwrite!")
-			return False
-		self.graphicsAccess = (framebuffer, mainDC)
-		print("[FlashManager] Main graphics suspended for ofgwrite.")
-		return True
-
-	def unlockGraphics(self):
-		if self.graphicsAccess is None:
-			return
-		framebuffer, mainDC = self.graphicsAccess
-		self.graphicsAccess = None
-		if framebuffer is not None:
-			framebuffer.unlock()
-		if not mainDC.resumeGraphics():
-			print("[FlashManager] Unable to resume main graphics after ofgwrite!")
 
 	def flashImage(self):
-		if BoxInfo.getItem("model") == "dm7435" and not hasattr(self, "dreamKernelA"):
+		if BoxInfo.getItem("model") in ("dm820", "dm7080") and not hasattr(self, "dreamKernelA"):
 			def featuresDone(data, retVal, extraArgs):
 				self.dreamKernelA = retVal == 0 and "dream-kernel-a" in data.split()
 				self.containerOFGWrite = None
@@ -840,7 +846,7 @@ class FlashImage(Screen):
 			else:
 				mtdKernel = BoxInfo.getItem("mtdkernel")
 				mtdRootFS = BoxInfo.getItem("mtdrootfs")
-				if BoxInfo.getItem("model") == "dms922x":
+				if BoxInfo.getItem("model") in ("dreamone", "dreamtwo"):
 					try:
 						with open("/proc/cmdline") as fd:
 							for arg in fd.read().split():
@@ -856,12 +862,12 @@ class FlashImage(Screen):
 				else:
 					cmdArgs = ["-r%s" % mtdRootFS, "-k", "-m%s" % self.slotCode]
 					if "uuid" in bootSlots[self.slotCode] and "mmcblk" not in mtdRootFS:
-						cmdArgs.insert(2, "-s%s/linuxrootfs" % BoxInfo.getItem("machinebuild")[2:])
-			elif BoxInfo.getItem("model") == "dms922x" and not BoxInfo.getItem("HasGPT"):  # Temp solution ofgwrite auto detection not ready.
+						cmdArgs.insert(2, "-s%s/linuxrootfs" % BoxInfo.getItem("model")[2:])
+			elif BoxInfo.getItem("model") in ("dreamone", "dreamtwo") and not BoxInfo.getItem("HasGPT"):  # Temp solution ofgwrite auto detection not ready.
 				cmdArgs = ["-r%s" % mtdRootFS, "-k%s" % mtdKernel]
-			elif BoxInfo.getItem("model") == "dms922x" and BoxInfo.getItem("HasGPT"):  # Temp solution ofgwrite auto detection not ready.
+			elif BoxInfo.getItem("model") in ("dreamone", "dreamtwo") and BoxInfo.getItem("HasGPT"):  # Temp solution ofgwrite auto detection not ready.
 				cmdArgs = ["-r%s" % mtdRootFS, "-a"]
-			elif BoxInfo.getItem("model") == "dm7435":
+			elif BoxInfo.getItem("model") in ("dm820", "dm7080"):
 				if rootSubDir is None:
 					cmdArgs = ["-r"] if self.dreamKernelA else ["-rmmcblk0p1"]
 				else:
@@ -877,39 +883,29 @@ class FlashImage(Screen):
 					cmdArgs = ["-r%s" % mtdRootFS, "-c%s" % currentSlot, "-m%s" % self.slotCode]
 				else:
 					cmdArgs = ["-r%s" % mtdRootFS, "-k%s" % mtdKernel, "-m0"] if (rootSubDir) is None else ["-r", "-k", "-m%s" % self.slotCode]
-			elif BoxInfo.getItem("model") == "dm7405nand":  # Temp solution ofgwrite auto detection not ready.
+			elif BoxInfo.getItem("model") in ("dm800se", "dm500hd"):  # Temp solution ofgwrite auto detection not ready.
 				cmdArgs = ["-r%s" % mtdRootFS, "-f"]
-			elif BoxInfo.getItem("machinebuild") in ("zgemmah82h",):  # Temp solution ofgwrite kill e2 not allways works.
+			elif BoxInfo.getItem("model") in ("zgemmah82h",):  # Temp solution ofgwrite kill e2 not allways works.
 				cmdArgs = ["-r", "-k", "-f"]
 			elif mtdKernel == mtdRootFS:  # Receiver with kernel and rootfs on one partition.
 				cmdArgs = ["-r"]
 			else:  # Normal non MultiBoot receiver.
 				cmdArgs = ["-r", "-k"]
-			if not self.lockGraphics():
-				self.session.openWithCallback(self.keyCancel, MessageBox, _("Error: Unable to lock the graphics system for flashing!"), type=MessageBox.TYPE_ERROR, windowTitle=self.getTitle())
-				return
-			try:
-				self.containerOFGWrite = Console()
-				self.containerOFGWrite.ePopen((OFGWRITE, OFGWRITE, *cmdArgs, imageFiles), callback=self.flashImageDone)
-			except OSError as err:
-				print(f"[FlashManager] Unable to start ofgwrite: {err}")
-				self.flashImageDone("", -1, None)
-			except Exception:
-				self.containerOFGWrite = None
-				self.unlockGraphics()
-				raise
+			self.containerOFGWrite = Console()
+			self.containerOFGWrite.ePopen([OFGWRITE, OFGWRITE] + cmdArgs + ['%s' % imageFiles], callback=self.flashImageDone)
+			fbClass.getInstance().lock()
 		else:
 			self.session.openWithCallback(self.keyCancel, MessageBox, _("Error: Image '%s' to install is invalid!") % self.imageName, type=MessageBox.TYPE_ERROR, windowTitle=self.getTitle())
 
 	def flashImageDone(self, data, retVal, extraArgs):
-		self.unlockGraphics()
+		fbClass.getInstance().unlock()
 		# The unlock resets the framebuffer, draw the whole screen again.
 		self.hide()
 		self.show()
 		self.containerOFGWrite = None
 		if retVal == 0:
 			slotCode = getattr(self, "slotCode", None)
-			if slotCode and BoxInfo.getItem("model") == "dms922x" and BoxInfo.getItem("HasGPT"):
+			if slotCode and BoxInfo.getItem("model") in ("dreamone", "dreamtwo") and BoxInfo.getItem("HasGPT"):
 				MultiBoot.updateDreamBootSection(slotCode)
 			self["header"].setText(_("Flashing image successful"))
 			self["summary_header"].setText(self["header"].getText())
