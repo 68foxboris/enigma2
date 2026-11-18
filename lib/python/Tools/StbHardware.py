@@ -2,6 +2,7 @@ from fcntl import ioctl
 from os.path import exists, isfile
 from struct import pack, unpack
 from time import time, localtime, gmtime
+from Components.SystemInfo import BoxInfo
 from Tools.Directories import fileReadLine, fileWriteLine
 
 MODULE_NAME = __name__.split(".")[-1]
