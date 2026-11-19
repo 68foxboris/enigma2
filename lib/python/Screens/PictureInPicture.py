@@ -53,6 +53,8 @@ class PictureInPictureZapping(Screen):
 
 
 class PictureInPicture(Screen):
+	playServiceExtensions = []
+
 	def __init__(self, session):
 		global pip_config_initialized
 		Screen.__init__(self, session)
@@ -189,7 +191,13 @@ class PictureInPicture(Screen):
 			return 0
 		from Screens.InfoBarGenerics import streamrelay
 		orig_ref = self.resolveAlternatePipService(service)
-		ref = streamrelay.streamrelayChecker(self.resolveAlternatePipService(service))[0]
+		ref = self.resolveAlternatePipService(service)
+		if ref:
+			ref = streamrelay.streamrelayChecker(ref)[0]
+		for extension in self.playServiceExtensions:
+			if not ref:
+				break
+			ref = extension(self, ref)
 		if ref:
 			if BoxInfo.getItem("CanNotDoSimultaneousTranscodeAndPIP") and StreamServiceList:
 				self.pipservice = None
