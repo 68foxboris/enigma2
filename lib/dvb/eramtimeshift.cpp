@@ -41,7 +41,7 @@ eRamRingBuffer::~eRamRingBuffer() {
 	free(m_buf);
 }
 
-int eRamRingBuffer::write(const uint8_t* data, size_t len, bool is_access_point) {
+int eRamRingBuffer::write(const uint8_t* data, size_t len, bool is_access_point, pts_t pts) {
 	len -= len % 188;
 	if (!data || len == 0 || len > m_capacity)
 		return 0;
@@ -60,6 +60,7 @@ int eRamRingBuffer::write(const uint8_t* data, size_t len, bool is_access_point)
 	eRamBlock& blk = m_blocks[m_block_write_idx];
 	blk.offset = m_write_offset;
 	blk.is_access_point = is_access_point;
+	blk.pts = pts;
 	m_block_write_idx = (m_block_write_idx + 1) % m_max_blocks;
 	if (m_total_blocks < m_max_blocks)
 		m_total_blocks++;
@@ -137,6 +138,32 @@ off_t eRamRingBuffer::findNearestAccessPoint(off_t from_offset) const {
 	return best;
 }
 
+off_t eRamRingBuffer::findDelayOffset(pts_t delay) const {
+	pthread_mutex_lock(&m_mutex);
+	off_t best = -1;
+	pts_t bestAge = -1;
+	pts_t latestPts = -1;
+	const off_t minOffset = std::max<off_t>(0, m_write_offset - (off_t)m_capacity);
+	if (delay >= 0 && m_total_blocks) {
+		latestPts = m_blocks[(m_block_write_idx + m_max_blocks - 1) % m_max_blocks].pts;
+		if (latestPts >= 0) {
+			for (size_t i = 0; i < m_total_blocks; ++i) {
+				const eRamBlock &block = m_blocks[i];
+				if (block.offset < minOffset || !block.is_access_point || block.pts < 0)
+					continue;
+				const pts_t age = (latestPts - block.pts) & 0x1FFFFFFFFLL;
+				if (age <= delay && age > bestAge) {
+					best = block.offset;
+					bestAge = age;
+				}
+			}
+		}
+	}
+	eTrace("[eRamRingBuffer] Delay seek: requested=%lld PTS, live=%lld, selectedAge=%lld, offset=%lld, retained=%lld..%lld", delay, latestPts, bestAge, (long long)best, (long long)minOffset, (long long)m_write_offset);
+	pthread_mutex_unlock(&m_mutex);
+	return best;
+}
+
 // ------------------------------------------------------------------
 // eRamTsSource
 // ------------------------------------------------------------------
@@ -205,6 +232,13 @@ bool eRamTsSource::getLappedOffset(off_t& out_offset) {
 	return lapped;
 }
 
+off_t eRamTsSource::getReadOffset() const {
+	pthread_mutex_lock(&m_offset_mutex);
+	const off_t offset = m_has_read_offset ? m_read_offset : -1;
+	pthread_mutex_unlock(&m_offset_mutex);
+	return offset;
+}
+
 off_t eRamTsSource::length() {
 	return m_buf ? m_buf->getWriteOffset() : -1;
 }
@@ -269,7 +303,9 @@ int eRamRecorder::writeData(int len) {
 		return len;
 
 	bool is_ap = (m_ts_parser.getAccessPointCount() > ap_before);
-	int written = m_ring->write(m_buffer, (size_t)len, is_ap);
+	pts_t pts = -1;
+	m_ts_parser.getLastPTS(pts);
+	int written = m_ring->write(m_buffer, (size_t)len, is_ap, pts);
 	if (written > 0) {
 		m_current_offset += written;
 	}

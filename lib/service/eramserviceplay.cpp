@@ -116,6 +116,17 @@ void eRamServicePlay::checkLapAndSeek() {
 	if (!m_timeshift_active)
 		return;
 
+	// Use the existing watchdog, at most once every two seconds in Verbose.
+	// The source cursor is a read position, not proof of decoded playback.
+	if (debugLvl >= lvlTrace && ++m_trace_ticks % 10 == 0 && m_ts_source && m_ram_ring) {
+		pts_t playback = -1;
+		const int result = m_decoder ? m_decoder->getPTS(m_have_video_pid ? 1 : 2, playback) : -1;
+		eTrace("[RAMTimeshift] sourceRead=%lld retained=%lld..%lld playback=%lld ptsResult=%d paused=%d recovering=%d sync=%d",
+			(long long)m_ts_source->getReadOffset(), (long long)m_ram_ring->getMinOffset(),
+			(long long)m_ram_ring->getWriteOffset(), playback, result, m_is_paused,
+			m_stream_corruption_detected.load(), m_timeshift_sync_enabled);
+	}
+
 	// Do not move the read position while PRS is paused waiting for corruption
 	// to clear — a position jump here would break PRS recovery.
 	if (m_stream_corruption_detected)
@@ -192,6 +203,7 @@ RESULT eRamServicePlay::stopTimeshift(bool swToLive) {
 		m_watchdog_timer = nullptr;
 	}
 	resetRecoveryState();
+	m_timeshift_sync_enabled = false;
 
 	if (m_record) {
 		// Stop the push thread BEFORE releasing the source to avoid a
@@ -245,6 +257,23 @@ RESULT eRamServicePlay::seekRelative(int direction, pts_t to) {
 	return eDVBServicePlay::seekRelative(direction, to);
 }
 
+RESULT eRamServicePlay::seekTimeshiftDelay(int milliseconds) {
+	if (milliseconds < 0 || milliseconds > 60000 || !m_timeshift_active || !m_ram_ring
+		|| m_stream_corruption_detected)
+		return -1;
+	const off_t offset = m_ram_ring->findDelayOffset((pts_t)milliseconds * 90);
+	ePtr<iDVBPVRChannel> channel;
+	if (offset < 0 || m_service_handler_timeshift.getPVRChannel(channel) || !channel)
+		return -1;
+	eDebug("[eRamServicePlay] Synchronization seek: delay=%d ms, offset=%lld", milliseconds, (long long)offset);
+	const RESULT result = channel->seekSourcePosition(offset);
+	// An explicit synchronization seek supersedes the old recovery position.
+	// Otherwise the post-gap check can wait for a timestamp we just skipped.
+	if (!result)
+		resetRecoveryState();
+	return result;
+}
+
 RESULT eRamServicePlay::saveTimeshiftFile() {
 	// RAM timeshift has no disk file to save.
 	return 0;
@@ -296,12 +325,12 @@ RESULT eRamServicePlay::getPlayPosition(pts_t& pos) {
 	pts_t first_pts = 0;
 	if (m_record->getFirstPTS(first_pts) != 0)
 		return -1;
-	
+
 	pts_t dec = 0;
 	if (m_decoder->getPTS(0, dec) != 0)
 		if (m_decoder->getPTS(1, dec) != 0)
 			return -1;
-	
+
 	dec &= 0x1FFFFFFFF;          // Enforce 33-bit wrap-around
 	pos = pts_delta(dec, first_pts);
 	return 0;

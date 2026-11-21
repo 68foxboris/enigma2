@@ -34,6 +34,9 @@ public:
 	// Timeshift management
 	RESULT activateTimeshift() override;
 	RESULT saveTimeshiftFile() override; // no-op: nothing on disk
+	bool isTimeshiftMemory() override { return true; }
+	RESULT seekTimeshiftDelay(int milliseconds) override;
+	long long getTimeshiftFileSize() override { return -1; }
 	void serviceEventTimeshift(int event) override;
 
 	RESULT timeshift(ePtr<iTimeshiftService>& ptr) override { ptr = this; return 0; }
@@ -63,6 +66,7 @@ private:
 	// Frozen play position (PTS delta) captured at stream-corruption onset.
 	// Prevents PRS from seeing a spuriously advancing getPTS() during pause.
 	pts_t m_frozen_play_position;
+	unsigned int m_trace_ticks = 0;
 };
 
 #endif // __lib_service_eramserviceplay_h

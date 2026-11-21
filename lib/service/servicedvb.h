@@ -195,6 +195,8 @@ public:
 	RESULT setNextPlaybackFile(const char* fn);
 	RESULT saveTimeshiftFile();
 	std::string getTimeshiftFilename();
+	RESULT setTimeshiftSyncEnabled(bool enabled) override;
+	RESULT getTimeshiftDelay(pts_t &delay) override;
 	virtual void switchToLive();
 
 	// iTapService
@@ -388,10 +390,20 @@ protected:
 	std::atomic<bool> m_stream_corruption_detected; // FIXED: Changed to std::atomic<bool> to prevent Race Conditions
 
 	bool m_delay_calculated = false; // Flag to ensure delay is calculated only once.
+	enum class RecoveryPhase { Waiting, Playing, Refilling };
+	RecoveryPhase m_recovery_phase = RecoveryPhase::Waiting;
+	pts_t m_recovery_check_position = 0;
+	bool m_timeshift_sync_enabled = false;
+	pts_t m_timeshift_sync_playback_pts = -1;
+	pts_t m_timeshift_sync_live_pts = -1;
+	int64_t m_timeshift_sync_log_time = -1;
+	unsigned int m_timeshift_sync_eof_count = 0;
+	bool getTimeshiftSyncPosition(pts_t &live, pts_t &playback);
 
 	virtual void handleEofRecovery();
 	virtual void startPreciseRecoveryCheck();
 	void resetRecoveryState(); // Resets all recovery state variables.
+	bool getTimeshiftRecoveryDelay(pts_t &delay, pts_t &position);
 	virtual void onRecoveryPaused() {} // Hook after playback is actually paused
 	// -- END: Precise Recovery System --
 };

@@ -702,6 +702,13 @@ public:
 			/* this essentially seeks to the relative end of the timeshift buffer */
 	virtual RESULT activateTimeshift()=0;
 	virtual RESULT saveTimeshiftFile()=0;
+	// Optional, bounded RAM-buffer repositioning for external-audio synchronization.
+	// Does not enable general seeking or change ordinary timeshift recovery.
+	virtual RESULT seekTimeshiftDelay(int /*milliseconds*/) { return -1; }
+	// Opt-in recovery for plugin-owned external-audio synchronization buffers.
+	virtual RESULT setTimeshiftSyncEnabled(bool /*enabled*/) { return -1; }
+	// Incoming and decoded timestamps in the same 90 kHz stream clock domain.
+	virtual RESULT getTimeshiftDelay(pts_t &SWIG_NAMED_OUTPUT(delay)) { delay = 0; return -1; }
 	virtual std::string getTimeshiftFilename()=0;
 	virtual void switchToLive()=0;
 };
