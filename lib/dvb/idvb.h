@@ -369,6 +369,8 @@ public:
 	/* m_service_name_sort is uppercase, with special chars removed, to increase sort performance. */
 	std::string m_service_name, m_service_name_sort;
 	std::string m_provider_name;
+	std::string m_default_authority;
+	uint32_t m_aus_da_flag;
 	int m_lcn;
 	int getLCN() { return m_lcn; }
 
@@ -774,6 +776,7 @@ public:
 	 * Default no-op — only used by RAM timeshift where the normal
 	 * cue-sheet seek path (through tstools) is not available. */
 	virtual void forceSourcePosition(off_t /*offset*/) {}
+	virtual RESULT seekSourcePosition(off_t /*offset*/) { return -1; }
 
 		/* skipping must be done with a cue sheet */
 };
