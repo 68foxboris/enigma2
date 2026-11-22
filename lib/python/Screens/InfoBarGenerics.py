@@ -45,6 +45,7 @@ from ServiceReference import ServiceReference, getStreamRelayRef, hdmiInServiceR
 
 from Tools.ASCIItranslit import legacyEncode
 from Tools.Directories import SCOPE_CONFIG, SCOPE_SKINS, fileExists, fileReadLines, fileWriteLines, fileReadLinesISO, getRecordingFilename, moveFiles, resolveFilename
+from Tools import Notifications
 from Tools.Notifications import AddPopup, AddNotificationWithCallback, current_notifications, lock, notificationAdded, notifications, RemovePopup
 from Tools.BoundFunction import boundFunction
 from Tools.HybridService import HybridService
