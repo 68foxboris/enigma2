@@ -1225,7 +1225,7 @@ class PackageAction(Screen, NumericalTextInput):
 			choices = [(_("Search in the current view"), False), (_("Search all packages"), True)]
 			if self.searchText:
 				choices.append((_("Clear search"), None))
-			self.session.openWithCallback(self.keySearchScopeCallback, ChoiceBox, windowTitle=_("Search"), choiceList=choices, selection=int(self.searchAll))
+			self.session.openWithCallback(self.keySearchScopeCallback, ChoiceBox, windowTitle=_("Search"), list=choices, selection=int(self.searchAll))
 
 	def keySearchScopeCallback(self, choice):
 		if choice and not self.processing:
