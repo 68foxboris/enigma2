@@ -1232,7 +1232,7 @@ class PackageAction(Screen, NumericalTextInput):
 			if choice[1] is None:
 				self.keySearchCallback("")
 			else:
-				self.session.openWithCallback(lambda text: self.keySearchCallback(text, choice[1]), VirtualKeyboard, title=choice[0], text=self.searchText)
+				self.session.openWithCallback(lambda text: self.keySearchCallback(text, choice[1]), VirtualKeyBoard, title=choice[0], text=self.searchText)
 
 	def keySearchCallback(self, text, searchAll=None):
 		if text is None or self.processing:
