@@ -12,6 +12,7 @@ import NavigationInstance
 from enigma import BT_KEEP_ASPECT_RATIO, BT_SCALE, BT_ALIGN_CENTER, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_VALIGN_CENTER, eListbox, eListboxPythonMultiContent, eServiceCenter, eServiceReference, eSize, eTimer, gFont, iServiceInformation
 
 from Components.GUIComponent import GUIComponent
+from Components.Language import alphabeticSortKey
 from skin import fonts, parameters
 from Tools.Directories import resolveFilename
 from Screens.LocationBox import defaultInhibitDirs
@@ -814,9 +815,10 @@ class MovieList(GUIComponent):
 		# x = ref,info,begin,...
 		ref = x[0]
 		name = x[1] and x[1].getName(ref)
+		name = alphabeticSortKey(name)
 		if ref.flags & eServiceReference.mustDescent:
-			return (0, name and name.lower() or "", -x[2])
-		return (1, name and name.lower() or "", -x[2])
+			return (0, name, -x[2])
+		return (1, name, -x[2])
 
 	def buildAlphaNumericFlatSortKey(self, x):
 		# x = ref,info,begin,...
@@ -831,13 +833,13 @@ class MovieList(GUIComponent):
 			name = p[1]
 		# print(f"Sorting for -{name}-")
 
-		return (1, name and name.lower() or "", -x[2])
+		return (1, alphabeticSortKey(name), -x[2])
 
 	def buildBeginTimeSortKey(self, x):
 		ref = x[0]
 		if ref.flags & eServiceReference.mustDescent:
-			return (0, "", -x[2])
-		return (1, "", -x[2])
+			return (0, (False, ""), -x[2])
+		return (1, (False, ""), -x[2])
 
 	def buildGroupwiseSortkey(self, x):  # Sort recordings by date, sort MP3 and stuff by name
 		ref = x[0]  # x = ref, info, begin, ...
