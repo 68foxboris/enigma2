@@ -138,7 +138,7 @@ public:
 		eventNoPATEntry,   // no pat entry for the corresponding SID could be found
 		eventNoPMT,        // no pmt could be received (timeout)
 		eventNewProgramInfo, // we just received a PMT
-		eventTuned,        // a channel was successfully (re-)tuned in, you may start additional filters now
+		eventTuned,        // a channel was sucessfully (re-)tuned in, you may start additional filters now
 
 		eventPreStart,     // before start filepush thread
 		eventSOF,          // seek pre start
@@ -179,7 +179,6 @@ public:
 	void setCaDisable(bool disable) { m_ca_disabled = disable; }
 	void addCaHandler();
 	void removeCaHandler();
-	void allocatePVRChannel();
 
 	enum serviceType
 	{
@@ -194,8 +193,7 @@ public:
 		scrambled_streamserver = 8,
 		streamclient = 9,
 		offline = 10,
-		pvrDescramble = 11,
-		scrambled_livetv = 12
+		pvrDescramble = 11
 	};
 
 	/* deprecated interface */

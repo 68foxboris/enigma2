@@ -1,14 +1,19 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <sys/socket.h>
 #include <errno.h>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/sysinfo.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+#include <sys/vfs.h>
 #include <atomic>
+
 #include <linux/dvb/dmx.h>
+#include <linux/magic.h>
+
 #include <lib/base/eerror.h>
 #include <lib/base/cfile.h>
 #include <lib/dvb/idvb.h>
@@ -53,7 +58,7 @@ static int determineBufferCount()
 	else if (megabytes > 100)
 		result = 16; // 256MB systems: Use 3MB demux buffers (dm8000, et5x00, vuduo)
 	else
-		result = 8; // Smaller boxes: Use 1.5MB buffer (dm7025)
+		result = 8; // Smaller boxes: Use 1.5MB buffer
 	return result;
 }
 
@@ -143,16 +148,11 @@ RESULT eDVBDemux::createPESReader(eMainloop *context, ePtr<iDVBPESReader> &reade
 	return res;
 }
 
-RESULT eDVBDemux::createTSRecorder(ePtr<iDVBTSRecorder> &recorder, unsigned int packetsize, bool streaming, bool sync_mode, bool is_streaming_output)
+RESULT eDVBDemux::createTSRecorder(ePtr<iDVBTSRecorder> &recorder, unsigned int packetsize, bool streaming)
 {
 	if (m_dvr_busy)
 		return -EBUSY;
-	// Note: scrambled thread selection is now done via setDescrambler()
-	// If streaming=true, use eDVBRecordStreamThread, else use eDVBRecordScrambledThread
-	// (which supports descrambling when a descrambler is attached)
-	// sync_mode=true for Live-TV (DVR device), false for recording (file)
-	// is_streaming_output=true when target is a socket (encrypted streaming)
-	recorder = new eDVBTSRecorder(this, packetsize, streaming, sync_mode, is_streaming_output);
+	recorder = new eDVBTSRecorder(this, packetsize, streaming);
 	return 0;
 }
 
@@ -270,6 +270,7 @@ RESULT eDVBSectionReader::start(const eDVBSectionFilterMask &mask)
 	notifier->start();
 
 	dmx_sct_filter_params sct = {};
+	memset(&sct, 0, sizeof(sct));
 	sct.pid     = mask.pid;
 	sct.timeout = 0;
 	sct.flags   = DMX_IMMEDIATE_START;
@@ -340,7 +341,7 @@ void eDVBPESReader::data(int)
 
 eDVBPESReader::eDVBPESReader(eDVBDemux *demux, eMainloop *context, RESULT &res): m_demux(demux), m_active(0)
 {
-	eDebug("[eDVBPESReader] Created. Opening demux");
+	eWarning("[eDVBPESReader] Created. Opening demux");
 	m_fd = m_demux->openDemux();
 	if (m_fd >= 0)
 	{
@@ -382,6 +383,8 @@ RESULT eDVBPESReader::start(int pid)
 	m_notifier->start();
 
 	dmx_pes_filter_params flt = {};
+	memset(&flt, 0, sizeof(flt));
+
 	flt.pes_type = DMX_PES_OTHER;
 	flt.pid     = pid;
 	flt.input   = DMX_IN_FRONTEND;
@@ -432,14 +435,13 @@ eDVBRecordFileThread::eDVBRecordFileThread(int packetsize, int bufferCount, int 
 		/*buffer*/ (unsigned char*) ::mmap(NULL, (buffersize > 0) ? (buffersize * bufferCount) : (bufferCount * packetsize * 1024), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, /*ignored*/-1, 0),
 		/*buffersize*/ (buffersize > 0) ? buffersize : (packetsize * 1024), packetsize),
 	 m_ts_parser(packetsize),
-	 m_packet_size(packetsize),
 	 m_current_offset(0),
 	 m_fd_dest(-1),
 	 m_sync_mode(sync_mode),
-	 m_discard_on_timeout(false),
 	 m_aio(bufferCount),
 	 m_current_buffer(m_aio.begin()),
-	 m_buffer_use_histogram(bufferCount+1, 0)
+	 m_buffer_use_histogram(bufferCount+1, 0),
+	 _packetSize(packetsize)
 {
 	if (m_buffer == MAP_FAILED)
 		eFatal("[eDVBRecordFileThread] Failed to allocate filepush buffer, contact MiLo\n");
@@ -458,6 +460,13 @@ eDVBRecordFileThread::eDVBRecordFileThread(int packetsize, int bufferCount, int 
 
 eDVBRecordFileThread::~eDVBRecordFileThread()
 {
+	// The aiocb objects and their buffers must outlive every submitted request.
+	stop();
+	_drainWrites(true);
+	if (_ownsTarget)
+		::close(m_fd_dest);
+	if (_targetDirectoryFd >= 0)
+		::close(_targetDirectoryFd);
 	::munmap(m_allocated_buffer, m_aio.size() * m_buffersize);
 }
 
@@ -466,14 +475,18 @@ void eDVBRecordFileThread::setTimingPID(int pid, iDVBTSRecorder::timing_pid_type
 	m_ts_parser.setPid(pid, pidtype, streamtype);
 }
 
-void eDVBRecordFileThread::startSaveMetaInformation(const std::string &filename)
+int eDVBRecordFileThread::startSaveMetaInformation(const std::string &filename)
 {
-	m_ts_parser.startSave(filename);
+	int result = m_ts_parser.startSave(filename);
+	if (result < 0)
+		eWarning("[eDVBRecordFileThread] unable to create recording indexes: %m");
+	return 0; // Index failure must not prevent transport stream recording.
 }
 
 void eDVBRecordFileThread::stopSaveMetaInformation()
 {
-	m_ts_parser.stopSave();
+	if (m_ts_parser.stopSave() < 0)
+		eWarning("[eDVBRecordFileThread] recording indexes could not be completed: %m");
 }
 
 int eDVBRecordFileThread::getLastPTS(pts_t &pts)
@@ -492,293 +505,110 @@ static bool isTransientAioError(int err)
 	return err == ENOMEM || err == EAGAIN;
 }
 
-void eDVBRecordFileThread::AsyncIO::countShortWrite(int* short_write_count)
+int eDVBRecordFileThread::AsyncIO::wait(int* short_write_count, bool allowCancelled)
 {
-	if (short_write_count && !short_written)
-		++(*short_write_count);
-	short_written = true;
-}
-
-int eDVBRecordFileThread::AsyncIO::wait(const std::atomic<int>* stop_flag, int* short_write_count)
-{
-	int ret = 0;
-	int saved_errno = 0;
-	for (auto& part : parts)
+	int result;
+	while ((result = poll(short_write_count, allowCancelled)) > 0)
 	{
-		int r = waitPart(part, stop_flag, short_write_count);
-		if (r < 0 && ret == 0)
+		struct aiocb* pending = &aio;
+		struct timespec timeout = {1, 0};
+		if (aio_suspend(&pending, 1, &timeout) < 0 && errno != EINTR && errno != EAGAIN)
 		{
-			ret = r;
-			saved_errno = errno;
+			eWarning("[eDVBRecordFileThread] aio_suspend failed: %m");
+			// A failed wait does not end the I/O request. Keep its storage alive.
+			usleep(10000);
 		}
 	}
-	if (ret < 0)
-		errno = saved_errno;
-	return ret;
-}
-
-int eDVBRecordFileThread::AsyncIO::waitPart(struct aiocb& aio, const std::atomic<int>* stop_flag, int* short_write_count)
-{
-	if (aio.aio_buf == nullptr) // No request outstanding
-		return 0;
-
-	// Limit consecutive timeouts to prevent infinite blocking
-	const int MAX_TIMEOUTS = 5;
-	int timeout_count = 0;
-
-	while (true)
-	{
-		// Wait for current operation to complete with timeout
-		while (aio_error(&aio) == EINPROGRESS)
-		{
-			eDebug("[eDVBRecordFileThread] Waiting for I/O to complete");
-			struct aiocb* paio = &aio;
-			struct timespec timeout = {1, 0}; // 1 second timeout
-			int r = aio_suspend(&paio, 1, &timeout);
-			if (r < 0)
-			{
-				if (errno == EAGAIN) // Timeout
-				{
-					timeout_count++;
-					eDebug("[eDVBRecordFileThread] aio_suspend timeout (%d/%d)",
-						timeout_count, MAX_TIMEOUTS);
-
-					// Check if we should stop
-					if (stop_flag && stop_flag->load())
-					{
-						eDebug("[eDVBRecordFileThread] stop requested, cancelling AIO");
-						aio_cancel(aio.aio_fildes, &aio);
-						aio.aio_buf = NULL;
-						return -1;
-					}
-
-					// After MAX_TIMEOUTS, cancel AIO and continue (don't block forever)
-					if (timeout_count >= MAX_TIMEOUTS)
-					{
-						eWarning("[eDVBRecordFileThread] AIO timeout limit reached, cancelling and continuing");
-						aio_cancel(aio.aio_fildes, &aio);
-						aio.aio_buf = NULL;
-						return 0; // Return 0 so thread continues!
-					}
-					continue;
-				}
-				if (errno == EINTR)
-				{
-					// Check if we should stop after signal
-					if (stop_flag && stop_flag->load())
-					{
-						eDebug("[eDVBRecordFileThread] stop requested after EINTR");
-						aio_cancel(aio.aio_fildes, &aio);
-						aio.aio_buf = NULL;
-						return -1;
-					}
-					continue;
-				}
-				eWarning("[eDVBRecordFileThread] aio_suspend failed: %m");
-				return -1;
-			}
-		}
-
-		int err = aio_error(&aio);
-		int r = aio_return(&aio);
-		if (r < 0)
-		{
-			if (isTransientAioError(err))
-			{
-				eWarning("[eDVBRecordFileThread] aio failed (error=%d): %s - dropping %zu bytes", err, strerror(err), aio.aio_nbytes);
-				aio.aio_buf = NULL;
-				return 0;
-			}
-			// aio_return() does not set errno, the error is in aio_error()
-			if (err > 0)
-				errno = err;
-			eDebug("[eDVBRecordFileThread] wait: aio_return failed: %m");
-			aio.aio_buf = NULL;
-			return -1;
-		}
-
-		// Handle short write - retry remaining bytes
-		if ((size_t)r != aio.aio_nbytes)
-		{
-			countShortWrite(short_write_count);
-			eDebug("[eDVBRecordFileThread] wait: short write %d of %zu bytes -> retry", r, aio.aio_nbytes);
-			aio.aio_nbytes -= r;
-			aio.aio_offset += r;
-			aio.aio_buf = (volatile void*)((const char*)aio.aio_buf + r);
-			if (aio_write(&aio) < 0)
-			{
-				eDebug("[eDVBRecordFileThread] wait: aio_write retry failed: %m");
-				aio.aio_buf = NULL;
-				return -1;
-			}
-			continue; // Wait for retry to complete
-		}
-
-		aio.aio_buf = NULL;
-		return 0;
-	}
+	return result;
 }
 
 int eDVBRecordFileThread::AsyncIO::cancel(int fd)
 {
-	int r = poll();
+	int r = poll(nullptr, true);
 	if (r <= 0)
 		return r; // Either no need to cancel, or error return
 	eDebug("[eDVBRecordFileThread] cancelling");
-	// The worst result of all parts: error, not cancelled, cancelled, all done
-	int ret = AIO_ALLDONE;
-	for (auto& aio : parts)
-	{
-		if (aio.aio_buf == NULL)
-			continue;
-		int res = aio_cancel(fd, &aio);
-		if (res < 0)
-			ret = -1;
-		else if (ret >= 0 && res == AIO_NOTCANCELED)
-			ret = AIO_NOTCANCELED;
-		else if (ret == AIO_ALLDONE && res == AIO_CANCELED)
-			ret = AIO_CANCELED;
-	}
-	return ret;
+	return aio_cancel(fd, &aio);
 }
 
-int eDVBRecordFileThread::AsyncIO::pollPart(struct aiocb& aio, int* short_write_count)
+int eDVBRecordFileThread::AsyncIO::poll(int* short_write_count, bool allowCancelled)
 {
 	if (aio.aio_buf == NULL)
 		return 0;
 	int err = aio_error(&aio);
-	if (err == EINPROGRESS)
+	if (err == EINPROGRESS || err < 0)
 	{
 		return 1;
 	}
 
-	int r = aio_return(&aio);
-
-	if (r >= 0 && (size_t)r != aio.aio_nbytes)
-	{ // short write
-		countShortWrite(short_write_count);
-#ifdef GLIBC_64BIT_TIME_FLAGS
-		eDebug("[eDVBRecordFileThread] short write: %d of bytes %d written -> retry", r, aio.aio_nbytes);
-#else
-		eDebug("[eDVBRecordFileThread] short write: %d of bytes %lu written -> retry", r, aio.aio_nbytes);
-#endif
-		aio.aio_nbytes -= r;
-		aio.aio_offset += r;
-		aio.aio_buf = (volatile void*)((const char*)aio.aio_buf + r);
-		if (aio_write(&aio) < 0)
-			return -1;
-		return 1;
-	}
-
-	aio.aio_buf = NULL;
-	if (r < 0)
+	ssize_t r = aio_return(&aio);
+	if (err || r <= 0 || (size_t)r > aio.aio_nbytes)
 	{
-		if (err == 0 || err == ECANCELED)
-		{
-			/* aio_error() reported success/cancel but aio_return() failed.
-			 * This happens on DVR/socket devices with incomplete POSIX AIO.
-			 * The operation itself completed - treat as done. */
+		aio.aio_buf = NULL;
+		if (allowCancelled && (err == ECANCELED || (err == 0 && r < 0)))
 			return 0;
-		}
 		if (isTransientAioError(err))
 		{
 			eWarning("[eDVBRecordFileThread] aio failed (error=%d): %s - dropping %zu bytes", err, strerror(err), aio.aio_nbytes);
 			return 0;
 		}
-		eDebug("[eDVBRecordFileThread] poll: aio failed (error=%d): %s", err, strerror(err));
-		// aio_return() does not set errno, callers check it
-		errno = err;
+		errno = err > 0 ? err : EIO;
 		return -1;
 	}
-	return 0;
-}
 
-int eDVBRecordFileThread::AsyncIO::poll(int* short_write_count)
-{
-	int ret = 0;
-	for (auto& aio : parts)
-	{
-		int r = pollPart(aio, short_write_count);
-		if (r < 0)
-			return r;
-		if (r > 0)
-			ret = 1;
-	}
-	return ret;
-}
-
-int eDVBRecordFileThread::AsyncIO::start(int fd, off_t offset, size_t nbytes, unsigned char* data, size_t chunk)
-{
-	for (const auto& aio : parts)
-	{
-		if (aio.aio_buf != NULL)
-		{
-			errno = EBUSY;
-			return -1;
-		}
-	}
-	size_t count = (chunk && nbytes > chunk) ? (nbytes + chunk - 1) / chunk : 1;
-	parts.resize(count);
-	short_written = false;
-	size_t done = 0;
-	for (size_t i = 0; i < count; ++i)
-	{
-		struct aiocb& aio = parts[i];
-		size_t len = (count > 1 && nbytes - done > chunk) ? chunk : nbytes - done;
-		memset(&aio, 0, sizeof(struct aiocb)); // Documentation says "zero it before call".
-		aio.aio_fildes = fd;
-		aio.aio_nbytes = len;
-		aio.aio_offset = offset + done;   // Offset can be omitted with O_APPEND
-		aio.aio_buf = data + done;
+	if (r >= 0 && (size_t)r != aio.aio_nbytes)
+	{ // short write
+		if (short_write_count)
+			++(*short_write_count);
+		eDebug("[eDVBRecordFileThread] short write: %zd of bytes %zu written -> retry", r, aio.aio_nbytes);
+		aio.aio_nbytes -= r;
+		aio.aio_offset += r;
+		aio.aio_buf = (volatile void*)((const char*)aio.aio_buf + r);
 		if (aio_write(&aio) < 0)
 		{
-			// Not queued, nothing to wait for; earlier parts stay queued
-			for (size_t j = i; j < count; ++j)
-				parts[j].aio_buf = NULL;
-			if (i == 0)
-				return -1;
-			if (isTransientAioError(errno))
-				eWarning("[eDVBRecordFileThread] aio_write failed: %m - dropping %zu bytes", nbytes - done);
-			else
-				eWarning("[eDVBRecordFileThread] aio_write failed: %m - %zu bytes not written", nbytes - done);
-			return 0;
+			aio.aio_buf = NULL;
+			return -1;
 		}
-		done += len;
+		return 1;
 	}
+
+	aio.aio_buf = NULL;
 	return 0;
 }
 
-void eDVBRecordFileThread::updateWriteChunk()
+int eDVBRecordFileThread::AsyncIO::start(int fd, off_t offset, size_t nbytes, void* buffer)
 {
-	struct stat st = {};
-	bool dvr = m_serviceDescrambler && m_fd_dest >= 0 && fstat(m_fd_dest, &st) == 0 && S_ISCHR(st.st_mode);
-	size_t chunk = dvr ? (MAX_DVR_WRITE / m_packet_size) * m_packet_size : 0;
-	if (chunk != m_write_chunk.load())
+	if (aio.aio_buf != NULL)
 	{
-		m_write_chunk.store(chunk);
-		if (chunk)
-			eDebug("[eDVBRecordFileThread] writing descrambled data to the DVR in parts of %zu bytes", chunk);
+		errno = EBUSY;
+		return -1;
 	}
+	memset(&aio, 0, sizeof(struct aiocb)); // Documentation says "zero it before call".
+	aio.aio_fildes = fd;
+	aio.aio_nbytes = nbytes;
+	aio.aio_offset = offset;   // Offset can be omitted with O_APPEND
+	aio.aio_buf = buffer;
+	int result = aio_write(&aio);
+	if (result < 0)
+		aio.aio_buf = NULL;
+	return result;
 }
 
-// AIO write mode detection: locked after verification for entire session.
+// AIO write mode detection shared by recorder instances.
 // -1 = unknown (probing), 0 = not supported (sync), 1 = supported (async)
-static int s_aio_state = -1;
+static std::atomic<int> s_aio_state{-1};
 static const int AIO_VERIFY_THRESHOLD = 3;
 
 int eDVBRecordFileThread::asyncWrite(int len)
 {
-	static int s_aio_verify_count = 0;
+	static std::atomic<int> s_aio_verify_count{0};
 #ifdef SHOW_WRITE_TIME
 	struct timeval starttime = {};
 	struct timeval now = {};
 	suseconds_t diff;
 	gettimeofday(&starttime, NULL);
 #endif
-	// Only call parseData here if no descrambler is set.
-	// When a descrambler is active, eDVBRecordScrambledThread::writeData()
-	// calls parseData AFTER descrambling to ensure we parse clear data.
-	if (!getProtocol() && !m_serviceDescrambler)
+	if (!getProtocol())
 	{
 		int parse_result = m_ts_parser.parseData(m_current_offset, m_buffer, len);
 		if (parse_result == -2)
@@ -795,7 +625,7 @@ int eDVBRecordFileThread::asyncWrite(int len)
 	gettimeofday(&starttime, NULL);
 #endif
 
-	int r = m_current_buffer->start(m_fd_dest, m_current_offset, len, m_buffer, m_write_chunk.load());
+	int r = m_current_buffer->start(m_fd_dest, m_current_offset - _partStart, len, m_buffer);
 	if (r < 0)
 	{
 		if (isTransientAioError(errno))
@@ -804,7 +634,7 @@ int eDVBRecordFileThread::asyncWrite(int len)
 			return len;
 		}
 		int error = errno;
-		eWarning("[eDVBRecordFileThread] aio_write failed: %m");
+		eDebug("[eDVBRecordFileThread] aio_write failed: %m");
 		errno = error;
 		return r;
 	}
@@ -818,7 +648,9 @@ int eDVBRecordFileThread::asyncWrite(int len)
 	// Count how many buffers are still "busy". Move backwards from current,
 	// because they can reasonably be expected to finish in that order.
 	AsyncIOvector::iterator i = m_current_buffer;
-	r = i->poll(&m_aio_short_write_count);
+	r = i->poll(&m_aio_short_write_count, !_fileOutput);
+	if (r < 0)
+		return r;
 	int busy_count = 0;
 	while (r > 0)
 	{
@@ -831,10 +663,12 @@ int eDVBRecordFileThread::asyncWrite(int len)
 			eWarning("[eFilePushThreadRecorder] Warning: All write buffers busy");
 			break;
 		}
-		r = i->poll(&m_aio_short_write_count);
+		r = i->poll(&m_aio_short_write_count, !_fileOutput);
 		if (r < 0)
 		{
+			int error = errno;
 			eWarning("[eDVBRecordFileThread] poll failed: %d", r);
+			errno = error;
 			return r;
 		}
 	}
@@ -849,7 +683,7 @@ int eDVBRecordFileThread::asyncWrite(int len)
 		if (s_aio_verify_count >= AIO_VERIFY_THRESHOLD)
 		{
 			s_aio_state = 1;
-			eDebug("[eDVBRecordFileThread] AIO verified after %d writes - locked for session", s_aio_verify_count);
+			eDebug("[eDVBRecordFileThread] AIO verified after %d writes", s_aio_verify_count.load());
 		}
 	}
 
@@ -860,175 +694,339 @@ int eDVBRecordFileThread::asyncWrite(int len)
 	return len;
 }
 
-int eDVBRecordFileThread::writeData(int len)
+RESULT eDVBRecordFileThread::setSplitSize(off_t bytes)
 {
-	if (!len || !m_buffer)
-		return 0;
-
-	// Use sync mode if: explicitly configured OR AIO was detected as unsupported
-	if (m_sync_mode || s_aio_state == 0)
+	if (bytes < 0 || (bytes && (bytes < _packetSize || bytes % _packetSize)))
 	{
-		// Synchronous write mode with timeout to prevent blocking forever
+		errno = EINVAL;
+		return -1;
+	}
+	_splitSize = bytes;
+	return 0;
+}
+
+void eDVBRecordFileThread::_publishWrittenBytes()
+{
+	if (!_fileOutput || getWriteError())
+		return;
+	off_t complete = m_current_offset;
+	for (const auto &request : m_aio)
+	{
+		if (request.aio.aio_buf && _partStart + request.aio.aio_offset < complete)
+			complete = _partStart + request.aio.aio_offset;
+	}
+	_writtenBytes.store(complete - complete % _packetSize);
+}
+
+int eDVBRecordFileThread::_drainWrites(bool allowCancelled)
+{
+	int error = 0;
+	for (auto &request : m_aio)
+	{
+		if (request.wait(&m_aio_short_write_count, allowCancelled) < 0 && !error)
+			error = errno;
+	}
+	if (error)
+	{
+		errno = error;
+		return -1;
+	}
+	_publishWrittenBytes();
+	return 0;
+}
+
+int eDVBRecordFileThread::_cacheFileTarget()
+{
+	if (!_targetCached)
+	{
+		if (_targetDirectoryFd >= 0)
+		{
+			int directoryFd = _targetDirectoryFd;
+			_targetDirectoryFd = -1;
+			if (::close(directoryFd) < 0)
+				return -1;
+		}
+		struct stat target = {};
+		if (::fstat(m_fd_dest, &target) < 0)
+			return -1;
+		if (!S_ISREG(target.st_mode))
+		{
+			errno = EINVAL;
+			return -1;
+		}
+		_targetDevice = target.st_dev;
+		_targetInode = target.st_ino;
+		_targetMode = target.st_mode & 0777;
+		_targetCached = true;
+	}
+	if (_splitSize && _targetDirectoryFd < 0)
+	{
+		std::string::size_type separator = _targetFilename.find_last_of('/');
+		std::string directory = separator == std::string::npos ? "." : separator == 0 ? "/" : _targetFilename.substr(0, separator);
+		_targetBasename = separator == std::string::npos ? _targetFilename : _targetFilename.substr(separator + 1);
+		if (_targetBasename.empty() || _targetBasename == "." || _targetBasename == "..")
+		{
+			errno = EINVAL;
+			return -1;
+		}
+		int directoryFd = ::open(directory.c_str(), O_RDONLY | O_DIRECTORY | O_CLOEXEC);
+		if (directoryFd < 0)
+			return -1;
+		struct stat target = {};
+		int error = 0;
+		if (::fstat(directoryFd, &target) < 0)
+			error = errno;
+		else if (target.st_dev != _targetDevice)
+			error = EXDEV;
+		_targetDirectoryFd = directoryFd;
+		if (!error && _checkTargetBase() < 0)
+			error = errno;
+		if (error)
+		{
+			_targetDirectoryFd = -1;
+			::close(directoryFd);
+			errno = error;
+			return -1;
+		}
+	}
+	return 0;
+}
+
+int eDVBRecordFileThread::_checkTargetBase()
+{
+	struct stat target = {};
+	if (::fstatat(_targetDirectoryFd, _targetBasename.c_str(), &target, AT_SYMLINK_NOFOLLOW) < 0)
+		return -1;
+	if (!S_ISREG(target.st_mode) || target.st_dev != _targetDevice || target.st_ino != _targetInode)
+	{
+		errno = ESTALE;
+		return -1;
+	}
+	return 0;
+}
+
+int eDVBRecordFileThread::_nextPart()
+{
+	if (_partNumber >= 999)
+	{
+		errno = EFBIG;
+		return -1;
+	}
+	if (_drainWrites() < 0)
+		return -1;
+	if (_checkTargetBase() < 0)
+		return -1;
+	if (_ownsTarget)
+	{
+		int oldFd = m_fd_dest;
+		m_fd_dest = -1;
+		_ownsTarget = false;
+		if (::close(oldFd) < 0)
+			return -1;
+	}
+	char suffix[16];
+	snprintf(suffix, sizeof(suffix), ".%03u", _partNumber + 1);
+	std::string filename = _targetBasename + suffix;
+	int nextFd = ::openat(_targetDirectoryFd, filename.c_str(), O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW | O_LARGEFILE | O_CLOEXEC, _targetMode);
+	if (nextFd < 0)
+		return -1;
+	struct stat created = {};
+	struct statfs filesystem = {};
+	int error = 0;
+	bool identityKnown = ::fstat(nextFd, &created) == 0;
+	if (!identityKnown || ::fstatfs(nextFd, &filesystem) < 0)
+		error = errno;
+	else if (created.st_dev != _targetDevice || !S_ISREG(created.st_mode))
+		error = EXDEV;
+	else if (static_cast<unsigned int>(filesystem.f_type) == TMPFS_MAGIC || static_cast<unsigned int>(filesystem.f_type) == RAMFS_MAGIC)
+		error = ENODEV;
+	else if ((created.st_mode & 0777) != _targetMode)
+	{
+		// Preserve effective permissions even if the process umask changed.
+		struct stat target = {};
+		if (::fchmod(nextFd, _targetMode) < 0 || ::fstat(nextFd, &target) < 0)
+			error = errno;
+		else if ((target.st_mode & 0777) != _targetMode)
+			error = EPERM;
+	}
+	if (!error && _checkTargetBase() < 0)
+		error = errno;
+	if (!error)
+	{
+		struct stat entry = {};
+		if (::fstatat(_targetDirectoryFd, filename.c_str(), &entry, AT_SYMLINK_NOFOLLOW) < 0)
+			error = errno;
+		else if (!S_ISREG(entry.st_mode) || entry.st_dev != created.st_dev || entry.st_ino != created.st_ino)
+			error = ESTALE;
+	}
+	if (error)
+	{
+		struct stat entry = {};
+		// Keep the created FD open so its inode cannot be reused during this check.
+		// Old kernels have no atomic conditional-inode unlink: retain uncertain entries.
+		if (identityKnown && ::fstatat(_targetDirectoryFd, filename.c_str(), &entry, AT_SYMLINK_NOFOLLOW) == 0
+			&& S_ISREG(entry.st_mode) && entry.st_dev == created.st_dev && entry.st_ino == created.st_ino)
+			::unlinkat(_targetDirectoryFd, filename.c_str(), 0);
+		::close(nextFd);
+		errno = error;
+		return -1;
+	}
+	m_fd_dest = nextFd;
+	_ownsTarget = true;
+	++_partNumber;
+	_partStart = m_current_offset;
+	return 0;
+}
+
+int eDVBRecordFileThread::_syncWrite(int len, bool parse)
+{
+	// poll() only provides a readiness timeout for devices/sockets, not files.
+	if (!_fileOutput)
+	{
 		struct pollfd pfd = {};
 		pfd.fd = m_fd_dest;
 		pfd.events = POLLOUT;
-		int poll_ret = poll(&pfd, 1, 1000); // 1 second timeout
-
+		int poll_ret = poll(&pfd, 1, 1000);
 		if (poll_ret == 0)
 		{
-			if (m_discard_on_timeout)
-			{
-				eDebug("[eDVBRecordFileThread] sync write poll timeout - discarding %d bytes", len);
-				return len;
-			}
-			eDebug("[eDVBRecordFileThread] sync write poll timeout");
-			return 0; // Timeout - return 0 to retry
+			return 0;
 		}
 		if (poll_ret < 0)
 		{
 			if (errno == EINTR)
-				return 0; // Interrupted - return 0 to retry
-			eWarning("[eDVBRecordFileThread] sync write poll error: %m");
+				return 0;
 			return -1;
 		}
-		// Only call parseData here if no descrambler is set.
-		// When a descrambler is active, eDVBRecordScrambledThread::writeData()
-		// calls parseData AFTER descrambling to ensure we parse clear data.
-		if (!getProtocol() && !m_serviceDescrambler)
-		{
-			m_ts_parser.parseData(m_current_offset, m_buffer, len);
-		}
-
-		const size_t chunk = m_write_chunk.load();
-		int written = 0;
-		while (written < len)
-		{
-			size_t count = len - written;
-			if (chunk && count > chunk)
-				count = chunk;
-			ssize_t w = ::write(m_fd_dest, m_buffer + written, count);
-			if (w > 0)
-			{
-				written += w;
-				continue;
-			}
-			if (w < 0 && errno == EINTR)
-				continue;
-			if (w < 0 && (errno == EAGAIN || errno == EWOULDBLOCK))
-			{
-				if (m_stop)
-					return -1;
-				usleep(1000);
-				continue;
-			}
-			if (w == 0)
-			{
-				eWarning("[eDVBRecordFileThread] sync write returned 0");
-				return -1;
-			}
-			eWarning("[eDVBRecordFileThread] sync write error: %m");
-			return -1;
-		}
-		m_current_offset += len;
-		return len;
 	}
-	else
+	int parseResult = 0;
+	if (parse && !getProtocol())
+		parseResult = m_ts_parser.parseData(m_current_offset, m_buffer, len);
+	if (parseResult == -2)
 	{
-		// Asynchronous write mode - better performance with buffer rotation
-		// When DVR is busy (e.g. CW loss), skip write to prevent 5s blocking
-		if (m_discard_on_timeout)
-		{
-			AsyncIOvector::iterator next_it = m_current_buffer;
-			++next_it;
-			if (next_it == m_aio.end())
-				next_it = m_aio.begin();
-
-			if (next_it->poll() > 0)
-			{
-				// Next slot still has pending AIO - DVR is busy
-				// Discard data instead of blocking in wait()
-				++m_busy_discard_count;
-				if (m_busy_discard_count <= 20 || m_busy_discard_count % 100 == 0)
-					eWarning("[eDVBRecordFileThread] DVR busy - discarded %d bytes (#%u)", len, m_busy_discard_count);
-				return len;
-			}
-		}
-		len = asyncWrite(len);
-		if (len < 0)
-		{
-			if (m_stop)
-				return len;
-			if (errno == ENOSYS)
-			{
-				if (s_aio_state == 1)
-				{
-					eDebug("[eDVBRecordFileThread] ENOSYS ignored - AIO verified for session");
-					return -1;
-				}
-				s_aio_state = 0;
-				eWarning("[eDVBRecordFileThread] AIO not supported (ENOSYS), falling back to sync mode");
-				m_sync_mode = true;
-				return writeData(m_buffersize);
-			}
-			eWarning("[eDVBRecordFileThread] asyncWrite failed: %d", len);
-			return len;
-		}
-		// Wait for previous aio to complete on this buffer before returning
-		int r = m_current_buffer->wait(&m_stop, &m_aio_short_write_count);
-		if (r < 0)
-		{
-			if (m_stop)
-				return len;
-			if (errno == ENOSYS)
-			{
-				if (s_aio_state == 1)
-				{
-					eDebug("[eDVBRecordFileThread] ENOSYS in wait ignored - AIO verified for session");
-					return len;
-				}
-				s_aio_state = 0;
-				eWarning("[eDVBRecordFileThread] AIO not supported (ENOSYS in wait), falling back to sync mode");
-				m_sync_mode = true;
-				return len;
-			}
-			eWarning("[eDVBRecordFileThread] wait failed: %d", r);
-			return -1;
-		}
-		// Fall back to sync mode after persistent AIO short writes
-		if (!s_aio_sync_fallback && m_aio_short_write_count >= AIO_SHORT_WRITE_THRESHOLD)
-		{
-			s_aio_sync_fallback = true;
-			m_sync_mode = true;
-			eWarning("[eDVBRecordFileThread] %d AIO short writes - switching to sync mode",
-				m_aio_short_write_count);
-		}
+		m_event(eFilePushThreadRecorder::evtStreamCorrupt);
 		return len;
 	}
+	int written = 0;
+	while (written < len)
+	{
+		if (_splitSize && m_current_offset - _partStart == _splitSize && _nextPart() < 0)
+			return -1;
+		size_t count = len - written;
+		if (_splitSize && (off_t)count > _splitSize - (m_current_offset - _partStart))
+			count = _splitSize - (m_current_offset - _partStart);
+		ssize_t result = _fileOutput
+			? ::pwrite(m_fd_dest, m_buffer + written, count, m_current_offset - _partStart)
+			: ::write(m_fd_dest, m_buffer + written, count);
+		if (result > 0)
+		{
+			written += result;
+			m_current_offset += result;
+			_publishWrittenBytes();
+			continue;
+		}
+		if (result < 0 && errno == EINTR)
+			continue;
+		if (result < 0 && (errno == EAGAIN || errno == EWOULDBLOCK) && !m_stop)
+		{
+			usleep(1000);
+			continue;
+		}
+		if (!result)
+			errno = EIO;
+		return -1;
+	}
+	return len;
+}
+
+int eDVBRecordFileThread::writeData(int len)
+{
+	if (!len || !m_buffer)
+		return 0;
+	if (getWriteError())
+	{
+		errno = getWriteError();
+		return -1;
+	}
+	if (_fileOutput && _cacheFileTarget() < 0)
+		return -1;
+	if (_splitSize && m_current_offset - _partStart == _splitSize && _nextPart() < 0)
+		return -1;
+	if (!m_sync_mode && s_aio_state == 0)
+	{
+		if (_drainWrites(!_fileOutput) < 0)
+			return -1;
+		m_sync_mode = true;
+	}
+	if (m_sync_mode)
+		return _syncWrite(len);
+	if (_splitSize && len > _splitSize - (m_current_offset - _partStart))
+	{
+		// Only the buffer crossing a part boundary needs synchronous splitting.
+		if (_drainWrites() < 0)
+			return -1;
+		return _syncWrite(len);
+	}
+
+	off_t before = m_current_offset;
+	int result = asyncWrite(len);
+	if (result < 0)
+	{
+		// Only a rejected submission can be retried in another I/O mode.
+		if (errno == ENOSYS && m_current_offset == before)
+		{
+			if (_drainWrites(!_fileOutput) < 0)
+				return -1;
+			if (s_aio_state != 1)
+				s_aio_state = 0;
+			m_sync_mode = true;
+			return _syncWrite(len, false);
+		}
+		return -1;
+	}
+	if (m_current_buffer->wait(&m_aio_short_write_count, !_fileOutput) < 0)
+		return -1;
+	if (m_aio_short_write_count >= AIO_SHORT_WRITE_THRESHOLD)
+	{
+		if (_drainWrites(!_fileOutput) < 0)
+			return -1;
+		s_aio_sync_fallback = true;
+		m_sync_mode = true;
+	}
+	_publishWrittenBytes();
+	return result;
 }
 
 void eDVBRecordFileThread::flush()
 {
 	eDebug("[eDVBRecordFileThread] waiting for aio to complete");
-	for (AsyncIOvector::iterator it = m_aio.begin(); it != m_aio.end(); ++it)
+	if (_drainWrites(!_fileOutput) < 0)
+		_setWriteError(errno);
+	if (_fileOutput && m_syncOnStop && m_fd_dest >= 0)
 	{
-		if (m_stop)
-		{
-			eDebug("[eDVBRecordFileThread] flush: stop requested, cancelling remaining AIOs");
-			// Cancel all remaining AIOs without waiting
-			for (; it != m_aio.end(); ++it)
-			{
-				it->cancel(m_fd_dest);
-			}
-			break;
-		}
-		if (it->wait(&m_stop) < 0 && m_stop)
-		{
-			eDebug("[eDVBRecordFileThread] flush: wait failed and stop requested, aborting");
-			break;
-		}
+		int result;
+		do
+			result = fdatasync(m_fd_dest);
+		while (result < 0 && errno == EINTR);
+		if (result < 0)
+			_setWriteError(errno);
+	}
+	if (_ownsTarget)
+	{
+		int oldFd = m_fd_dest;
+		m_fd_dest = -1;
+		_ownsTarget = false;
+		if (::close(oldFd) < 0)
+			_setWriteError(errno);
+	}
+	if (_targetDirectoryFd >= 0)
+	{
+		int directoryFd = _targetDirectoryFd;
+		_targetDirectoryFd = -1;
+		if (::close(directoryFd) < 0)
+			_setWriteError(errno);
 	}
 	int bufferCount = m_aio.size();
-	eDebug("[eDVBRecordFileThread] buffer usage histogram (%d buffers of %zd kB)", bufferCount, m_buffersize>>10);
+	eDebug("[eDVBRecordFileThread] buffer usage histogram (%d buffers of %zu kB)", bufferCount, m_buffersize>>10);
 	for (int i=0; i <= bufferCount; ++i)
 	{
 		if (m_buffer_use_histogram[i] != 0)
@@ -1064,7 +1062,8 @@ int eDVBRecordStreamThread::writeData(int len)
 		{
 			pfd.fd = m_fd_dest;
 			pfd.events = POLLOUT;
-			poll(&pfd, 1, -1);
+			if (poll(&pfd, 1, 1000) <= 0)
+				return pos;
 
 			w = write(m_fd_dest, m_buffer + pos, len - pos);
 
@@ -1116,7 +1115,7 @@ int eDVBRecordStreamThread::writeData(int len)
 				return r;
 		}
 		// we want to have a consistent state, so wait for completion, just to be sure
-		r = m_current_buffer->wait(&m_stop);
+		r = m_current_buffer->wait(nullptr, true);
 		if (r < 0)
 		{
 			eDebug("[eDVBRecordStreamThread] wait failed: %m");
@@ -1152,106 +1151,10 @@ void eDVBRecordStreamThread::flush()
 	eDVBRecordFileThread::flush();
 }
 
-eDVBRecordScrambledThread::eDVBRecordScrambledThread(int packetsize, int buffersize, bool sync_mode, bool is_streaming) :
-	eDVBRecordStreamThread(packetsize, buffersize, sync_mode),
-	m_first_data_written(false),
-	m_is_streaming(is_streaming)
-{
-	pthread_mutex_init(&m_data_ready_mutex, NULL);
-	pthread_cond_init(&m_data_ready_cond, NULL);
-	// Note: s_aio_state may override sync_mode at runtime in writeData()
-	const char* mode = sync_mode ? "sync" : (s_aio_state == 0 ? "sync (AIO unavailable)" : "async");
-	eDebug("[eDVBRecordScrambledThread] %s allocated %zu buffers of %zu kB (streaming=%d)",
-		mode, m_aio.size(), m_buffersize>>10, is_streaming);
-}
-
-eDVBRecordScrambledThread::~eDVBRecordScrambledThread()
-{
-	pthread_cond_destroy(&m_data_ready_cond);
-	pthread_mutex_destroy(&m_data_ready_mutex);
-}
-
-void eDVBRecordScrambledThread::resetFirstDataFlag()
-{
-	pthread_mutex_lock(&m_data_ready_mutex);
-	m_first_data_written = false;
-	pthread_mutex_unlock(&m_data_ready_mutex);
-}
-
-bool eDVBRecordScrambledThread::waitForFirstData(int timeout_ms)
-{
-	struct timespec ts;
-	clock_gettime(CLOCK_REALTIME, &ts);
-	ts.tv_sec += timeout_ms / 1000;
-	ts.tv_nsec += (timeout_ms % 1000) * 1000000;
-	if (ts.tv_nsec >= 1000000000) {
-		ts.tv_sec++;
-		ts.tv_nsec -= 1000000000;
-	}
-
-	// Wait for DVR data (thread-safe)
-	pthread_mutex_lock(&m_data_ready_mutex);
-	while (!m_first_data_written)
-	{
-		int ret = pthread_cond_timedwait(&m_data_ready_cond, &m_data_ready_mutex, &ts);
-		if (ret == ETIMEDOUT)
-		{
-			eDebug("[eDVBRecordScrambledThread] waitForFirstData: DVR timeout after %dms", timeout_ms);
-			pthread_mutex_unlock(&m_data_ready_mutex);
-			return false;
-		}
-	}
-	pthread_mutex_unlock(&m_data_ready_mutex);
-	eDebug("[eDVBRecordScrambledThread] waitForFirstData: DVR data ready");
-
-	return true;
-}
-
-int eDVBRecordScrambledThread::writeData(int len)
-{
-	// Descramble if we have a descrambler - ignore return value
-	// This allows CI+, StreamRelay and FTA to pass through unchanged
-	// (data is already clear or hardware-descrambled)
-	// For SoftCSA: descrambles in-place when CW available,
-	// passes through encrypted when no CW (may cause artifacts at channel start)
-	if (m_serviceDescrambler)
-	{
-		m_serviceDescrambler->descramble(m_buffer, len);
-
-		// Parse AFTER descrambling for correct Access Points (.ap files)
-		if (!getProtocol())
-			m_ts_parser.parseData(m_current_offset, m_buffer, len);
-	}
-
-	// Call the appropriate parent writeData based on target type:
-	// - Streaming (socket): use eDVBRecordStreamThread::writeData() for proper socket handling
-	// - Recording (file): use eDVBRecordFileThread::writeData() for file I/O
-	int ret;
-	if (m_is_streaming)
-		ret = eDVBRecordStreamThread::writeData(len);
-	else
-		ret = eDVBRecordFileThread::writeData(len);
-
-	// Signal first data written (for decoder sync)
-	if (ret > 0 && !m_first_data_written)
-	{
-		pthread_mutex_lock(&m_data_ready_mutex);
-		if (!m_first_data_written)
-		{
-			m_first_data_written = true;
-			eDebug("[eDVBRecordScrambledThread] First data written (%d bytes), signaling", ret);
-			pthread_cond_signal(&m_data_ready_cond);
-		}
-		pthread_mutex_unlock(&m_data_ready_mutex);
-	}
-
-	return ret;
-}
-
 
 DEFINE_REF(eDVBTSRecorder);
 
-eDVBTSRecorder::eDVBTSRecorder(eDVBDemux *demux, int packetsize, bool streaming, bool sync_mode, bool is_streaming_output):
+eDVBTSRecorder::eDVBTSRecorder(eDVBDemux *demux, int packetsize, bool streaming):
 	m_demux(demux),
 	m_running(0),
 	m_target_fd(-1),
@@ -1259,15 +1162,10 @@ eDVBTSRecorder::eDVBTSRecorder(eDVBDemux *demux, int packetsize, bool streaming,
 	m_ram_mode(false)
 {
 	if (streaming)
-		// For streaming: use StreamThread for FTA (no descrambling needed)
-		// Encrypted streams use streaming=false and get ScrambledThread
 		m_thread = new eDVBRecordStreamThread(packetsize);
 	else
-		// Use ScrambledThread for file recording - supports optional descrambling
 		// sync_mode forced if AIO short writes were detected in a previous channel
-		// is_streaming_output=true when target is a socket (streaming encrypted channels)
-		m_thread = new eDVBRecordScrambledThread(packetsize,
-			-1, s_aio_sync_fallback || sync_mode, is_streaming_output);
+		m_thread = new eDVBRecordFileThread(packetsize, recordingBufferCount, -1, s_aio_sync_fallback);
 	CONNECT(m_thread->m_event, eDVBTSRecorder::filepushEvent);
 }
 
@@ -1320,7 +1218,11 @@ RESULT eDVBTSRecorder::start()
 	char filename[128];
 	snprintf(filename, 128, "/dev/dvb/adapter%d/demux%d", m_demux->adapter, m_demux->demux);
 
+#if HAVE_HISILICON
+	m_source_fd = ::open(filename, O_RDONLY | O_CLOEXEC | O_NONBLOCK);
+#else
 	m_source_fd = ::open(filename, O_RDONLY | O_CLOEXEC);
+#endif
 
 	if (m_source_fd < 0)
 	{
@@ -1331,6 +1233,8 @@ RESULT eDVBTSRecorder::start()
 	setBufferSize(1024*1024);
 
 	dmx_pes_filter_params flt = {};
+	memset(&flt, 0, sizeof(flt));
+
 	flt.pes_type = DMX_PES_OTHER;
 	flt.output  = DMX_OUT_TSDEMUX_TAP;
 	flt.pid     = i->first;
@@ -1348,8 +1252,15 @@ RESULT eDVBTSRecorder::start()
 
 	::ioctl(m_source_fd, DMX_START);
 
-	if (!m_target_filename.empty())
-		m_thread->startSaveMetaInformation(m_target_filename);
+	if (!m_target_filename.empty() && m_thread->startSaveMetaInformation(m_target_filename) < 0)
+	{
+		int error = m_thread->getWriteError();
+		::ioctl(m_source_fd, DMX_STOP);
+		::close(m_source_fd);
+		m_source_fd = -1;
+		errno = error;
+		return -1;
+	}
 
 	m_thread->start(m_source_fd);
 	m_running = 1;
@@ -1406,6 +1317,11 @@ void eDVBTSRecorder::setServiceFilter(int serviceId, int pmtPid, bool shared)
 
 RESULT eDVBTSRecorder::setTargetFD(int fd)
 {
+	// Limit socket writes even when a stream consumer stops reading.
+	struct timeval timeout = {2, 0};
+	struct stat status = {};
+	if (!fstat(fd, &status) && S_ISSOCK(status.st_mode))
+		setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
 	m_target_fd = fd;
 	m_thread->setTargetFD(fd);
 	return 0;
@@ -1414,7 +1330,18 @@ RESULT eDVBTSRecorder::setTargetFD(int fd)
 RESULT eDVBTSRecorder::setTargetFilename(const std::string& filename)
 {
 	m_target_filename = filename;
+	m_thread->setTargetFilename(filename);
 	return 0;
+}
+
+RESULT eDVBTSRecorder::setSplitSize(off_t bytes)
+{
+	if (m_running || m_ram_mode || (bytes && m_target_filename.empty()))
+	{
+		errno = EINVAL;
+		return -1;
+	}
+	return m_thread->setSplitSize(bytes);
 }
 
 RESULT eDVBTSRecorder::enableAccessPoints(bool enable)
@@ -1447,6 +1374,8 @@ RESULT eDVBTSRecorder::stop()
 			eWarning("[eDVBTSRecorder] DMX_STOP: %m");
 	}
 
+	if (m_target_filename.empty() && m_target_fd >= 0)
+		shutdown(m_target_fd, SHUT_WR);
 	m_thread->stop();
 
 	if (m_source_fd >= 0)
@@ -1459,6 +1388,11 @@ RESULT eDVBTSRecorder::stop()
 	m_running = 0;
 
 	m_thread->stopSaveMetaInformation();
+	if (m_thread->getWriteError())
+	{
+		errno = m_thread->getWriteError();
+		return -1;
+	}
 	return 0;
 }
 
@@ -1536,24 +1470,6 @@ void eDVBTSRecorder::filepushEvent(int event)
 		m_event(eventStreamCorrupt);
 		break;
 	}
-}
-
-RESULT eDVBTSRecorder::setDescrambler(ePtr<iServiceScrambled> serviceDescrambler)
-{
-	m_thread->setDescrambler(serviceDescrambler);
-	return 0;
-}
-
-void eDVBTSRecorder::setDiscardOnTimeout(bool discard)
-{
-	m_thread->setDiscardOnTimeout(discard);
-}
-
-bool eDVBTSRecorder::waitForFirstData(int timeout_ms)
-{
-	// Delegate to thread - only ScrambledThread actually implements waiting
-	// Other thread types return immediately via base class default
-	return m_thread->waitForFirstData(timeout_ms);
 }
 
 void eDVBTSRecorder::setMinWrite(size_t size)

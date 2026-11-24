@@ -26,7 +26,7 @@ eFilePushThread::eFilePushThread(int io_prio_class, int io_prio_level, int block
 	  m_run_state(0)
 {
 	m_current_position = 0;
-	m_force_position.store(-1, std::memory_order_relaxed);
+	m_force_position.store(-1, std::memory_order_relaxed); // S8417: no other shared data depends on this store
 	if (m_buffer == NULL)
 		eFatal("[eFilePushThread] Failed to allocate %zu bytes", buffersize);
 	CONNECT(m_messagepump.recv_msg, eFilePushThread::recvEvent);
@@ -110,7 +110,7 @@ void eFilePushThread::thread()
 			 * exchange() atomically reads the value and resets to -1
 			 * in one operation.  Prevents the lost-update race that
 			 * exists with separate if(v>=0) / v=-1 on volatile. */
-			off_t forced = m_force_position.exchange(-1, std::memory_order_relaxed);
+			off_t forced = m_force_position.exchange(-1, std::memory_order_relaxed); // S8417: no other shared data depends on this value
 			if (forced >= 0)
 			{
 				m_current_position = forced;
@@ -187,7 +187,7 @@ void eFilePushThread::thread()
 #ifdef DREAMNEXTGEN
 					/* Shorter poll timeout for timeshift to reduce
 					 * latency when resuming playback. */
-					int poll_timeout = (m_flags == 1) ? 100 : 250;
+					int poll_timeout = (m_flags & FLAGBIT_TIMESHIFT) ? 100 : 250;
 					switch (poll(&pfd, 1, poll_timeout))
 #else
 					switch (poll(&pfd, 1, 250)) /* wait for 250ms */
@@ -214,7 +214,14 @@ void eFilePushThread::thread()
 				if (m_stop)
 					break;
 
-				if (m_flags == 1) { /* timeshift — at live edge, wait for more data */
+				if (m_flags & FLAGBIT_TIMESHIFT) {
+					if (!(m_flags & FLAGBIT_RAM_MODE) || eofcount == 0) {
+						if (m_sof == 0)
+							sendEvent(evtEOF);
+						else
+							sendEvent(evtUser);
+					}
+					++eofcount;
 #ifdef DREAMNEXTGEN
 					usleep(15000);  /* 15ms — balance between responsiveness and CPU */
 #else
@@ -233,9 +240,7 @@ void eFilePushThread::thread()
 					eDebug("[eFilePushThread] reached EOF, but we are in stream mode. delaying 1 second.");
 					sleep(1);
 					continue;
-				}
-				else if (++eofcount < 10)
-				{
+				} else if (++eofcount < 10) {
 					eDebug("[eFilePushThread] reached EOF, but the file may grow. delaying 1 second.");
 					sleep(1);
 					continue;
@@ -327,7 +332,7 @@ void eFilePushThread::start(ePtr<iTsSource> &source, int fd_dest)
 	m_source = source;
 	m_fd_dest = fd_dest;
 	m_current_position = 0;
-	m_force_position.store(-1, std::memory_order_relaxed);
+	m_force_position.store(-1, std::memory_order_relaxed); // S8417: no other shared data depends on this store
 	m_run_state = 1;
 	m_stop = 0;
 	run();
@@ -339,7 +344,7 @@ void eFilePushThread::forcePosition(off_t pos)
 	 * it up on its next loop iteration via exchange().
 	 * memory_order_relaxed is sufficient: the consumer only reads
 	 * m_force_position — no other shared data depends on this store. */
-	m_force_position.store(pos, std::memory_order_relaxed);
+	m_force_position.store(pos, std::memory_order_relaxed); // S8417
 }
 
 void eFilePushThread::stop()
@@ -370,7 +375,7 @@ void eFilePushThread::pause()
 		return;
 	}
 	/* Set thread into a paused state by setting m_stop to 2 and wait
-	* for the thread to acknowledge. */
+	 * for the thread to acknowledge. */
 	eSingleLocker lock(m_run_mutex);
 	m_stop = 2;
 	sendSignal(SIGUSR1);
@@ -662,7 +667,7 @@ void eFilePushThreadRecorder::thread()
 #endif
 
 	/* Some demux drivers block in read() until the whole buffer is filled,
-	 * which delays live data (SoftCSA) by several hundred ms at low bitrates.
+	 * which delays live data by several hundred ms at low bitrates.
 	 * Non-blocking reads after poll() return what is available. */
 	int flags = fcntl(m_fd_source, F_GETFL, 0);
 	flags |= O_NONBLOCK;

@@ -231,7 +231,6 @@ void eDVBServicePMTHandler::PMTready(int error)
 		case streamserver:
 		case scrambled_streamserver:
 		case streamclient:
-		case scrambled_livetv:
 			eEPGTransponderDataReader::getInstance()->PMTready(this);
 			break;
 		default:
@@ -1162,15 +1161,10 @@ int eDVBServicePMTHandler::getPVRChannel(ePtr<iDVBPVRChannel> &pvr_channel)
 		return -1;
 }
 
-void eDVBServicePMTHandler::allocatePVRChannel()
-{
-	eDVBChannelID chid;
-	m_resourceManager->allocatePVRChannel(chid, m_pvr_channel);
-	m_pvr_channel->getDemux(m_demux, 0);
-}
-
 void eDVBServicePMTHandler::SDTScanEvent(int event)
 {
+	if (!m_dvb_scan)
+		return;
 	switch (event)
 	{
 		case eDVBScan::evtFinish:
@@ -1358,6 +1352,9 @@ void eDVBServicePMTHandler::free()
 	m_no_pat_entry_delay->stop();
 	m_channelStateChanged_connection = 0;
 	m_channelEvent_connection = 0;
+	// Disconnect before releasing the scan: a pending SDT timeout can otherwise
+	// call SDTScanEvent after the service has already released m_dvb_scan.
+	m_scan_event_connection = 0;
 	m_dvb_scan = 0;
 
 	if (m_ca_servicePtr)

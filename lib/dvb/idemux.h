@@ -1,8 +1,8 @@
 #ifndef __dvb_idemux_h
 #define __dvb_idemux_h
 
+#include <cerrno>
 #include <lib/dvb/idvb.h>
-#include <lib/service/iservicescrambled.h>
 
 class iDVBSectionReader: public iObject
 {
@@ -48,15 +48,6 @@ public:
 	virtual RESULT getCurrentPCR(pts_t &pcr) = 0;
 	virtual RESULT getFirstPTS(pts_t &pts) = 0;
 
-	virtual RESULT setDescrambler(ePtr<iServiceScrambled>) = 0;
-
-	// Discard data on sync write timeout instead of retrying.
-	// Use for live soft decoding where stale data is worthless and
-	virtual void setDiscardOnTimeout(bool discard) = 0;
-
-	// Wait for first data to be written (for SoftDecoder sync)
-	virtual bool waitForFirstData(int timeout_ms) = 0;
-
 	// Set write accumulation threshold (0 = continuous writing)
 	virtual void setMinWrite(size_t size) = 0;
 	// Single-service output only. Other demux implementations may leave PSI unchanged.
@@ -73,6 +64,10 @@ public:
 		eventStreamCorrupt
 	};
 	virtual RESULT connectEvent(const sigc::slot<void(int)> &event, ePtr<eConnection> &conn)=0;
+	// Append optional methods so existing recorder vtable slots stay unchanged.
+	virtual RESULT setSplitSize(off_t bytes) { errno = ENOSYS; return -1; }
+	virtual long long getWrittenBytes() { errno = ENOSYS; return -1; }
+	virtual void setSyncOnStop(bool enabled) { }
 };
 
 #endif
