@@ -2036,6 +2036,18 @@ def InitUsageConfig():
 	config.mediaplayer.useAlternateUserAgent = ConfigYesNo(default=False)
 	config.mediaplayer.alternateUserAgent = ConfigText(default="")
 
+	def setSoftCSAPlaybackDelay(configElement):
+		if BoxInfo.getItem("HasSoftCSA"):
+			fileWriteLine("/sys/module/dmxcsa/parameters/delay", str(configElement.value), source=MODULE_NAME)
+
+	config.softcsa = ConfigSubsection()
+	config.softcsa.playbackDelay = ConfigSelection(
+		default=-1,
+		choices=[(0, _("Disabled")), (-1, _("Automatic"))] + [(x, _("%d ms") % x) for x in list(range(250, 2001, 250)) + list(range(2500, 5001, 500))]
+	)
+	config.softcsa.playbackDelay.addNotifier(setSoftCSAPlaybackDelay)
+	config.softcsa.notifications = ConfigYesNo(default=True)
+
 	config.misc.softcam_setup = ConfigSubsection()
 	config.misc.softcam_setup.extension_menu = ConfigYesNo(default=True)
 	config.misc.softcam_streamrelay_url = ConfigIP(default=[127, 0, 0, 1], auto_jump=True)
