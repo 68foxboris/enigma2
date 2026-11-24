@@ -102,7 +102,7 @@ public:
 	void stopSaveMetaInformation();
 	int getLastPTS(pts_t &pts);
 	virtual int getFirstPTS(pts_t &pts);
-	void setTargetFD(int fd) { m_fd_dest = fd; _targetCached = false; }
+	void setTargetFD(int fd) { m_fd_dest = fd; updateWriteChunk(); }
 	void enableAccessPoints(bool enable) { m_ts_parser.enableAccessPoints(enable); }
 
 protected:
