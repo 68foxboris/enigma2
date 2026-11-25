@@ -3,9 +3,11 @@
 
 #include <aio.h>
 #include <atomic>
+#include <sys/types.h>
 #include <lib/dvb/idvb.h>
 #include <lib/dvb/idemux.h>
 #include <lib/dvb/pvrparse.h>
+#include <lib/service/iservicescrambled.h>
 #include "filepush.h"
 
 class eDVBDemux: public iDVBDemux
@@ -101,6 +103,7 @@ public:
 	void setTimingPID(int pid, iDVBTSRecorder::timing_pid_type pidtype, int streamtype);
 	void startSaveMetaInformation(const std::string &filename);
 	void stopSaveMetaInformation();
+	void setSyncOnStop(bool enabled) { m_syncOnStop = enabled; m_ts_parser.setSyncOnStop(enabled); }
 	int getLastPTS(pts_t &pts);
 	virtual int getFirstPTS(pts_t &pts);
 	void setTargetFD(int fd) { m_fd_dest = fd; updateWriteChunk(); }
