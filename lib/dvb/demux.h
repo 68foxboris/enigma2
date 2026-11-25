@@ -2,6 +2,7 @@
 #define __dvb_demux_h
 
 #include <aio.h>
+#include <atomic>
 #include <lib/dvb/idvb.h>
 #include <lib/dvb/idemux.h>
 #include <lib/dvb/pvrparse.h>
@@ -104,6 +105,7 @@ public:
 	virtual int getFirstPTS(pts_t &pts);
 	void setTargetFD(int fd) { m_fd_dest = fd; updateWriteChunk(); }
 	void enableAccessPoints(bool enable) { m_ts_parser.enableAccessPoints(enable); }
+	void setDescrambler(ePtr<iServiceScrambled> serviceDescrambler) { m_serviceDescrambler = serviceDescrambler; updateWriteChunk(); };
 
 protected:
 	int asyncWrite(int len);
@@ -124,7 +126,9 @@ protected:
 		int poll(int* short_write_count = nullptr, bool allowCancelled = false); // returns 1 if busy, 0 if ready, <0 on error return
 		int cancel(int fd); // returns <0 on error, 0 cancelled, >0 bytes written?
 	};
-	eMPEGStreamParserTS m_ts_parser;
+	void updateWriteChunk();
+	std::atomic<size_t> m_write_chunk{0}; // 0 = write whole buffers
+	eMPEGSStreamParserTS m_ts_parser;
 	size_t m_packet_size;
 	off_t m_current_offset;
 	int m_fd_dest;
