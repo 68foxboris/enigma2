@@ -3681,6 +3681,7 @@ RESULT eDVBServicePlay::stopTimeshift(bool swToLive)
 {
 	if (!m_timeshift_enabled)
 		return -1;
+	int result = 0;
 
 	// Reset the recovery system state for the next timeshift session.
 	resetRecoveryState();
