@@ -594,6 +594,19 @@ int eDVBRecordFileThread::AsyncIO::start(int fd, off_t offset, size_t nbytes, vo
 	return result;
 }
 
+void eDVBRecordFileThread::updateWriteChunk()
+{
+	struct stat st = {};
+	bool dvr = m_serviceDescrambler && m_fd_dest >= 0 && fstat(m_fd_dest, &st) == 0 && S_ISCHR(st.st_mode);
+	size_t chunk = dvr ? (MAX_DVR_WRITE / _packetSize) * _packetSize : 0;
+	if (chunk != m_write_chunk.load())
+	{
+		m_write_chunk.store(chunk);
+		if (chunk)
+			eDebug("[eDVBRecordFileThread] writing descrambled data to the DVR in parts of %zu bytes", chunk);
+	}
+}
+
 // AIO write mode detection shared by recorder instances.
 // -1 = unknown (probing), 0 = not supported (sync), 1 = supported (async)
 static std::atomic<int> s_aio_state{-1};
