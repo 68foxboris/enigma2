@@ -4,6 +4,7 @@ from os import fsync, remove, rename
 from os.path import exists
 from subprocess import call
 from sys import maxsize
+from threading import Thread
 from time import ctime, localtime, mktime, strftime, time
 from uuid import uuid4
 
@@ -11,8 +12,6 @@ from enigma import eActionMap, quitMainloop
 
 import NavigationInstance
 from timer import Timer, TimerEntry
-from threading import Thread
-
 from Components.config import config
 from Components.SystemInfo import getBoxDisplayName
 from Components.TimerSanityCheck import TimerSanityCheck
@@ -477,18 +476,18 @@ class Scheduler(Timer):
 		return -1
 
 	def isAutoDeepstandbyEnabled(self):
-		returnValue = True
 		if Screens.Standby.inStandby:
 			now = int(time())
 			for timer in self.timer_list:
-				if timer.timerType == TIMERTYPE.AUTODEEPSTANDBY:
-					if timer.begin <= now + 900:
-						returnValue = not (timer.getNetworkTraffic() or timer.getNetworkAdress())
-					elif timer.autosleepwindow:
-						returnValue = timer.autosleepbegin <= now + 900
-				if not returnValue:
-					break
-		return returnValue
+				if timer.timerType != TIMERTYPE.AUTODEEPSTANDBY or timer.disabled or timer.cancelled or timer.failed:
+					continue
+				# An inactive auto-sleep window must not prevent shutdown after a recording.
+				# Do not call getAutoSleepWindow() here: it changes the timer's state and schedule.
+				if timer.autosleepwindow and not timer.autosleepbegin <= now < timer.autosleepend:
+					continue
+				if timer.begin <= now + 900 and (timer.getNetworkTraffic() or timer.getNetworkAdress()):
+					return False
+		return True
 
 	def isProcessing(self, exceptTimer=None, endedTimer=None):
 		isRunning = False
@@ -1288,6 +1287,9 @@ class SchedulerEntry(TimerEntry):
 				seconds = now - self.netbytes_time
 				self.netbytes = newBytes
 				self.netbytes_time = now
+				if seconds <= 0:
+					print("[Scheduler] NetworkTraffic: Interval <= 0 seconds; postpone shutdown and measure again.")
+					return True
 				diffBytes = float(newBytes - oldBytes) * 8.0 / 1024.0 / seconds  # In kbit/s.
 				if diffBytes < 0:
 					print("[Scheduler] NetworkTraffic: Overflow of interface counter, waiting for next value.")
