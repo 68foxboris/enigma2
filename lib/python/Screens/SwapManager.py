@@ -64,7 +64,7 @@ class Swap(Setup):
 			"menu": (self.swapMenu, _("Refresh, add an existing swap file or change autostart"))
 		}, prio=-1, description=_("Swap Manager"))
 		self.onClose.append(self.screenClosed)
-		self.onLayoutFinish.append(self.protectedCallback(self.updateSwap))
+		self.onLayoutFinish.append(self.updateSwap)
 
 	def screenClosed(self):
 		self.closed = True
