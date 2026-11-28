@@ -2229,6 +2229,9 @@ msgstr "Добавить HDMI IN в букет"
 msgid "Add Marker To Bouquet"
 msgstr "Добавить маркер в букет"
 
+msgid "Add Path"
+msgstr "Добавить путь"
+
 msgid "Add Record Timer"
 msgstr "Добавить таймер записи"
 
@@ -4853,6 +4856,9 @@ msgstr "Выберите скин, который будет использов�
 msgid "Choose the skin to be used for the LCD/front panel interface. Press 'GREEN' to activate the skin."
 msgstr "Выберите оформление, которое будет использоваться для интерфейса ЖК-дисплея/передней панели. Нажмите ЗЕЛЁНУЮ кнопку для активации скина."
 
+msgid "Choose the skin to be used for the graphical user interface (GUI). Press 'GREEN' to activate the skin."
+msgstr "Выберите скин, который будет использоваться для графического интерфейса. Нажмите ЗЕЛЁНУЮ кнопку, для активации скина."
+
 msgid "Choose the style/order in which items are displayed in help windows."
 msgstr "Выберите стиль/порядок, в котором элементы отображаются в окнах справки."
 
@@ -6317,10 +6323,13 @@ msgstr "Канал DAB+"
 
 #, python-format
 msgid "DAB+ channel %s"
-msgstr ""
+msgstr "Канал DAB+ %s"
 
 msgid "DAB+ decoder back end not installed"
-msgstr ""
+msgstr "Бэкенд декодера DAB+ не установлен"
+
+msgid "DAB+ front display"
+msgstr "Передний дисплей DAB+"
 
 msgid "DAB+ scan failed; existing bouquets were kept."
 msgstr "Сбой сканирования DAB+; существующие списки каналов (букеты) были сохранены."
@@ -6453,17 +6462,29 @@ msgstr "Дата"
 msgid "Date / Time"
 msgstr "Дата/время"
 
+msgid "Date Format"
+msgstr "Формат даты"
+
 msgid "Date Time Input Actions"
 msgstr "Действия по вводу даты и времени"
 
 msgid "Date And Time"
 msgstr "Дата и время"
 
+msgid "Date and Time Settings"
+msgstr "Настройки даты и времени"
+
+msgid "Date and Time Setup Actions"
+msgstr "Действия по настройке даты и времени"
+
 msgid "Date ascending"
 msgstr "Дата по возрастанию"
 
 msgid "Date descending"
 msgstr "Дата по убыванию"
+
+msgid "Date display style"
+msgstr "Стиль отображения даты"
 
 msgid "Date style"
 msgstr "Стиль даты"
@@ -6474,6 +6495,18 @@ msgstr "Ввод даты/времени"
 #, python-format
 msgid "Date: %s   Author: %s"
 msgstr "Дата: %s   Автор: %s"
+
+msgid "Day Date Month Year"
+msgstr "День Дата Месяц Год"
+
+msgid "Day Month Date Year"
+msgstr "День Месяц Число Год"
+
+msgid "Day Year Month Date"
+msgstr "День Год Месяц Число"
+
+msgid "Day display style"
+msgstr "Стиль отображения дня"
 
 msgid "Day D Mon"
 msgstr "День Д Мес"
@@ -7278,6 +7311,27 @@ msgstr "Питание и контент дисплея"
 msgid "Display Scrolling"
 msgstr "Прокрутка дисплея"
 
+msgid "Display Settings"
+msgstr "Настройки дисплея ресивера"
+
+msgid "Display Skin Packages"
+msgstr "Пакеты скинов для дисплея"
+
+msgid "Display context menu"
+msgstr "Показывать контекстное меню"
+
+msgid "Display file as hexadecimal"
+msgstr "Отображать файл как шестнадцатеричный"
+
+msgid "Display file as octal"
+msgstr "Отображать файл как восьмеричный"
+
+msgid "Display file as text"
+msgstr "Показать файл как текст"
+
+msgid "Display log for the currently selected timer"
+msgstr "Показать лог выбранного таймера"
+
 msgid "Display EPG as MultiEPG"
 msgstr "Показать ТВ-гид как MultiEPG"
 
@@ -7314,6 +7368,9 @@ msgstr "Отобразить следующий экран системной и
 msgid "Display oscam information."
 msgstr "Отображение информации об oscam."
 
+msgid "Display seconds"
+msgstr "Отображать секунды"
+
 msgid "Display previous commit log"
 msgstr "Показать предыдущий журнал фиксации"
 
@@ -7329,11 +7386,20 @@ msgstr "Скин дисплея"
 msgid "Display the EIT Now/Next event data in the InfoBar."
 msgstr "Передачи сейчас/следующая отображать в инфопанели из EIT."
 
+msgid "Display the base locales or all locales for a language."
+msgstr "Отображение базовых локалей или всех локалей для языка."
+
+msgid "Display the tags context menu"
+msgstr "Отображение контекстного меню тегов"
+
 msgid "Display the virtual keyboard for data entry"
 msgstr "Показывать виртуальную клавиатуру для ввода данных"
 
 msgid "Display type"
 msgstr "Тип дисплея"
+
+msgid "Displayed movie title"
+msgstr "Отображаемое название фильма"
 
 msgid "Distance"
 msgstr "Расстояние"
@@ -9267,6 +9333,19 @@ msgstr "Быстрый DiSEqC"
 msgid "FastScan"
 msgstr "Быстрый поиск по оператору"
 
+msgid "Fast Scan Actions"
+msgstr "Действия быстрого сканирования"
+
+#, python-format
+msgid "Fast Scan version %d: Found %d channel."
+msgid_plural "Fast Scan version %d: Found %d channels."
+msgstr[0] "Версия быстрого сканирования %d: найден %d канал."
+msgstr[1] "Версия быстрого сканирования %d: найдено каналов — %d."
+msgstr[2] "Версия быстрого сканирования %d: найдены каналы — %d."
+
+msgid "Fast Skin Reload"
+msgstr "Быстрое обновление скина"
+
 msgid "Fast epoch"
 msgstr "Время для быстрой скорости"
 
@@ -9463,6 +9542,12 @@ msgstr "Финляндия"
 
 msgid "Finnish"
 msgstr "Финский"
+
+msgid "First chapter marker"
+msgstr "Маркер первой главы"
+
+msgid "First separator"
+msgstr "Первый разделитель"
 
 msgid "First page"
 msgstr "Первая страница"
@@ -9699,6 +9784,12 @@ msgstr "Полный RGB"
 
 msgid "Full description separator"
 msgstr "Разделитель полного описания"
+
+msgid "Full day name"
+msgstr "Полное название дня"
+
+msgid "Full month name"
+msgstr "Полное название месяца"
 
 msgid "Full factory reset"
 msgstr "Полный сброс к заводским настройкам"
@@ -10327,6 +10418,9 @@ msgstr "Настройки горячих кнопок"
 
 msgid "Hotkey"
 msgstr "Горячие кнопки"
+
+msgid "Hour display style"
+msgstr "Стиль отображения часов"
 
 msgid "Hotkey Panic"
 msgstr "Кнопка паники"
@@ -12178,6 +12272,9 @@ msgstr "Монголия"
 msgid "Montenegro"
 msgstr "Черногория"
 
+msgid "Month display style"
+msgstr "Стиль отображения месяца"
+
 msgid "Monthly"
 msgstr "Ежемесячно"
 
@@ -12486,6 +12583,9 @@ msgstr "Мульти"
 
 msgid "Multi EPG"
 msgstr "Мульти ТВ-гид"
+
+msgid "Multi-path mode"
+msgstr "Многопутевой режим"
 
 msgid "Multi channel downmix"
 msgstr "Мультиканальное микширование"
@@ -13425,6 +13525,9 @@ msgstr "OSCamInfo: Информация"
 msgid "OSCamInfo: Log"
 msgstr "OSCamInfo: Лог"
 
+msgid "OSD Animation Settings"
+msgstr "Настройки анимации экранного меню (OSD)"
+
 msgid "OSD 3D Settings"
 msgstr "Настройки 3D"
 
@@ -14093,7 +14196,24 @@ msgid "Picon Packages"
 msgstr "Пакеты пиконов"
 
 msgid "Picon Settings"
-msgstr "Настройки Picon"
+msgstr "Настройки Пикон"
+
+msgid "Picon and service number"
+msgstr "Пикон и номер канала"
+
+msgid "Picon install location"
+msgstr "Место установки пиконов"
+
+#, python-format
+msgid "Picon path %s"
+msgstr "Путь к пикону %s"
+
+#, python-format
+msgid "Picon path %s is in use and cannot be removed!"
+msgstr "Путь к пиконам %s используется, поэтому его нельзя удалить!"
+
+msgid "Picon search mode"
+msgstr "Режим поиска пиконов"
 
 msgid "Picon mode"
 msgstr "режим Picon"
@@ -14108,11 +14228,11 @@ msgstr "Режим установки Picon"
 msgid "Picon Size"
 msgstr "Размер пикона"
 
-msgid "Picon Width"
+msgid "Picon width"
 msgstr "Ширина пикона"
 
-msgid "Picon install location"
-msgstr "Целевое местоположение пакета Picon"
+msgid "Picon Width"
+msgstr "Ширина пикона"
 
 msgid "Picon and Service Name"
 msgstr "Пикон и название канала"
@@ -14650,7 +14770,7 @@ msgstr "Лог настройки позиционера"
 msgid "Power"
 msgstr "Питание"
 
-msgid "Power LED State in Deep-Standby"
+msgid "Power LED State in Deep Standby"
 msgstr "Состояние индикатора питания в глубоком режиме ожидания"
 
 msgid "Power LED State in Standby"
@@ -14659,10 +14779,10 @@ msgstr "Состояние индикатора питания в режиме �
 msgid "Power LED can be turned on or off here."
 msgstr "Здесь можно включить или выключить индикатор питания."
 
-msgid "Power LED state during deep-standby."
+msgid "Power LED state during Deep Standby."
 msgstr "Состояние индикатора питания в режиме глубокого ожидания."
 
-msgid "Power LED state during standby."
+msgid "Power LED state during Standby."
 msgstr "Состояние индикатора питания в режиме ожидания."
 
 msgid "Power LED state when running."
@@ -15354,6 +15474,10 @@ msgstr "Реально обновить лицевую панель и пере�
 msgid "Really update the frontprocessor and reboot now?"
 msgstr "Обновить фронтпроцессор и выполнить перезагрузку сейчас?"
 
+#, python-format
+msgid "Really upgrade your %s %s and reboot now?"
+msgstr "Хотите обновить ваш %s %s и перезагрузить?"
+
 msgid "Really update your %s %s and reboot now?"
 msgstr "Действительно обновить Ваш %s %s и выполнить перезагрузку сейчас?"
 
@@ -15540,6 +15664,12 @@ msgstr "Обновить"
 
 msgid "Reload Services"
 msgstr "Перезагрузить каналы"
+
+msgid "Reload Skin"
+msgstr "Перезагрузить скин"
+
+msgid "Reload the skin without restarting the GUI when switching skins."
+msgstr "Перезагружать оформление без перезапуска графического интерфейса при смене тем оформления."
 
 msgid "Reload blacklists"
 msgstr "Обновить черный список"
@@ -16616,6 +16746,9 @@ msgstr "Поиск на западе..."
 msgid "Second cable of motorized LNB"
 msgstr "Второй кабель от позиционера"
 
+msgid "Second separator"
+msgstr "Второй разделитель"
+
 msgid "Secondary DNS (IPv4)"
 msgstr "Вторичный DNS (IPv4)"
 
@@ -16874,9 +17007,6 @@ msgstr "Выберите быстрый DiSEqC, если Ваша система
 msgid "Select HDD"
 msgstr "Выбрать жёсткий диск"
 
-msgid "Select the security protocol that will be used to access the selected wireless network."
-msgstr "Выберите протокол безопасности, который будет использоваться для доступа к выбранной беспроводной сети."
-
 msgid "Select the sort order of the Extension Menu entries."
 msgstr "Выберите порядок сортировки записей меню расширений."
 
@@ -17085,9 +17215,6 @@ msgstr "Выберите текущий выделенный канал"
 msgid "Select the currently highlighted service and exit"
 msgstr "Выберите выделенную в данный момент услугу и выйдите"
 
-msgid "Select the display sequence of previously visited services."
-msgstr "Выберите последовательность отображения ранее посещенных сервисов."
-
 msgid "Select 'Unique numbering' to assign unique numbers for every service in every bouquet. Use 'Bouquets start at 1' to start numbering each bouquet from 1. Use 'LCN numbering' to use consistent service LCNs where ever that service is used."
 msgstr "Выберите «Уникальная нумерация», чтобы назначить уникальные номера для каждой услуги в каждом букете. Используйте «Букеты начинаются с 1», чтобы начать нумерацию каждого букета с 1. Используйте «Нумерацию LCN», чтобы использовать последовательные LCN услуг, где бы эта услуга ни использовалась."
 
@@ -17114,6 +17241,21 @@ msgstr "Выберите дизайн для меню."
 
 msgid "Select the display options for each menu entry item. If menu numbers are available then the number buttons can be used to select the numbered menu entries directly."
 msgstr "Выберите параметры отображения для каждого пункта меню. Если пункты меню пронумерованы, то можно использовать цифровые кнопки для их непосредственного вызова."
+
+msgid "Select the display sequence of previously visited services."
+msgstr "Выберите последовательность отображения ранее посещенных каналов."
+
+msgid "Select the display style for dates. The screen display will be based on your choices but can be influenced by the skin."
+msgstr "Выберите стиль отображения дат. Внешний вид на экране будет зависеть от вашего выбора, однако на него также может влиять оформление (скин)."
+
+msgid "Select the display style for day of the week. The screen display will be based on your choice but can be influenced by the skin."
+msgstr "Выберите стиль отображения дня недели. Вид на экране будет зависеть от вашего выбора, однако на него также может влиять оформление (скин)."
+
+msgid "Select the display style for hours/times."
+msgstr "Выберите стиль отображения часов/времени."
+
+msgid "Select the display style for months. The screen display will be based on your choices but can be influenced by the skin."
+msgstr "Выберите стиль отображения месяцев. Внешний вид на экране будет зависеть от вашего выбора, однако на него также может влиять оформление (скин)."
 
 msgid "Select the file system for the device."
 msgstr "Выберите файловую систему для устройства."
@@ -17172,9 +17314,6 @@ msgstr "Выберите формат Вашего SCR устройства. В�
 msgid "Select the read block buffer size (rsize) mount option. Use 'Automatic' to allow the kernel and server to negotiate the optimal size."
 msgstr "Выберите параметр монтирования размера буфера блока чтения (rsize). Используйте значение «Автоматический», чтобы ядро ​​и сервер согласовали оптимальный размер."
 
-msgid "Select the share protocol to be used, SMB (Windows-style shares) or NFS (Mac and Linux shares)."
-msgstr "Выберите используемый протокол общего доступа: SMB (общий доступ в стиле Windows) или NFS (общий доступ для Mac и Linux)."
-
 msgid "Select the receiver action when the TV switches away from the receiver input."
 msgstr "Выберите действие ресивера, когда телевизор переключается с входа ресивера на другой."
 
@@ -17199,6 +17338,30 @@ msgstr "Выберите спутник к которому подключена
 msgid "Select the screen layout, from the options provided by the skin, to be used for the ChannelSelection screen."
 msgstr "Выберите макет информации в списке услуг из вариантов, предоставляемых скином, отображаемым на экране выбора канала."
 
+msgid "Select the search mode to find picons. 'Single-path mode' uses one path for all picons. 'Multi-path mode' allows multiple picon paths to be used for different use cases."
+msgstr "Выберите режим поиска для нахождения пиконов. В режиме «одного пути» (Single-path mode) для всех пиконов используется один путь. Режим «нескольких путей» (Multi-path mode) позволяет использовать разные пути для пиконов в зависимости от конкретных задач."
+
+msgid "Select the security protocol that will be used to access the selected wireless network."
+msgstr "Выберите протокол безопасности, который будет использоваться для доступа к выбранной беспроводной сети."
+
+msgid "Select the separator between the date and the time elements."
+msgstr "Выберите разделитель между элементами даты и времени."
+
+msgid "Select the separator between the day and the date elements."
+msgstr "Выберите разделитель между элементами «день» и «дата»."
+
+msgid "Select the separator between the first two date elements."
+msgstr "Выберите разделитель между первыми двумя элементами даты."
+
+msgid "Select the separator between the second two date elements."
+msgstr "Выберите разделитель между вторым и третьим элементами даты."
+
+msgid "Select the separator between the time elements."
+msgstr "Выберите разделитель между элементами времени."
+
+msgid "Select the share protocol to be used, SMB (Windows-style shares) or NFS (Mac and Linux shares)."
+msgstr "Выберите протокол общего доступа: SMB (общие ресурсы в стиле Windows) или NFS (общие ресурсы для Mac и Linux)."
+
 msgid "Select the size of the volume step when the VOLUME buttons are pressed."
 msgstr "Выберите размер шага регулировки громкости при нажатии кнопок VOLUME."
 
@@ -17206,13 +17369,20 @@ msgid "Select the size of the volume steps when the VOLUME buttons are held down
 msgstr "Выберите размер шага регулировки громкости при удерживании кнопок VOLUME."
 
 msgid "Select the shifted character set"
-msgstr "Выберите набор символов с виртуальной клавиатурой"
+msgstr "Выберите смещенный набор символов"
 
 msgid "Select the sort order of the Plugin Browser menu entries. User defined also allows the plugin entries to be hidden."
 msgstr "Выберите порядок сортировки пунктов меню обозревателя подключаемых модулей. Определяемый пользователем также позволяет скрывать записи плагина."
 
 msgid "Select the sort order of the menu entries. User defined also allows the menu entries to be hidden."
 msgstr "Выберите порядок сортировки пунктов меню. Определяемый пользователем также позволяет скрывать пункты меню."
+
+msgid "Select the style for displaying dates."
+msgstr "Выберите стиль отображения дат."
+
+msgid "Select the suffix character to be appended to the date string. This is used for some locales."
+msgstr "Выберите суффикс, который будет добавлен к строке даты. Это используется для некоторых локалей."
+
 
 msgid "Select the DNS server(s) that will be used to lookup hostnames to resolve IP addresses."
 msgstr "Выберите DNS-сервер(ы), которые будут использоваться для поиска имен хостов с целью разрешения IP-адресов."
@@ -18939,6 +19109,9 @@ msgstr "Один спутник"
 msgid "Single step (GOP)"
 msgstr "Один шаг (GOP)"
 
+msgid "Single-path mode"
+msgstr "Режим одного пути"
+
 msgid "Sint Maarten (Dutch part)"
 msgstr "Sint Maarten (Dutch part)"
 
@@ -19417,6 +19590,12 @@ msgstr "Южная Георгия и Южные Сандвичевы остро�
 
 msgid "South Sudan"
 msgstr "Южный Судан"
+
+msgid "Space ' '"
+msgstr ""
+
+msgid "Space Hyphen Space ' - '"
+msgstr ""
 
 msgid "Space to reserve for recordings (GB)"
 msgstr "Резервировать место на диске для записей (Гб)"
@@ -19965,6 +20144,10 @@ msgstr "Успешно:"
 
 msgid "Sudan"
 msgstr "Судан"
+
+msgid "Suffix character"
+msgstr "Суффиксный символ"
+
 
 msgid "Sun"
 msgstr "Вс"
@@ -21054,6 +21237,10 @@ msgstr "Тигринья"
 msgid "Time"
 msgstr "Время"
 
+msgid "Time Format"
+msgstr "Формат времени"
+
+
 msgid "Timeout"
 msgstr "Перерыв"
 
@@ -21095,6 +21282,10 @@ msgstr "Интервал повторения для быстрой перемо
 
 msgid "Time jump: Use normal fast forward for speeds"
 msgstr "Нормальные скорости для быстрой перемотки вперёд"
+
+msgid "Time separator"
+msgstr "Разделитель времени"
+
 
 msgid "Time scale"
 msgstr "Шкала времени"
@@ -21684,6 +21875,12 @@ msgstr "Включение HDMI-IN в полноэкранном режиме"
 msgid "Turn on HDMI-IN PiP mode"
 msgstr "Включение HDMI-IN в режиме PiP"
 
+msgid "Turn on the control LED"
+msgstr "Включить светодиодный индикатор управления"
+
+msgid "Turn on the power LED"
+msgstr "Включите светодиодный индикатор питания"
+
 msgid "Turn on the power LED during deep standby."
 msgstr "Включить питание на кнопке LED в режиме глубокого ожидания."
 
@@ -21699,11 +21896,23 @@ msgstr "Размер шага поворота"
 msgid "Tuvalu"
 msgstr "Тувалу"
 
+msgid "Two digits"
+msgstr "Две цифры"
+
+msgid "Two digits (12 hour time)"
+msgstr "Две цифры (формат времени — 12 часов)"
+
+msgid "Two digits (24 hour time)"
+msgstr "Две цифры (формат времени — 24 часа)"
+
 msgid "Two"
 msgstr "Два"
 
 msgid "Two lines"
 msgstr "Две строки"
+
+msgid "Two spaces '  '"
+msgstr ""
 
 msgid "Two lines and next event"
 msgstr "Две строки и следующее событие"
@@ -23191,6 +23400,9 @@ msgstr "При включении этой функции IP-адрес, мас�
 
 msgid "When enabled, reformat subtitles to match the width of the screen."
 msgstr "Если включено, переформатировать субтитры в соответствии с шириной экрана."
+
+msgid "When enabled, seconds will be shown in time displays. The seconds display will be based on your selection but will be influenced by code and space requirements and the skin."
+msgstr "Если эта функция включена, на индикаторах времени будут отображаться секунды. Формат отображения секунд зависит от вашего выбора, однако на него также влияют программные ограничения, требования к свободному пространству и используемое оформление (скин)."
 
 msgid "When enabled, services may be grouped in multiple bouquets."
 msgstr "Если включено, то каналы могут быть сгруппированы в несколько букетов."
